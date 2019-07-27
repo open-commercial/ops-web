@@ -1,0 +1,19 @@
+<div>
+  <p-toast></p-toast>
+  <p-panel header="Ingreso de Usuario">
+    <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
+        <br>
+        <span class="ui-float-label">
+          <input id="username" type="text" required pInputText formControlName="username">
+          <label for="username">Usuario</label>
+          <p-message severity="error" text="Field is required" *ngIf="form.get('username').hasError('required')"></p-message>
+        </span><br>
+        <span class="ui-float-label">
+          <input id="password" type="password" required pInputText formControlName="password">
+          <label for="password">Contraseña</label>
+          <p-message severity="error" text="Field is required" *ngIf="form.get('password').hasError('required')"></p-message>
+        </span><br>
+        <button pButton icon="pi pi-sign-in" type="submit" class="ui-button-raised ui-button-rounded" label="Ingresar"></button>
+    </form>
+  </p-panel>
+</div>
