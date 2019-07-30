@@ -4,11 +4,12 @@ import {AuthService} from '../../services/auth.service';
 import {MessageService} from 'primeng/api';
 import {Usuario} from "../../models/usuario";
 import {finalize} from "rxjs/operators";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
@@ -16,9 +17,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private fb: FormBuilder,
-              private messageService: MessageService) { }
+              private messageService: MessageService,
+              private router: Router) { }
 
   ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['']);
+    }
     this.createForm();
   }
 
@@ -30,7 +35,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log(this.form.valid);
     if (this.form.valid) {
       const data = this.form.value;
       this.loading = true;
@@ -48,12 +52,14 @@ export class LoginComponent implements OnInit {
                 summary: 'Login',
                 detail: `Bienvenido ${usuario.nombre} ${usuario.apellido}!`
               });
+              this.router.navigate(['']);
             });
         },
         err => {
+          console.log(err);
           this.loading = false;
           this.form.enable();
-          this.messageService.add({ severity: 'success', summary: 'Login', detail: err.error });
+          this.messageService.add({ severity: 'error', summary: 'Login', detail: err });
         });
     }
   }

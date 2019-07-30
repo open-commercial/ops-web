@@ -46,11 +46,8 @@ export class AuthService {
   }
 
   logout() {
-    this.http.put(this.urlLogout, null)
-      .subscribe(data => {
-        localStorage.clear();
-        this.router.navigate(['']);
-      });
+    localStorage.clear();
+    this.router.navigate(['']);
   }
 
   getToken(): string {

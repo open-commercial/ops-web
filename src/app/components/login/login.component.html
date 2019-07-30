@@ -1,19 +1,32 @@
 <div>
   <p-toast></p-toast>
-  <p-panel header="Ingreso de Usuario">
-    <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
-        <br>
-        <span class="ui-float-label">
-          <input id="username" type="text" required pInputText formControlName="username">
-          <label for="username">Usuario</label>
-          <p-message severity="error" text="Field is required" *ngIf="form.get('username').hasError('required')"></p-message>
-        </span><br>
-        <span class="ui-float-label">
-          <input id="password" type="password" required pInputText formControlName="password">
-          <label for="password">Contraseña</label>
-          <p-message severity="error" text="Field is required" *ngIf="form.get('password').hasError('required')"></p-message>
-        </span><br>
-        <button pButton icon="pi pi-sign-in" type="submit" class="ui-button-raised ui-button-rounded" label="Ingresar"></button>
-    </form>
-  </p-panel>
+  <br>
+  <div class="-p-grid">
+    <div class="p-col-12 p-sm-6 p-sm-offset-3 p-md-4 p-md-offset-4">
+      <p-panel header="Ingreso">
+        <form [formGroup]="form" (ngSubmit)="login()" class="login-form">
+          <br>
+          <div class="ui-fluid">
+          <span class="ui-float-label">
+            <input id="username" type="text" required pInputText formControlName="username">
+            <label for="username">Usuario</label>
+          </span>
+            <p-message severity="error" text="Requerido" *ngIf="!form.get('username').valid && form.get('username').dirty"></p-message>
+          </div>
+          <br>
+          <div class="ui-fluid">
+          <span class="ui-float-label ">
+            <input id="password" type="password" required pInputText formControlName="password">
+            <label for="password">Contraseña</label>
+          </span>
+            <p-message severity="error" text="Requerido" *ngIf="!form.get('password').valid && form.get('password').dirty"></p-message>
+          </div>
+          <br>
+          <button pButton icon="pi pi-sign-in" type="submit" class="ui-button-raised ui-button-rounded" label="Ingresar" [disabled]="form.invalid"></button>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+
+
 </div>

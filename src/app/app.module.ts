@@ -11,12 +11,15 @@ import { UsuariosService } from './services/usuarios.service';
 import { LoginComponent } from './components/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { AuthGuard} from './guards/auth.guard';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    MenuComponent
+    MenuComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +32,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     AuthService,
+    AuthGuard,
     UsuariosService
   ],
   bootstrap: [AppComponent]
