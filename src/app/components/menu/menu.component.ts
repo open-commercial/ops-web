@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-menu',
@@ -9,97 +8,47 @@ import {Router} from "@angular/router";
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
+  display = false;
+  menubarItems: MenuItem[];
+  menuItems: MenuItem[];
+
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    this.getItems();
+    this.getMenubarItems();
+    this.getSidebarItems();
   }
 
-  getItems() {
-    let items: MenuItem[] = [{label: 'SIC-OPS'}];
-    if (this.authService.isAuthenticated()) {
-      items = items.concat([
-        {
-          label: 'Sistema',
-          icon: 'pi pi-fw pi-file',
-          items: [{
-            label: 'New',
-            icon: 'pi pi-fw pi-plus',
-            items: [
-              {label: 'Project'},
-              {label: 'Other'},
-            ]
-          },
-            {label: 'Open'},
-            {separator: true},
-            {label: 'Quit'}
-          ]
-        },
-        {
-          label: 'Compras',
-          icon: 'pi pi-fw pi-pencil',
-          items: [
-            {label: 'Delete', icon: 'pi pi-fw pi-trash'},
-            {label: 'Refresh', icon: 'pi pi-fw pi-refresh'}
-          ]
-        },
-        {
-          label: 'Ventas',
-          icon: 'pi pi-fw pi-question',
-          items: [
-            {
-              label: 'Contents'
-            },
-            {
-              label: 'Search',
-              icon: 'pi pi-fw pi-search',
-              items: [
-                {
-                  label: 'Text',
-                  items: [
-                    {
-                      label: 'Workspace'
-                    }
-                  ]
-                },
-                {
-                  label: 'File'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: 'Administración',
-          icon: 'pi pi-fw pi-cog',
-          items: [
-            {
-              label: 'Edit',
-              icon: 'pi pi-fw pi-pencil',
-              items: [
-                {label: 'Save', icon: 'pi pi-fw pi-save'},
-                {label: 'Update', icon: 'pi pi-fw pi-save'},
-              ]
-            },
-            {
-              label: 'Other',
-              icon: 'pi pi-fw pi-tags',
-              items: [
-                {label: 'Delete', icon: 'pi pi-fw pi-minus'}
-              ]
-            }
-          ]
-        },
-        {separator: true},
-        {
-          label: 'Stock', icon: 'pi pi-fw pi-times'
-        }
-      ]);
-    }
-    return items;
+  getMenubarItems() {
+    this.menubarItems = [
+      {
+        label: 'Globo de Oro',
+        icon: 'pi pi-fw pi-bars',
+        command: () => { this.display = true; }
+      },
+    ];
+  }
+
+  getSidebarItems() {
+    this.menuItems = [
+      {
+        label: 'Stock',
+        items: [
+          {label: 'Productos', icon: 'pi pi-fw pi-plus'},
+        ]
+      },
+      {
+        label: '',
+        items: [
+          { label: 'Cerrar sesión', icon: 'pi pi-fw pi-sign-out', command: () => this.logout() },
+        ]
+
+      }
+    ];
   }
 
   logout() {
     this.authService.logout();
+    this.display = false;
   }
 }

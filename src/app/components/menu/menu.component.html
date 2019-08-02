@@ -1,3 +1,4 @@
-<p-menubar [model]="getItems()" [autoDisplay]="false">
-    <button *ngIf="authService.isAuthenticated()" (click)="logout()" pButton label="Salir" icon="pi pi-sign-out"></button>
-</p-menubar>
+<p-sidebar [(visible)]="display" *ngIf="authService.isAuthenticated()">
+    <p-menu [model]="menuItems"></p-menu>
+</p-sidebar>
+<p-menubar [model]="menubarItems" [autoDisplay]="false" *ngIf="authService.isAuthenticated()"></p-menubar>
