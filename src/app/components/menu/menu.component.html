@@ -1,4 +1,34 @@
-<p-sidebar [(visible)]="display" *ngIf="authService.isAuthenticated()">
-    <p-menu [model]="menuItems"></p-menu>
-</p-sidebar>
-<p-menubar [model]="menubarItems" [autoDisplay]="false" *ngIf="authService.isAuthenticated()"></p-menubar>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/c_scale,w_40/v1557317348/assets/logo-globodeoro-500x500px.png'" alt="">
+  </a>
+
+  <button *ngIf="authService.isAuthenticated()" class="navbar-toggler navbar-toggler-right" type="button" aria-controls="appNavigation" aria-expanded="!isCollapsed" aria-label="Toggle navigation" (click)="toggleMenu()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed" *ngIf="authService.isAuthenticated()">
+    <div class="navbar-nav mr-auto">
+      <div class="nav-item dropdown" ngbDropdown >
+        <a class="nav-link dropdown-toggle" id="dropdownStock" ngbDropdownToggle>
+          <fa-icon [icon]="['fas', 'cubes']"></fa-icon> Stock
+        </a>
+        <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownStock">
+          <a class="dropdown-item" routerLinkActive="active" (click)="toggleMenu()">
+            <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="navbar-nav ml-auto" *ngIf="usuario">
+      <div class="nav-item dropdown" ngbDropdown >
+        <a class="nav-link dropdown-toggle" id="dropdownUser" ngbDropdownToggle>
+          <fa-icon [icon]="['fas', 'user']"></fa-icon> {{ usuario.username }}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownUser">
+          <a class="dropdown-item" (click)="logout()"><fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
+import {Usuario} from '../../models/usuario';
 
 @Component({
   selector: 'app-menu',
@@ -8,47 +8,20 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-  display = false;
-  menubarItems: MenuItem[];
-  menuItems: MenuItem[];
-
   constructor(private authService: AuthService) { }
+  isCollapsed = true;
+  usuario: Usuario = null;
 
   ngOnInit() {
-    this.getMenubarItems();
-    this.getSidebarItems();
-  }
-
-  getMenubarItems() {
-    this.menubarItems = [
-      {
-        label: 'Globo de Oro',
-        icon: 'pi pi-fw pi-bars',
-        command: () => { this.display = true; }
-      },
-    ];
-  }
-
-  getSidebarItems() {
-    this.menuItems = [
-      {
-        label: 'Stock',
-        items: [
-          {label: 'Productos', icon: 'pi pi-fw pi-plus'},
-        ]
-      },
-      {
-        label: '',
-        items: [
-          { label: 'Cerrar sesión', icon: 'pi pi-fw pi-sign-out', command: () => this.logout() },
-        ]
-
-      }
-    ];
+    this.authService.usuarioLoggedInSubject$.subscribe((u: Usuario) => this.usuario = u);
   }
 
   logout() {
     this.authService.logout();
-    this.display = false;
+    this.toggleMenu();
+  }
+
+  toggleMenu() {
+    this.isCollapsed = !this.isCollapsed;
   }
 }

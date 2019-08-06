@@ -1,4 +1,4 @@
-@import "~primeflex/primeflex";
+@import "~bootstrap/scss/bootstrap";
 
 /* You can add global styles to this file, and also import other style files */
 html {
@@ -9,24 +9,4 @@ body {
   padding: 0;
   margin: 0;
   height: 100%;
-  .ui-button {
-    color: #333;
-    background-color: #fbc02d;
-    border: 1px solid #fbc02d;
-    &:enabled:hover {
-      background-color: darken(#fbc02d, 10%);
-      color: #333;
-      border-color: darken(#fbc02d, 10%);
-    }
-    &:enabled:focus {
-      box-shadow: 0 0 0 0.2em darken(#fbc02d, 20%);;
-    }
-  }
-}
-
-
-
-.ui-menu {
-  margin-top: 1.5rem;
-  width: 100%;
 }

@@ -1,25 +1,12 @@
 .login {
-  text-align: center;
-  padding: 0.7rem;
-  .login-form {
-    display: inline-block;
-    text-align: center;
-    max-width: 18rem;
-    width: 100%;
-    input {
-      text-align: center;
-    }
-  }
-
-  p-messages {
-    display: inline-block;
-    max-width: 30rem;
+  form {
+    max-width: 25rem;
     width: 100%;
   }
-
   img.logo {
-    width: 180px;
-    margin: 1.25rem 0;
+    max-width: 180px;
+    width: 100%;
+    margin: 1rem 0;
   }
 }
 

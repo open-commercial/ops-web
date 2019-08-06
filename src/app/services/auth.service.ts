@@ -15,19 +15,20 @@ export class AuthService {
   urlLogout = environment.apiUrl + '/api/v1/logout';
   urlPasswordRecovery = environment.apiUrl + '/api/v1/password-recovery?idEmpresa=' + environment.idEmpresa;
   jwtHelper = new JwtHelperService();
-  private nombreUsuarioLoggedInSubject = new Subject<string>();
-  nombreUsuarioLoggedIn$ = this.nombreUsuarioLoggedInSubject.asObservable();
+
+  private usuarioLoggedInSubject = new Subject<Usuario>();
+  usuarioLoggedInSubject$ = this.usuarioLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient,
               private router: Router,
               private usuariosService: UsuariosService) {}
 
-  setNombreUsuarioLoggedIn(nombre: string) {
-    this.nombreUsuarioLoggedInSubject.next(nombre);
+  setUsuarioLoggedIn(usuario: Usuario) {
+    this.usuarioLoggedInSubject.next(usuario);
   }
 
-  login(username: string, password: string) {
-    const credential = { username: username, password: password};
+  login(user: string, pass: string) {
+    const credential = { username: user, password: pass };
     return this.http.post(this.urlLogin, credential, {responseType: 'text'})
       .pipe(
         map(data => {
@@ -47,6 +48,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
+    this.setUsuarioLoggedIn(null);
     this.router.navigate(['']);
   }
 
@@ -71,12 +73,15 @@ export class AuthService {
   }
 
   cambiarContrasenia(key: string, id: number) {
-    return this.http.post(this.urlPasswordRecovery, {'key': key, 'id': id}, {responseType: 'text'});
+    return this.http.post(this.urlPasswordRecovery, { key: key, id: id}, {responseType: 'text'});
   }
 
   setAuthenticationInfo(token: string) {
     localStorage.setItem('token', token);
     const decodedToken = this.jwtHelper.decodeToken(token);
-    localStorage.setItem('id_Usuario', decodedToken.idUsuario);
+    const idUsuario = decodedToken.idUsuario;
+    localStorage.setItem('id_Usuario', idUsuario);
+    if (!idUsuario) { this.setUsuarioLoggedIn(null); return; }
+    this.getLoggedInUsuario().subscribe((u: Usuario) => this.setUsuarioLoggedIn(u));
   }
 }

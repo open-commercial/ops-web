@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth.service';
-import {MessageService} from 'primeng/api';
-import {Usuario} from "../../models/usuario";
-import {finalize} from "rxjs/operators";
-import {Router} from "@angular/router";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { Usuario } from '../../models/usuario';
+import {debounceTime, finalize} from 'rxjs/operators';
+import { Router } from '@angular/router';
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -14,18 +14,28 @@ import {Router} from "@angular/router";
 export class LoginComponent implements OnInit {
   form: FormGroup;
   loading = false;
+  submitted = false;
+
+  private errors = new Subject<string>();
+  errorMessage: string;
 
   constructor(private authService: AuthService,
               private fb: FormBuilder,
-              private messageService: MessageService,
               private router: Router) { }
 
   ngOnInit() {
+    this.errors.subscribe((message) => this.errorMessage = message);
+    this.errors
+      .pipe(debounceTime(3000))
+      .subscribe(() => this.errorMessage = null);
+
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['']);
     }
     this.createForm();
   }
+
+  get f() { return this.form.controls; }
 
   createForm() {
     this.form = this.fb.group({
@@ -35,6 +45,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.submitted = true;
     if (this.form.valid) {
       const data = this.form.value;
       this.loading = true;
@@ -47,21 +58,18 @@ export class LoginComponent implements OnInit {
               finalize(() => { this.loading = false; this.form.enable(); })
             )
             .subscribe((usuario: Usuario) => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Login',
-                detail: `Bienvenido ${usuario.nombre} ${usuario.apellido}!`
-              });
               this.router.navigate(['']);
             });
         },
         err => {
-          console.log(err);
+          this.showErrorMessage(err);
           this.loading = false;
           this.form.enable();
-          this.messageService.clear();
-          this.messageService.add({ severity: 'error', summary: 'Login', detail: err });
         });
     }
+  }
+
+  showErrorMessage(message: string) {
+    this.errors.next(message);
   }
 }
