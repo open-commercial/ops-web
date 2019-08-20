@@ -1,34 +1,47 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" *ngIf="authService.isAuthenticated()">
   <a class="navbar-brand" href="#">
     <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/c_scale,w_40/v1557317348/assets/logo-globodeoro-500x500px.png'" alt="">
   </a>
 
-  <button *ngIf="authService.isAuthenticated()" class="navbar-toggler navbar-toggler-right" type="button" aria-controls="appNavigation" aria-expanded="!isCollapsed" aria-label="Toggle navigation" (click)="toggleMenu()">
+  <button class="navbar-toggler navbar-toggler-right" type="button" aria-controls="appNavigation" [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation" (click)="toggleMenu()">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed" *ngIf="authService.isAuthenticated()">
-    <div class="navbar-nav mr-auto">
-      <div class="nav-item dropdown" ngbDropdown >
-        <a class="nav-link dropdown-toggle" id="dropdownStock" ngbDropdownToggle>
+  <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownStock" ngbDropdownToggle>
           <fa-icon [icon]="['fas', 'cubes']"></fa-icon> Stock
         </a>
         <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownStock">
-          <a class="dropdown-item" routerLinkActive="active" (click)="toggleMenu()">
+          <a class="dropdown-item" routerLink="/productos" routerLinkActive="active" (click)="toggleMenu()">
             <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos
           </a>
         </div>
-      </div>
-    </div>
-    <div class="navbar-nav ml-auto" *ngIf="usuario">
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownVentas" ngbDropdownToggle>
+          <fa-icon [icon]="['fas', 'dollar-sign']"></fa-icon> Ventas
+        </a>
+        <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownVentas">
+          <a class="dropdown-item" routerLink="/pedidos" routerLinkActive="active" (click)="toggleMenu()">
+            <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos
+          </a>
+        </div>
+      </li>
+    </ul>
+    <div class="navbar-nav ml-auto">
       <div class="nav-item dropdown" ngbDropdown >
-        <a class="nav-link dropdown-toggle" id="dropdownUser" ngbDropdownToggle>
-          <fa-icon [icon]="['fas', 'user']"></fa-icon> {{ usuario.username }}
+        <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownUser" ngbDropdownToggle>
+          <fa-icon [icon]="['fas', 'user']"></fa-icon> {{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}
         </a>
         <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownUser">
-          <a class="dropdown-item" (click)="logout()"><fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir</a>
+          <a [routerLink]="null" class="dropdown-item" (click)="logout()">
+            <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir
+          </a>
         </div>
       </div>
     </div>
   </div>
 </nav>
+

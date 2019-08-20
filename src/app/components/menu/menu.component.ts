@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import {Usuario} from '../../models/usuario';
+import { Usuario } from '../../models/usuario';
 
 @Component({
   selector: 'app-menu',
@@ -8,12 +8,15 @@ import {Usuario} from '../../models/usuario';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-  constructor(private authService: AuthService) { }
   isCollapsed = true;
   usuario: Usuario = null;
 
+  constructor(public authService: AuthService) { }
+
   ngOnInit() {
-    this.authService.usuarioLoggedInSubject$.subscribe((u: Usuario) => this.usuario = u);
+    if (this.authService.isAuthenticated()) {
+      this.authService.getLoggedInUsuario().subscribe((u: Usuario) => this.usuario = u);
+    }
   }
 
   logout() {

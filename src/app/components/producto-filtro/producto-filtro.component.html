@@ -1,0 +1,15 @@
+<div class="form-group">
+  <label for="idCliente">Producto</label>
+  <ng-select class="filtro" id="idCliente" [items]="productos$ | async"
+             bindLabel="descripcion"
+             bindValue="idProducto"
+             [loading]="loading"
+             [typeahead]="input$"
+             (change)="select($event)">
+    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+      <span class="codigo">Nº: {{ item.codigo }}</span>
+      &nbsp;-&nbsp;
+      <span class="description">{{ item.descripcion }}</span>
+    </ng-template>
+  </ng-select>
+</div>

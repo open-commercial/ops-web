@@ -1,4 +1,9 @@
+$theme-colors: (
+  "primary": #fbc02d,
+);
+
 @import "~bootstrap/scss/bootstrap";
+@import "~@ng-select/ng-select/scss/default.theme";
 
 /* You can add global styles to this file, and also import other style files */
 html {

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../models/usuario';
-import {debounceTime, finalize} from 'rxjs/operators';
+import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import {Subject} from "rxjs";
+import { Subject } from 'rxjs';
+import { EmpresaService } from "../../services/empresa.service";
 
 @Component({
   selector: 'app-login',
@@ -58,6 +59,7 @@ export class LoginComponent implements OnInit {
               finalize(() => { this.loading = false; this.form.enable(); })
             )
             .subscribe((usuario: Usuario) => {
+              EmpresaService.setIdEmpresa(usuario.idEmpresaPredeterminada.toString());
               this.router.navigate(['']);
             });
         },

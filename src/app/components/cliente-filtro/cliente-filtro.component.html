@@ -1,0 +1,16 @@
+<div class="form-group">
+  <label for="idCliente">Cliente</label>
+  <ng-select class="filtro" id="idCliente" [items]="clientes$ | async"
+             bindLabel="nombreFiscal"
+             bindValue="id_Cliente"
+             [loading]="loading"
+             [typeahead]="input$"
+             (change)="select($event)">
+    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+        <span class="nroCliente">Nº: {{ item.nroCliente }}</span>
+        &nbsp;-&nbsp;
+        <span class="nombreFiscal">{{ item.nombreFiscal }}</span>
+        <span class="nombreFantasia" *ngIf="item.nombreFantasia">&nbsp;"{{ item.nombreFantasia }}"</span>
+    </ng-template>
+  </ng-select>
+</div>
