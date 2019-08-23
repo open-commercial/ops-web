@@ -6,6 +6,7 @@ import { EstadoPedido } from '../../models/estado.pedido';
 import { finalize } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-pedidos',
@@ -32,11 +33,17 @@ export class PedidosComponent implements OnInit {
   size = 0;
 
   filterForm: FormGroup;
+  applyFilters = [];
 
-  static getTimeStamp(dateObj: any) {
+  static getTimeStamp(dateObj: NgbDate) {
     if (!dateObj) { return ''; }
     const dateStr = [dateObj.year, dateObj.month, dateObj.day].join('-');
     return Date.parse(dateStr);
+  }
+
+  static getFormattedDate(dateObj: NgbDate) {
+    if (!dateObj) { return ''; }
+    return [dateObj.day, dateObj.month, dateObj.year ].join('/');
   }
 
   constructor(private pedidosService: PedidosService,
@@ -59,6 +66,7 @@ export class PedidosComponent implements OnInit {
       this.page = 0;
       this.pedidos = [];
     }
+    this.getApplyFilters();
     this.pedidosService.buscar(terminos, this.page)
       .pipe(
         finalize(() => this.pedidosLoading = false)
@@ -73,10 +81,10 @@ export class PedidosComponent implements OnInit {
 
   createFilterForm() {
     this.filterForm = this.fb.group({
-      idCliente: '',
-      idUsuario: '',
-      idProducto: '',
-      idViajante: '',
+      cliente: '',
+      usuario: '',
+      producto: '',
+      viajante: '',
       rangoFecha: null,
       estadoPedido: '',
       nroPedido: '',
@@ -84,23 +92,80 @@ export class PedidosComponent implements OnInit {
   }
 
   filter() {
-    // if (this.filterForm.valid) {
       this.getPedidos(true);
-    // }
+  }
+
+  reset() {
+    this.filterForm.get('cliente').patchValue('');
+    this.filterForm.reset({
+      cliente: '',
+      usuario: '',
+      producto: '',
+      viajante: '',
+      rangoFecha: null,
+      estadoPedido: '',
+      nroPedido: '',
+    });
+    this.filter();
   }
 
   getFormValues() {
     const values = this.filterForm.value;
     return {
-      idCliente: values.idCliente,
-      idUsuario: values.idUsuario,
-      idProducto: values.idProducto,
-      idViajante: values.idViajante,
+      idCliente: values.cliente ? values.cliente.id_Cliente : '',
+      idUsuario: values.usuario ? values.usuario.id_Usuario : '',
+      idProducto: values.producto ? values.producto.idProducto : '',
+      idViajante: values.viajante ? values.viajante.id_Usuario : '',
       desde: values.rangoFecha && values.rangoFecha.desde ? PedidosComponent.getTimeStamp(values.rangoFecha.desde) : '',
       hasta: values.rangoFecha && values.rangoFecha.hasta ? PedidosComponent.getTimeStamp(values.rangoFecha.hasta) : '',
       estadoPedido: values.estadoPedido,
       nroPedido: values.nroPedido,
     };
+  }
+
+  getApplyFilters() {
+    const values = this.filterForm.value;
+    this.applyFilters = [];
+
+    if (values.cliente && values.cliente.id_Cliente) {
+      let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
+      if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
+      this.applyFilters.push({ label: 'Cliente', value: val });
+    }
+
+    if (values.usuario) {
+      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
+      this.applyFilters.push({ label: 'Usuario', value: val });
+    }
+
+    if (values.producto) {
+      this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
+    }
+
+    if (values.viajante) {
+      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
+      this.applyFilters.push({ label: 'Viajante', value: values.usuario.username });
+    }
+
+    if (values.rangoFecha && values.rangoFecha.desde) {
+      this.applyFilters.push({
+        label: 'Fecha (desde)', value: PedidosComponent.getFormattedDate(values.rangoFecha.desde)
+      });
+    }
+
+    if (values.rangoFecha && values.rangoFecha.hasta) {
+      this.applyFilters.push({
+        label: 'Fecha (hasta)', value: PedidosComponent.getFormattedDate(values.rangoFecha.hasta)
+      });
+    }
+
+    if (values.estadoPedido) {
+      this.applyFilters.push({ label: 'Estado', value: values.estadoPedido });
+    }
+
+    if (values.nroPedido) {
+      this.applyFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
+    }
   }
 
   loadMore() {

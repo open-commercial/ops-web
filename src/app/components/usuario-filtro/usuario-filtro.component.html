@@ -2,15 +2,23 @@
   <label for="idCliente">{{ label }}</label>
   <ng-select class="filtro" id="idCliente" [items]="usuario$ | async"
              bindLabel="username"
-             bindValue="id_Usuario"
              [loading]="loading"
              [typeahead]="input$"
-             (change)="select($event)">
-    <!--<ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-      <span class="nroCliente">Nº: {{ item }}</span>
-      &nbsp;-&nbsp;
-      <span class="nombreFiscal">{{ item.nombreFiscal }}</span>
-      <span class="nombreFantasia" *ngIf="item.nombreFantasia">&nbsp;"{{ item.nombreFantasia }}"</span>
-    </ng-template>-->
+             (change)="select($event)"
+             typeToSearchText="Escriba para buscar" [(ngModel)]="value">
+    <ng-template ng-label-tmp let-item="item">
+      <div *ngIf="item">
+        <span class="username">{{ item.username }}</span>
+        &nbsp;-&nbsp;
+        <span class="nomape">{{ item.nombre }} {{ item.apellido }}</span>
+      </div>
+    </ng-template>
+
+    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+      <div class="card item-filtro">
+        <div class="card-header"><fa-icon [icon]="['fas', 'user']"></fa-icon>&nbsp;&nbsp;{{ item.username }}</div>
+        <div class="card-body">{{ item.nombre }} {{ item.apellido }}</div>
+      </div>
+    </ng-template>
   </ng-select>
 </div>

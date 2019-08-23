@@ -36,7 +36,7 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   select(obj: any) {
-    this.value = obj ? obj.idProducto : '';
+    this.value = obj;
     this.onTouch();
     this.onChange(this.value);
   }
@@ -59,7 +59,7 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
 
   loadProductos() {
     this.input$.pipe(
-      debounceTime(200),
+      debounceTime(700),
       distinctUntilChanged(),
       tap(() => this.loading = true),
       switchMap(term => this.productos$ = this.productosService.getProductos(term).pipe(

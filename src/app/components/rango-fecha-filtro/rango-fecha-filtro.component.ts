@@ -1,6 +1,6 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-rango-fecha-filtro',
@@ -15,15 +15,20 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
   ]
 })
 export class RangoFechaFiltroComponent implements OnInit, ControlValueAccessor {
-  hoveredDate: NgbDate;
+  private pLabel = 'Fecha';
 
   fromDate: NgbDate;
   toDate: NgbDate;
 
   value = { desde: null, hasta: null };
   isDisabled: boolean;
+
   onChange = (_: any) => { };
   onTouch = () => { };
+
+  @Input()
+  set label(label: string) { this.pLabel = label; }
+  get label() { return this.pLabel; }
 
   constructor() {}
 
@@ -43,52 +48,31 @@ export class RangoFechaFiltroComponent implements OnInit, ControlValueAccessor {
 
   writeValue(obj: any): void {
     this.value = obj;
+    if (!obj) {
+      this.onFromDateSelection(null);
+      this.onToDateSelection(null);
+    }
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
-
-    if (!this.value) { this.value = { desde: null, hasta: null}; }
-
-    if (this.fromDate && this.toDate) {
-      this.value.desde = this.fromDate;
-      this.value.hasta = this.toDate;
-    } else {
-      this.value.desde = null;
-      this.value.hasta = null;
-    }
-
+  onFromDateSelection(date) {
+    this.fromDate = date;
+    this.value = this.fromDate || this.toDate ? { desde: this.fromDate, hasta: this.toDate } : null;
     this.onTouch();
     this.onChange(this.value);
   }
 
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  onToDateSelection(date) {
+    this.toDate = date;
+    this.value = this.fromDate || this.toDate ? { desde: this.fromDate, hasta: this.toDate } : null;
+    this.onTouch();
+    this.onChange(this.value);
   }
 
-  isInside(date: NgbDate) {
-    return date.after(this.fromDate) && date.before(this.toDate);
+  clearFromDate() {
+    this.onFromDateSelection(null);
   }
 
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || date.equals(this.toDate) || this.isInside(date) || this.isHovered(date);
-  }
-
-  getDateStr(date: NgbDate|null) {
-    if (!date) { return null; }
-    return [date.day, date.month, date.year].join('/');
-  }
-
-  clearDates() {
-    this.fromDate = null;
-    this.toDate = null;
-    this.onChange(null);
+  clearToDate() {
+    this.onToDateSelection(null);
   }
 }

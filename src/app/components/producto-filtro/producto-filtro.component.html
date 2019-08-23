@@ -2,14 +2,21 @@
   <label for="idCliente">Producto</label>
   <ng-select class="filtro" id="idCliente" [items]="productos$ | async"
              bindLabel="descripcion"
-             bindValue="idProducto"
              [loading]="loading"
              [typeahead]="input$"
-             (change)="select($event)">
+             (change)="select($event)"
+             typeToSearchText="Escriba para buscar"
+             [(ngModel)]="value">
+    <ng-template ng-label-tmp let-item="item">
+      <div *ngIf="item">
+        <span class="codigo">{{ item.codigo }} {{ item.descripcion }}</span>&nbsp;-&nbsp;
+      </div>
+    </ng-template>
     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-      <span class="codigo">Nº: {{ item.codigo }}</span>
-      &nbsp;-&nbsp;
-      <span class="description">{{ item.descripcion }}</span>
+      <div class="card item-filtro">
+        <div class="card-header"><fa-icon [icon]="['fas', 'box-open']"></fa-icon>&nbsp;&nbsp;{{ item.codigo }}</div>
+        <div class="card-body">{{ item.descripcion }}</div>
+      </div>
     </ng-template>
   </ng-select>
 </div>

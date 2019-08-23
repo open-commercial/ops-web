@@ -53,7 +53,7 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   select(obj: any) {
-    this.value = obj ? obj.id_Usuario : '';
+    this.value = obj;
     this.onTouch();
     this.onChange(this.value);
   }
@@ -76,7 +76,7 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
 
   loadUsuarios() {
     this.input$.pipe(
-      debounceTime(200),
+      debounceTime(700),
       distinctUntilChanged(),
       tap(() => this.loading = true),
       switchMap(term => this.usuario$ = this.usuariosService.getUsuarios(term, 0, this.pRoles).pipe(

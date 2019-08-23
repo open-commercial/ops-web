@@ -21,6 +21,7 @@ import { Pagination } from '../../models/pagination';
 export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
 
   clientes$: Observable<Cliente[]>;
+  // clientes: Cliente[];
   loading = false;
   input$  = new Subject<string>();
 
@@ -36,7 +37,7 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   select(obj: any) {
-    this.value = obj ? obj.id_Cliente : '';
+    this.value = obj;
     this.onTouch();
     this.onChange(this.value);
   }
@@ -59,7 +60,7 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
 
   loadClientes() {
     this.input$.pipe(
-      debounceTime(200),
+      debounceTime(700),
       distinctUntilChanged(),
       tap(() => this.loading = true),
       switchMap(term => this.clientes$ = this.clientesService.getClientes(term).pipe(
