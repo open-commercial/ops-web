@@ -1,7 +1,8 @@
 $primary-color: #fbc02d;
+$secondary-color: whitesmoke;
 
 $theme-colors: (
-  "primary": $primary-color,
+  "primary": $primary-color
 );
 
 @import "~bootstrap/scss/bootstrap";
@@ -33,4 +34,8 @@ body {
 
 .spinner-primary {
   color: $primary-color;
+}
+
+.card-body {
+  white-space: normal;
 }

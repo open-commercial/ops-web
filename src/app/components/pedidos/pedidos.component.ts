@@ -93,6 +93,7 @@ export class PedidosComponent implements OnInit {
 
   filter() {
       this.getPedidos(true);
+      this.isFiltersCollapsed = true;
   }
 
   reset() {
@@ -106,7 +107,7 @@ export class PedidosComponent implements OnInit {
       estadoPedido: '',
       nroPedido: '',
     });
-    this.filter();
+    this.getPedidos(true);
   }
 
   getFormValues() {

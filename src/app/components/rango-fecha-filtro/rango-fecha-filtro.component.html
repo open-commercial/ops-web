@@ -5,11 +5,11 @@
            [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
            [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
     <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" (click)="clearFromDate()">
+        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+      </button>
       <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
         <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-      </button>
-      <button class="btn btn-outline-secondary" type="button" (click)="clearFromDate()">
-        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
       </button>
     </div>
   </div>
@@ -21,11 +21,11 @@
            [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
            [showWeekNumbers]="false" ngbDatepicker #dh="ngbDatepicker">
     <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" (click)="clearToDate()">
+        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+      </button>
       <button class="btn btn-outline-secondary" (click)="dh.open()" type="button">
         <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-      </button>
-      <button class="btn btn-outline-secondary" type="button" (click)="clearToDate()">
-        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
       </button>
     </div>
   </div>

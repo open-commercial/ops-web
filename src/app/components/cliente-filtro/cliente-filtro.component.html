@@ -6,20 +6,25 @@
              [typeahead]="input$"
              (change)="select($event)"
              typeToSearchText="Escriba para buscar"
+             loadingText="Cargando..."
+             notFoundText="Sin resultados"
              [(ngModel)]="value"
   >
     <ng-template ng-label-tmp let-item="item">
       <div *ngIf="item">
-        <span class="nroCliente">Nº: {{ item.nroCliente }}</span>&nbsp;-&nbsp;
-        <span class="nombreFiscal">{{ item.nombreFiscal }}</span>
-        <span class="nombreFantasia" *ngIf="item.nombreFantasia">&nbsp;"{{ item.nombreFantasia }}"</span>
+        <span class="nroCliente"><fa-icon [icon]="['fas', 'portrait']"></fa-icon> {{ item.nroCliente }}</span>&nbsp;-&nbsp;
+        <span class="nombreFiscal">{{ item.nombreFiscal }}</span>&nbsp;
+        <span class="nombreFantasia" *ngIf="item.nombreFantasia">{{ item.nombreFantasia }}</span>
       </div>
     </ng-template>
 
     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
       <div class="card item-filtro">
         <div class="card-header"><fa-icon [icon]="['fas', 'portrait']"></fa-icon>&nbsp;&nbsp;{{ item.nroCliente }}</div>
-        <div class="card-body">{{ item.nombreFiscal }} {{ item.nombreFantasia ? '"' + item.nombreFantasia + '"' : ''}}</div>
+        <div class="card-body">
+          <strong>{{ item.nombreFiscal }}</strong>
+          <br><span *ngIf="item.nombreFantasia">{{ item.nombreFantasia }}</span>
+        </div>
       </div>
     </ng-template>
   </ng-select>
