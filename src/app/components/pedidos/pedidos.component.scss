@@ -1,0 +1,16 @@
+.pedido {
+  .dato {
+    display: inline-block;
+    margin-right: 0.5rem;
+    .column-name {
+      font-weight: bold;
+    }
+    .column-data {
+      font-style: italic;
+      &.total {
+        color: darkgreen;
+        font-weight: bold;
+      }
+    }
+  }
+}

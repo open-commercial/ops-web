@@ -1,1 +1,41 @@
+$primary-color: #fbc02d;
+$secondary-color: whitesmoke;
+
+$theme-colors: (
+  "primary": $primary-color
+);
+
+@import "~bootstrap/scss/bootstrap";
+@import "~@ng-select/ng-select/scss/default.theme";
+
 /* You can add global styles to this file, and also import other style files */
+html {
+  height: 100%;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+  height: 38px;
+}
+
+.card.item-filtro {
+  &:hover, &:focus {
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(218, 169, 44, 0.5);
+    -moz-box-shadow: 0 0 0 0.2rem rgba(218, 169, 44, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(218, 169, 44, 0.5);
+  }
+}
+
+.spinner-primary {
+  color: $primary-color;
+}
+
+.card-body {
+  white-space: normal;
+}
