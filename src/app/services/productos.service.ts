@@ -9,7 +9,7 @@ import { HelperService } from './helper.service';
 @Injectable()
 export class ProductosService {
 
-  url = environment.apiUrl + '/api/v1/public/productos/';
+  url = environment.apiUrl + '/api/v1/productos/';
   urlBusqueda = this.url + 'busqueda/criteria?idEmpresa=' + EmpresaService.getIdEmpresa();
 
   constructor(private http: HttpClient) {}

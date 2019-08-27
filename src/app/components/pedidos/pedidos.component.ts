@@ -7,6 +7,7 @@ import { finalize } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-pedidos',
@@ -171,5 +172,15 @@ export class PedidosComponent implements OnInit {
 
   loadMore() {
     this.getPedidos();
+  }
+
+
+  downloadPedidoPdf(pedido: Pedido) {
+    this.pedidosService.getPedidoPdf(pedido).subscribe(
+      (res) => {
+        const file = new Blob([res], {type: 'application/pdf'});
+        saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
+      }
+    );
   }
 }

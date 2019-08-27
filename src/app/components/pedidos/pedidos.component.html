@@ -49,6 +49,7 @@
           <li *ngFor="let f of applyFilters">{{ f.label }}: {{ f.value }}</li>
         </ul>
       </div>
+      <strong><em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}.</em></strong>
       <div class="pedidos my-2">
         <div *ngFor="let p of pedidos" class="pedido d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
           <div class="d-flex flex-column flex-fill">
@@ -79,9 +80,9 @@
               </div>
             </div>
           </div>
-          <!--<div class="text-right flex-fill flex-shrink-0 flex-grow-0">
+          <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
             <ul class="list-inline mb-0 text-center d-inline-block">
-              <li class="list-inline-item">
+              <!--<li class="list-inline-item">
                 <a routerLink="." class="btn btn-primary" ngbPopover="Modificar" triggers="mouseenter:mouseleave">
                   <fa-icon [icon]="['fas', 'clipboard']"></fa-icon>
                 </a>
@@ -102,14 +103,14 @@
                 <a routerLink="." class="btn btn-primary" ngbPopover="Facturar" triggers="mouseenter:mouseleave">
                   <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon>
                 </a>
-              </li>
+              </li>-->
               <li class="list-inline-item">
-                <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave">
+                <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadPedidoPdf(p)">
                   <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
                 </a>
               </li>
             </ul>
-          </div>-->
+          </div>
         </div>
         <div class="text-center mt-2">
           <fa-icon class="spinner-primary" *ngIf="pedidosLoading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
