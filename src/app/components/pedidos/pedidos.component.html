@@ -113,8 +113,8 @@
           </div>
         </div>
         <div class="text-center mt-2">
-          <fa-icon class="spinner-primary" *ngIf="pedidosLoading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-          <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!pedidosLoading && (page + 1) < totalPages">Mas resultados</button>
+          <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+          <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
         </div>
       </div>
     </div>

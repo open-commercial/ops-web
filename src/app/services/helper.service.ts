@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,22 @@ export class HelperService {
       }
     }
     return qsArray.join('&');
+  }
+
+
+  static getTimeStamp(dateObj: NgbDate) {
+    if (!dateObj) { return ''; }
+    const dateStr = [dateObj.year, dateObj.month, dateObj.day].join('-');
+    return Date.parse(dateStr);
+  }
+
+  static getFormattedDate(dateObj: NgbDate) {
+    if (!dateObj) { return ''; }
+    return [dateObj.day, dateObj.month, dateObj.year ].join('/');
+  }
+
+  static formatNumFactura(nSerie: number, nFac: number) {
+    return ('000' + nSerie).slice(-4) + '-' + ('0000000' + nFac).slice(-8);
   }
 
   constructor() {}
