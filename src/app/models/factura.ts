@@ -1,3 +1,5 @@
+import { CategoriaIVA } from './categoria-iva';
+
 export enum TipoDeComprobante {
   FACTURA_A,
   FACTURA_B,
@@ -76,8 +78,11 @@ export interface Factura {
 export interface FacturaVenta extends Factura {
   idCliente: number;
   nombreFiscalCliente: string;
-  idViajante: number;
-  nombreViajante: string;
+  nroDeCliente: string;
+  categoriaIVACliente: CategoriaIVA;
+  idViajanteCliente: number;
+  nombreViajanteCliente: string;
+  ubicacionCliente: string;
 }
 
 export interface BusquedaFacturaVentaCriteria {
