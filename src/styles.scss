@@ -1,5 +1,6 @@
-$primary-color: #fbc02d;
-$secondary-color: whitesmoke;
+$primary-color: #fbc02d !default;
+$secondary-color: whitesmoke !default;
+$badge-font-size: 85% !default;
 
 $theme-colors: (
   "primary": $primary-color
@@ -38,4 +39,34 @@ body {
 
 .card-body {
   white-space: normal;
+}
+
+.pedido, .factura {
+  .dato {
+    display: inline-block;
+    margin-right: 0.5rem;
+    .column-name {
+      font-weight: bold;
+      display: inline-block;
+    }
+    .column-data {
+      display: inline-block;
+      font-style: italic;
+      &.total {
+        background: #eaffe6;
+        color: #084c08;
+        font-weight: bold;
+        padding: 0.15rem 0.5rem 0 0.4rem;
+        margin-bottom: 0.2rem;
+        -webkit-border-radius: 0.25rem;
+        -moz-border-radius: 0.25rem;
+        border-radius: 0.25rem;
+        border: 0.05rem solid #084c08;
+        border-left: 0.3rem solid #084c08;
+      }
+    }
+  }
+  /*&:hover {
+    background: #FDFFE6;
+  }*/
 }

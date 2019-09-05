@@ -1,16 +1,15 @@
 <div class="app-pedidos">
-  <div class="card">
+  <div class="card mt-3">
     <h5 class="card-header"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h5>
     <div class="card-body p-3">
-
       <div class="text-right mb-0">
         <button type="button" class="btn btn-primary" (click)="isFiltersCollapsed = !isFiltersCollapsed"
                 [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="collapseExample">
           <fa-icon [icon]="['fas', 'filter']"></fa-icon>
         </button>
       </div>
-      <div id="collapseExample" [ngbCollapse]="isFiltersCollapsed" class="mb-2">
-        <form [formGroup]="filterForm" (ngSubmit)="filter()" class="login-form card card-body bg-light">
+      <div id="collapseExample" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+        <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
           <div class="row">
             <div class="col-md-6">
               <app-cliente-filtro formControlName="cliente"></app-cliente-filtro>
@@ -67,15 +66,15 @@
             </span>
             </div>
             <div class="px-2 flex-fill">
-              <div class="d-flex flex-row flex-wrap">
+              <div class="d-flex flex-row flex-wrap align-items-center">
                 <div class="">
                   <span class="dato"><span class="column-name">Cliente:&nbsp;</span><span class="column-data">{{ p.nombreFiscalCliente }}</span></span>
                   <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ p.nombreUsuario }}</span></span>
                   <span class="dato" *ngIf="p.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ p.nombreViajante }}</span></span>
                 </div>
                 <div class="">
-                  <span class="dato"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ p.totalEstimado | currency:'ARS' }}</span></span>
-                  <span class="dato"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ p.totalActual | currency:'ARS' }}</span></span>
+                  <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ p.totalEstimado | currency:'ARS' }}</span></span>
+                  <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ p.totalActual | currency:'ARS' }}</span></span>
                 </div>
               </div>
             </div>

@@ -1,22 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FacturaVenta, TipoDeComprobante } from '../../models/factura';
-import { Rol } from '../../models/rol';
+import { TipoDeComprobante } from '../../models/factura';
 import { HelperService } from '../../services/helper.service';
-import { Pagination } from '../../models/pagination';
-import { finalize } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
+import { finalize } from "rxjs/operators";
+import { Pagination } from "../../models/pagination";
+import { FacturasCompraService } from "../../services/facturas-compra.service";
 
 @Component({
-  selector: 'app-facturas-venta',
-  templateUrl: './facturas-venta.component.html',
-  styleUrls: ['./facturas-venta.component.scss']
+  selector: 'app-facturas-compra',
+  templateUrl: './facturas-compra.component.html',
+  styleUrls: ['./facturas-compra.component.scss']
 })
-export class FacturasVentaComponent implements OnInit {
+export class FacturasCompraComponent implements OnInit {
   facturas = [];
   loading = false;
-  rol = Rol;
+
   tiposFactura = [
     { val: TipoDeComprobante[TipoDeComprobante.FACTURA_A], text: 'Factura A' },
     { val: TipoDeComprobante[TipoDeComprobante.FACTURA_B], text: 'Factura B' },
@@ -48,7 +46,7 @@ export class FacturasVentaComponent implements OnInit {
 
   helper = HelperService;
 
-  constructor(private facturasVentaService: FacturasVentaService,
+  constructor(private facturasCompraService: FacturasCompraService,
               private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -58,13 +56,10 @@ export class FacturasVentaComponent implements OnInit {
 
   createFilterForm() {
     this.filterForm = this.fb.group({
-      cliente: '',
-      usuario: '',
+      proveedor: '',
       producto: '',
-      viajante: '',
       rangoFecha: null,
       tipoFactura: '',
-      nroPedido: '',
       numSerie: '',
       numFactura: '',
       ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
@@ -81,7 +76,7 @@ export class FacturasVentaComponent implements OnInit {
       this.facturas = [];
     }
     this.getApplyFilters();
-    this.facturasVentaService.buscar(terminos, this.page)
+    this.facturasCompraService.buscar(terminos, this.page)
       .pipe(
         finalize(() => this.loading = false)
       )
@@ -100,13 +95,10 @@ export class FacturasVentaComponent implements OnInit {
 
   reset() {
     this.filterForm.reset({
-      cliente: '',
-      usuario: '',
+      proveedor: '',
       producto: '',
-      viajante: '',
       rangoFecha: null,
       tipoFactura: '',
-      nroPedido: '',
       numSerie: '',
       numFactura: '',
       ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
@@ -118,14 +110,11 @@ export class FacturasVentaComponent implements OnInit {
   getFormValues() {
     const values = this.filterForm.value;
     return {
-      idCliente: values.cliente ? values.cliente.id_Cliente : '',
-      idUsuario: values.usuario ? values.usuario.id_Usuario : '',
+      idProveedor: values.proveedor ? values.proveedor.id_Proveedor : '',
       idProducto: values.producto ? values.producto.idProducto : '',
-      idViajante: values.viajante ? values.viajante.id_Usuario : '',
-      desde: values.rangoFecha && values.rangoFecha.desde ? this.helper.getTimeStamp(values.rangoFecha.desde) : '',
-      hasta: values.rangoFecha && values.rangoFecha.hasta ? this.helper.getTimeStamp(values.rangoFecha.hasta) : '',
+      fechaDesde: values.rangoFecha && values.rangoFecha.desde ? this.helper.getTimeStamp(values.rangoFecha.desde) : '',
+      fechaHasta: values.rangoFecha && values.rangoFecha.hasta ? this.helper.getTimeStamp(values.rangoFecha.hasta) : '',
       tipoComprobante: values.tipoFactura ? values.tipoFactura : '',
-      nroPedido: values.nroPedido,
       numSerie: values.numSerie ? values.numSerie : '',
       numFactura: values.numFactura ? values.numFactura : '',
       ordenarPor: values.ordenarPor ? values.ordenarPor : null,
@@ -137,24 +126,15 @@ export class FacturasVentaComponent implements OnInit {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.cliente && values.cliente.id_Cliente) {
-      let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
-      if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
-      this.applyFilters.push({ label: 'Cliente', value: val });
-    }
+    // console.log(values); return;
 
-    if (values.usuario) {
-      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
-      this.applyFilters.push({ label: 'Usuario', value: val });
+    if (values.proveedor && values.proveedor.id_Proveedor) {
+      const val = values.proveedor.nroProveedor + ' - ' + values.proveedor.razonSocial;
+      this.applyFilters.push({ label: 'Cliente', value: val });
     }
 
     if (values.producto) {
       this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
-    }
-
-    if (values.viajante) {
-      const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;
-      this.applyFilters.push({ label: 'Viajante', value: val });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
@@ -173,10 +153,6 @@ export class FacturasVentaComponent implements OnInit {
       this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura });
     }
 
-    if (values.nroPedido) {
-      this.applyFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
-    }
-
     if (values.numSerie) {
       this.applyFilters.push({ label: 'Nº Serie', value: values.numSerie });
     }
@@ -188,14 +164,5 @@ export class FacturasVentaComponent implements OnInit {
 
   loadMore() {
     this.getFacturas();
-  }
-
-  downloadFacturaPdf(factura: FacturaVenta) {
-    this.facturasVentaService.getFacturaPdf(factura).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `factura-venta.pdf`);
-      }
-    );
   }
 }

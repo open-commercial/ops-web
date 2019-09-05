@@ -28,6 +28,8 @@ import { ProductoFiltroComponent } from './components/producto-filtro/producto-f
 import { ProductosService } from './services/productos.service';
 import { RangoFechaFiltroComponent } from './components/rango-fecha-filtro/rango-fecha-filtro.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
+import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
+import { ProveedorFiltroComponent } from './components/proveedor-filtro/proveedor-filtro.component';
 
 library.add(fas);
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -44,6 +46,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ProductoFiltroComponent,
     RangoFechaFiltroComponent,
     FacturasVentaComponent,
+    FacturasCompraComponent,
+    ProveedorFiltroComponent,
   ],
   imports: [
     BrowserModule,

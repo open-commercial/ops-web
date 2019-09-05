@@ -70,7 +70,7 @@ export interface Factura {
   nombreEmpresa: string;
   eliminada: boolean;
   CAE: number;
-  vencimientoCAE: Date;
+  vencimientoCae: Date;
   numSerieAfip: number;
   numFacturaAfip: number;
 }

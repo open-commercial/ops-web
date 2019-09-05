@@ -134,7 +134,7 @@ export class PedidosComponent implements OnInit {
     }
 
     if (values.viajante) {
-      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
+      const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;
       this.applyFilters.push({ label: 'Viajante', value: val });
     }
 

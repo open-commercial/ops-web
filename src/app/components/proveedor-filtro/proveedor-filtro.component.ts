@@ -1,26 +1,26 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Cliente } from '../../models/cliente';
 import { Observable, of, Subject } from 'rxjs';
-import { ClientesService } from '../../services/clientes.service';
+import { ProveedoresService } from '../../services/proveedores.service';
+import { Proveedor } from '../../models/proveedor';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 
 @Component({
-  selector: 'app-cliente-filtro',
-  templateUrl: './cliente-filtro.component.html',
-  styleUrls: ['./cliente-filtro.component.scss'],
+  selector: 'app-proveedor-filtro',
+  templateUrl: './proveedor-filtro.component.html',
+  styleUrls: ['./proveedor-filtro.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ClienteFiltroComponent),
+      useExisting: forwardRef(() => ProveedorFiltroComponent),
       multi: true
     }
   ]
 })
-export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
+export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor {
 
-  clientes$: Observable<Cliente[]>;
+  proveedores$: Observable<Proveedor[]>;
   loading = false;
   input$  = new Subject<string>();
 
@@ -29,10 +29,10 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
   onChange = (_: any) => { };
   onTouch = () => { };
 
-  constructor(public clientesService: ClientesService) { }
+  constructor(public proveedoresService: ProveedoresService) { }
 
   ngOnInit() {
-    this.loadClientes();
+    this.loadProveedores();
   }
 
   select(obj: any) {
@@ -57,12 +57,12 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
     this.value = obj;
   }
 
-  loadClientes() {
+  loadProveedores() {
     this.input$.pipe(
       debounceTime(700),
       distinctUntilChanged(),
       tap(() => this.loading = true),
-      switchMap(term => this.clientes$ = this.clientesService.getClientes(term).pipe(
+      switchMap(term => this.proveedores$ = this.proveedoresService.getProveedores(term).pipe(
         map((v: Pagination) => v.content),
         catchError(() => of([])), // empty list on error
         tap(() => this.loading = false)
