@@ -1,10 +1,10 @@
-<div class="app-pedidos">
+<div class="app-facturas-compra">
   <div *ngIf="clearLoading" class="text-center my-3">
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
   <div *ngIf="!clearLoading">
     <div class="d-flex flex-row align-items-center my-3">
-      <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
+      <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Compra</h1>
       <div class="text-right m-0">
         <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
                 [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="collapseExample"
@@ -14,26 +14,51 @@
       </div>
     </div>
     <div id="collapseExample" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-      <form [formGroup]="filterForm" (ngSubmit)="filter()" class="pb-2">
+      <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
         <div class="row">
           <div class="col-md-6">
-            <app-cliente-filtro formControlName="cliente"></app-cliente-filtro>
-            <app-usuario-filtro formControlName="usuario"></app-usuario-filtro>
+            <app-proveedor-filtro formControlName="proveedor"></app-proveedor-filtro>
             <app-producto-filtro formControlName="producto"></app-producto-filtro>
-            <app-usuario-filtro formControlName="viajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
           </div>
           <div class="col-md-6">
             <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
             <div class="form-group">
-              <label for="estado">Estado</label>
-              <select class="form-control" id="estado" formControlName="estadoPedido">
+              <label for="tipo_factura">Tipo de Factura</label>
+              <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
                 <option></option>
-                <option *ngFor="let e of estados" [value]="e.text">{{ e.text }}</option>
+                <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="nro-pedido">Nº Pedido</label>
-              <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
+              <label>Nº Factura</label>
+              <div class="row">
+                <div class="col-4">
+                  <label class="sr-only" for="num-serie">Número de serie</label>
+                  <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
+                </div>
+                <div class="col-8">
+                  <label class="sr-only" for="num-factura">Número de Factura</label>
+                  <input type="text" class="form-control" id="num-factura" formControlName="numFactura">
+                </div>
+              </div>
+            </div>
+            <div class="card card-body bg-light mb-3">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="ordenar-por">Ordenar Por</span>
+                </div>
+                <select class="custom-select" aria-label="Ordernar por" aria-describedby="ordenar-por" formControlName="ordenarPor">
+                  <option *ngFor="let opo of ordenarPorOptions" value="{{ opo.val }}">{{ opo.text }}</option>
+                </select>
+              </div>
+              <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="sentido">Sentido</span>
+                </div>
+                <select class="custom-select" aria-label="Ordernar por" aria-describedby="sentido" formControlName="sentido">
+                  <option *ngFor="let so of sentidoOptions" value="{{ so.val }}">{{ so.text }}</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -47,6 +72,7 @@
         </ul>
       </form>
     </div>
+    <!--{{ this.filterForm.value | json }}-->
     <div class="alert alert-globo">
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
@@ -56,32 +82,35 @@
       </div>
       <strong><em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}</em></strong>
     </div>
-    <div class="pedidos my-2">
-      <div *ngFor="let p of pedidos" class="pedido d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
+    <div class="facturas my-2">
+      <div *ngFor="let f of facturas" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
         <div class="d-flex flex-column flex-fill">
           <div class="d-flex flex-row flex-wrap">
-          <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-            <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ p.fecha | date:'dd/MM/yyyy hh:mm' }}
-          </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ f.fecha | date:'dd/MM/yyyy hh:mm' }}
+        </span>
+            <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1">
+          {{ f.tipoComprobante.replace('_', ' ') }}
+        </span>
             <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-            <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> {{ p.nroPedido }}
-          </span>
-            <span class="badge ml-2 mb-2 px-2 py-1" [class.badge-success]="getEstadoValue(p.estado) === estado.ABIERTO"
-                  [class.badge-danger]="getEstadoValue(p.estado) === estado.CERRADO"
-                  [class.badge-warning]="getEstadoValue(p.estado) === estado.ACTIVO">
-            {{ p.estado }}
-          </span>
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(f.numSerie, f.numFactura ) }} <!--{{ f.numSerie }}-{{ f.numFactura }}-->
+        </span>
+            <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="f.numSerieAfip">
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) }} <!--{{ f.numSerieAfip }}-{{ f.numFacturaAfip }}-->
+        </span>
+            <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="f.cae">
+          CAE: {{ f.cae }} (vto: {{ f.vencimientoCAE | date:'dd/MM/yyyy hh:mm' }})
+        </span>
           </div>
           <div class="px-2 flex-fill">
             <div class="d-flex flex-row flex-wrap align-items-center">
               <div class="">
-                <span class="dato"><span class="column-name">Cliente:&nbsp;</span><span class="column-data">{{ p.nombreFiscalCliente }}</span></span>
-                <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ p.nombreUsuario }}</span></span>
-                <span class="dato" *ngIf="p.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ p.nombreViajante }}</span></span>
+                <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ f.razonSocialProveedor }}</span></span>
+                <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ f.nombreUsuario }}</span></span>
+                <span class="dato" *ngIf="f.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ f.nombreViajante }}</span></span>
               </div>
-              <div class="">
-                <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ p.totalEstimado | currency:'ARS' }}</span></span>
-                <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ p.totalActual | currency:'ARS' }}</span></span>
+              <div class="flex-fill">
+                <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ f.total | currency:'ARS' }}</span></span>
               </div>
             </div>
           </div>
@@ -109,12 +138,12 @@
               <a routerLink="." class="btn btn-primary" ngbPopover="Facturar" triggers="mouseenter:mouseleave">
                 <fa-icon [icon]="['fas', 'clipboard-check']"></fa-icon>
               </a>
-            </li>-->
+            </li>
             <li class="list-inline-item">
-              <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadPedidoPdf(p)">
+              <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave">
                 <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
               </a>
-            </li>
+            </li>-->
           </ul>
         </div>
       </div>

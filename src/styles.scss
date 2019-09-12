@@ -1,5 +1,4 @@
-$primary-color: #fbc02d;
-$secondary-color: whitesmoke;
+@import "variables";
 
 $theme-colors: (
   "primary": $primary-color
@@ -17,6 +16,8 @@ body {
   padding: 0;
   margin: 0;
   height: 100%;
+  background: whitesmoke;
+  overflow-x: hidden;
 }
 
 .ng-select.ng-select-single .ng-select-container {
@@ -38,4 +39,60 @@ body {
 
 .card-body {
   white-space: normal;
+}
+
+.pedido, .factura {
+  .dato {
+    display: inline-block;
+    margin-right: 0.5rem;
+    .column-name {
+      font-weight: bold;
+      display: inline-block;
+    }
+    .column-data {
+      display: inline-block;
+      font-style: italic;
+      &.total {
+        background: #eaffe6;
+        color: #084c08;
+        font-weight: bold;
+        padding: 0.15rem 0.5rem 0 0.4rem;
+        margin-bottom: 0.2rem;
+        -webkit-border-radius: 0.25rem;
+        -moz-border-radius: 0.25rem;
+        border-radius: 0.25rem;
+        border: 0.05rem solid #084c08;
+        border-left: 0.3rem solid #084c08;
+      }
+    }
+  }
+}
+
+.badge-warning {
+  background: $yellow-globo;
+}
+
+.alert-globo {
+  color: $gray-900;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  font-weight: bold;
+}
+
+app-menu {
+  margin-left: -15rem;
+  transition: margin-left 250ms;
+  &.opened {
+    margin-left: 0;
+  }
+  @include media-breakpoint-up(md) {
+    margin-left: 0;
+  }
+}
+
+.main-content {
+  min-width: 100%;
+  @include media-breakpoint-up(md) {
+    min-width: unset;
+  }
 }

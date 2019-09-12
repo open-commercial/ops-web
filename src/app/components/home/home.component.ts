@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  menuOpened = false;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  toggleMenu() {
+    this.menuOpened = !this.menuOpened;
+  }
 }

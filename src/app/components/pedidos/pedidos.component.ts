@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { saveAs } from 'file-saver';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -16,7 +17,8 @@ import { saveAs } from 'file-saver';
 })
 export class PedidosComponent implements OnInit {
   pedidos: Pedido[] = [];
-  pedidosLoading = false;
+  clearLoading = false;
+  loading = false;
   estado = EstadoPedido;
   rol = Rol;
 
@@ -36,17 +38,6 @@ export class PedidosComponent implements OnInit {
   filterForm: FormGroup;
   applyFilters = [];
 
-  static getTimeStamp(dateObj: NgbDate) {
-    if (!dateObj) { return ''; }
-    const dateStr = [dateObj.year, dateObj.month, dateObj.day].join('-');
-    return Date.parse(dateStr);
-  }
-
-  static getFormattedDate(dateObj: NgbDate) {
-    if (!dateObj) { return ''; }
-    return [dateObj.day, dateObj.month, dateObj.year ].join('/');
-  }
-
   constructor(private pedidosService: PedidosService,
               private fb: FormBuilder) { }
 
@@ -61,16 +52,18 @@ export class PedidosComponent implements OnInit {
 
   getPedidos(clearResults: boolean = false) {
     const terminos = this.getFormValues();
-    this.pedidosLoading = true;
     this.page += 1;
     if (clearResults) {
+      this.clearLoading = true;
       this.page = 0;
       this.pedidos = [];
+    } else {
+      this.loading = true;
     }
     this.getApplyFilters();
     this.pedidosService.buscar(terminos, this.page)
       .pipe(
-        finalize(() => this.pedidosLoading = false)
+        finalize(() => { this.loading = false; this.clearLoading = false; })
       )
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.pedidos.push(e));
@@ -98,7 +91,6 @@ export class PedidosComponent implements OnInit {
   }
 
   reset() {
-    this.filterForm.get('cliente').patchValue('');
     this.filterForm.reset({
       cliente: '',
       usuario: '',
@@ -118,8 +110,8 @@ export class PedidosComponent implements OnInit {
       idUsuario: values.usuario ? values.usuario.id_Usuario : '',
       idProducto: values.producto ? values.producto.idProducto : '',
       idViajante: values.viajante ? values.viajante.id_Usuario : '',
-      desde: values.rangoFecha && values.rangoFecha.desde ? PedidosComponent.getTimeStamp(values.rangoFecha.desde) : '',
-      hasta: values.rangoFecha && values.rangoFecha.hasta ? PedidosComponent.getTimeStamp(values.rangoFecha.hasta) : '',
+      desde: values.rangoFecha && values.rangoFecha.desde ? HelperService.getTimeStamp(values.rangoFecha.desde) : '',
+      hasta: values.rangoFecha && values.rangoFecha.hasta ? HelperService.getTimeStamp(values.rangoFecha.hasta) : '',
       estadoPedido: values.estadoPedido,
       nroPedido: values.nroPedido,
     };
@@ -145,19 +137,19 @@ export class PedidosComponent implements OnInit {
     }
 
     if (values.viajante) {
-      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
-      this.applyFilters.push({ label: 'Viajante', value: values.usuario.username });
+      const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;
+      this.applyFilters.push({ label: 'Viajante', value: val });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.applyFilters.push({
-        label: 'Fecha (desde)', value: PedidosComponent.getFormattedDate(values.rangoFecha.desde)
+        label: 'Fecha (desde)', value: HelperService.getFormattedDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
       this.applyFilters.push({
-        label: 'Fecha (hasta)', value: PedidosComponent.getFormattedDate(values.rangoFecha.hasta)
+        label: 'Fecha (hasta)', value: HelperService.getFormattedDate(values.rangoFecha.hasta)
       });
     }
 
@@ -173,7 +165,6 @@ export class PedidosComponent implements OnInit {
   loadMore() {
     this.getPedidos();
   }
-
 
   downloadPedidoPdf(pedido: Pedido) {
     this.pedidosService.getPedidoPdf(pedido).subscribe(
