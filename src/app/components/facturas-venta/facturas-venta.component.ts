@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FacturaVenta, TipoDeComprobante } from '../../models/factura';
 import { Rol } from '../../models/rol';
@@ -7,6 +6,8 @@ import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
 import { finalize } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
+import { FacturasService } from '../../services/facturas.service';
+import { FacturasVentaService } from '../../services/facturas-venta.service';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -15,6 +16,7 @@ import { saveAs } from 'file-saver';
 })
 export class FacturasVentaComponent implements OnInit {
   facturas = [];
+  clearLoading = false;
   loading = false;
   rol = Rol;
   tiposFactura = [
@@ -48,7 +50,8 @@ export class FacturasVentaComponent implements OnInit {
 
   helper = HelperService;
 
-  constructor(private facturasVentaService: FacturasVentaService,
+  constructor(private facturasService: FacturasService,
+              private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -74,16 +77,18 @@ export class FacturasVentaComponent implements OnInit {
 
   getFacturas(clearResults: boolean = false) {
     const terminos = this.getFormValues();
-    this.loading = true;
     this.page += 1;
     if (clearResults) {
+      this.clearLoading = true;
       this.page = 0;
       this.facturas = [];
+    } else {
+      this.loading = true;
     }
     this.getApplyFilters();
     this.facturasVentaService.buscar(terminos, this.page)
       .pipe(
-        finalize(() => this.loading = false)
+        finalize(() => { this.loading = false; this.clearLoading = false; })
       )
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
@@ -170,7 +175,7 @@ export class FacturasVentaComponent implements OnInit {
     }
 
     if (values.tipoFactura) {
-      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura });
+      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
     }
 
     if (values.nroPedido) {
@@ -191,7 +196,7 @@ export class FacturasVentaComponent implements OnInit {
   }
 
   downloadFacturaPdf(factura: FacturaVenta) {
-    this.facturasVentaService.getFacturaPdf(factura).subscribe(
+    this.facturasService.getFacturaPdf(factura).subscribe(
       (res) => {
         const file = new Blob([res], {type: 'application/pdf'});
         saveAs(file, `factura-venta.pdf`);

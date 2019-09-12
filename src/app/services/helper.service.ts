@@ -16,7 +16,6 @@ export class HelperService {
     return qsArray.join('&');
   }
 
-
   static getTimeStamp(dateObj: NgbDate) {
     if (!dateObj) { return ''; }
     const dateStr = [dateObj.year, dateObj.month, dateObj.day].join('-');

@@ -17,6 +17,7 @@ import { HelperService } from '../../services/helper.service';
 })
 export class PedidosComponent implements OnInit {
   pedidos: Pedido[] = [];
+  clearLoading = false;
   loading = false;
   estado = EstadoPedido;
   rol = Rol;
@@ -51,16 +52,18 @@ export class PedidosComponent implements OnInit {
 
   getPedidos(clearResults: boolean = false) {
     const terminos = this.getFormValues();
-    this.loading = true;
     this.page += 1;
     if (clearResults) {
+      this.clearLoading = true;
       this.page = 0;
       this.pedidos = [];
+    } else {
+      this.loading = true;
     }
     this.getApplyFilters();
     this.pedidosService.buscar(terminos, this.page)
       .pipe(
-        finalize(() => this.loading = false)
+        finalize(() => { this.loading = false; this.clearLoading = false; })
       )
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.pedidos.push(e));

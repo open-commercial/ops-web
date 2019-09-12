@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BusquedaFacturaCompraCriteria, TipoDeComprobante } from '../models/factura';
-import { EmpresaService } from "./empresa.service";
-import { Observable } from "rxjs";
-import { Pagination } from "../models/pagination";
+import { EmpresaService } from './empresa.service';
+import { Observable } from 'rxjs';
+import { Pagination } from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,6 @@ export class FacturasCompraService {
   urlBusqueda = this.url + '/busqueda/criteria';
 
   static createBusquedaCriteriaObject(terminos: any = {}, page = 0): BusquedaFacturaCompraCriteria {
-    console.log(terminos);
     return {
       buscaPorFecha: !!(terminos.fechaDesde || terminos.fechaHasta),
       fechaDesde: terminos.fechaDesde ? terminos.fechaDesde : '',

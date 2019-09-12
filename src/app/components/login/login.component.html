@@ -1,7 +1,7 @@
 <div class="login d-flex flex-column align-items-center">
   <img alt="" class="logo" src="https://res.cloudinary.com/hf0vu1bg2/image/upload/v1557317348/assets/logo-globodeoro-500x500px.png">
   <ngb-alert *ngIf="errorMessage" type="danger" (close)="errorMessage = null">{{ errorMessage }}</ngb-alert>
-  <form [formGroup]="form" (ngSubmit)="login()" class="login-form card card-body bg-light">
+  <form [formGroup]="form" (ngSubmit)="login()" class="login-form p-4">
     <div class="form-group">
       <label for="username">Usuario</label>
       <input class="form-control" id="username" type="text" required formControlName="username"
@@ -18,8 +18,6 @@
         <div *ngIf="f.password.errors.required">Requerido</div>
       </div>
     </div>
-    <button class="btn btn-primary" type="submit">
-      Ingresar <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon>
-    </button>
+    <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
   </form>
 </div>

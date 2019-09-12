@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TipoDeComprobante } from '../../models/factura';
+import { FacturaVenta, TipoDeComprobante } from '../../models/factura';
 import { HelperService } from '../../services/helper.service';
-import { finalize } from "rxjs/operators";
-import { Pagination } from "../../models/pagination";
-import { FacturasCompraService } from "../../services/facturas-compra.service";
+import { finalize } from 'rxjs/operators';
+import { Pagination } from '../../models/pagination';
+import { FacturasCompraService } from '../../services/facturas-compra.service';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -13,6 +13,7 @@ import { FacturasCompraService } from "../../services/facturas-compra.service";
 })
 export class FacturasCompraComponent implements OnInit {
   facturas = [];
+  clearLoading = false;
   loading = false;
 
   tiposFactura = [
@@ -69,16 +70,18 @@ export class FacturasCompraComponent implements OnInit {
 
   getFacturas(clearResults: boolean = false) {
     const terminos = this.getFormValues();
-    this.loading = true;
     this.page += 1;
     if (clearResults) {
+      this.clearLoading = true;
       this.page = 0;
       this.facturas = [];
+    } else {
+      this.loading = true;
     }
     this.getApplyFilters();
     this.facturasCompraService.buscar(terminos, this.page)
       .pipe(
-        finalize(() => this.loading = false)
+        finalize(() => { this.loading = false; this.clearLoading = false; })
       )
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
@@ -150,7 +153,7 @@ export class FacturasCompraComponent implements OnInit {
     }
 
     if (values.tipoFactura) {
-      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura });
+      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
     }
 
     if (values.numSerie) {

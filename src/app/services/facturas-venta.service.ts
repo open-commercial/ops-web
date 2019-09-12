@@ -11,7 +11,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FacturasVentaService {
   url = environment.apiUrl + '/api/v1/facturas/venta';
-  urlFacturas = environment.apiUrl + '/api/v1/facturas';
   urlBusqueda = this.url + '/busqueda/criteria';
 
   static createBusquedaCriteriaObject(terminos: any = {}, page = 0): BusquedaFacturaVentaCriteria {
@@ -46,9 +45,5 @@ export class FacturasVentaService {
   buscar(terminos: any = {}, pagina: number = 0): Observable<Pagination> {
     const criteria = FacturasVentaService.createBusquedaCriteriaObject(terminos);
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
-  }
-
-  getFacturaPdf(factura: FacturaVenta): Observable<Blob> {
-    return this.http.get(`${this.urlFacturas}/${factura.id_Factura}/reporte`, {responseType: 'blob'});
   }
 }
