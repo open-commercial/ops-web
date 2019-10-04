@@ -1,0 +1,156 @@
+<div class="app-punto-vetnta my-3">
+  <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Punto de Venta</h1>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2">
+    <ngb-accordion [closeOthers]="true" activeIds="static-1">
+      <ngb-panel id="static-1" [title]="'Cliente ' + getCccLabel()">
+        <ng-template ngbPanelContent>
+          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" (select)="handleSelectCcc($event)"></app-busqueda-cuenta-corriente-cliente>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="static-2" title="Productos" [disabled]="!(form && form.get('ccc').value)">
+        <!--<ng-template ngbPanelTitle>
+          <span>&#9733; <b>Fancy</b> title &#9733;</span>
+        </ng-template>-->
+        <ng-template ngbPanelContent>
+          <div formArrayName="renglonesPedido">
+            <div class="d-flex align-items-center mb-4">
+              <h3 class="m-0">Productos</h3>
+              <a class="btn btn-outline-dark ml-3" (click)="showProductoModal()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm">
+                <thead>
+                <tr>
+                  <th class="text-center align-middle">
+                    <input type="checkbox">
+                  </th>
+                  <th class="w-100 align-middle">Descripción</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-template ngFor let-rp [ngForOf]="renglonesPedido.controls" let-i="index">
+                  <tr [formGroupName]="i">
+                    <td class="text-center align-middle"><input type="checkbox"></td>
+                    <td class="align-middle">
+                      {{ rp.get('renglonPedido').value.codigoItem }}<br>
+                      {{ rp.get('renglonPedido').value.descripcionItem }}
+                      <div class="text-right">
+                        {{ rp.get('renglonPedido').value.cantidad }} {{ rp.get('renglonPedido').value.medidaItem }} x {{ rp.get('renglonPedido').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
+                        = <span [class.tachado]="rp.get('renglonPedido').value.bonificacionPorcentaje">{{ rp.get('renglonPedido').value.importeAnterior | currency:'ARS':'symbol':'1.0-2' }}</span>
+                      </div>
+                      <div class="text-right" *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje">
+                        <span class="badge badge-success">{{ rp.get('renglonPedido').value.bonificacionPorcentaje }}% OFF</span>&nbsp;<strong>{{ rp.get('renglonPedido').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <ul class="list-unstyled text-center mb-0">
+                        <li class="mb-2">
+                          <button class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></button>
+                        </li>
+                        <li>
+                          <button class="btn btn-danger" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="form-group flex-grow-0 flex-shrink-0">
+            <label for="observaciones">Observaciones</label>
+            <textarea class="form-control" id="observaciones" formControlName="observaciones" rows="3"></textarea>
+          </div>
+          <table class="table table-bordered table-sm" style="width: fit-content;">
+            <tbody>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Subtotal</th>
+              <td class="align-middle w-50 text-right">
+                {{ (form.get('resultados').value ? form.get('resultados').value.subTotal : 0) | currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="align-middle text-right">
+                <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
+              </th>
+              <td class="align-middle">
+                <input class="form-control" type="number" id="descuento" formControlName="descuento" (change)="onChange($event)">
+              </td>
+              <td class="align-middle text-right">$ 0</td>
+            </tr>
+            <tr>
+              <th scope="row" class="align-middle text-right">
+                <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
+              </th>
+              <td class="align-middle">
+                <input class="form-control" type="number" id="recargo" formControlName="recargo" (change)="onChange($event)">
+              </td>
+              <td class="align-middle text-right">$ 0</td>
+            </tr>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Total</th>
+              <td class="align-middle text-right">{{ (form.get('resultados').value ? form.get('resultados').value.total : 0) | currency:'ARS':'symbol':'1.0-2'}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="static-3" title="Envio" [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length)">
+        <ng-template ngbPanelContent>
+          <div class="d-flex flex-column flex-md-row align-items-md-center mb-2">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" formControlName="tipoEnvio" id="tipoEnvioRETIRO_EN_SUCURSAL" [value]="te.RETIRO_EN_SUCURSAL">
+              <label class="form-check-label" for="tipoEnvioRETIRO_EN_SUCURSAL">
+                {{ te[te.RETIRO_EN_SUCURSAL] }}
+              </label>
+            </div>
+            <div class="form-group ml-3 mb-0 flex-fill">
+              <label for="sucursal" class="sr-only">Sucursal</label>
+              <select class="form-control" id="sucursal" formControlName="sucursal">
+                <option *ngFor="let s of sucursales" [value]="s">{{ s.nombre }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex flex-column flex-md-row align-items-md-center mb-2">
+            <div class="form-check" [class.disabled]="!(form.get('ubicacionFacturacion') && form.get('ubicacionFacturacion').value)">
+              <input class="form-check-input" type="radio" formControlName="tipoEnvio" id="tipoEnvioUSAR_UBICACION_FACTURACION" [value]="te.USAR_UBICACION_FACTURACION">
+              <label class="form-check-label" for="tipoEnvioUSAR_UBICACION_FACTURACION">
+                {{ te[te.USAR_UBICACION_FACTURACION] }}
+              </label>
+            </div>
+            <div class="form-group ml-3 mb-0 flex-fill">
+              <label for="ubi-facturacion" class="sr-only">Ubicación de Facturación</label>
+              <input class="form-control" type="text" id="ubi-facturacion" [value]="getUbicacionLabel(form.get('ubicacionFacturacion').value)" readonly>
+            </div>
+          </div>
+          <div class="d-flex flex-column flex-md-row align-items-md-center mb-2">
+            <div class="form-check" [class.disabled]="!(form.get('ubicacionEnvio') && form.get('ubicacionEnvio').value)">
+              <input class="form-check-input" type="radio" formControlName="tipoEnvio" id="tipoEnvioUSAR_UBICACION_ENVIO" [value]="te.USAR_UBICACION_ENVIO" disabled>
+              <label class="form-check-label" for="tipoEnvioUSAR_UBICACION_ENVIO">
+                {{ te[te.USAR_UBICACION_ENVIO] }}
+              </label>
+            </div>
+            <div class="form-group ml-3 mb-0 flex-fill">
+              <label for="ubi-envio" class="sr-only">Ubicación de Envio</label>
+              <input class="form-control" type="text" id="ubi-envio" [value]="getUbicacionLabel(form.get('ubicacionEnvio').value)" readonly>
+            </div>
+          </div>
+          <ul class="text-right list-inline mb-0 mt-2">
+            <!--<li class="list-inline-item">
+              <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+            </li>-->
+            <li class="list-inline-item">
+              <button type="submit" class="btn btn-primary" [disabled]="saving">
+                <fa-icon [icon]="['fas', 'check']"></fa-icon> Generar Pedido
+              </button>
+            </li>
+          </ul>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </form>
+  <!--{{ form.value | json }}-->
+</div>

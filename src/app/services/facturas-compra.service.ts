@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { BusquedaFacturaCompraCriteria, TipoDeComprobante } from '../models/factura';
-import { EmpresaService } from './empresa.service';
+import { BusquedaFacturaCompraCriteria } from '../models/factura';
+import { SucursalesService } from './sucursales.service';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 
@@ -28,7 +28,7 @@ export class FacturasCompraService {
       tipoComprobante: terminos.tipoComprobante ? terminos.tipoComprobante : null,
       buscaPorProducto: !!terminos.idProducto,
       idProducto: terminos.idProducto ? terminos.idProducto : '',
-      idEmpresa: + EmpresaService.getIdEmpresa(), // el signo + convierte string en number
+      idEmpresa: + SucursalesService.getIdSucursal(), // el signo + convierte string en number
       pagina: page,
       ordenarPor: terminos.ordenarPor ? terminos.ordenarPor : 'fecha',
       sentido: terminos.sentido ? terminos.sentido : 'DESC',

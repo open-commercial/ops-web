@@ -1,0 +1,15 @@
+<div class="modal-body">
+  <form [formGroup]="form" (submit)="submit()">
+    <div class="form-group">
+      <p>{{ descripcionItem }}</p>
+      <label for="cantidad" class="sr-only">Cantidad</label>
+      <input type="number" class="form-control" id="cantidad" formControlName="cantidad" placeholder="Cantidad">
+      <small class="form-text text-muted">Ingrese la cantidad para este producto.</small>
+    </div>
+    <button class="invisible" type="submit"></button>
+    <div *ngIf="loading" class="text-center">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    </div>
+  </form>
+</div>
+

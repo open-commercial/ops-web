@@ -1,4 +1,11 @@
 <div class="side-nav">
+  <ul class="nav flex-column nav-pills mt-0 mb-2">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/punto-venta" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Punto de Venta
+      </a>
+    </li>
+  </ul>
   <h2><span class="label">&nbsp;COMPRAS</span></h2>
   <ul class="nav flex-column nav-pills mt-0 mb-2">
     <li class="nav-item">

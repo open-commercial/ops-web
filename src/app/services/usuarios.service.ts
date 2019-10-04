@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario';
 import { Pagination } from '../models/pagination';
-import { EmpresaService } from './empresa.service';
+import { SucursalesService } from './sucursales.service';
 import { Rol } from '../models/rol';
 import { HelperService } from './helper.service';
 
@@ -12,7 +12,7 @@ import { HelperService } from './helper.service';
 export class UsuariosService {
 
   url = environment.apiUrl + '/api/v1/usuarios';
-  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + EmpresaService.getIdEmpresa();
+  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + SucursalesService.getIdSucursal();
 
   constructor(private http: HttpClient) {}
 

@@ -5,7 +5,7 @@ import { Usuario } from '../../models/usuario';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { EmpresaService } from "../../services/empresa.service";
+import { SucursalesService } from "../../services/sucursales.service";
 
 @Component({
   selector: 'app-login',
@@ -59,7 +59,8 @@ export class LoginComponent implements OnInit {
               finalize(() => { this.loading = false; this.form.enable(); })
             )
             .subscribe((usuario: Usuario) => {
-              EmpresaService.setIdEmpresa(usuario.idEmpresaPredeterminada.toString());
+              // SucursalesService.setIdSucursal(usuario.idEmpresaPredeterminada.toString());
+              SucursalesService.setIdSucursal('1');
               this.router.navigate(['']);
             });
         },

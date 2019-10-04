@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { EmpresaService } from './empresa.service';
+import { SucursalesService } from './sucursales.service';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { BusquedaFacturaVentaCriteria, FacturaVenta } from '../models/factura';
@@ -33,7 +33,7 @@ export class FacturasVentaService {
       nroPedido: terminos.nroPedido ? terminos.nroPedido : '',
       buscaPorProducto: !!terminos.idProducto,
       idProducto: terminos.idProducto ? terminos.idProducto : '',
-      idEmpresa: + EmpresaService.getIdEmpresa(), // el signo + convierte string en number
+      idEmpresa: + SucursalesService.getIdSucursal(), // el signo + convierte string en number
       pagina: page,
       ordenarPor: terminos.ordenarPor ? terminos.ordenarPor : 'fecha',
       sentido: terminos.sentido ? terminos.sentido : 'DESC',

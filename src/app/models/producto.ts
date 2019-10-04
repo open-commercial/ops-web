@@ -1,12 +1,29 @@
 export interface Producto {
   idProducto: number;
-  hayStock: boolean;
   codigo: string;
   descripcion: string;
+  cantidad: number;
+  cantMinima: number;
+  bulto: number;
   nombreMedida: string;
-  nombreRubro: string;
+  precioCosto: number;
+  gananciaPorcentaje: number;
+  gananciaNeto: number;
+  precioVentaPublico: number;
+  ivaPorcentaje: number;
+  ivaNeto: number;
   precioLista: number;
-  precioBonificado: number;
-  ventaMinima: number;
+  nombreRubro: string;
+  ilimitado: boolean;
+  publico: boolean;
+  destacado: boolean;
+  fechaUltimaModificacion: Date;
+  estanteria: string;
+  estante: string;
+  razonSocialProveedor: string;
+  nota: string;
+  fechaAlta: Date;
+  fechaVencimiento: Date;
+  eliminado: Date;
   urlImagen: string;
 }

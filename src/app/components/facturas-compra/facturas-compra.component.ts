@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FacturaVenta, TipoDeComprobante } from '../../models/factura';
+import { FacturaVenta } from '../../models/factura';
 import { HelperService } from '../../services/helper.service';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
+import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 
 @Component({
   selector: 'app-facturas-compra',

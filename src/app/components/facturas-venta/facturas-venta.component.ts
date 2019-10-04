@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FacturaVenta, TipoDeComprobante } from '../../models/factura';
+import { FacturaVenta } from '../../models/factura';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
@@ -8,6 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { FacturasService } from '../../services/facturas.service';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
+import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 
 @Component({
   selector: 'app-facturas-venta',

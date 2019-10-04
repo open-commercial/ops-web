@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h4 class="h5 modal-title flex-fill">Selección de Producto</h4>
+</div>
+<div class="modal-body">
+  <form (submit)="seleccionarProducto()">
+  <label class="sr-only" for="pmProducto"></label>
+  <div class="input-group mb-3">
+    <input #searchInput autocomplete="off" type="text" class="form-control" id="pmProducto" (keyup.enter)="onSearchInputKeyUp($event)">
+    <div class="input-group-append">
+      <button tabindex="-1" class="btn" type="button" id="button-addon2" (click)="clearInput()">
+        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div class="productos">
+    <div *ngFor="let p of productos; let first = first;" class="producto form-check" [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto" (focusin)="rbFocus($event)">
+      <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (change)="select(p)">
+      <label class="form-check-label" for="p_{{ p.idProducto }}">
+        <span class="d-flex flex-column">
+          <span class="mr-2">{{ p.codigo }} - {{ p.descripcion }}</span>
+          <span class="mr-2"><strong>Disp: {{ p.cantidad }}</strong> Otra Suc: Cant. x Bulto: {{ p.bulto }}</span>
+          <span class="mr-2">Unidad: {{ p.nombreMedida }} P. Lista: {{ p.precioLista | currency:'ARS' }}</span>
+        </span>
+      </label>
+    </div>
+  </div>
+    <button class="invisible" type="submit"></button>
+  </form>
+</div>
+<!--<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado">
+    Agregar producto
+  </button>
+</div>-->
+

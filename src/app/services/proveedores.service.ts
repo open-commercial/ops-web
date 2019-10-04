@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { EmpresaService } from './empresa.service';
+import { SucursalesService } from './sucursales.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
@@ -11,7 +11,7 @@ import { HelperService } from './helper.service';
 })
 export class ProveedoresService {
   url = environment.apiUrl + '/api/v1/proveedores';
-  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + EmpresaService.getIdEmpresa();
+  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + SucursalesService.getIdSucursal();
 
   constructor(private http: HttpClient) { }
 

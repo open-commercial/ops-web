@@ -1,23 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {environment} from '../../environments/environment';
-import {HttpClient} from '@angular/common/http';
-import {Pedido} from '../models/pedido';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Pedido } from '../models/pedido';
 import { Pagination } from '../models/pagination';
-import { EmpresaService } from './empresa.service';
-import { HelperService } from './helper.service';
+import { SucursalesService } from './sucursales.service';
+import { NuevoRenglonPedido } from '../models/nuevo-renglon-pedido';
+import { RenglonPedido } from '../models/renglon-pedido';
+import { NuevosResultadosPedido } from '../models/nuevos-resultados-pedido';
+import { Resultados } from '../models/resultados';
+import { NuevoPedido } from '../models/nuevo-pedido';
+import { BusquedaPedidoCriteria } from '../models/criterias/BusquedaPedidoCriteria';
 @Injectable({
   providedIn: 'root'
 })
 export class PedidosService {
   url = environment.apiUrl + '/api/v1/pedidos';
-  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + EmpresaService.getIdEmpresa();
+  urlBusqueda = this.url + '/busqueda/criteria';
+
+  static createBusquedaCriteriaObject(terminos: any = {}, page = 0): BusquedaPedidoCriteria {
+    terminos.pagina = page;
+    terminos.idSucursal = SucursalesService.getIdSucursal();
+    return terminos;
+  }
 
   constructor(private http: HttpClient) { }
 
   buscar(terminos: any = {}, pagina: number = 0): Observable<Pagination> {
-    terminos.pagina = pagina;
-    return this.http.get<Pagination>(this.urlBusqueda + '&' + HelperService.getQueryString(terminos));
+    const criteria = PedidosService.createBusquedaCriteriaObject(terminos, pagina);
+    return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
   /*getPedidosCliente(cliente: Cliente, pagina: number) {
@@ -26,5 +37,17 @@ export class PedidosService {
 
   getPedidoPdf(pedido: Pedido): Observable<Blob> {
     return this.http.get(`${this.url}/${pedido.id_Pedido}/reporte`, {responseType: 'blob'});
+  }
+
+  calcularRenglon(nuevoRenglonPedido: NuevoRenglonPedido): Observable<Array<RenglonPedido>> {
+    return this.http.post<Array<RenglonPedido>>(`${this.url}/renglones`, [nuevoRenglonPedido]);
+  }
+
+  calcularResultadosPedido(nrp: NuevosResultadosPedido): Observable<Resultados> {
+    return this.http.post<Resultados>(`${this.url}/calculo-pedido`, nrp);
+  }
+
+  savePedido(np: NuevoPedido): Observable<Pedido> {
+    return this.http.post<Pedido>(this.url, np);
   }
 }

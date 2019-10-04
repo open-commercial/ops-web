@@ -3,14 +3,14 @@ import { environment } from '../../environments/environment';
 import { Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Cliente} from '../models/cliente';
-import { EmpresaService } from './empresa.service';
+import { SucursalesService } from './sucursales.service';
 import { Pagination } from '../models/pagination';
 import { HelperService } from './helper.service';
 
 @Injectable()
 export class ClientesService {
   url = environment.apiUrl + '/api/v1/clientes';
-  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + EmpresaService.getIdEmpresa();
+  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + SucursalesService.getIdSucursal();
 
   constructor(private http: HttpClient) {}
 
@@ -28,7 +28,11 @@ export class ClientesService {
   }
 
   saveCliente(cliente) {
-    cliente.idEmpresa = EmpresaService.getIdEmpresa();
+    cliente.idEmpresa = SucursalesService.getIdSucursal();
     return this.http.put(this.url, cliente);
+  }
+
+  getClientePredeterminado(): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.url}/predeterminado`);
   }
 }

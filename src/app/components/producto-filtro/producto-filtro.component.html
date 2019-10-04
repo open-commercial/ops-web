@@ -11,9 +11,9 @@
              [(ngModel)]="value">
     <ng-template ng-label-tmp let-item="item">
       <div *ngIf="item">
-        <span class="codigo">
+        <div class="codigo">
           <fa-icon [icon]="['fas', 'box-open']"></fa-icon> {{ item.codigo }} <strong>{{ item.descripcion }}</strong>
-        </span>
+        </div>
       </div>
     </ng-template>
     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">

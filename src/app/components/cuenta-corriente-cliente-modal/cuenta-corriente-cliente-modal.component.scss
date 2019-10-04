@@ -1,0 +1,11 @@
+.cccs {
+  .ccc {
+    &.selected {
+      background: #c5eefa;
+    }
+    .form-check-input {
+      width: 0;
+      height: 0;
+    }
+  }
+}
