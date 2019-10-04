@@ -96,3 +96,9 @@ app-menu {
     min-width: unset;
   }
 }
+
+ngb-accordion .card-header > button {
+  text-align: left;
+  width: 100%;
+  height: 100%;
+}

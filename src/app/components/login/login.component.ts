@@ -5,7 +5,7 @@ import { Usuario } from '../../models/usuario';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { SucursalesService } from "../../services/sucursales.service";
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-login',

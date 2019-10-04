@@ -10,6 +10,7 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
 import { BusquedaPedidoCriteria } from "../../models/criterias/BusquedaPedidoCriteria";
+import { SucursalesService } from "../../services/sucursales.service";
 
 @Component({
   selector: 'app-pedidos',
@@ -106,7 +107,9 @@ export class PedidosComponent implements OnInit {
 
   getFormValues() {
     const values = this.filterForm.value;
-    const ret: BusquedaPedidoCriteria = {};
+    const ret: BusquedaPedidoCriteria = {
+      idSucursal: Number(SucursalesService.getIdSucursal())
+    };
 
     if (values.cliente) { ret.idCliente = values.cliente.id_Cliente; }
     if (values.usuario) { ret.idUsuario = values.usuario.id_Usuario; }

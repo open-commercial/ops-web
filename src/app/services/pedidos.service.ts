@@ -20,7 +20,6 @@ export class PedidosService {
 
   static createBusquedaCriteriaObject(terminos: any = {}, page = 0): BusquedaPedidoCriteria {
     terminos.pagina = page;
-    terminos.idSucursal = SucursalesService.getIdSucursal();
     return terminos;
   }
 

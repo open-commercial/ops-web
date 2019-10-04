@@ -1,18 +1,21 @@
 <div class="modal-header">
   <h4 class="h5 modal-title flex-fill">Buscar Cliente</h4>
 </div>
-<div class="modal-body">
-  <form (submit)="seleccionarCcc()">
-    <label class="sr-only" for="cccmCcc"></label>
-    <div class="input-group mb-3">
-      <input #searchInput autocomplete="off" type="text" class="form-control" id="cccmCcc" (keyup.enter)="onSearchInputEnterKeyUp($event)" [disabled]="loading">
-      <div class="input-group-append">
-        <button tabindex="-1" class="btn btn-primary" type="button">
-          <fa-icon [icon]="['fas', 'search']"></fa-icon>
-        </button>
-      </div>
+<div class="modal-body flex-fill">
+  <label class="sr-only" for="cccmCcc"></label>
+  <div class="input-group mb-3">
+    <input #searchInput autocomplete="off" type="text" class="form-control" id="cccmCcc" (keyup.enter)="onSearchInputEnterKeyUp($event)" [disabled]="loading">
+    <div class="input-group-append">
+      <button tabindex="-1" class="btn btn-primary" type="button">
+        <fa-icon [icon]="['fas', 'search']"></fa-icon>
+      </button>
     </div>
-    <div class="cccs">
+  </div>
+  <form (submit)="seleccionarCcc()">
+    <div *ngIf="loading" class="text-center my-3">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    </div>
+    <div class="cccs" *ngIf="!loading">
       <div *ngFor="let ccc of cccs; let f = first;" [class.border-top]="f" class="ccc form-check border-bottom p-2" [class.selected]="ccc && cccSeleccionado && ccc.idCuentaCorriente === cccSeleccionado.idCuentaCorriente">
         <input class="form-check-input" type="radio" name="ccc" id="ccc_{{ ccc.idCuentaCorriente }}" [value]="ccc.idCuentaCorriente" (change)="select(ccc)">
         <label class="form-check-label d-block" for="ccc_{{ ccc.idCuentaCorriente }}">

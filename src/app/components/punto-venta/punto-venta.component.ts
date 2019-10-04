@@ -18,8 +18,9 @@ import { HelperService } from '../../services/helper.service';
 import { Ubicacion } from "../../models/ubicacion";
 import { NuevoPedido } from "../../models/nuevo-pedido";
 import { AuthService } from "../../services/auth.service";
-import { finalize } from "rxjs/operators";
+import { debounceTime, finalize } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { Subject } from "rxjs";
 
 @Component({
   selector: 'app-punto-venta',
@@ -32,6 +33,10 @@ export class PuntoVentaComponent implements OnInit {
   sucursales: Array<Sucursal> = [];
 
   saving = false;
+  cccPredeterminadoLoading = false;
+
+  private errors = new Subject<string>();
+  errorMessage: string;
 
   constructor(private fb: FormBuilder,
               private modalService: NgbModal,
@@ -46,6 +51,11 @@ export class PuntoVentaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.errors.subscribe((message) => this.errorMessage = message);
+    this.errors
+      .pipe(debounceTime(3000))
+      .subscribe(() => this.errorMessage = null);
+
     this.createFrom();
   }
 
@@ -76,18 +86,28 @@ export class PuntoVentaComponent implements OnInit {
     this.form.get('recargo').valueChanges.subscribe(
       v => this.calcularResultados()
     );*/
+
     this.form.get('tipoEnvio').valueChanges.subscribe(te => {
 
     });
 
     this.getSucursales();
 
-    this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado().subscribe(
-      ccc => {
-        this.form.get('ccc').setValue(ccc);
-        this.setUbicaciones();
-      }
-    );
+    this.cccPredeterminadoLoading = true;
+    this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
+      .pipe(
+        finalize(() => this.cccPredeterminadoLoading = false)
+      )
+      .subscribe(
+        ccc => {
+          this.form.get('ccc').setValue(ccc);
+          this.setUbicaciones();
+        },
+        err => {
+          console.log(err.error);
+          this.showErrorMessage(err);
+        }
+      );
   }
 
   setUbicaciones() {
@@ -250,7 +270,6 @@ export class PuntoVentaComponent implements OnInit {
     };
     this.pedidosService.calcularResultadosPedido(nrp)
       .subscribe((r: Resultados) => {
-        // console.log(r);
         this.form.get('resultados').setValue(r);
       });
   }
@@ -266,5 +285,16 @@ export class PuntoVentaComponent implements OnInit {
 
   getUbicacionLabel(u: Ubicacion) {
     return HelperService.formatUbicacion(u);
+  }
+
+  showErrorMessage(message: string) {
+    this.errors.next(message);
+  }
+
+  ingresarProductoDirecto($event) {
+    const codigo = $event.target.value;
+    console.log(codigo);
+    $event.target.value = '';
+    $event.target.focus();
   }
 }
