@@ -39,9 +39,9 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
       ))
     ).subscribe(data => {
       this.cccs = data;
-      if (this.cccs.length) {
+      /*if (this.cccs.length) {
         setTimeout(() => this.focusFirstRadio(), 500);
-      }
+      }*/
     });
   }
 
@@ -56,7 +56,7 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
 
   onSearchInputEnterKeyUp($event) {
     this.input$.next($event.target.value);
-    $event.stopImmediatePropagation();
+    // $event.stopImmediatePropagation();
   }
 
   select(ccc: CuentaCorrienteCliente) {

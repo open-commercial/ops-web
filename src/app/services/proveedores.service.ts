@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { SucursalesService } from './sucursales.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
-import { HelperService } from './helper.service';
-import { BusquedaProveedorCriteria } from "../models/criterias/busqueda-proveedor-criteria";
+import { BusquedaProveedorCriteria } from '../models/criterias/busqueda-proveedor-criteria';
 
 @Injectable({
   providedIn: 'root'

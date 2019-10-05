@@ -216,7 +216,7 @@ export class PuntoVentaComponent implements OnInit {
 
   // modal de producto
   showProductoModal() {
-    const modalRef = this.modalService.open(ProductoModalComponent, { size: 'xl' });
+    const modalRef = this.modalService.open(ProductoModalComponent);
     modalRef.result.then((p: Producto) => {
       const control = this.searchRPInRenglones(p.idProducto);
       const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;

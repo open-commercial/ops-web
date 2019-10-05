@@ -20,15 +20,12 @@
           <div formArrayName="renglonesPedido">
             <div class="d-flex align-items-center mb-4">
               <h3 class="m-0">Productos</h3>
-              <a class="btn btn-outline-dark ml-3" (click)="showProductoModal()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
+              <a class="btn btn-primary ml-3" (click)="showProductoModal()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
             </div>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">
                 <thead>
                 <tr>
-                  <th class="text-center align-middle">
-                    <input type="checkbox">
-                  </th>
                   <th class="w-100 align-middle">Descripción</th>
                   <th></th>
                 </tr>
@@ -36,7 +33,6 @@
                 <tbody>
                 <ng-template ngFor let-rp [ngForOf]="renglonesPedido.controls" let-i="index">
                   <tr [formGroupName]="i">
-                    <td class="text-center align-middle"><input type="checkbox"></td>
                     <td class="align-middle">
                       {{ rp.get('renglonPedido').value.codigoItem }}<br>
                       {{ rp.get('renglonPedido').value.descripcionItem }}
