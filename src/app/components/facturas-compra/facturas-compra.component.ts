@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FacturaVenta } from '../../models/factura';
 import { HelperService } from '../../services/helper.service';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
+import { BusquedaFacturaCompraCriteria } from "../../models/criterias/busqueda-factura-compra-criteria";
+import { SucursalesService } from "../../services/sucursales.service";
 
 @Component({
   selector: 'app-facturas-compra',
@@ -70,7 +71,7 @@ export class FacturasCompraComponent implements OnInit {
   }
 
   getFacturas(clearResults: boolean = false) {
-    const terminos = this.getFormValues();
+    const criteria = this.getFormValues();
     this.page += 1;
     if (clearResults) {
       this.clearLoading = true;
@@ -80,7 +81,7 @@ export class FacturasCompraComponent implements OnInit {
       this.loading = true;
     }
     this.getApplyFilters();
-    this.facturasCompraService.buscar(terminos, this.page)
+    this.facturasCompraService.buscar(criteria, this.page)
       .pipe(
         finalize(() => { this.loading = false; this.clearLoading = false; })
       )
@@ -113,17 +114,22 @@ export class FacturasCompraComponent implements OnInit {
 
   getFormValues() {
     const values = this.filterForm.value;
-    return {
-      idProveedor: values.proveedor ? values.proveedor.id_Proveedor : '',
-      idProducto: values.producto ? values.producto.idProducto : '',
-      fechaDesde: values.rangoFecha && values.rangoFecha.desde ? this.helper.getTimeStamp(values.rangoFecha.desde) : '',
-      fechaHasta: values.rangoFecha && values.rangoFecha.hasta ? this.helper.getTimeStamp(values.rangoFecha.hasta) : '',
-      tipoComprobante: values.tipoFactura ? values.tipoFactura : '',
-      numSerie: values.numSerie ? values.numSerie : '',
-      numFactura: values.numFactura ? values.numFactura : '',
-      ordenarPor: values.ordenarPor ? values.ordenarPor : null,
-      sentido: values.sentido ? values.sentido : null,
+    const criteria: BusquedaFacturaCompraCriteria = {
+      idSucursal: Number(SucursalesService.getIdSucursal()),
+      pagina: 0
     };
+
+    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getTimeStamp(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getTimeStamp(values.rangoFecha.hasta); }
+    if (values.proveedor) { criteria.idProveedor = values.proveedor.id_Proveedor; }
+    if (values.numSerie) { criteria.numSerie = values.numSerie; }
+    if (values.numFactura) { criteria.numFactura = values.numFactura; }
+    if (values.tipoFactura) { criteria.tipoComprobante = values.tipoFactura; }
+    if (values.producto) { criteria.idProducto = values.producto.idProducto; }
+    if (values.ordenarPor) { criteria.ordenarPor = values.ordenarPor; }
+    if (values.sentido) { criteria.sentido = values.sentido; }
+
+    return criteria;
   }
 
   getApplyFilters() {

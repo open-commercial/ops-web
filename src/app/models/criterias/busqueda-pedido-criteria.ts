@@ -12,7 +12,7 @@ export interface BusquedaPedidoCriteria {
   estadoPedido?: EstadoPedido;
   tipoDeEnvio?: TipoDeEnvio;
   idProducto?: number;
-  pagina?: number;
+  pagina: number;
   ordenarPor?: string;
   sentido?: string;
 }

@@ -5,18 +5,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { HelperService } from './helper.service';
+import { BusquedaProveedorCriteria } from "../models/criterias/busqueda-proveedor-criteria";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProveedoresService {
   url = environment.apiUrl + '/api/v1/proveedores';
-  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + SucursalesService.getIdSucursal();
+  urlBusqueda = this.url + '/busqueda/criteria';
 
   constructor(private http: HttpClient) { }
 
   getProveedores(input, page = 0): Observable<Pagination> {
-    const terminos = { nroProveedor: input, razonSocial: input, pagina: page };
-    return this.http.get<Pagination>(this.urlBusqueda + '&' + HelperService.getQueryString(terminos));
+    const criteria: BusquedaProveedorCriteria = { nroProveedor: input, razonSocial: input, pagina: page };
+    return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 }

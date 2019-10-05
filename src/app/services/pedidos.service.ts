@@ -10,7 +10,7 @@ import { RenglonPedido } from '../models/renglon-pedido';
 import { NuevosResultadosPedido } from '../models/nuevos-resultados-pedido';
 import { Resultados } from '../models/resultados';
 import { NuevoPedido } from '../models/nuevo-pedido';
-import { BusquedaPedidoCriteria } from '../models/criterias/BusquedaPedidoCriteria';
+import { BusquedaPedidoCriteria } from '../models/criterias/busqueda-pedido-criteria';
 @Injectable({
   providedIn: 'root'
 })

@@ -6,17 +6,21 @@ import { Cliente} from '../models/cliente';
 import { SucursalesService } from './sucursales.service';
 import { Pagination } from '../models/pagination';
 import { HelperService } from './helper.service';
+import { BusquedaClienteCriteria } from '../models/criterias/busqueda-cliente-criteria';
 
 @Injectable()
 export class ClientesService {
   url = environment.apiUrl + '/api/v1/clientes';
-  urlBusqueda = this.url + '/busqueda/criteria?idEmpresa=' + SucursalesService.getIdSucursal();
+  urlBusqueda = this.url + '/busqueda/criteria';
 
   constructor(private http: HttpClient) {}
 
   getClientes(input, page = 0): Observable<Pagination> {
-    const terminos = { nombreFiscal: input, nombreFantasia: input, nroCliente: input, pagina: page };
-    return this.http.get<Pagination>(this.urlBusqueda + '&' + HelperService.getQueryString(terminos));
+    const criteria: BusquedaClienteCriteria = {
+      nombreFiscal: input, nombreFantasia: input, nroDeCliente: input,
+      pagina: page
+    };
+    return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
   getClienteDelUsuario(idUsuario): Observable<Cliente> {

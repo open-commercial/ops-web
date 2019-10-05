@@ -17,13 +17,13 @@ export class HelperService {
     return qsArray.join('&');
   }
 
-  static getTimeStamp(dateObj: NgbDate) {
+  static getTimeStamp(dateObj: NgbDate): number {
     if (!dateObj) { return null; }
     const dateStr = [dateObj.year, dateObj.month, dateObj.day].join('-');
     return Date.parse(dateStr);
   }
 
-  static getFormattedDate(dateObj: NgbDate) {
+  static getFormattedDate(dateObj: NgbDate): string {
     if (!dateObj) { return ''; }
     return [dateObj.day, dateObj.month, dateObj.year ].join('/');
   }

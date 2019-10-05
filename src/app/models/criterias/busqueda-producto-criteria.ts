@@ -8,7 +8,7 @@ export interface BusquedaProductoCriteria {
   listarSoloEnStock?: boolean;
   publico?: boolean;
   destacado?: boolean;
-  pagina?: number;
+  pagina: number;
   ordenarPor?: string;
   sentido?: string;
 }

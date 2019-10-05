@@ -62,51 +62,7 @@ export interface FacturaVenta extends Factura {
   ubicacionCliente: string;
 }
 
-export interface BusquedaFacturaVentaCriteria {
-  buscaPorFecha: boolean;
-  fechaDesde: Date;
-  fechaHasta: Date;
-  buscaCliente: boolean;
-  idCliente: number;
-  buscaPorTipoComprobante: boolean;
-  tipoComprobante: TipoDeComprobante;
-  buscaUsuario: boolean;
-  idUsuario: number;
-  buscaViajante: boolean;
-  idViajante: number;
-  buscaPorNumeroFactura: boolean;
-  numSerie: number;
-  numFactura: number;
-  buscarPorPedido: boolean;
-  nroPedido: number;
-  buscaPorProducto: boolean;
-  idProducto: number;
-  idEmpresa: number;
-  pagina: number;
-  ordenarPor: string;
-  sentido: string;
-}
-
 export interface FacturaCompra extends Factura {
   idProveedor: number;
   razonSocialProveedor: string;
-}
-
-export interface BusquedaFacturaCompraCriteria {
-  buscaPorFecha: boolean;
-  fechaDesde: Date;
-  fechaHasta: Date;
-  buscaPorProveedor: boolean;
-  idProveedor: number;
-  buscaPorNumeroFactura: boolean;
-  numSerie: number;
-  numFactura: number;
-  buscaPorTipoComprobante: boolean;
-  tipoComprobante: TipoDeComprobante;
-  buscaPorProducto: boolean;
-  idProducto: number;
-  idEmpresa: number;
-  pagina: number;
-  ordenarPor: string;
-  sentido: string;
 }

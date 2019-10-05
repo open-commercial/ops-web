@@ -21,6 +21,7 @@ import { AuthService } from "../../services/auth.service";
 import { debounceTime, finalize } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
+import { ProductosService } from "../../services/productos.service";
 
 @Component({
   selector: 'app-punto-venta',
@@ -45,7 +46,8 @@ export class PuntoVentaComponent implements OnInit {
               private cuentasCorrienteService: CuentasCorrienteService,
               private sucursalesService: SucursalesService,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private productosService: ProductosService) {
 
     config.type = 'dark';
   }
@@ -293,8 +295,40 @@ export class PuntoVentaComponent implements OnInit {
 
   ingresarProductoDirecto($event) {
     const codigo = $event.target.value;
-    console.log(codigo);
-    $event.target.value = '';
-    $event.target.focus();
+    // console.log(codigo);
+
+    this.productosService.getProductoPorCodigo(codigo.trim())
+      .subscribe((p: Producto) => {
+        if (p) {
+          const rc = this.searchRPInRenglones(p.idProducto);
+          let cant = 1;
+          if (rc) { cant = rc.get('renglonPedido').value.cantidad + 1; }
+
+          const nrp: NuevoRenglonPedido = {
+            idProductoItem: p.idProducto,
+            cantidad: cant,
+            idCliente: this.form.get('ccc').value.cliente.id_Cliente,
+          };
+
+          // this.loading = true;
+          this.pedidosService.calcularRenglon(nrp)
+            .pipe(finalize(() => {
+              // this.loading = false
+              $event.target.value = '';
+              $event.target.focus();
+            }))
+            .subscribe(data =>  {
+              const rp: RenglonPedido = data[0];
+              if (rc) {
+                rc.get('renglonPedido').setValue(rp);
+              } else {
+                this.renglonesPedido.push(this.createRenglonPedidoForm(rp));
+              }
+            });
+        } else {
+          // show error
+        }
+      })
+    ;
   }
 }

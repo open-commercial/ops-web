@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Producto } from '../models/producto';
 import { HelperService } from './helper.service';
 import { Pagination } from '../models/pagination';
-import { BusquedaProductoCriteria } from '../models/criterias/BusquedaProductoCriteria';
+import { BusquedaProductoCriteria } from '../models/criterias/busqueda-producto-criteria';
 
 @Injectable()
 export class ProductosService {
@@ -22,5 +22,9 @@ export class ProductosService {
 
   getProducto(idProducto: number): Observable<Producto> {
     return this.http.get<Producto>(this.url + idProducto);
+  }
+
+  getProductoPorCodigo(cod: string): Observable<Producto> {
+    return this.http.get<Producto>(`${this.url}/busqueda?` + HelperService.getQueryString({ codigo: cod }));
   }
 }

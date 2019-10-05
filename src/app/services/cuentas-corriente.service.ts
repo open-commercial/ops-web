@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { HelperService } from './helper.service';
-import { BusquedaCuentaCorrienteClienteCriteria } from '../models/criterias/BusquedaCuentaCorrienteClienteCriteria';
+import { BusquedaCuentaCorrienteClienteCriteria } from '../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
 import { CuentaCorrienteCliente } from '../models/cuenta-corriente';
 
 @Injectable({

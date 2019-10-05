@@ -6,7 +6,7 @@ export interface BusquedaCuentaCorrienteClienteCriteria {
   idProvincia?: number;
   idLocalidad?: number;
   nroDeCliente?: string;
-  pagina?: number;
+  pagina: number;
   ordenarPor?: string;
   sentido?: string;
 }

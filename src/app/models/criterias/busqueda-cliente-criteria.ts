@@ -6,8 +6,7 @@ export interface BusquedaClienteCriteria {
   idProvincia?: number;
   idLocalidad?: number;
   nroDeCliente?: string;
-  pidEmpresa?: number;
-  pagina?: number;
+  pagina: number;
   ordenarPor?: string;
   sentido?: string;
 }

@@ -9,7 +9,7 @@ import { Rol } from '../../models/rol';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
-import { BusquedaPedidoCriteria } from "../../models/criterias/BusquedaPedidoCriteria";
+import { BusquedaPedidoCriteria } from "../../models/criterias/busqueda-pedido-criteria";
 import { SucursalesService } from "../../services/sucursales.service";
 
 @Component({
@@ -108,7 +108,8 @@ export class PedidosComponent implements OnInit {
   getFormValues() {
     const values = this.filterForm.value;
     const ret: BusquedaPedidoCriteria = {
-      idSucursal: Number(SucursalesService.getIdSucursal())
+      idSucursal: Number(SucursalesService.getIdSucursal()),
+      pagina: 0
     };
 
     if (values.cliente) { ret.idCliente = values.cliente.id_Cliente; }

@@ -9,6 +9,8 @@ import { saveAs } from 'file-saver';
 import { FacturasService } from '../../services/facturas.service';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
+import { BusquedaFacturaVentaCriteria } from '../../models/criterias/busqueda-factura-venta-criteria';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -77,7 +79,7 @@ export class FacturasVentaComponent implements OnInit {
   }
 
   getFacturas(clearResults: boolean = false) {
-    const terminos = this.getFormValues();
+    const criteria = this.getFormValues();
     this.page += 1;
     if (clearResults) {
       this.clearLoading = true;
@@ -87,7 +89,7 @@ export class FacturasVentaComponent implements OnInit {
       this.loading = true;
     }
     this.getApplyFilters();
-    this.facturasVentaService.buscar(terminos, this.page)
+    this.facturasVentaService.buscar(criteria, this.page)
       .pipe(
         finalize(() => { this.loading = false; this.clearLoading = false; })
       )
@@ -121,22 +123,27 @@ export class FacturasVentaComponent implements OnInit {
     this.getFacturas(true);
   }
 
-  getFormValues() {
+  getFormValues(): BusquedaFacturaVentaCriteria {
     const values = this.filterForm.value;
-    return {
-      idCliente: values.cliente ? values.cliente.id_Cliente : '',
-      idUsuario: values.usuario ? values.usuario.id_Usuario : '',
-      idProducto: values.producto ? values.producto.idProducto : '',
-      idViajante: values.viajante ? values.viajante.id_Usuario : '',
-      desde: values.rangoFecha && values.rangoFecha.desde ? this.helper.getTimeStamp(values.rangoFecha.desde) : '',
-      hasta: values.rangoFecha && values.rangoFecha.hasta ? this.helper.getTimeStamp(values.rangoFecha.hasta) : '',
-      tipoComprobante: values.tipoFactura ? values.tipoFactura : '',
-      nroPedido: values.nroPedido,
-      numSerie: values.numSerie ? values.numSerie : '',
-      numFactura: values.numFactura ? values.numFactura : '',
-      ordenarPor: values.ordenarPor ? values.ordenarPor : null,
-      sentido: values.sentido ? values.sentido : null,
+    const criteria: BusquedaFacturaVentaCriteria = {
+      idSucursal: Number(SucursalesService.getIdSucursal()),
+      pagina: 0,
     };
+
+    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getTimeStamp(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getTimeStamp(values.rangoFecha.hasta); }
+    if (values.cliente) { criteria.idCliente = values.cliente.id_Cliente; }
+    if (values.tipoFactura) { criteria.tipoComprobante = values.tipoFactura; }
+    if (values.usuario) { criteria.idUsuario = values.usuario.id_Usuario; }
+    if (values.viajante) { criteria.idViajante = values.viajante.id_Usuario; }
+    if (values.numSerie) { criteria.numSerie = values.numSerie; }
+    if (values.numFactura) { criteria.numFactura = values.numFactura; }
+    if (values.nroPedido) { criteria.nroPedido = values.nroPedido; }
+    if (values.producto) { criteria.idProducto = values.producto.idProducto; }
+    if (values.ordenarPor) { criteria.ordenarPor = values.ordenarPor; }
+    if (values.sentido) { criteria.sentido = values.sentido; }
+
+    return criteria;
   }
 
   getApplyFilters() {
