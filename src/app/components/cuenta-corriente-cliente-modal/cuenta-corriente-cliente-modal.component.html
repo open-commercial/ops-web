@@ -7,7 +7,7 @@
     <input #searchInput autocomplete="off" type="text" class="form-control" id="cccmCcc"
            (keyup.enter)="onSearchInputEnterKeyUp($event)" [disabled]="loading">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar(searchInput.value)">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
       </button>
     </div>

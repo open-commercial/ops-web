@@ -41,11 +41,15 @@ export class ProductoModalComponent implements OnInit {
   }
 
   onSearchInputKeyUp($event) {
-    this.input$.next($event.target.value);
+    this.buscar($event.target.value);
   }
 
-  rbFocus($event) {
-    console.log($event);
+  buscar(value) {
+    this.productoSeleccionado = null;
+    value = value.trim();
+    if (value) {
+      this.input$.next(value);
+    }
   }
 
   select(p: Producto) {
@@ -56,12 +60,5 @@ export class ProductoModalComponent implements OnInit {
     if (this.productoSeleccionado) {
       this.activeModal.close(this.productoSeleccionado);
     }
-  }
-
-  clearInput() {
-    this.searchInput.nativeElement.value = '';
-    this.productos = [];
-    this.productoSeleccionado = null;
-    this.searchInput.nativeElement.focus();
   }
 }

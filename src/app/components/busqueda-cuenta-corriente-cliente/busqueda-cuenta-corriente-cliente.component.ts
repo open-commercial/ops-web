@@ -28,7 +28,7 @@ export class BusquedaCuentaCorrienteClienteComponent implements OnInit {
   }
 
   showCccModal() {
-    const modalRef = this.modalService.open(CuentaCorrienteClienteModalComponent, { size: 'xl', scrollable: true });
+    const modalRef = this.modalService.open(CuentaCorrienteClienteModalComponent, { scrollable: true });
     modalRef.result.then((ccc: CuentaCorrienteCliente) => {
       this.ccc = ccc;
       this.select.emit(this.ccc);

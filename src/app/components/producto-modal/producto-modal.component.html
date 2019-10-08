@@ -6,7 +6,7 @@
     <label class="sr-only" for="pmProducto"></label>
     <input #searchInput autocomplete="off" type="text" class="form-control" id="pmProducto" (keyup.enter)="onSearchInputKeyUp($event)">
     <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar(searchInput.value)">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
       </button>
     </div>
@@ -14,8 +14,8 @@
   <form (submit)="seleccionarProducto()">
   <div class="productos">
     <div *ngFor="let p of productos; let f = first;" [class.border-top]="f" class="producto form-check border-bottom px-0 py-2"
-         [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto" (focusin)="rbFocus($event)">
-      <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (change)="select(p)">
+         [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto">
+      <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (focus)="select(p)">
       <label class="form-check-label d-block" for="p_{{ p.idProducto }}">
         <span class="d-flex flex-row align-items-center">
           <span class="img-container flex-grow-0 flex-shrink-0">
@@ -35,9 +35,9 @@
     <button class="invisible" type="submit"></button>
   </form>
 </div>
-<!--<div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado">
-    Agregar producto
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado">
+    <fa-icon [icon]="['fas', 'hand-point-up']"></fa-icon>&nbsp;Seleccionar
   </button>
-</div>-->
+</div>
 

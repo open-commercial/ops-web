@@ -45,8 +45,15 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   }
 
   onSearchInputEnterKeyUp($event) {
+    this.buscar($event.target.value);
+  }
+
+  buscar(value: string) {
     this.cccSeleccionado = null;
-    this.input$.next($event.target.value);
+    value = value.trim();
+    if (value) {
+      this.input$.next(value);
+    }
   }
 
   select(ccc: CuentaCorrienteCliente) {
