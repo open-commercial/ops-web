@@ -1,11 +1,7 @@
 <div class="app-punto-vetnta my-3">
   <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Punto de Venta</h1>
-  <ngb-alert *ngIf="errorMessage" type="danger" (close)="errorMessage = null">{{ errorMessage }}</ngb-alert>
-  <div class="form-group">
-    <label class="sr-only" for="codigoProducto">Código</label>
-    <input autocomplete="off" #cb id="codigoProducto" type="text" placeholder="Codigo del producto..." class="form-control" (keyup.enter)="ingresarProductoDirecto($event)">
-  </div>
-  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2">
+  <ngb-alert class="my-3" *ngIf="errorMessage" type="danger" (close)="errorMessage = null">{{ errorMessage }}</ngb-alert>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2"> <!--(ngSubmit)="submit()"-->
     <ngb-accordion [closeOthers]="true" activeIds="static-1">
       <ngb-panel id="static-1" [title]="'Cliente ' + getCccLabel()">
         <ng-template ngbPanelContent>
@@ -21,6 +17,16 @@
             <div class="d-flex align-items-center mb-4">
               <h3 class="m-0">Productos</h3>
               <a class="btn btn-primary ml-3" (click)="showProductoModal()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="codigo-addon">
+                  <fa-icon [icon]="['fas', 'barcode']" *ngIf="!loadingProducto"></fa-icon>
+                  <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
+                </span>
+              </div>
+              <input autocomplete="off" id="codigoProducto" placeholder="Cód. del producto..." type="text" aria-describedby="codigo-addon"
+                     class="form-control" (keyup.enter)="ingresarProductoDirecto($event)" [disabled]="loadingProducto">
             </div>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">
@@ -47,10 +53,10 @@
                     <td>
                       <ul class="list-unstyled text-center mb-0">
                         <li class="mb-2">
-                          <button class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></button>
+                          <a class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
                         </li>
                         <li>
-                          <button class="btn btn-danger" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+                          <a class="btn btn-danger" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
                         </li>
                       </ul>
                     </td>

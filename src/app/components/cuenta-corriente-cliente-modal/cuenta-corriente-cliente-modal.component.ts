@@ -28,35 +28,25 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   }
 
   loadCccs() {
-    this.input$.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
-      tap(() => this.loading = true),
-      switchMap(term => this.cuentasCorrienteService.getCuentasCorriente(term).pipe(
-        map((v: Pagination) => v.content),
-        catchError(() => of([])), // empty list on error
-        tap(() => this.loading = false)
-      ))
-    ).subscribe(data => {
-      this.cccs = data;
-      /*if (this.cccs.length) {
-        setTimeout(() => this.focusFirstRadio(), 500);
-      }*/
-    });
-  }
-
-  focusFirstRadio() {
-    if (this.cccs.length) {
-      const firstId = 'ccc_' + this.cccs[0].idCuentaCorriente;
-      const elem = document.getElementById(firstId);
-      elem.click();
-      elem.focus();
-    }
+    this.input$
+      .pipe(
+        debounceTime(700),
+        distinctUntilChanged(),
+        tap(() => this.loading = true),
+        switchMap(term => this.cuentasCorrienteService.getCuentasCorriente(term).pipe(
+          map((v: Pagination) => v.content),
+          catchError(() => of([])), // empty list on error
+          tap(() => this.loading = false)
+        ))
+      )
+      .subscribe(data => {
+        this.cccs = data;
+      });
   }
 
   onSearchInputEnterKeyUp($event) {
+    this.cccSeleccionado = null;
     this.input$.next($event.target.value);
-    // $event.stopImmediatePropagation();
   }
 
   select(ccc: CuentaCorrienteCliente) {

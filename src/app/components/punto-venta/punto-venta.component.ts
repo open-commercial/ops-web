@@ -15,13 +15,13 @@ import { CuentasCorrienteService } from '../../services/cuentas-corriente.servic
 import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
 import { HelperService } from '../../services/helper.service';
-import { Ubicacion } from "../../models/ubicacion";
-import { NuevoPedido } from "../../models/nuevo-pedido";
-import { AuthService } from "../../services/auth.service";
-import { debounceTime, finalize } from "rxjs/operators";
-import { Router } from "@angular/router";
-import { Subject } from "rxjs";
-import { ProductosService } from "../../services/productos.service";
+import { Ubicacion } from '../../models/ubicacion';
+import { NuevoPedido } from '../../models/nuevo-pedido';
+import { AuthService } from '../../services/auth.service';
+import { debounceTime, finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { ProductosService } from '../../services/productos.service';
 
 @Component({
   selector: 'app-punto-venta',
@@ -38,6 +38,8 @@ export class PuntoVentaComponent implements OnInit {
 
   private errors = new Subject<string>();
   errorMessage: string;
+
+  loadingProducto = false;
 
   constructor(private fb: FormBuilder,
               private modalService: NgbModal,
@@ -294,41 +296,61 @@ export class PuntoVentaComponent implements OnInit {
   }
 
   ingresarProductoDirecto($event) {
-    const codigo = $event.target.value;
-    // console.log(codigo);
+    const codigo = $event.target.value.trim();
+    $event.preventDefault();
 
-    this.productosService.getProductoPorCodigo(codigo.trim())
-      .subscribe((p: Producto) => {
-        if (p) {
-          const rc = this.searchRPInRenglones(p.idProducto);
-          let cant = 1;
-          if (rc) { cant = rc.get('renglonPedido').value.cantidad + 1; }
+    if (!codigo) { return; }
 
-          const nrp: NuevoRenglonPedido = {
-            idProductoItem: p.idProducto,
-            cantidad: cant,
-            idCliente: this.form.get('ccc').value.cliente.id_Cliente,
-          };
+    this.loadingProducto = true;
+    this.productosService.getProductoPorCodigo(codigo)
+      .subscribe(
+        (p: Producto) => {
+          if (p) {
+            const rc = this.searchRPInRenglones(p.idProducto);
+            let cant = 1;
+            if (rc) { cant = rc.get('renglonPedido').value.cantidad + 1; }
 
-          // this.loading = true;
-          this.pedidosService.calcularRenglon(nrp)
-            .pipe(finalize(() => {
-              // this.loading = false
-              $event.target.value = '';
-              $event.target.focus();
-            }))
-            .subscribe(data =>  {
-              const rp: RenglonPedido = data[0];
-              if (rc) {
-                rc.get('renglonPedido').setValue(rp);
-              } else {
-                this.renglonesPedido.push(this.createRenglonPedidoForm(rp));
-              }
-            });
-        } else {
-          // show error
+            const nrp: NuevoRenglonPedido = {
+              idProductoItem: p.idProducto,
+              cantidad: cant,
+              idCliente: this.form.get('ccc').value.cliente.id_Cliente,
+            };
+            // this.loading = true;
+
+            this.pedidosService.calcularRenglon(nrp)
+              .pipe(
+                finalize(() => {
+                  this.loadingProducto = false;
+                  $event.target.value = '';
+                  $event.target.focus();
+                })
+              )
+              .subscribe(
+                data =>  {
+                  const rp: RenglonPedido = data[0];
+                  if (rc) {
+                    rc.get('renglonPedido').setValue(rp);
+                  } else {
+                    this.renglonesPedido.push(this.createRenglonPedidoForm(rp));
+                  }
+                },
+                err => {
+                  this.showErrorMessage(err.error);
+                }
+              );
+          } else {
+            this.loadingProducto = false;
+            $event.target.value = '';
+            $event.target.focus();
+            this.showErrorMessage(`No existe producto con codigo: "${codigo}"`);
+          }
+        },
+        err => {
+          this.loadingProducto = false;
+          $event.target.value = '';
+          $event.target.focus();
+          this.showErrorMessage(err.error);
         }
-      })
-    ;
+    );
   }
 }
