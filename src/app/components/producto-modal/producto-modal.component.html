@@ -1,10 +1,13 @@
 <div class="modal-header">
   <h4 class="h5 modal-title flex-fill">Buscar Producto</h4>
+  <button type="button" class="close" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body px-2">
   <div class="input-group mb-3">
     <label class="sr-only" for="pmProducto"></label>
-    <input #searchInput autocomplete="off" type="text" class="form-control" id="pmProducto" (keyup.enter)="onSearchInputKeyUp($event)">
+    <input #searchInput autocomplete="off" ngbAutofocus type="text" class="form-control" id="pmProducto" (keyup.enter)="onSearchInputKeyUp($event)">
     <div class="input-group-append">
       <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar(searchInput.value)">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
@@ -24,7 +27,7 @@
           <span class="d-flex flex-column">
             <span class="mr-2 codigo">{{ p.codigo }}</span>
             <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
-            <span class="mr-2"><strong>Stock: {{ p.cantidad }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ p.cantidad }} {{ p.nombreMedida }}</span>
+            <span class="mr-2">Stock: <strong>{{ p.cantidadTotalEnSucursales }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
             <span class="mr-2">Cant. x Bulto: {{ p.bulto }} {{ p.nombreMedida }}</span>
             <span class="mr-2">P. Lista: <strong>{{ p.precioLista | currency:'ARS' }}</strong></span>
           </span>
@@ -37,7 +40,7 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-primary" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado">
-    <fa-icon [icon]="['fas', 'hand-point-up']"></fa-icon>&nbsp;Seleccionar
+    <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>&nbsp;Seleccionar
   </button>
 </div>
 

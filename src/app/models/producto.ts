@@ -4,8 +4,8 @@ export interface Producto {
   idProducto: number;
   codigo: string;
   descripcion: string;
-  cantidadTotalEnSucursales: Array<CantidadEnSucursal>;
-  cantidad: number;
+  cantidadEnSucursales: Array<CantidadEnSucursal>;
+  cantidadTotalEnSucursales: number;
   hayStock: boolean;
   cantMinima: number;
   bulto: number;

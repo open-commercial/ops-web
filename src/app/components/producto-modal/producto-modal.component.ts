@@ -5,6 +5,8 @@ import { Producto } from '../../models/producto';
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
+import { SucursalesService } from '../../services/sucursales.service';
+import { CantidadEnSucursal } from "../../models/cantidad-en-sucursal";
 
 @Component({
   selector: 'app-producto-modal',
@@ -60,5 +62,14 @@ export class ProductoModalComponent implements OnInit {
     if (this.productoSeleccionado) {
       this.activeModal.close(this.productoSeleccionado);
     }
+  }
+
+  getCantOtrasSucursales(p: Producto) {
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
+      c => c.idSucursal === Number(SucursalesService.getIdSucursal())
+    );
+
+    const cant = aux.length ? aux[0].cantidad : 0;
+    return p.cantidadTotalEnSucursales - cant;
   }
 }

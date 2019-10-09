@@ -11,7 +11,7 @@
           <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" (select)="handleSelectCcc($event)" *ngIf="!cccPredeterminadoLoading"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="static-2" title="Productos" [disabled]="!(form && form.get('ccc').value)">
+      <ngb-panel id="static-2" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!(form && form.get('ccc').value)">
         <ng-template ngbPanelContent>
           <div formArrayName="renglonesPedido">
             <div class="d-flex align-items-center mb-4">
@@ -40,8 +40,8 @@
                 <ng-template ngFor let-rp [ngForOf]="renglonesPedido.controls" let-i="index">
                   <tr [formGroupName]="i">
                     <td class="align-middle">
-                      {{ rp.get('renglonPedido').value.codigoItem }}<br>
-                      {{ rp.get('renglonPedido').value.descripcionItem }}
+                      <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span><br>
+                      <strong>{{ rp.get('renglonPedido').value.descripcionItem }}</strong>
                       <div class="text-right">
                         {{ rp.get('renglonPedido').value.cantidad }} {{ rp.get('renglonPedido').value.medidaItem }} x {{ rp.get('renglonPedido').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
                         = <span [class.tachado]="rp.get('renglonPedido').value.bonificacionPorcentaje">{{ rp.get('renglonPedido').value.importeAnterior | currency:'ARS':'symbol':'1.0-2' }}</span>
@@ -56,7 +56,7 @@
                           <a class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
                         </li>
                         <li>
-                          <a class="btn btn-danger" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                          <a class="btn btn-primary" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
                         </li>
                       </ul>
                     </td>

@@ -3,12 +3,12 @@
     <!--<em *ngIf="!ccc">(Cliente no seleccionado)</em>-->
     <div *ngIf="ccc" class="d-flex flex-column">
       <span class="mr-2">
-        Nº: {{ ccc.cliente.nroCliente }}
+        #{{ ccc.cliente.nroCliente }}
         <span class="badge badge-success" *ngIf="ccc.cliente.bonificacion"> {{ ccc.cliente.bonificacion }}% bonif</span>
       </span>
       <span>
         <span *ngIf="ccc.cliente.idFiscal">CUIT ó DNI: {{ ccc.cliente.idFiscal }} - </span>
-        <strong>{{ ccc.cliente.nombreFiscal }}</strong><em *ngIf="ccc.cliente.nombreFantasia"> - "{{ ccc.cliente.nombreFantasia }}"</em>
+        <strong>{{ ccc.cliente.nombreFiscal }}</strong> - <em *ngIf="ccc.cliente.nombreFantasia">{{ ccc.cliente.nombreFantasia }}</em>
       </span>
       <span *ngIf="ccc.cliente.ubicacionEnvio">
         Ubi. facturación: {{ helper.formatUbicacion(ccc.cliente.ubicacionFacturacion) }}
