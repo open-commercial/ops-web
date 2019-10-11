@@ -1,16 +1,20 @@
+@import "../../../variables";
+
 .productos {
   .producto {
     &.selected {
-      background: #c5eefa;
+      .info {
+        background: $primary-color;
+      }
     }
     .form-check-input {
       width: 0;
       height: 0;
     }
     .img-container {
+      padding: 0.5rem;
       width: 5rem;
       height: 5rem;
-      display: block;
       img {
         object-fit: contain;
         max-width: 100%;

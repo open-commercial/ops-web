@@ -6,11 +6,10 @@ import { EstadoPedido } from '../../models/estado.pedido';
 import { finalize } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
-import { BusquedaPedidoCriteria } from "../../models/criterias/busqueda-pedido-criteria";
-import { SucursalesService } from "../../services/sucursales.service";
+import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-pedidos',

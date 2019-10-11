@@ -1,12 +1,17 @@
+@import "../../../variables";
+
 .cccs {
   overflow-y: auto;
   .ccc {
     &.selected {
-      background: #c5eefa;
+      background: $primary-color;
     }
     .form-check-input {
       width: 0;
       height: 0;
+    }
+    .numero {
+      font-size: 12px;
     }
   }
 }

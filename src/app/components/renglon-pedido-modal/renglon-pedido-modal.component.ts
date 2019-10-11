@@ -16,9 +16,13 @@ import { Cliente } from '../../models/cliente';
 export class RenglonPedidoModalComponent implements OnInit {
   cliente: Cliente;
   idProductoItem: number;
-  descripcionItem: string;
   cantidad = 1;
+  codigoItem: string;
+  descripcionItem: string;
+  urlImagenItem: string;
+  oferta: boolean;
   form: FormGroup;
+  submitted = false;
   loading = false;
 
   constructor(private fb: FormBuilder,
@@ -31,21 +35,23 @@ export class RenglonPedidoModalComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      cantidad: [this.cantidad, Validators.required]
+      cantidad: [this.cantidad, [Validators.required, Validators.min(0.1)]]
     });
   }
 
+  get f() { return this.form.controls; }
+
   submit() {
+    this.submitted = true;
     if (this.form.valid) {
       const cant = this.form.value.cantidad;
       const nrp: NuevoRenglonPedido = {
         idProductoItem: this.idProductoItem,
         cantidad: cant,
-        idCliente: this.cliente.id_Cliente,
       };
 
       this.loading = true;
-      this.pedidosService.calcularRenglon(nrp)
+      this.pedidosService.calcularRenglon(nrp, this.cliente.id_Cliente)
         .pipe(finalize(() => this.loading = false))
         .subscribe(data =>  {
           const rp: RenglonPedido = data[0];

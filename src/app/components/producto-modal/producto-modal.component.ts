@@ -6,7 +6,7 @@ import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } f
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { SucursalesService } from '../../services/sucursales.service';
-import { CantidadEnSucursal } from "../../models/cantidad-en-sucursal";
+import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 
 @Component({
   selector: 'app-producto-modal',

@@ -1,9 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
-import { of, Subject } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { HelperService } from '../../services/helper.service';
 
@@ -14,46 +13,51 @@ import { HelperService } from '../../services/helper.service';
 })
 export class CuentaCorrienteClienteModalComponent implements OnInit {
   cccs: CuentaCorrienteCliente[] = [];
+  clearLoading = false;
   loading = false;
-  input$  = new Subject<string>();
+  termino = '';
   cccSeleccionado: CuentaCorrienteCliente = null;
   helper = HelperService;
-  @ViewChild('searchInput', null) searchInput: ElementRef;
+
+  page = 0;
+  totalElements = 0;
+  totalPages = 0;
+  size = 0;
 
   constructor(public activeModal: NgbActiveModal,
               private cuentasCorrienteService: CuentasCorrienteService) { }
 
-  ngOnInit() {
-    this.loadCccs();
-  }
+  ngOnInit() {}
 
-  loadCccs() {
-    this.input$
-      .pipe(
-        debounceTime(700),
-        distinctUntilChanged(),
-        tap(() => this.loading = true),
-        switchMap(term => this.cuentasCorrienteService.getCuentasCorriente(term).pipe(
-          map((v: Pagination) => v.content),
-          catchError(() => of([])), // empty list on error
-          tap(() => this.loading = false)
-        ))
-      )
-      .subscribe(data => {
-        this.cccs = data;
-      });
-  }
-
-  onSearchInputEnterKeyUp($event) {
-    this.buscar($event.target.value);
-  }
-
-  buscar(value: string) {
-    this.cccSeleccionado = null;
-    value = value.trim();
-    if (value) {
-      this.input$.next(value);
+  getCccs(clearResults = false) {
+    this.page += 1;
+    if (clearResults) {
+      this.clearLoading = true;
+      this.page = 0;
+      this.cccs = [];
+    } else {
+      this.loading = true;
     }
+
+    this.cuentasCorrienteService.getCuentasCorriente(this.termino, this.page)
+      .pipe(
+        finalize(() => { this.loading = false; this.clearLoading = false; })
+      )
+      .subscribe((p: Pagination) => {
+        p.content.forEach((e) => this.cccs.push(e));
+        this.totalElements = p.totalElements;
+        this.totalPages = p.totalPages;
+        this.size = p.size;
+      })
+    ;
+  }
+
+  buscar() {
+    this.getCccs(true);
+  }
+
+  loadMore() {
+    this.getCccs();
   }
 
   select(ccc: CuentaCorrienteCliente) {
@@ -64,12 +68,5 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
     if (this.cccSeleccionado) {
       this.activeModal.close(this.cccSeleccionado);
     }
-  }
-
-  clearInput() {
-    this.searchInput.nativeElement.value = '';
-    this.cccs = [];
-    this.cccSeleccionado = null;
-    this.searchInput.nativeElement.focus();
   }
 }

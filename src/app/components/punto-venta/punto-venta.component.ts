@@ -223,17 +223,23 @@ export class PuntoVentaComponent implements OnInit {
       const control = this.searchRPInRenglones(p.idProducto);
       const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
 
-      this.showCantidadModal(p.idProducto, `${p.codigo} - ${p.descripcion}`, cPrevia);
+      this.showCantidadModal(p.idProducto, cPrevia, p.codigo, p.descripcion, p.urlImagen, p.oferta);
     }, (reason) => { /*console.log(reason);*/ });
   }
 
   // modal de cantidad
-  showCantidadModal(idProductoItem: number, descripcionItem: string, cantidadPrevia = 1) {
+  showCantidadModal(
+    idProductoItem: number, cantidadPrevia = 1,
+    codigoItem: string, descripcionItem: string, urlImagenItem: string, oferta: boolean
+  ) {
     const modalRef = this.modalService.open(RenglonPedidoModalComponent/*, { size: 'xl' }*/);
     modalRef.componentInstance.cliente = this.form.get('ccc').value.cliente;
     modalRef.componentInstance.idProductoItem = idProductoItem;
-    modalRef.componentInstance.descripcionItem = descripcionItem;
     modalRef.componentInstance.cantidad = cantidadPrevia;
+    modalRef.componentInstance.codigoItem = codigoItem;
+    modalRef.componentInstance.descripcionItem = descripcionItem;
+    modalRef.componentInstance.urlImagenItem = urlImagenItem;
+    modalRef.componentInstance.oferta = oferta;
     modalRef.result.then((rp: RenglonPedido) => {
         this.handleRenglonPedido(rp);
     }, (reason) => { /*console.log(reason);*/ });
@@ -242,7 +248,9 @@ export class PuntoVentaComponent implements OnInit {
   editRenglon(rpControl: AbstractControl) {
     if (rpControl) {
       const rp: RenglonPedido = rpControl.get('renglonPedido').value;
-      this.showCantidadModal(rp.idProductoItem, rp.descripcionItem, rp.cantidad);
+      this.showCantidadModal(
+        rp.idProductoItem, rp.cantidad, rp.codigoItem, rp.descripcionItem, rp.urlImagenItem, rp.oferta
+      );
     }
   }
 
@@ -313,11 +321,10 @@ export class PuntoVentaComponent implements OnInit {
             const nrp: NuevoRenglonPedido = {
               idProductoItem: p.idProducto,
               cantidad: cant,
-              idCliente: this.form.get('ccc').value.cliente.id_Cliente,
             };
             // this.loading = true;
 
-            this.pedidosService.calcularRenglon(nrp)
+            this.pedidosService.calcularRenglon(nrp, this.form.get('ccc').value.cliente.id_Cliente)
               .pipe(
                 finalize(() => {
                   this.loadingProducto = false;

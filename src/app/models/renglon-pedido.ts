@@ -4,9 +4,13 @@ export interface RenglonPedido {
   codigoItem: string;
   descripcionItem: string;
   medidaItem: string;
+  urlImagenItem: string;
+  oferta: boolean;
   precioUnitario: number;
   cantidad: number;
-  descuentoPorcentaje: number;
-  descuentoNeto: number;
+  bonificacionPorcentaje: number;
+  bonificacionNeta: number;
+  subTotal: number;
+  importeAnterior: number;
   importe: number;
 }

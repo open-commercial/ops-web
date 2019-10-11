@@ -1,41 +1,45 @@
 <div class="modal-header">
   <h4 class="h5 modal-title flex-fill">Buscar Producto</h4>
-  <button type="button" class="close" aria-label="Close">
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div class="modal-body px-2">
-  <div class="input-group mb-3">
+<div class="modal-body d-flex flex-column px-2">
+  <div class="input-group">
     <label class="sr-only" for="pmProducto"></label>
-    <input #searchInput autocomplete="off" ngbAutofocus type="text" class="form-control" id="pmProducto" (keyup.enter)="onSearchInputKeyUp($event)">
+    <input #searchInput autocomplete="off" ngbAutofocus type="text" class="form-control" id="pmProducto"
+           (keyup.enter)="onSearchInputKeyUp($event)" [disabled]="loading">
     <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar(searchInput.value)">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar(searchInput.value)" [disabled]="loading">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
       </button>
     </div>
   </div>
-  <form (submit)="seleccionarProducto()">
-  <div class="productos">
-    <div *ngFor="let p of productos; let f = first;" [class.border-top]="f" class="producto form-check border-bottom px-0 py-2"
-         [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto">
-      <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (focus)="select(p)">
-      <label class="form-check-label d-block" for="p_{{ p.idProducto }}">
-        <span class="d-flex flex-row align-items-center">
-          <span class="img-container flex-grow-0 flex-shrink-0">
-            <img [src]="p.urlImagen ? p.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
-          </span>
-          <span class="d-flex flex-column">
-            <span class="mr-2 codigo">{{ p.codigo }}</span>
-            <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
-            <span class="mr-2">Stock: <strong>{{ p.cantidadTotalEnSucursales }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
-            <span class="mr-2">Cant. x Bulto: {{ p.bulto }} {{ p.nombreMedida }}</span>
-            <span class="mr-2">P. Lista: <strong>{{ p.precioLista | currency:'ARS' }}</strong></span>
-          </span>
-        </span>
-      </label>
-    </div>
+  <div *ngIf="loading" class="text-center mt-3">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
-    <button class="invisible" type="submit"></button>
+  <form (submit)="seleccionarProducto()" class="flex-fill overflow-auto mt-3" *ngIf="!loading && productos.length">
+    <div class="productos">
+      <div *ngFor="let p of productos; let f = first;" [class.border-top]="f" class="producto form-check border-bottom p-0"
+           [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto">
+        <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (focus)="select(p)">
+        <label class="form-check-label d-block" for="p_{{ p.idProducto }}">
+          <span class="d-flex flex-row align-items-center">
+            <span class="img-container flex-grow-0 flex-shrink-0 d-flex align-items-center">
+              <img [src]="p.urlImagen ? p.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
+            </span>
+            <span class="flex-fill d-flex flex-column p-2 info">
+              <span class="mr-2 codigo">{{ p.codigo }}</span>
+              <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
+              <span class="mr-2">Stock: <strong>{{ p.cantidadTotalEnSucursales }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
+              <span class="mr-2">Cant. x Bulto: {{ p.bulto }} {{ p.nombreMedida }}</span>
+              <span class="mr-2">P. Lista: <strong>{{ p.precioLista | currency:'ARS' }}</strong></span>
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <button class="sr-only" type="submit"></button>
   </form>
 </div>
 <div class="modal-footer">

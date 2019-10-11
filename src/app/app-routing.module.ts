@@ -12,6 +12,17 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
+      { path: '', component: PuntoVentaComponent },
+    ]
+  },
+  { path: '**', redirectTo: '' }
+];
+
+/*
+const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
+    children: [
       { path: 'punto-venta', component: PuntoVentaComponent },
       { path: 'pedidos', component: PedidosComponent },
       { path: 'facturas-venta', component: FacturasVentaComponent },
@@ -20,6 +31,7 @@ const routes: Routes = [
   },
   { path: '**', redirectTo: '' }
 ];
+*/
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
