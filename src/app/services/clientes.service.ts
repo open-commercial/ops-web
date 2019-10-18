@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Subject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Cliente} from '../models/cliente';
-import { SucursalesService } from './sucursales.service';
 import { Pagination } from '../models/pagination';
-import { HelperService } from './helper.service';
 import { BusquedaClienteCriteria } from '../models/criterias/busqueda-cliente-criteria';
 
 @Injectable()
@@ -17,8 +15,7 @@ export class ClientesService {
 
   getClientes(input, page = 0): Observable<Pagination> {
     const criteria: BusquedaClienteCriteria = {
-      nombreFiscal: input, nombreFantasia: input, nroDeCliente: input,
-      pagina: page
+      nombreFiscal: input, nombreFantasia: input, nroDeCliente: input, pagina: page
     };
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
@@ -31,9 +28,8 @@ export class ClientesService {
     return this.http.get<Cliente>(this.url + '/' + idCliente);
   }
 
-  saveCliente(cliente) {
-    cliente.idEmpresa = SucursalesService.getIdSucursal();
-    return this.http.put(this.url, cliente);
+  saveCliente(cliente: Cliente): Observable<Cliente> {
+    return this.http.put<Cliente>(this.url, cliente);
   }
 
   getClientePredeterminado(): Observable<Cliente> {

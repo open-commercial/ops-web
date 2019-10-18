@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
-import { NgbAccordionConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionConfig, NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
 import { PedidosService } from '../../services/pedidos.service';
@@ -14,19 +14,19 @@ import { Resultados } from '../../models/resultados';
 import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
 import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
-import { HelperService } from '../../services/helper.service';
-import { Ubicacion } from '../../models/ubicacion';
 import { NuevoPedido } from '../../models/nuevo-pedido';
 import { AuthService } from '../../services/auth.service';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
+import { EliminarRengloPedidoModalComponent } from '../eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
+import { Cliente } from '../../models/cliente';
 
 @Component({
   selector: 'app-punto-venta',
   templateUrl: './punto-venta.component.html',
-  styleUrls: ['./punto-venta.component.scss']
+  styleUrls: ['./punto-venta.component.scss'],
 })
 export class PuntoVentaComponent implements OnInit {
   form: FormGroup;
@@ -39,11 +39,16 @@ export class PuntoVentaComponent implements OnInit {
   private errors = new Subject<string>();
   errorMessage: string;
 
+  private productoPorCodigoErrors = new Subject<string>();
+  productoPorCodigoErrorMessage: string;
+
   loadingProducto = false;
+  loadingResultados = false;
 
   constructor(private fb: FormBuilder,
+              modalConfig: NgbModalConfig,
               private modalService: NgbModal,
-              config: NgbAccordionConfig,
+              accordionConfig: NgbAccordionConfig,
               private pedidosService: PedidosService,
               private cuentasCorrienteService: CuentasCorrienteService,
               private sucursalesService: SucursalesService,
@@ -51,7 +56,9 @@ export class PuntoVentaComponent implements OnInit {
               private router: Router,
               private productosService: ProductosService) {
 
-    config.type = 'dark';
+    accordionConfig.type = 'dark';
+    modalConfig.backdrop = 'static';
+    modalConfig.keyboard = false;
   }
 
   ngOnInit() {
@@ -60,6 +67,11 @@ export class PuntoVentaComponent implements OnInit {
       .pipe(debounceTime(3000))
       .subscribe(() => this.errorMessage = null);
 
+    this.productoPorCodigoErrors.subscribe((message) => this.productoPorCodigoErrorMessage = message);
+    this.productoPorCodigoErrors
+      .pipe(debounceTime(3000))
+      .subscribe(() => this.productoPorCodigoErrorMessage = null);
+
     this.createFrom();
   }
 
@@ -67,7 +79,7 @@ export class PuntoVentaComponent implements OnInit {
     this.form = this.fb.group({
       ccc: [null, Validators.required],
       renglonesPedido: this.fb.array([]),
-      observaciones: '',
+      observaciones: ['', Validators.maxLength(250)],
       descuento: 0,
       recargo: 0,
       tipoEnvio: [this.te.RETIRO_EN_SUCURSAL, Validators.required],
@@ -78,7 +90,10 @@ export class PuntoVentaComponent implements OnInit {
     });
 
     this.form.get('ccc').valueChanges
-      .subscribe(v => this.calcularResultados());
+      .subscribe(v => {
+        this.setUbicaciones();
+        this.calcularResultados();
+      });
 
     this.form.get('renglonesPedido').valueChanges
       .subscribe(v => this.calcularResultados());
@@ -105,7 +120,6 @@ export class PuntoVentaComponent implements OnInit {
       .subscribe(
         ccc => {
           this.form.get('ccc').setValue(ccc);
-          this.setUbicaciones();
         },
         err => {
           console.log(err.error);
@@ -254,8 +268,13 @@ export class PuntoVentaComponent implements OnInit {
     }
   }
 
-  eliminarRenglon(index: number) {
-    this.renglonesPedido.removeAt(index);
+  eliminarRenglon(index: number, content) {
+    const rp: RenglonPedido = this.renglonesPedido.at(index).get('renglonPedido').value;
+    const modalRef = this.modalService.open(EliminarRengloPedidoModalComponent);
+    modalRef.componentInstance.rp = rp;
+    modalRef.result.then(() => {
+      this.renglonesPedido.removeAt(index);
+    }, (reason) => { /*console.log(reason);*/ });
   }
 
   searchRPInRenglones(idProducto): AbstractControl {
@@ -280,7 +299,12 @@ export class PuntoVentaComponent implements OnInit {
       recargoPorcentaje: this.form.get('recargo').value,
       renglones: this.form.get('renglonesPedido').value.map(e =>  e.renglonPedido)
     };
+
+    this.loadingResultados = true;
     this.pedidosService.calcularResultadosPedido(nrp)
+      .pipe(
+        finalize(() => this.loadingResultados = false)
+      )
       .subscribe((r: Resultados) => {
         this.form.get('resultados').setValue(r);
       });
@@ -295,12 +319,12 @@ export class PuntoVentaComponent implements OnInit {
     this.calcularResultados();
   }
 
-  getUbicacionLabel(u: Ubicacion) {
-    return HelperService.formatUbicacion(u);
-  }
-
   showErrorMessage(message: string) {
     this.errors.next(message);
+  }
+
+  showProductoPorCodigoErrorMessage(message: string) {
+    this.productoPorCodigoErrors.next(message);
   }
 
   ingresarProductoDirecto($event) {
@@ -342,22 +366,29 @@ export class PuntoVentaComponent implements OnInit {
                   }
                 },
                 err => {
-                  this.showErrorMessage(err.error);
+                  this.showProductoPorCodigoErrorMessage(err.error);
                 }
               );
           } else {
             this.loadingProducto = false;
             $event.target.value = '';
             $event.target.focus();
-            this.showErrorMessage(`No existe producto con codigo: "${codigo}"`);
+            this.showProductoPorCodigoErrorMessage(`No existe producto con codigo: "${codigo}"`);
           }
         },
         err => {
           this.loadingProducto = false;
           $event.target.value = '';
           $event.target.focus();
-          this.showErrorMessage(err.error);
+          this.showProductoPorCodigoErrorMessage(err.error);
         }
     );
   }
+
+  updatedCliente($event: Cliente) {
+    const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
+    ccc.cliente = $event;
+    this.form.get('ccc').setValue(ccc);
+  }
 }
+

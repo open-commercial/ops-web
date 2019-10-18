@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, of, Subject } from 'rxjs';
 import { Producto } from '../../models/producto';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { SucursalesService } from '../../services/sucursales.service';
@@ -15,43 +15,59 @@ import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 })
 export class ProductoModalComponent implements OnInit {
   productos: Producto[] = [];
+  clearLoading = false;
   loading = false;
+  busqueda = '';
   input$  = new Subject<string>();
 
   productoSeleccionado: Producto = null;
 
-  @ViewChild('searchInput', null) searchInput: ElementRef;
+  page = 0;
+  totalElements = 0;
+  totalPages = 0;
+  size = 0;
+
+  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               private productosService: ProductosService) { }
 
-  ngOnInit() {
-    this.loadProductos();
-  }
+  ngOnInit() {}
 
-  loadProductos() {
-    this.input$.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
-      tap(() => this.loading = true),
-      switchMap(term => this.productosService.getProductos(term).pipe(
-        map((v: Pagination) => v.content),
-        catchError(() => of([])), // empty list on error
-        tap(() => this.loading = false)
-      ))
-    ).subscribe(data => this.productos = data);
-  }
-
-  onSearchInputKeyUp($event) {
-    this.buscar($event.target.value);
-  }
-
-  buscar(value) {
-    this.productoSeleccionado = null;
-    value = value.trim();
-    if (value) {
-      this.input$.next(value);
+  getProductos(clearResults = false) {
+    this.page += 1;
+    if (clearResults) {
+      this.clearLoading = true;
+      this.page = 0;
+      this.productos = [];
+    } else {
+      this.loading = true;
     }
+
+    this.productosService.getProductos(this.busqueda, this.page)
+      .pipe(
+        finalize(() => {
+          this.loading = false; this.clearLoading = false;
+          if (clearResults) {
+            setTimeout(() => this.searchInput.nativeElement.focus(), 300);
+          }
+        })
+      )
+      .subscribe((p: Pagination) => {
+        p.content.forEach((e) => this.productos.push(e));
+        this.totalElements = p.totalElements;
+        this.totalPages = p.totalPages;
+        this.size = p.size;
+      })
+    ;
+  }
+
+  buscar() {
+    this.getProductos(true);
+  }
+
+  loadMore() {
+    this.getProductos();
   }
 
   select(p: Producto) {

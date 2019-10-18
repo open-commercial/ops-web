@@ -1,0 +1,16 @@
+<div class="d-flex flex-row align-items-center">
+  <div class="p-2">
+    <em *ngIf="!ubicacion && !updating">(Sin ubicación)</em>
+    <div *ngIf="ubicacion && !updating">
+      {{ getUbicacionStr() }}
+    </div>
+    <div *ngIf="updating">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    </div>
+  </div>
+  <div class="p-2">
+    <button class="btn btn-primary" type="button" (click)="showUbicacionModal()" [disabled]="updating">
+      <fa-icon [icon]="['fas', (ubicacion ? 'edit' : 'plus')]"></fa-icon>
+    </button>
+  </div>
+</div>

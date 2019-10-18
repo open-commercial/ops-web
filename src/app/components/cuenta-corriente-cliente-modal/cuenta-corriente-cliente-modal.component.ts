@@ -15,7 +15,7 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   cccs: CuentaCorrienteCliente[] = [];
   clearLoading = false;
   loading = false;
-  termino = '';
+  busqueda = '';
   cccSeleccionado: CuentaCorrienteCliente = null;
   helper = HelperService;
 
@@ -23,6 +23,8 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   totalElements = 0;
   totalPages = 0;
   size = 0;
+
+  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               private cuentasCorrienteService: CuentasCorrienteService) { }
@@ -39,9 +41,14 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
       this.loading = true;
     }
 
-    this.cuentasCorrienteService.getCuentasCorriente(this.termino, this.page)
+    this.cuentasCorrienteService.getCuentasCorriente(this.busqueda, this.page)
       .pipe(
-        finalize(() => { this.loading = false; this.clearLoading = false; })
+        finalize(() => {
+          this.loading = false; this.clearLoading = false;
+          if (clearResults) {
+            setTimeout(() => this.searchInput.nativeElement.focus(), 300);
+          }
+        })
       )
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.cccs.push(e));

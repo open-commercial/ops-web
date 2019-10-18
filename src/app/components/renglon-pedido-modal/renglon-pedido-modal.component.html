@@ -1,17 +1,16 @@
-<div class="modal-body">
+<div class="modal-body p-2">
   <div class="d-flex flex-row align-items-center">
-    <div class="img-container d-flex align-items-center">
+    <div class="img-container d-flex align-items-center flex-grow-0 flex-shrink-0">
       <img [src]="urlImagenItem ? urlImagenItem : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
     </div>
-    <div class="info">
-      <span class="codigo">{{ codigoItem }}</span>&nbsp;<span *ngIf="oferta" class="badge badge-success">oferta</span> <br>
+    <div class="info flex-fill">
+      <span class="codigo">{{ codigoItem }}</span>&nbsp;<span *ngIf="oferta" class="badge badge-success">OFERTA</span> <br>
       <strong>{{ descripcionItem }}</strong>
     </div>
   </div>
-  <form [formGroup]="form" (submit)="submit()">
+  <form [formGroup]="form" (submit)="submit()" *ngIf="!loading">
     <div class="form-group mb-0">
       <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad para este producto.</label>
-      <!--<small class="form-text text-muted">Ingrese la cantidad para este producto.</small>-->
       <input type="number" class="form-control" id="cantidad" placeholder="Cantidad"
              formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }">
 
@@ -21,17 +20,17 @@
       </div>
     </div>
     <button tabindex="-1" class="sr-only" type="submit">Aceptar</button>
-    <div *ngIf="loading" class="text-center">
-      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-    </div>
   </form>
+  <div *ngIf="loading" class="text-center">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">
-    <!--<fa-icon [icon]="['fas', 'bullseye']"></fa-icon>&nbsp;-->Cancelar
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="loading">
+    Cancelar
   </button>
-  <button type="button" class="btn btn-primary" (click)="submit()">
-    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="loading">
+    Aceptar
   </button>
 </div>
 

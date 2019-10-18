@@ -1,24 +1,18 @@
-<div class="modal-header">
-  <h4 class="h5 modal-title flex-fill">Buscar Producto</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body d-flex flex-column px-2">
+<div class="modal-body d-flex flex-column p-2">
   <div class="input-group">
     <label class="sr-only" for="pmProducto"></label>
-    <input #searchInput autocomplete="off" ngbAutofocus type="text" class="form-control" id="pmProducto"
-           (keyup.enter)="onSearchInputKeyUp($event)" [disabled]="loading">
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="text" class="form-control" id="pmProducto" placeholder="Buscar Producto..."
+           (keyup.enter)="buscar()" [disabled]="clearLoading || loading">
     <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar(searchInput.value)" [disabled]="loading">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
       </button>
     </div>
   </div>
-  <div *ngIf="loading" class="text-center mt-3">
+  <div *ngIf="clearLoading" class="text-center mt-3">
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
-  <form (submit)="seleccionarProducto()" class="flex-fill overflow-auto mt-3" *ngIf="!loading && productos.length">
+  <form (submit)="seleccionarProducto()" class="flex-fill mt-2" *ngIf="!clearLoading && productos.length">
     <div class="productos">
       <div *ngFor="let p of productos; let f = first;" [class.border-top]="f" class="producto form-check border-bottom p-0"
            [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto">
@@ -29,7 +23,9 @@
               <img [src]="p.urlImagen ? p.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
             </span>
             <span class="flex-fill d-flex flex-column p-2 info">
-              <span class="mr-2 codigo">{{ p.codigo }}</span>
+              <span>
+                <span class="mr-2 codigo">{{ p.codigo }}</span>&nbsp;<span *ngIf="p.oferta" class="badge badge-success">OFERTA</span>
+              </span>
               <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
               <span class="mr-2">Stock: <strong>{{ p.cantidadTotalEnSucursales }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
               <span class="mr-2">Cant. x Bulto: {{ p.bulto }} {{ p.nombreMedida }}</span>
@@ -39,11 +35,18 @@
         </label>
       </div>
     </div>
+    <div class="text-center pt-2">
+      <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+      <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
+    </div>
     <button class="sr-only" type="submit"></button>
   </form>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-primary" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado">
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="loading || clearLoading">
+    Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado || loading || clearLoading">
     <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>&nbsp;Seleccionar
   </button>
 </div>

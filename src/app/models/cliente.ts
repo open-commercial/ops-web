@@ -3,23 +3,22 @@ import {Ubicacion} from './ubicacion';
 
 export interface Cliente {
   id_Cliente: number;
+  bonificacion: number;
   nroCliente: string;
   nombreFiscal: string;
   nombreFantasia: string;
-  bonificacion: number;
   categoriaIVA: CategoriaIVA;
-  idFiscal: string;
+  idFiscal: number;
   email: string;
   telefono: string;
-  ubicacionFacturacion: Ubicacion;
-  ubicacionEnvio: Ubicacion;
   contacto: string;
   fechaAlta: Date;
-  idEmpresa: number;
-  nombreEmpresa: string;
   idViajante: number;
   nombreViajante: string;
   idCredencial: number;
   nombreCredencial: string;
   predeterminado: boolean;
+  ubicacionFacturacion: Ubicacion;
+  ubicacionEnvio: Ubicacion;
 }
+

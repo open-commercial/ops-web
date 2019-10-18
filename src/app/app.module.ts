@@ -36,6 +36,10 @@ import { ProductoModalComponent } from './components/producto-modal/producto-mod
 import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
 import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/renglon-pedido-modal.component';
 import { CuentaCorrienteClienteModalComponent } from './components/cuenta-corriente-cliente-modal/cuenta-corriente-cliente-modal.component';
+import { UbicacionFacturacionComponent } from './components/ubicacion-facturacion-component/ubicacion-facturacion.component';
+import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
+import { EliminarRengloPedidoModalComponent } from './components/eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
+import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
 
 library.add(fas);
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -60,6 +64,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     BusquedaCuentaCorrienteClienteComponent,
     RenglonPedidoModalComponent,
     CuentaCorrienteClienteModalComponent,
+    UbicacionFacturacionComponent,
+    UbicacionEnvioComponent,
+    UbicacionModalComponent,
+    EliminarRengloPedidoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,7 +92,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
   entryComponents: [
     ProductoModalComponent,
     RenglonPedidoModalComponent,
-    CuentaCorrienteClienteModalComponent
+    CuentaCorrienteClienteModalComponent,
+    UbicacionModalComponent,
+    EliminarRengloPedidoModalComponent
   ],
   bootstrap: [AppComponent]
 })
