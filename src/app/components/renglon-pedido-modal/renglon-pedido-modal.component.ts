@@ -51,7 +51,7 @@ export class RenglonPedidoModalComponent implements OnInit {
       };
 
       this.loading = true;
-      this.pedidosService.calcularRenglon(nrp, this.cliente.id_Cliente)
+      this.pedidosService.calcularRenglones([nrp], this.cliente.id_Cliente)
         .pipe(finalize(() => this.loading = false))
         .subscribe(data =>  {
           const rp: RenglonPedido = data[0];

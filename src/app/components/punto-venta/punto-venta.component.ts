@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
-import { NgbAccordionConfig, NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
 import { PedidosService } from '../../services/pedidos.service';
@@ -82,18 +82,13 @@ export class PuntoVentaComponent implements OnInit {
       observaciones: ['', Validators.maxLength(250)],
       descuento: 0,
       recargo: 0,
-      tipoEnvio: [this.te.RETIRO_EN_SUCURSAL, Validators.required],
+      tipoEnvio: [ null/*this.te.RETIRO_EN_SUCURSAL*/, Validators.required ],
       sucursal: null,
-      ubicacionFacturacion: null,
-      ubicacionEnvio: null,
       resultados: null,
     });
 
     this.form.get('ccc').valueChanges
-      .subscribe(v => {
-        this.setUbicaciones();
-        this.calcularResultados();
-      });
+      .subscribe(v => { this.updateRenglones(); });
 
     this.form.get('renglonesPedido').valueChanges
       .subscribe(v => this.calcularResultados());
@@ -128,14 +123,14 @@ export class PuntoVentaComponent implements OnInit {
       );
   }
 
-  setUbicaciones() {
-    this.form.get('ubicacionFacturacion').setValue(null);
-    this.form.get('ubicacionEnvio').setValue(null);
-    if (this.form && this.form.get('ccc') && this.form.get('ccc').value) {
-      const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
-      this.form.get('ubicacionFacturacion').setValue(ccc.cliente.ubicacionFacturacion);
-      this.form.get('ubicacionEnvio').setValue(ccc.cliente.ubicacionEnvio);
-    }
+  clienteHasUbicacionFacturacion() {
+    const cliente: Cliente = this.form.get('ccc') && this.form.get('ccc').value.cliente ? this.form.get('ccc').value.cliente : null;
+    return !!(cliente && cliente.ubicacionFacturacion);
+  }
+
+  clienteHasUbicacionEnvio() {
+    const cliente: Cliente = this.form.get('ccc') && this.form.get('ccc').value.cliente ? this.form.get('ccc').value.cliente : null;
+    return !!(cliente && cliente.ubicacionEnvio);
   }
 
   getSucursales() {
@@ -199,10 +194,8 @@ export class PuntoVentaComponent implements OnInit {
       observaciones: '',
       descuento: 0,
       recargo: 0,
-      tipoEnvio: TipoDeEnvio.RETIRO_EN_SUCURSAL,
+      tipoEnvio: null, // TipoDeEnvio.RETIRO_EN_SUCURSAL,
       sucursal: null,
-      ubicacionFacturacion: null,
-      ubicacionEnvio: null,
       resultados: null,
     });
   }
@@ -348,7 +341,7 @@ export class PuntoVentaComponent implements OnInit {
             };
             // this.loading = true;
 
-            this.pedidosService.calcularRenglon(nrp, this.form.get('ccc').value.cliente.id_Cliente)
+            this.pedidosService.calcularRenglones([nrp], this.form.get('ccc').value.cliente.id_Cliente)
               .pipe(
                 finalize(() => {
                   this.loadingProducto = false;
@@ -389,6 +382,44 @@ export class PuntoVentaComponent implements OnInit {
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
     ccc.cliente = $event;
     this.form.get('ccc').setValue(ccc);
+  }
+
+  getTipoDeEnvioStr(te: TipoDeEnvio) {
+    if (te === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
+      return 'RETIRO EN SUCURSAL';
+    }
+    if (te === TipoDeEnvio.USAR_UBICACION_ENVIO) {
+      return 'USAR UBICACIÓN DE ENVÍO';
+    }
+    if (te === TipoDeEnvio.USAR_UBICACION_FACTURACION) {
+      return 'USAR UBICACIÓN DE FACTURACIÓN';
+    }
+    return '';
+  }
+
+  updateRenglones() {
+    const cliente: Cliente = this.form.get('ccc').value.cliente;
+    const renglones: NuevoRenglonPedido[] = [];
+    this.renglonesPedido.controls.forEach(c => {
+      const rp: RenglonPedido = c.get('renglonPedido').value;
+      const nrp: NuevoRenglonPedido = {
+        idProductoItem: rp.idProductoItem,
+        cantidad: rp.cantidad,
+      };
+      renglones.push(nrp);
+    });
+
+    if (cliente && renglones.length) {
+      this.pedidosService.calcularRenglones(renglones, cliente.id_Cliente)
+        .subscribe(rps => {
+          const nuevosRenglones = [];
+          rps.forEach((rp: RenglonPedido) => {
+            nuevosRenglones.push({ renglonPedido: rp });
+          });
+          this.renglonesPedido.setValue(nuevosRenglones);
+        })
+      ;
+    }
   }
 }
 
