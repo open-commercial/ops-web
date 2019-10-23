@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
   NgbAccordionModule,
-  NgbAlertModule,
+  NgbAlertModule, NgbButtonsModule,
   NgbCollapseModule,
   NgbDatepickerModule,
   NgbDropdownModule, NgbModalModule,
@@ -11,11 +11,11 @@ import {
 @NgModule({
   imports: [
     NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbDatepickerModule, NgbPopoverModule, NgbAccordionModule,
-    NgbModalModule, NgbTypeaheadModule
+    NgbModalModule, NgbTypeaheadModule, NgbButtonsModule
   ],
   exports: [
     NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbDatepickerModule, NgbPopoverModule, NgbAccordionModule,
-    NgbModalModule, NgbTypeaheadModule
+    NgbModalModule, NgbTypeaheadModule, NgbButtonsModule
   ]
 })
 export class NgBoostrapModule { }

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
-import { NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
 import { PedidosService } from '../../services/pedidos.service';
@@ -45,6 +45,8 @@ export class PuntoVentaComponent implements OnInit {
   loadingProducto = false;
   loadingResultados = false;
 
+  @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -73,6 +75,12 @@ export class PuntoVentaComponent implements OnInit {
       .subscribe(() => this.productoPorCodigoErrorMessage = null);
 
     this.createFrom();
+  }
+
+  panelBeforeChange($event) {
+    if (this.accordion.activeIds.indexOf($event.panelId) >= 0) {
+      $event.preventDefault();
+    }
   }
 
   createFrom() {
@@ -386,13 +394,13 @@ export class PuntoVentaComponent implements OnInit {
 
   getTipoDeEnvioStr(te: TipoDeEnvio) {
     if (te === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
-      return 'RETIRO EN SUCURSAL';
+      return 'Retiro sucursal';
     }
     if (te === TipoDeEnvio.USAR_UBICACION_ENVIO) {
-      return 'USAR UBICACIÓN DE ENVÍO';
+      return 'Ubicación envío';
     }
     if (te === TipoDeEnvio.USAR_UBICACION_FACTURACION) {
-      return 'USAR UBICACIÓN DE FACTURACIÓN';
+      return 'Ubicación facturación';
     }
     return '';
   }
