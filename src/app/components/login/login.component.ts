@@ -6,6 +6,7 @@ import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from "../../models/sucursal";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private fb: FormBuilder,
-              private router: Router) { }
+              private router: Router,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
     this.errors.subscribe((message) => this.errorMessage = message);
@@ -59,9 +61,15 @@ export class LoginComponent implements OnInit {
               finalize(() => { this.loading = false; this.form.enable(); })
             )
             .subscribe((usuario: Usuario) => {
-              // SucursalesService.setIdSucursal(usuario.idEmpresaPredeterminada.toString());
-              SucursalesService.setIdSucursal('1');
-              this.router.navigate(['']);
+              this.sucursalesService.getSucursales().subscribe(sucs => {
+                if (sucs.length)  {
+                  this.sucursalesService.seleccionarSucursal(sucs[0]);
+                  this.router.navigate(['']);
+                } else {
+                  this.showErrorMessage('No se pudieron obtener sucursales.');
+                  this.authService.logout();
+                }
+              });
             });
         },
         err => {

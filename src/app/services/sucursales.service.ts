@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Sucursal } from '../models/sucursal';
 import { environment } from '../../environments/environment';
 import { HelperService } from './helper.service';
@@ -11,6 +11,9 @@ import { HelperService } from './helper.service';
 export class SucursalesService {
   public url = environment.apiUrl + '/api/v1/sucursales';
 
+  private sucursalSubject = new Subject<Sucursal>();
+  sucursal$ = this.sucursalSubject.asObservable();
+
   constructor(private http: HttpClient) { }
 
   static getIdSucursal() {
@@ -19,6 +22,11 @@ export class SucursalesService {
 
   static setIdSucursal(idSucursal: string) {
     localStorage.setItem('idSucursal', idSucursal);
+  }
+
+  seleccionarSucursal(s: Sucursal) {
+    SucursalesService.setIdSucursal(s.idSucursal.toString());
+    this.sucursalSubject.next(s);
   }
 
   getSucursales(): Observable<Array<Sucursal>> {
