@@ -48,10 +48,7 @@ export class TopBarComponent implements OnInit {
 
   refreshSucursalSeleccionada() {
     const idSucSeleccionada = Number(SucursalesService.getIdSucursal());
-    const aux = this.sucursales.filter((s: Sucursal) => {
-      console.log(s.idSucursal + ' === ' + idSucSeleccionada)
-      return s.idSucursal === idSucSeleccionada;
-    });
+    const aux = this.sucursales.filter((s: Sucursal) => s.idSucursal === idSucSeleccionada);
     this.sucursalSeleccionada = aux.length ? aux[0] : null;
   }
 
