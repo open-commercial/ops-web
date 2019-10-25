@@ -185,6 +185,7 @@ export class PuntoVentaComponent implements OnInit {
   submit() {
     if (this.form.valid) {
       const np: NuevoPedido = this.getNuevoPedido();
+      // console.log(np); return;
       this.saving = true;
       this.pedidosService.savePedido(np)
         .pipe(finalize(() => this.saving = false))

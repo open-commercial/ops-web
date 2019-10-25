@@ -5,8 +5,8 @@ export interface NuevoPedido {
   fechaVencimiento: Date;
   observaciones: string;
   idSucursal: number;
-  idSucursalEnvio: number;
   tipoDeEnvio: TipoDeEnvio;
+  idSucursalEnvio: number;
   idUsuario: number;
   idCliente: number;
   renglones: Array<RenglonPedido>;
