@@ -18,6 +18,9 @@
         <div *ngIf="f.password.errors.required">Requerido</div>
       </div>
     </div>
-    <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
+    <div *ngIf="loading" class="text-center my-3">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit" *ngIf="!loading">Ingresar</button>
   </form>
 </div>

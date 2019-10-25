@@ -26,11 +26,11 @@
   </div>
 </div>
 <div class="modal-footer p-2">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="loading">
-    Cancelar
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
   </button>
   <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="loading">
-    Aceptar
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar
   </button>
 </div>
 

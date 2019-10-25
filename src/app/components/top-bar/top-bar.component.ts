@@ -53,6 +53,7 @@ export class TopBarComponent implements OnInit {
   }
 
   seleccionarSucursal(s: Sucursal) {
+    if (s && this.sucursalSeleccionada && s.idSucursal === this.sucursalSeleccionada.idSucursal) { return; }
     this.sucursalesService.seleccionarSucursal(s);
   }
 }

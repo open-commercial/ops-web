@@ -22,6 +22,16 @@ import { Subject } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
 import { EliminarRengloPedidoModalComponent } from '../eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
+import { ClientesService } from '../../services/clientes.service';
+
+enum OpcionEnvio {
+  RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
+  ENVIO_A_DOMICILIO= 'ENVIO A DOMICILIO',
+}
+enum OpcionEnvioUbicacion {
+  USAR_UBICACION_ENVIO= 'USAR_UBICACION_ENVIO',
+  USAR_UBICACION_FACTURACION= 'USAR_UBICACION_FACTURACION',
+}
 
 @Component({
   selector: 'app-punto-venta',
@@ -30,14 +40,18 @@ import { Cliente } from '../../models/cliente';
 })
 export class PuntoVentaComponent implements OnInit {
   form: FormGroup;
-  te = TipoDeEnvio;
+
+  oe = OpcionEnvio;
+  oeu = OpcionEnvioUbicacion;
+
   sucursales: Array<Sucursal> = [];
 
   saving = false;
   cccPredeterminadoLoading = false;
 
-  private errors = new Subject<string>();
-  errorMessage: string;
+  private messages = new Subject<string>();
+  message: string;
+  messageType = 'success';
 
   private productoPorCodigoErrors = new Subject<string>();
   productoPorCodigoErrorMessage: string;
@@ -52,6 +66,7 @@ export class PuntoVentaComponent implements OnInit {
               private modalService: NgbModal,
               accordionConfig: NgbAccordionConfig,
               private pedidosService: PedidosService,
+              private clientesService: ClientesService,
               private cuentasCorrienteService: CuentasCorrienteService,
               private sucursalesService: SucursalesService,
               private authService: AuthService,
@@ -64,14 +79,14 @@ export class PuntoVentaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.errors.subscribe((message) => this.errorMessage = message);
-    this.errors
-      .pipe(debounceTime(3000))
-      .subscribe(() => this.errorMessage = null);
+    this.messages.subscribe((message) => this.message = message);
+    this.messages
+      .pipe(debounceTime(5000))
+      .subscribe(() => this.message = null);
 
     this.productoPorCodigoErrors.subscribe((message) => this.productoPorCodigoErrorMessage = message);
     this.productoPorCodigoErrors
-      .pipe(debounceTime(3000))
+      .pipe(debounceTime(5000))
       .subscribe(() => this.productoPorCodigoErrorMessage = null);
 
     this.createFrom();
@@ -90,13 +105,16 @@ export class PuntoVentaComponent implements OnInit {
       observaciones: ['', Validators.maxLength(250)],
       descuento: 0,
       recargo: 0,
-      tipoEnvio: [ null/*this.te.RETIRO_EN_SUCURSAL*/, Validators.required ],
+      opcionEnvio: [null, Validators.required],
       sucursal: null,
+      opcionEnvioUbicacion: null,
       resultados: null,
     });
 
     this.form.get('ccc').valueChanges
-      .subscribe(v => { this.updateRenglones(); });
+      .subscribe(v => {
+        this.updateRenglones();
+      });
 
     this.form.get('renglonesPedido').valueChanges
       .subscribe(v => this.calcularResultados());
@@ -109,26 +127,40 @@ export class PuntoVentaComponent implements OnInit {
       v => this.calcularResultados()
     );*/
 
-    this.form.get('tipoEnvio').valueChanges.subscribe(te => {
-
+    this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
+      if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
+        this.form.get('opcionEnvioUbicacion').setValue(null);
+      }
+      if (oe === OpcionEnvio.ENVIO_A_DOMICILIO) {
+        this.form.get('sucursal').setValue(null);
+      }
     });
 
     this.getSucursales();
 
     this.cccPredeterminadoLoading = true;
-    this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-      .pipe(
-        finalize(() => this.cccPredeterminadoLoading = false)
-      )
+    this.clientesService.existeClientePredetermiando()
       .subscribe(
-        ccc => {
-          this.form.get('ccc').setValue(ccc);
+        (existe: boolean) => {
+          if (existe) {
+            this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
+              .pipe(finalize(() => this.cccPredeterminadoLoading = false))
+              .subscribe(
+                ccc => this.form.get('ccc').setValue(ccc),
+                err => this.showErrorMessage(err.error),
+              )
+            ;
+          } else {
+            this.cccPredeterminadoLoading = false;
+            this.showErrorMessage('Busque un Cliente para poder continuar');
+          }
         },
         err => {
-          console.log(err.error);
-          this.showErrorMessage(err);
+          this.cccPredeterminadoLoading = false;
+          this.showErrorMessage(err.error);
         }
-      );
+      )
+    ;
   }
 
   clienteHasUbicacionFacturacion() {
@@ -145,7 +177,7 @@ export class PuntoVentaComponent implements OnInit {
     this.sucursalesService.getPuntosDeRetito()
       .subscribe((data: Array<Sucursal>) => {
         this.sucursales = data;
-        if (this.sucursales.length) { this.form.get('sucursal').setValue(this.sucursales[0]); }
+        // if (this.sucursales.length) { this.form.get('sucursal').setValue(this.sucursales[0]); }
       })
     ;
   }
@@ -157,19 +189,43 @@ export class PuntoVentaComponent implements OnInit {
       this.pedidosService.savePedido(np)
         .pipe(finalize(() => this.saving = false))
         .subscribe(p => {
-          this.router.navigate(['/pedidos']);
+          // this.router.navigate(['/pedidos']);
+          this.showMessage('Pedido generado correctamente');
+          this.reset();
         })
       ;
     }
   }
 
+  submitButtonEnabled() {
+    const opcionEnvio = this.form.get('opcionEnvio').value;
+    const sucursal = this.form.get('sucursal').value;
+    const opcionEnvioUbicacion = this.form.get('opcionEnvioUbicacion').value;
+
+    return this.form.get('ccc').value && this.form.get('renglonesPedido').value.length &&
+      (
+        (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL && sucursal) ||
+        (opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO &&
+          (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION && this.clienteHasUbicacionFacturacion()) ||
+          (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
+        )
+      );
+  }
+
   getNuevoPedido() {
-    const sucursalEnvio: Sucursal =
-      this.form.get('tipoEnvio').value === TipoDeEnvio.RETIRO_EN_SUCURSAL && this.form.get('sucursal').value
-      ? this.form.get('sucursal').value : null;
+    let te: TipoDeEnvio = null;
+    let sucursalEnvio: Sucursal = null;
+
+    if (this.form.get('opcionEnvio').value === OpcionEnvio.RETIRO_EN_SUCURSAL) {
+      te = TipoDeEnvio.RETIRO_EN_SUCURSAL;
+      sucursalEnvio = this.form.get('sucursal').value;
+    } else {
+      const opcionEnvioUbicacion = this.form.get('opcionEnvioUbicacion').value;
+      te = opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION ?
+        TipoDeEnvio.USAR_UBICACION_FACTURACION : TipoDeEnvio.USAR_UBICACION_ENVIO;
+    }
 
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
-
     const renglones = this.form.get('renglonesPedido').value && this.form.get('renglonesPedido').value.length
       ? this.form.get('renglonesPedido').value : [];
 
@@ -180,7 +236,7 @@ export class PuntoVentaComponent implements OnInit {
       observaciones: this.form.get('observaciones').value,
       idSucursal: Number(SucursalesService.getIdSucursal()),
       idSucursalEnvio: sucursalEnvio ? sucursalEnvio.idSucursal : null,
-      tipoDeEnvio: this.form.get('tipoEnvio').value,
+      tipoDeEnvio: te,
       idUsuario: Number(this.authService.getLoggedInIdUsuario()),
       idCliente: ccc && ccc.cliente ? ccc.cliente.id_Cliente : null,
       renglones: renglones.map(r => r.renglonPedido),
@@ -191,6 +247,7 @@ export class PuntoVentaComponent implements OnInit {
       descuentoNeto: resultados && resultados.descuentoNeto ? resultados.descuentoNeto : 0,
       total: resultados && resultados.total ? resultados.total : 0,
     };
+
     return np;
   }
 
@@ -202,7 +259,7 @@ export class PuntoVentaComponent implements OnInit {
       observaciones: '',
       descuento: 0,
       recargo: 0,
-      tipoEnvio: null, // TipoDeEnvio.RETIRO_EN_SUCURSAL,
+      opcionEnvio: null,
       sucursal: null,
       resultados: null,
     });
@@ -233,13 +290,14 @@ export class PuntoVentaComponent implements OnInit {
 
   // modal de producto
   showProductoModal() {
-    const modalRef = this.modalService.open(ProductoModalComponent, { scrollable: true });
+    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.result.then((p: Producto) => {
       const control = this.searchRPInRenglones(p.idProducto);
       const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
 
       this.showCantidadModal(p.idProducto, cPrevia, p.codigo, p.descripcion, p.urlImagen, p.oferta);
-    }, (reason) => { /*console.log(reason);*/ });
+    }, (reason) => { /*console.log(reason);*/
+    });
   }
 
   // modal de cantidad
@@ -256,8 +314,9 @@ export class PuntoVentaComponent implements OnInit {
     modalRef.componentInstance.urlImagenItem = urlImagenItem;
     modalRef.componentInstance.oferta = oferta;
     modalRef.result.then((rp: RenglonPedido) => {
-        this.handleRenglonPedido(rp);
-    }, (reason) => { /*console.log(reason);*/ });
+      this.handleRenglonPedido(rp);
+    }, (reason) => { /*console.log(reason);*/
+    });
   }
 
   editRenglon(rpControl: AbstractControl) {
@@ -269,13 +328,14 @@ export class PuntoVentaComponent implements OnInit {
     }
   }
 
-  eliminarRenglon(index: number, content) {
+  eliminarRenglon(index: number) {
     const rp: RenglonPedido = this.renglonesPedido.at(index).get('renglonPedido').value;
     const modalRef = this.modalService.open(EliminarRengloPedidoModalComponent);
     modalRef.componentInstance.rp = rp;
     modalRef.result.then(() => {
       this.renglonesPedido.removeAt(index);
-    }, (reason) => { /*console.log(reason);*/ });
+    }, (reason) => { /*console.log(reason);*/
+    });
   }
 
   searchRPInRenglones(idProducto): AbstractControl {
@@ -289,16 +349,32 @@ export class PuntoVentaComponent implements OnInit {
 
   getCccLabel() {
     const ccc: CuentaCorrienteCliente = this.form && this.form.get('ccc') ? this.form.get('ccc').value : null;
-    if (!ccc) { return ''; }
+    if (!ccc) {
+      return '';
+    }
     return '#' + ccc.cliente.nroCliente + ' - ' + ccc.cliente.nombreFiscal
       + (ccc.cliente.nombreFantasia ? ' - ' + ccc.cliente.nombreFantasia : '');
+  }
+
+  getEnvioLabel() {
+    const opcionEnvio = this.form.get('opcionEnvio').value;
+    let label = '';
+
+    if (opcionEnvio && opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL) {
+      label = ': Retiro en sucursal';
+    }
+
+    if (opcionEnvio && opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO) {
+      label = ': Envio a domicilio';
+    }
+    return label;
   }
 
   calcularResultados() {
     const nrp: NuevosResultadosPedido = {
       descuentoPorcentaje: this.form.get('descuento').value,
       recargoPorcentaje: this.form.get('recargo').value,
-      renglones: this.form.get('renglonesPedido').value.map(e =>  e.renglonPedido)
+      renglones: this.form.get('renglonesPedido').value.map(e => e.renglonPedido)
     };
 
     this.loadingResultados = true;
@@ -320,8 +396,13 @@ export class PuntoVentaComponent implements OnInit {
     this.calcularResultados();
   }
 
+  showMessage(message, type = 'success') {
+    this.messageType = type;
+    this.messages.next(message);
+  }
+
   showErrorMessage(message: string) {
-    this.errors.next(message);
+    this.showMessage(message, 'danger');
   }
 
   showProductoPorCodigoErrorMessage(message: string) {
@@ -347,14 +428,13 @@ export class PuntoVentaComponent implements OnInit {
               idProductoItem: p.idProducto,
               cantidad: cant,
             };
-            // this.loading = true;
 
             this.pedidosService.calcularRenglones([nrp], this.form.get('ccc').value.cliente.id_Cliente)
               .pipe(
                 finalize(() => {
                   this.loadingProducto = false;
                   $event.target.value = '';
-                  $event.target.focus();
+                  setTimeout(() => { $event.target.focus(); }, 500);
                 })
               )
               .subscribe(
@@ -373,15 +453,15 @@ export class PuntoVentaComponent implements OnInit {
           } else {
             this.loadingProducto = false;
             $event.target.value = '';
-            $event.target.focus();
             this.showProductoPorCodigoErrorMessage(`No existe producto con codigo: "${codigo}"`);
+            setTimeout(() => { $event.target.focus(); }, 500);
           }
         },
         err => {
           this.loadingProducto = false;
           $event.target.value = '';
-          $event.target.focus();
           this.showProductoPorCodigoErrorMessage(err.error);
+          setTimeout(() => { $event.target.focus(); }, 500);
         }
     );
   }
@@ -390,19 +470,6 @@ export class PuntoVentaComponent implements OnInit {
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
     ccc.cliente = $event;
     this.form.get('ccc').setValue(ccc);
-  }
-
-  getTipoDeEnvioStr(te: TipoDeEnvio) {
-    if (te === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
-      return 'Retiro sucursal';
-    }
-    if (te === TipoDeEnvio.USAR_UBICACION_ENVIO) {
-      return 'Ubicación envío';
-    }
-    if (te === TipoDeEnvio.USAR_UBICACION_FACTURACION) {
-      return 'Ubicación facturación';
-    }
-    return '';
   }
 
   updateRenglones() {

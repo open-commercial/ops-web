@@ -43,9 +43,6 @@
           <label for="calle">Calle</label>
           <input type="text" class="form-control" id="calle" formControlName="calle"
                  [ngClass]="{ 'is-invalid': submitted && f.calle.errors }">
-          <!--<div class="invalid-feedback" *ngIf="submitted && f.calle.errors">
-            <div *ngIf="f.calle.errors.required">Requerido</div>
-          </div>-->
         </div>
       </div>
       <div class="col-sm-4">
@@ -53,11 +50,7 @@
           <label for="numero">Número</label>
           <input type="text" class="form-control" id="numero" formControlName="numero"
                  [ngClass]="{ 'is-invalid': submitted && f.numero.errors }">
-          <!--<div class="invalid-feedback" *ngIf="submitted && f.numero.errors">
-            <div *ngIf="f.numero.errors.required">Requerido</div>
-          </div>-->
         </div>
-
       </div>
     </div>
     <div class="row">
@@ -66,9 +59,6 @@
           <label for="piso">Piso</label>
           <input type="text" class="form-control" id="piso" formControlName="piso"
                  [ngClass]="{ 'is-invalid': submitted && f.piso.errors }">
-          <!--<div class="invalid-feedback" *ngIf="submitted && f.piso.errors">
-            <div *ngIf="f.piso.errors.required">Requerido</div>
-          </div>-->
         </div>
       </div>
       <div class="col-sm-6">
@@ -76,9 +66,6 @@
           <label for="departamento">Dpto</label>
           <input type="text" class="form-control" id="departamento" formControlName="departamento"
                  [ngClass]="{ 'is-invalid': submitted && f.departamento.errors }">
-          <!--<div class="invalid-feedback" *ngIf="submitted && f.departamento.errors">
-            <div *ngIf="f.departamento.errors.required">Requerido</div>
-          </div>-->
         </div>
       </div>
     </div>
@@ -86,16 +73,13 @@
       <label for="descripcion">Descripción</label>
       <textarea type="text" class="form-control" id="descripcion" formControlName="descripcion"
              [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }"></textarea>
-      <!--<div class="invalid-feedback" *ngIf="submitted && f.departamento.errors">
-        <div *ngIf="f.departamento.errors.required">Requerido</div>
-      </div>-->
     </div>
     <button class="sr-only" type="submit"></button>
   </form>
 </div>
 <div class="modal-footer p-2">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">
-    <!--<fa-icon [icon]="['fas', 'bullseye']"></fa-icon>&nbsp;-->Cancelar
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
   </button>
   <button type="button" class="btn btn-primary" (click)="submit()">
     <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar

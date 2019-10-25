@@ -1,6 +1,6 @@
 <div class="app-punto-vetnta my-3">
   <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Nuevo Pedido</h1>
-  <ngb-alert class="my-3" *ngIf="errorMessage" type="danger" (close)="errorMessage = null">{{ errorMessage }}</ngb-alert>
+  <ngb-alert class="my-3" *ngIf="message" [type]="messageType" (close)="message = null">{{ message }}</ngb-alert>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2"> <!--(ngSubmit)="submit()"-->
     <ngb-accordion #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
@@ -26,7 +26,7 @@
                   <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
                 </span>
               </div>
-              <input autocomplete="off" id="codigoProducto" placeholder="Cód. del producto..." type="text" aria-describedby="codigo-addon"
+              <input autocomplete="off" id="codigoProducto" placeholder="Código de producto..." type="text" aria-describedby="codigo-addon"
                      class="form-control" (keyup.enter)="ingresarProductoDirecto($event)" [disabled]="loadingProducto">
             </div>
             <div class="table-responsive">
@@ -57,7 +57,7 @@
                           <a class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
                         </li>
                         <li>
-                          <a class="btn btn-primary" (click)="eliminarRenglon(i, content)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                          <a class="btn btn-primary" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
                         </li>
                       </ul>
                     </td>
@@ -85,7 +85,8 @@
                 <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="descuento" formControlName="descuento" (change)="onChange($event)" [disabled]="loadingResultados">
+                <input class="form-control" type="number" id="descuento" formControlName="descuento"
+                       (keyup.enter)="onChange($event)" (blur)="onChange($event)"><!--  [disabled]="loadingResultados" -->
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? (-1 * form.get('resultados').value.descuentoNeto) : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -96,7 +97,8 @@
                 <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="recargo" formControlName="recargo" (change)="onChange($event)" [disabled]="loadingResultados">
+                <input class="form-control" type="number" id="recargo" formControlName="recargo"
+                       (keyup.enter)="onChange($event)" (blur)="onChange($event)"><!--  [disabled]="loadingResultados" -->
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? form.get('resultados').value.recargoNeto : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -110,87 +112,44 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="envio" title="Envio"><!-- [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length)" -->
+      <ngb-panel id="envio" [title]="'Envio' + getEnvioLabel()"
+                 [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length)">
         <ng-template ngbPanelContent>
-          <div class="row">
-            <div class="col-md-6">
-              <app-ubicacion-facturacion-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-facturacion-component>
-            </div>
-            <div class="col-md-6">
-              <app-ubicacion-envio-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
-            </div>
-          </div>
-          <label for="tipoEnvio">Seleccione el tipo de Envío:</label>&nbsp;
-          <div class="btn-group btn-group-toggle" id="tipoEnvio" ngbRadioGroup name="radioBasic" formControlName="tipoEnvio">
+          <label for="opcionEnvio">Seleccione el tipo de Envío:</label>&nbsp;
+          <div class="btn-group btn-group-toggle" id="opcionEnvio" ngbRadioGroup name="radioBasic" formControlName="opcionEnvio">
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
-              <input ngbButton type="radio" [value]="te.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length">
-              {{ getTipoDeEnvioStr(te.RETIRO_EN_SUCURSAL) }}
+              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL"><!--  [disabled]="!sucursales.length" -->
+              Retiro en sucursal
             </label>
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
-              <input ngbButton type="radio" [value]="te.USAR_UBICACION_FACTURACION" [disabled]="!clienteHasUbicacionFacturacion()">
-              {{ getTipoDeEnvioStr(te.USAR_UBICACION_FACTURACION) }}
-            </label>
-            <label ngbButtonLabel class="btn-outline-primary letra-negra">
-              <input ngbButton type="radio" [value]="te.USAR_UBICACION_ENVIO" [disabled]="!clienteHasUbicacionEnvio()">
-              {{ getTipoDeEnvioStr(te.USAR_UBICACION_ENVIO) }}
+              <input ngbButton type="radio" [value]="oe.ENVIO_A_DOMICILIO">
+              Envío a Domicilio
             </label>
           </div>
-          <div class="form-group my-3" *ngIf="form && form.get('tipoEnvio').value === te.RETIRO_EN_SUCURSAL">
+          <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
             <label for="sucursal" class="sr-only">Sucursal</label>
             <select class="form-control" id="sucursal" formControlName="sucursal" [disabled]="!sucursales.length">
               <option *ngFor="let s of sucursales" [value]="s">{{ s.nombre }}</option>
             </select>
           </div>
-          <!--<div class="d-flex flex-column flex-md-row align-items-md-center mb-2">
-            {{ !sucursales.length }}
-            <div class="form-check">
-              <input class="form-check-input" type="radio" formControlName="tipoEnvio" id="tipoEnvioRETIRO_EN_SUCURSAL"
-                     [value]="te.RETIRO_EN_SUCURSAL" disabled>
-              <label class="form-check-label" for="tipoEnvioRETIRO_EN_SUCURSAL">
-                {{ getTipoDeEnvioStr(te.RETIRO_EN_SUCURSAL) }}
-              </label>
-            </div>
-            <div class="form-group ml-3 mb-0 flex-fill">
-              <label for="sucursal" class="sr-only">Sucursal</label>
-              <select class="form-control" id="sucursal" formControlName="sucursal" [attr.disabled]="!sucursales.length">
-                <option *ngFor="let s of sucursales" [value]="s">{{ s.nombre }}</option>
-              </select>
-            </div>
+          <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value  === oe.ENVIO_A_DOMICILIO">
+            <label for="opcionEnvioUbicacion" class="sr-only">Ubicación</label>
+            <select class="form-control" id="opcionEnvioUbicacion" formControlName="opcionEnvioUbicacion">
+              <option [value]="oeu.USAR_UBICACION_FACTURACION">Usar ubicación de facturación</option>
+              <option [value]="oeu.USAR_UBICACION_ENVIO">Usar ubicación de envío</option>
+            </select>
           </div>
-          <div class="d-flex flex-column flex-md-row align-items-md-center mb-2">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" formControlName="tipoEnvio" id="tipoEnvioUSAR_UBICACION_FACTURACION"
-                     [value]="te.USAR_UBICACION_FACTURACION">
-              <label class="form-check-label" for="tipoEnvioUSAR_UBICACION_FACTURACION">
-                {{ getTipoDeEnvioStr(te.USAR_UBICACION_FACTURACION) }}
-              </label>
-            </div>
-            <div class="form-group ml-3 mb-0 flex-fill">
-              <app-ubicacion-facturacion-component [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-facturacion-component>
-            </div>
+          <div *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_FACTURACION">
+            <app-ubicacion-facturacion-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-facturacion-component>
           </div>
-          <div class="d-flex flex-column flex-md-row align-items-md-center mb-2">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" formControlName="tipoEnvio" id="tipoEnvioUSAR_UBICACION_ENVIO"
-                     [value]="te.USAR_UBICACION_ENVIO">
-              <label class="form-check-label" for="tipoEnvioUSAR_UBICACION_ENVIO">
-                {{ getTipoDeEnvioStr(te.USAR_UBICACION_ENVIO) }}
-              </label>
-            </div>
-            <div class="form-group ml-3 mb-0 flex-fill">
-              <app-ubicacion-envio-component [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
-            </div>
-          </div>-->
-          <ul class="text-right list-inline mb-0 mt-2">
-            <!--<li class="list-inline-item">
-              <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
-            </li>-->
-            <li class="list-inline-item">
-              <button type="submit" class="btn btn-primary" [disabled]="saving">
+          <div  *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO">
+            <app-ubicacion-envio-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
+          </div>
+          <div class="text-right mb-0 mt-2">
+                <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled()">
                 <fa-icon [icon]="['fas', 'check']"></fa-icon> Enviar Pedido
               </button>
-            </li>
-          </ul>
+          </div>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>

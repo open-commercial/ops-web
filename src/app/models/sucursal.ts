@@ -12,6 +12,7 @@ export interface Sucursal {
   email: string;
   telefono: string;
   ubicacion: Ubicacion;
+  detalleUbicacion: string;
   logo: string;
   eliminada: boolean;
 }

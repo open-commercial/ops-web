@@ -14,7 +14,11 @@
   </div>
 </div>
 <div class="modal-footer p-2">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Cancelar</button>
-  <button type="button" class="btn btn-primary" (click)="activeModal.close()">Aceptar</button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="activeModal.close()">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar
+  </button>
 </div>
 

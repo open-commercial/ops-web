@@ -43,11 +43,11 @@
   </form>
 </div>
 <div class="modal-footer p-2">
-  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()" [disabled]="loading || clearLoading">
-    Cancelar
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading || clearLoading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
   </button>
   <button type="button" class="btn btn-primary" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado || loading || clearLoading">
-    <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>&nbsp;Seleccionar
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Seleccionar
   </button>
 </div>
 

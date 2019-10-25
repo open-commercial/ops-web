@@ -6,7 +6,6 @@ import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { SucursalesService } from '../../services/sucursales.service';
-import { Sucursal } from "../../models/sucursal";
 
 @Component({
   selector: 'app-login',
@@ -57,26 +56,41 @@ export class LoginComponent implements OnInit {
         .subscribe(
         () => {
           this.authService.getLoggedInUsuario()
-            .pipe(
-              finalize(() => { this.loading = false; this.form.enable(); })
-            )
-            .subscribe((usuario: Usuario) => {
-              this.sucursalesService.getSucursales().subscribe(sucs => {
-                if (sucs.length)  {
-                  this.sucursalesService.seleccionarSucursal(sucs[0]);
-                  this.router.navigate(['']);
-                } else {
-                  this.showErrorMessage('No se pudieron obtener sucursales.');
-                  this.authService.logout();
-                }
-              });
-            });
+            .subscribe(
+              (usuario: Usuario) => {
+                this.sucursalesService.getSucursales()
+                  .pipe(
+                    finalize(() => { this.loading = false; this.form.enable(); })
+                  )
+                  .subscribe(
+                    sucs => {
+                      if (sucs.length)  {
+                        this.sucursalesService.seleccionarSucursal(sucs[0]);
+                        this.router.navigate(['']);
+                      } else {
+                        this.showErrorMessage('No se pudieron obtener sucursales.');
+                        this.authService.logout();
+                      }
+                    },
+                    err => {
+                      this.showErrorMessage(err);
+                    }
+                  )
+                ;
+              },
+              err => {
+                this.showErrorMessage(err);
+                this.loading = false;
+                this.form.enable();
+              }
+            );
         },
         err => {
           this.showErrorMessage(err);
           this.loading = false;
           this.form.enable();
-        });
+        })
+      ;
     }
   }
 
