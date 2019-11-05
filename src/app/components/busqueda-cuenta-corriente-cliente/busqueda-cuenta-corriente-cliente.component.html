@@ -1,4 +1,4 @@
-<div class="d-flex flex-row">
+<div class="d-flex flex-row align-items-center">
   <div class="flex-fill p-2">
     <!--<em *ngIf="!ccc">(Cliente no seleccionado)</em>-->
     <div *ngIf="ccc" class="d-flex flex-column">
@@ -19,6 +19,9 @@
       <span>
         Saldo: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.0-2'}}</span>
       </span>
+    </div>
+    <div *ngIf="!ccc">
+      <em>Busque un Cliente para poder continuar</em>
     </div>
   </div>
   <div class="p-2">

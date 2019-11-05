@@ -1,5 +1,5 @@
 <div class="app-punto-vetnta my-3">
-  <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Nuevo Pedido</h1>
+  <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nuevo Pedido</h1>
   <ngb-alert class="my-3" *ngIf="message" [type]="messageType" (close)="message = null">{{ message }}</ngb-alert>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2"> <!--(ngSubmit)="submit()"-->
     <ngb-accordion #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
@@ -118,7 +118,7 @@
           <label for="opcionEnvio">Seleccione el tipo de Envío:</label>&nbsp;
           <div class="btn-group btn-group-toggle" id="opcionEnvio" ngbRadioGroup name="radioBasic" formControlName="opcionEnvio">
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
-              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL"><!--  [disabled]="!sucursales.length" -->
+              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length"><!--  [disabled]="!sucursales.length" -->
               Retiro en sucursal
             </label>
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
@@ -145,10 +145,13 @@
           <div  *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO">
             <app-ubicacion-envio-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
           </div>
-          <div class="text-right mb-0 mt-2">
-                <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled()">
-                <fa-icon [icon]="['fas', 'check']"></fa-icon> Enviar Pedido
-              </button>
+          <div class="text-right mb-0 mt-2" *ngIf="!saving">
+            <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled()">
+              <fa-icon [icon]="['fas', 'check']"></fa-icon> Enviar Pedido
+            </button>
+          </div>
+          <div *ngIf="saving" class="text-center my-3">
+            <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
           </div>
         </ng-template>
       </ngb-panel>

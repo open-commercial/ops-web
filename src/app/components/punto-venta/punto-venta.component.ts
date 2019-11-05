@@ -93,6 +93,10 @@ export class PuntoVentaComponent implements OnInit {
   }
 
   panelBeforeChange($event) {
+    if (this.saving) {
+      $event.preventDefault();
+      return;
+    }
     if (this.accordion.activeIds.indexOf($event.panelId) >= 0) {
       $event.preventDefault();
     }
@@ -130,9 +134,15 @@ export class PuntoVentaComponent implements OnInit {
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
         this.form.get('opcionEnvioUbicacion').setValue(null);
+        if (!this.form.get('sucursal').value && this.sucursales.length) {
+          this.form.get('sucursal').setValue(this.sucursales[0]);
+        }
       }
       if (oe === OpcionEnvio.ENVIO_A_DOMICILIO) {
         this.form.get('sucursal').setValue(null);
+        if (!this.form.get('opcionEnvioUbicacion').value) {
+          this.form.get('opcionEnvioUbicacion').setValue(OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION);
+        }
       }
     });
 
@@ -152,7 +162,6 @@ export class PuntoVentaComponent implements OnInit {
             ;
           } else {
             this.cccPredeterminadoLoading = false;
-            this.showErrorMessage('Busque un Cliente para poder continuar');
           }
         },
         err => {
@@ -191,7 +200,7 @@ export class PuntoVentaComponent implements OnInit {
         .pipe(finalize(() => this.saving = false))
         .subscribe(p => {
           // this.router.navigate(['/pedidos']);
-          this.showMessage('Pedido generado correctamente');
+          this.showMessage('Pedido enviado correctamente!');
           this.reset();
         })
       ;
@@ -434,7 +443,6 @@ export class PuntoVentaComponent implements OnInit {
               .pipe(
                 finalize(() => {
                   this.loadingProducto = false;
-                  $event.target.value = '';
                   setTimeout(() => { $event.target.focus(); }, 500);
                 })
               )
@@ -446,6 +454,7 @@ export class PuntoVentaComponent implements OnInit {
                   } else {
                     this.renglonesPedido.push(this.createRenglonPedidoForm(rp));
                   }
+                  $event.target.value = '';
                 },
                 err => {
                   this.showProductoPorCodigoErrorMessage(err.error);
@@ -453,14 +462,12 @@ export class PuntoVentaComponent implements OnInit {
               );
           } else {
             this.loadingProducto = false;
-            $event.target.value = '';
             this.showProductoPorCodigoErrorMessage(`No existe producto con codigo: "${codigo}"`);
             setTimeout(() => { $event.target.focus(); }, 500);
           }
         },
         err => {
           this.loadingProducto = false;
-          $event.target.value = '';
           this.showProductoPorCodigoErrorMessage(err.error);
           setTimeout(() => { $event.target.focus(); }, 500);
         }

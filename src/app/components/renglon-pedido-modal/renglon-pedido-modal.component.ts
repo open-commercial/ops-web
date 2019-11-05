@@ -35,7 +35,7 @@ export class RenglonPedidoModalComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      cantidad: [this.cantidad, [Validators.required, Validators.min(0.1)]]
+      cantidad: [this.cantidad, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -57,6 +57,22 @@ export class RenglonPedidoModalComponent implements OnInit {
           const rp: RenglonPedido = data[0];
           this.activeModal.close(rp);
         });
+    }
+  }
+
+  incrementarCantidad() {
+    let cant = parseInt(this.form.get('cantidad').value, 10);
+    if (!isNaN(cant)) {
+      cant += 1;
+      this.form.get('cantidad').setValue(cant);
+    }
+  }
+
+  decrementarCantidad() {
+    let cant = parseInt(this.form.get('cantidad').value, 10);
+    if (!isNaN(cant) && cant > 1) {
+      cant -= 1;
+      this.form.get('cantidad').setValue(cant);
     }
   }
 }
