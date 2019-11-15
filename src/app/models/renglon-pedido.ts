@@ -1,5 +1,5 @@
 export interface RenglonPedido {
-  id_RenglonPedido: number;
+  idRenglonPedido: number;
   idProductoItem: number;
   codigoItem: string;
   descripcionItem: string;

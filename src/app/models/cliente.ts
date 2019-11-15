@@ -2,7 +2,7 @@ import {CategoriaIVA} from './categoria-iva';
 import {Ubicacion} from './ubicacion';
 
 export interface Cliente {
-  id_Cliente: number;
+  idCliente: number;
   bonificacion: number;
   nroCliente: string;
   nombreFiscal: string;
@@ -21,4 +21,3 @@ export interface Cliente {
   ubicacionFacturacion: Ubicacion;
   ubicacionEnvio: Ubicacion;
 }
-

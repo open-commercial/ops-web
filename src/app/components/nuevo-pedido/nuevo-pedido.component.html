@@ -41,14 +41,15 @@
                 <ng-template ngFor let-rp [ngForOf]="renglonesPedido.controls" let-i="index">
                   <tr [formGroupName]="i">
                     <td class="align-middle">
-                      <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span>&nbsp;<span *ngIf="rp.get('renglonPedido').value.oferta" class="badge badge-success">OFERTA</span><br>
+                      <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span>&nbsp;
+                      <span *ngIf="rp.get('renglonPedido').value.oferta && rp.get('renglonPedido').value.bonificacionPorcentaje > 0" class="badge badge-success">OFERTA {{ rp.get('renglonPedido').value.bonificacionPorcentaje }}%</span><br>
                       <strong>{{ rp.get('renglonPedido').value.descripcionItem }}</strong>
                       <div class="text-right">
                         {{ rp.get('renglonPedido').value.cantidad }} {{ rp.get('renglonPedido').value.medidaItem }} x {{ rp.get('renglonPedido').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
                         = <span [class.tachado]="rp.get('renglonPedido').value.bonificacionPorcentaje">{{ rp.get('renglonPedido').value.importeAnterior | currency:'ARS':'symbol':'1.0-2' }}</span>
-                      </div>
-                      <div class="text-right" *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje">
-                        <span class="badge badge-success">{{ rp.get('renglonPedido').value.bonificacionPorcentaje }}% OFF</span>&nbsp;<strong>{{ rp.get('renglonPedido').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
+                        <span class="text-right text-nowrap" *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje">
+                          &nbsp;<strong>{{ rp.get('renglonPedido').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
+                        </span>
                       </div>
                     </td>
                     <td>

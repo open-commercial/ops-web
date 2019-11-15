@@ -84,7 +84,6 @@ export class ProductoModalComponent implements OnInit {
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
       c => c.idSucursal === Number(SucursalesService.getIdSucursal())
     );
-
     const cant = aux.length ? aux[0].cantidad : 0;
     return p.cantidadTotalEnSucursales - cant;
   }

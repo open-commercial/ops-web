@@ -2,7 +2,7 @@ import { CategoriaIVA } from './categoria-iva';
 import { TipoDeComprobante } from './tipo-de-comprobante';
 
 export interface RenglonFactura  {
-  id_RenglonFactura: number;
+  idRenglonFactura: number;
   idProductoItem: number;
   codigoItem: string;
   descripcionItem: string;
@@ -21,7 +21,7 @@ importe: number;
 }
 
 export interface Factura {
-  id_Factura: number;
+  idFactura: number;
   nombreUsuario: string;
   fecha: Date;
   tipoComprobante: TipoDeComprobante;

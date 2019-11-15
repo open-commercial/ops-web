@@ -6,13 +6,13 @@ import { AuthGuard } from './guards/auth.guard';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
-import { PuntoVentaComponent } from './components/punto-venta/punto-venta.component';
+import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
-      { path: '', component: PuntoVentaComponent },
+      { path: '', component: NuevoPedidoComponent },
     ]
   },
   { path: '**', redirectTo: '' }
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
-      { path: 'punto-venta', component: PuntoVentaComponent },
+      { path: 'nuevo-pedido', component: NuevoPedidoComponent },
       { path: 'pedidos', component: PedidosComponent },
       { path: 'facturas-venta', component: FacturasVentaComponent },
       { path: 'facturas-compra', component: FacturasCompraComponent }

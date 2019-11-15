@@ -35,10 +35,10 @@ enum OpcionEnvioUbicacion {
 
 @Component({
   selector: 'app-punto-venta',
-  templateUrl: './punto-venta.component.html',
-  styleUrls: ['./punto-venta.component.scss'],
+  templateUrl: './nuevo-pedido.component.html',
+  styleUrls: ['./nuevo-pedido.component.scss'],
 })
-export class PuntoVentaComponent implements OnInit {
+export class NuevoPedidoComponent implements OnInit {
   form: FormGroup;
 
   oe = OpcionEnvio;
@@ -248,7 +248,7 @@ export class PuntoVentaComponent implements OnInit {
       idSucursalEnvio: sucursalEnvio ? sucursalEnvio.idSucursal : null,
       tipoDeEnvio: te,
       idUsuario: Number(this.authService.getLoggedInIdUsuario()),
-      idCliente: ccc && ccc.cliente ? ccc.cliente.id_Cliente : null,
+      idCliente: ccc && ccc.cliente ? ccc.cliente.idCliente : null,
       renglones: renglones.map(r => r.renglonPedido),
       subTotal: resultados && resultados.subTotal ? resultados.subTotal : 0,
       recargoPorcentaje: resultados && resultados.recargoPorcentaje ? resultados.recargoPorcentaje : 0,
@@ -305,24 +305,18 @@ export class PuntoVentaComponent implements OnInit {
       const control = this.searchRPInRenglones(p.idProducto);
       const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
 
-      this.showCantidadModal(p.idProducto, cPrevia, p.codigo, p.descripcion, p.urlImagen, p.oferta);
+      this.showCantidadModal(p.idProducto, cPrevia);
     }, (reason) => { /*console.log(reason);*/
     });
   }
 
   // modal de cantidad
   showCantidadModal(
-    idProductoItem: number, cantidadPrevia = 1,
-    codigoItem: string, descripcionItem: string, urlImagenItem: string, oferta: boolean
-  ) {
+    idProductoItem: number, cantidadPrevia = 1) {
     const modalRef = this.modalService.open(RenglonPedidoModalComponent/*, { size: 'xl' }*/);
     modalRef.componentInstance.cliente = this.form.get('ccc').value.cliente;
-    modalRef.componentInstance.idProductoItem = idProductoItem;
     modalRef.componentInstance.cantidad = cantidadPrevia;
-    modalRef.componentInstance.codigoItem = codigoItem;
-    modalRef.componentInstance.descripcionItem = descripcionItem;
-    modalRef.componentInstance.urlImagenItem = urlImagenItem;
-    modalRef.componentInstance.oferta = oferta;
+    modalRef.componentInstance.loadProducto(idProductoItem);
     modalRef.result.then((rp: RenglonPedido) => {
       this.handleRenglonPedido(rp);
     }, (reason) => { /*console.log(reason);*/
@@ -332,9 +326,7 @@ export class PuntoVentaComponent implements OnInit {
   editRenglon(rpControl: AbstractControl) {
     if (rpControl) {
       const rp: RenglonPedido = rpControl.get('renglonPedido').value;
-      this.showCantidadModal(
-        rp.idProductoItem, rp.cantidad, rp.codigoItem, rp.descripcionItem, rp.urlImagenItem, rp.oferta
-      );
+      this.showCantidadModal(rp.idProductoItem, rp.cantidad);
     }
   }
 
@@ -368,10 +360,12 @@ export class PuntoVentaComponent implements OnInit {
 
   getEnvioLabel() {
     const opcionEnvio = this.form.get('opcionEnvio').value;
+    const sucursal = this.form.get('sucursal').value;
     let label = '';
 
     if (opcionEnvio && opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL) {
       label = ': Retiro en sucursal';
+      if (sucursal) { label += ` (${sucursal.nombre})`; }
     }
 
     if (opcionEnvio && opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO) {
@@ -439,7 +433,7 @@ export class PuntoVentaComponent implements OnInit {
               cantidad: cant,
             };
 
-            this.pedidosService.calcularRenglones([nrp], this.form.get('ccc').value.cliente.id_Cliente)
+            this.pedidosService.calcularRenglones([nrp], this.form.get('ccc').value.cliente.idCliente)
               .pipe(
                 finalize(() => {
                   this.loadingProducto = false;
@@ -493,7 +487,7 @@ export class PuntoVentaComponent implements OnInit {
     });
 
     if (cliente && renglones.length) {
-      this.pedidosService.calcularRenglones(renglones, cliente.id_Cliente)
+      this.pedidosService.calcularRenglones(renglones, cliente.idCliente)
         .subscribe(rps => {
           const nuevosRenglones = [];
           rps.forEach((rp: RenglonPedido) => {

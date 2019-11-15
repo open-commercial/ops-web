@@ -1,7 +1,7 @@
 import {EstadoPedido} from './estado.pedido';
 
 export interface Pedido {
-  id_Pedido: number;
+  idPedido: number;
   nroPedido: number;
   fecha: Date;
   fechaVencimiento: Date;

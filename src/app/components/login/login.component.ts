@@ -6,6 +6,7 @@ import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from '../../models/sucursal';
 
 @Component({
   selector: 'app-login',
@@ -65,7 +66,12 @@ export class LoginComponent implements OnInit {
                   .subscribe(
                     sucs => {
                       if (sucs.length)  {
-                        this.sucursalesService.seleccionarSucursal(sucs[0]);
+                        const aux = sucs.filter((s: Sucursal) => s.idSucursal === usuario.idSucursalPredeterminada);
+                        if (aux.length) {
+                          this.sucursalesService.seleccionarSucursal(aux[0]);
+                        } else {
+                          this.sucursalesService.seleccionarSucursal(sucs[0]);
+                        }
                         this.router.navigate(['']);
                       } else {
                         this.showErrorMessage('No se pudieron obtener sucursales.');

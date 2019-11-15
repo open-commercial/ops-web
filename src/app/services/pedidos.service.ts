@@ -31,11 +31,11 @@ export class PedidosService {
   }
 
   /*getPedidosCliente(cliente: Cliente, pagina: number) {
-    return this.http.get(this.urlBusqueda + '&idCliente=' + cliente.id_Cliente + '&pagina=' + pagina);
+    return this.http.get(this.urlBusqueda + '&idCliente=' + cliente.idCliente + '&pagina=' + pagina);
   }*/
 
   getPedidoPdf(pedido: Pedido): Observable<Blob> {
-    return this.http.get(`${this.url}/${pedido.id_Pedido}/reporte`, {responseType: 'blob'});
+    return this.http.get(`${this.url}/${pedido.idPedido}/reporte`, {responseType: 'blob'});
   }
 
   calcularRenglones(renglones: NuevoRenglonPedido[], idCliente: number): Observable<Array<RenglonPedido>> {

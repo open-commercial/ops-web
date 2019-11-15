@@ -111,7 +111,7 @@ export class PedidosComponent implements OnInit {
       pagina: 0
     };
 
-    if (values.cliente) { ret.idCliente = values.cliente.id_Cliente; }
+    if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
     if (values.usuario) { ret.idUsuario = values.usuario.id_Usuario; }
     if (values.producto) { ret.idProducto = values.producto.idProducto; }
     if (values.viajante) { ret.idViajante = values.viajante.id_Usuario; }
@@ -127,7 +127,7 @@ export class PedidosComponent implements OnInit {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.cliente && values.cliente.id_Cliente) {
+    if (values.cliente && values.cliente.idCliente) {
       let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
       if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
       this.applyFilters.push({ label: 'Cliente', value: val });

@@ -31,7 +31,7 @@ import { FacturasVentaComponent } from './components/facturas-venta/facturas-ven
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
 import { ProveedorFiltroComponent } from './components/proveedor-filtro/proveedor-filtro.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
-import { PuntoVentaComponent } from './components/punto-venta/punto-venta.component';
+import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
 import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
 import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
 import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/renglon-pedido-modal.component';
@@ -59,7 +59,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     FacturasCompraComponent,
     ProveedorFiltroComponent,
     TopBarComponent,
-    PuntoVentaComponent,
+    NuevoPedidoComponent,
     ProductoModalComponent,
     BusquedaCuentaCorrienteClienteComponent,
     RenglonPedidoModalComponent,

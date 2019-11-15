@@ -34,16 +34,10 @@ export class TopBarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    // this.toggleMenu();
   }
 
   menuBtnClick() {
     this.menuButtonClick.emit();
-  }
-
-  getSucursalesSinSeleccionada() {
-    const idSucSeleccionada = Number(SucursalesService.getIdSucursal());
-    return this.sucursales.filter((s: Sucursal) => s.idSucursal !== idSucSeleccionada);
   }
 
   refreshSucursalSeleccionada() {

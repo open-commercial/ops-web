@@ -13,6 +13,6 @@ export class FacturasService {
   constructor(private http: HttpClient) { }
 
   getFacturaPdf(factura: FacturaVenta): Observable<Blob> {
-    return this.http.get(`${this.urlFacturas}/${factura.id_Factura}/reporte`, {responseType: 'blob'});
+    return this.http.get(`${this.urlFacturas}/${factura.idFactura}/reporte`, {responseType: 'blob'});
   }
 }

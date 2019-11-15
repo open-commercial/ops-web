@@ -132,7 +132,7 @@ export class FacturasVentaComponent implements OnInit {
 
     if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getTimeStamp(values.rangoFecha.desde); }
     if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getTimeStamp(values.rangoFecha.hasta); }
-    if (values.cliente) { criteria.idCliente = values.cliente.id_Cliente; }
+    if (values.cliente) { criteria.idCliente = values.cliente.idCliente; }
     if (values.tipoFactura) { criteria.tipoComprobante = values.tipoFactura; }
     if (values.usuario) { criteria.idUsuario = values.usuario.id_Usuario; }
     if (values.viajante) { criteria.idViajante = values.viajante.id_Usuario; }
@@ -150,7 +150,7 @@ export class FacturasVentaComponent implements OnInit {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.cliente && values.cliente.id_Cliente) {
+    if (values.cliente && values.cliente.idCliente) {
       let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
       if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
       this.applyFilters.push({ label: 'Cliente', value: val });

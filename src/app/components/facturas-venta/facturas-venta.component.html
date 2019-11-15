@@ -116,7 +116,7 @@
                 <span class="dato" *ngIf="f.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ f.nombreViajante }}</span></span>
               </div>
               <div class="">
-                <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ f.total | currency:'ARS' }}</span></span>
+                <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ f.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
               </div>
             </div>
           </div>

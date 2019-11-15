@@ -7,6 +7,7 @@ import { PedidosService } from '../../services/pedidos.service';
 import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
 import { finalize } from 'rxjs/operators';
 import { Cliente } from '../../models/cliente';
+import { ProductosService } from '../../services/productos.service';
 
 @Component({
   selector: 'app-renglon-pedido-modal',
@@ -15,22 +16,30 @@ import { Cliente } from '../../models/cliente';
 })
 export class RenglonPedidoModalComponent implements OnInit {
   cliente: Cliente;
-  idProductoItem: number;
   cantidad = 1;
-  codigoItem: string;
-  descripcionItem: string;
-  urlImagenItem: string;
-  oferta: boolean;
+  producto: Producto = null;
+  productoLoading = false;
   form: FormGroup;
   submitted = false;
   loading = false;
 
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal,
-              private pedidosService: PedidosService) { }
+              private pedidosService: PedidosService,
+              private productosService: ProductosService) { }
 
   ngOnInit() {
     this.createForm();
+  }
+
+  public loadProducto(idProductoItem: number) {
+    this.productoLoading = true;
+    this.productosService.getProducto(idProductoItem)
+      .pipe(finalize(() => this.productoLoading = false))
+      .subscribe((p: Producto) => {
+         this.producto = p;
+      })
+    ;
   }
 
   createForm() {
@@ -46,12 +55,12 @@ export class RenglonPedidoModalComponent implements OnInit {
     if (this.form.valid) {
       const cant = this.form.value.cantidad;
       const nrp: NuevoRenglonPedido = {
-        idProductoItem: this.idProductoItem,
+        idProductoItem: this.producto.idProducto,
         cantidad: cant,
       };
 
       this.loading = true;
-      this.pedidosService.calcularRenglones([nrp], this.cliente.id_Cliente)
+      this.pedidosService.calcularRenglones([nrp], this.cliente.idCliente)
         .pipe(finalize(() => this.loading = false))
         .subscribe(data =>  {
           const rp: RenglonPedido = data[0];

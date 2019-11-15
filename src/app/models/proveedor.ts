@@ -2,7 +2,7 @@ import { CategoriaIVA } from './categoria-iva';
 import { Ubicacion } from './ubicacion';
 
 export interface Proveedor {
-  id_Proveedor: number;
+  idProveedor: number;
   nroProveedor: string;
   razonSocial: string;
   categoriaIVA: CategoriaIVA;
