@@ -242,20 +242,19 @@ export class NuevoPedidoComponent implements OnInit {
     const resultados: Resultados = this.form.get('resultados').value ? this.form.get('resultados').value : null;
 
     const np: NuevoPedido = {
-      fechaVencimiento: null,
       observaciones: this.form.get('observaciones').value,
       idSucursal: Number(SucursalesService.getIdSucursal()),
-      idSucursalEnvio: sucursalEnvio ? sucursalEnvio.idSucursal : null,
       tipoDeEnvio: te,
       idUsuario: Number(this.authService.getLoggedInIdUsuario()),
       idCliente: ccc && ccc.cliente ? ccc.cliente.idCliente : null,
-      renglones: renglones.map(r => r.renglonPedido),
-      subTotal: resultados && resultados.subTotal ? resultados.subTotal : 0,
+      renglones: renglones.map(r => {
+        return {
+          idProductoItem: r.renglonPedido.idProductoItem,
+          cantidad: r.renglonPedido.cantidad,
+        };
+      }),
       recargoPorcentaje: resultados && resultados.recargoPorcentaje ? resultados.recargoPorcentaje : 0,
-      recargoNeto: resultados && resultados.recargoNeto ? resultados.recargoNeto : 0,
       descuentoPorcentaje: resultados && resultados.descuentoPorcentaje ? resultados.descuentoPorcentaje : 0,
-      descuentoNeto: resultados && resultados.descuentoNeto ? resultados.descuentoNeto : 0,
-      total: resultados && resultados.total ? resultados.total : 0,
     };
 
     return np;
