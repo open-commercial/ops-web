@@ -1,0 +1,16 @@
+@import "../../../variables";
+
+.cccs {
+  .ccc {
+    &.selected {
+      background: $primary-color;
+    }
+    .form-check-input {
+      width: 0;
+      height: 0;
+    }
+    .numero {
+      font-size: 12px;
+    }
+  }
+}

@@ -80,8 +80,8 @@
                 <span class="dato" *ngIf="p.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ p.nombreViajante }}</span></span>
               </div>
               <div class="">
-                <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ p.totalEstimado | currency:'ARS' }}</span></span>
-                <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ p.totalActual | currency:'ARS' }}</span></span>
+                <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ p.totalEstimado | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+                <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ p.totalActual | currency:'ARS':'symbol':'1.0-2' }}</span></span>
               </div>
             </div>
           </div>

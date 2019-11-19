@@ -1,0 +1,24 @@
+<!--<div class="modal-header p-2">
+<h4 class="modal-title" id="modal-basic-title">Quitar producto</h4>
+</div>-->
+<div class="modal-body p-2">
+  <div class="d-flex flex-row align-items-center ">
+    <div class="p-2">
+      <fa-icon [icon]="['fas', 'exclamation-triangle']" [size]="'2x'"></fa-icon>
+    </div>
+    <div class="flex-fill">
+      <span class="codigo">{{ rp.codigoItem }}</span><br>
+      <strong class="description">{{ rp.descripcionItem }}</strong><br>
+      Desea quitar este producto del pedido?
+    </div>
+  </div>
+</div>
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="activeModal.close()">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar
+  </button>
+</div>
+

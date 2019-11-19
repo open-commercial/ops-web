@@ -1,0 +1,161 @@
+<div class="app-punto-vetnta my-3">
+  <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nuevo Pedido</h1>
+  <ngb-alert class="my-3" *ngIf="message" [type]="messageType" (close)="message = null">{{ message }}</ngb-alert>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2"> <!--(ngSubmit)="submit()"-->
+    <ngb-accordion #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
+      <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
+        <ng-template ngbPanelContent>
+          <div *ngIf="cccPredeterminadoLoading" class="text-center my-3">
+            <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+          </div>
+          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" (select)="handleSelectCcc($event)" *ngIf="!cccPredeterminadoLoading"></app-busqueda-cuenta-corriente-cliente>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!(form && form.get('ccc').value)">
+        <ng-template ngbPanelContent>
+          <div formArrayName="renglonesPedido">
+            <div class="d-flex align-items-center mb-4">
+              <h3 class="m-0">Productos</h3>
+              <a class="btn btn-primary ml-3" (click)="showProductoModal()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
+            </div>
+            <ngb-alert class="my-3" *ngIf="productoPorCodigoErrorMessage" type="danger" (close)="productoPorCodigoErrorMessage = null">{{ productoPorCodigoErrorMessage }}</ngb-alert>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="codigo-addon">
+                  <fa-icon [icon]="['fas', 'barcode']" *ngIf="!loadingProducto"></fa-icon>
+                  <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
+                </span>
+              </div>
+              <input autocomplete="off" id="codigoProducto" placeholder="Código de producto..." type="text" aria-describedby="codigo-addon"
+                     class="form-control" (keyup.enter)="ingresarProductoDirecto($event)" [disabled]="loadingProducto">
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm">
+                <thead>
+                <tr>
+                  <th class="w-100 align-middle">Descripción</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-template ngFor let-rp [ngForOf]="renglonesPedido.controls" let-i="index">
+                  <tr [formGroupName]="i">
+                    <td class="align-middle">
+                      <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span>&nbsp;
+                      <span *ngIf="rp.get('renglonPedido').value.oferta && rp.get('renglonPedido').value.bonificacionPorcentaje > 0" class="badge badge-success">OFERTA {{ rp.get('renglonPedido').value.bonificacionPorcentaje }}%</span><br>
+                      <strong>{{ rp.get('renglonPedido').value.descripcionItem }}</strong>
+                      <div class="text-right">
+                        {{ rp.get('renglonPedido').value.cantidad }} {{ rp.get('renglonPedido').value.medidaItem }} x {{ rp.get('renglonPedido').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
+                        = <span [class.tachado]="rp.get('renglonPedido').value.bonificacionPorcentaje">{{ rp.get('renglonPedido').value.importeAnterior | currency:'ARS':'symbol':'1.0-2' }}</span>
+                        <span class="text-right text-nowrap" *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje">
+                          &nbsp;<strong>{{ rp.get('renglonPedido').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <ul class="list-unstyled text-center mb-0">
+                        <li class="mb-2">
+                          <a class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
+                        </li>
+                        <li>
+                          <a class="btn btn-primary" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="form-group flex-grow-0 flex-shrink-0">
+            <label for="observaciones">Observaciones</label>
+            <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
+          </div>
+          <table class="table table-bordered table-sm" style="width: fit-content;">
+            <tbody>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Subtotal</th>
+              <td class="align-middle w-50 text-right">
+                {{ (form.get('resultados').value ? form.get('resultados').value.subTotal : 0) | currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="align-middle text-right">
+                <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
+              </th>
+              <td class="align-middle">
+                <input class="form-control" type="number" id="descuento" formControlName="descuento"
+                       (keyup.enter)="onChange($event)" (blur)="onChange($event)"><!--  [disabled]="loadingResultados" -->
+              </td>
+              <td class="align-middle text-right">
+                {{ (form.get('resultados').value ? (-1 * form.get('resultados').value.descuentoNeto) : 0) | currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="align-middle text-right">
+                <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
+              </th>
+              <td class="align-middle">
+                <input class="form-control" type="number" id="recargo" formControlName="recargo"
+                       (keyup.enter)="onChange($event)" (blur)="onChange($event)"><!--  [disabled]="loadingResultados" -->
+              </td>
+              <td class="align-middle text-right">
+                {{ (form.get('resultados').value ? form.get('resultados').value.recargoNeto : 0) | currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Total</th>
+              <td class="align-middle text-right">{{ (form.get('resultados').value ? form.get('resultados').value.total : 0) | currency:'ARS':'symbol':'1.0-2'}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="envio" [title]="'Envio' + getEnvioLabel()"
+                 [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length)">
+        <ng-template ngbPanelContent>
+          <label for="opcionEnvio">Seleccione el tipo de Envío:</label>&nbsp;
+          <div class="btn-group btn-group-toggle" id="opcionEnvio" ngbRadioGroup name="radioBasic" formControlName="opcionEnvio">
+            <label ngbButtonLabel class="btn-outline-primary letra-negra">
+              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length"><!--  [disabled]="!sucursales.length" -->
+              Retiro en sucursal
+            </label>
+            <label ngbButtonLabel class="btn-outline-primary letra-negra">
+              <input ngbButton type="radio" [value]="oe.ENVIO_A_DOMICILIO">
+              Envío a Domicilio
+            </label>
+          </div>
+          <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
+            <label for="sucursal" class="sr-only">Sucursal</label>
+            <select class="form-control" id="sucursal" formControlName="sucursal"><!--  [disabled]="!sucursales.length" -->
+              <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">{{ sucursal.nombre }}</option>
+            </select>
+          </div>
+          <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value  === oe.ENVIO_A_DOMICILIO">
+            <label for="opcionEnvioUbicacion" class="sr-only">Ubicación</label>
+            <select class="form-control" id="opcionEnvioUbicacion" formControlName="opcionEnvioUbicacion">
+              <option [value]="oeu.USAR_UBICACION_FACTURACION">Usar ubicación de facturación</option>
+              <option [value]="oeu.USAR_UBICACION_ENVIO">Usar ubicación de envío</option>
+            </select>
+          </div>
+          <div *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_FACTURACION">
+            <app-ubicacion-facturacion-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-facturacion-component>
+          </div>
+          <div  *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO">
+            <app-ubicacion-envio-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
+          </div>
+          <div class="text-right mb-0 mt-2" *ngIf="!saving">
+            <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled()">
+              <fa-icon [icon]="['fas', 'check']"></fa-icon> Enviar Pedido
+            </button>
+          </div>
+          <div *ngIf="saving" class="text-center my-3">
+            <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+          </div>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </form>
+</div>

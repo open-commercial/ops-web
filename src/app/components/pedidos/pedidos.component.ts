@@ -6,9 +6,10 @@ import { EstadoPedido } from '../../models/estado.pedido';
 import { finalize } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
+import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -105,23 +106,28 @@ export class PedidosComponent implements OnInit {
 
   getFormValues() {
     const values = this.filterForm.value;
-    return {
-      idCliente: values.cliente ? values.cliente.id_Cliente : '',
-      idUsuario: values.usuario ? values.usuario.id_Usuario : '',
-      idProducto: values.producto ? values.producto.idProducto : '',
-      idViajante: values.viajante ? values.viajante.id_Usuario : '',
-      desde: values.rangoFecha && values.rangoFecha.desde ? HelperService.getTimeStamp(values.rangoFecha.desde) : '',
-      hasta: values.rangoFecha && values.rangoFecha.hasta ? HelperService.getTimeStamp(values.rangoFecha.hasta) : '',
-      estadoPedido: values.estadoPedido,
-      nroPedido: values.nroPedido,
+    const ret: BusquedaPedidoCriteria = {
+      idSucursal: Number(SucursalesService.getIdSucursal()),
+      pagina: 0
     };
+
+    if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
+    if (values.usuario) { ret.idUsuario = values.usuario.id_Usuario; }
+    if (values.producto) { ret.idProducto = values.producto.idProducto; }
+    if (values.viajante) { ret.idViajante = values.viajante.id_Usuario; }
+    if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getTimeStamp(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getTimeStamp(values.rangoFecha.hasta); }
+    if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
+    if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
+
+    return ret;
   }
 
   getApplyFilters() {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.cliente && values.cliente.id_Cliente) {
+    if (values.cliente && values.cliente.idCliente) {
       let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
       if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
       this.applyFilters.push({ label: 'Cliente', value: val });

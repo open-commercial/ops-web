@@ -31,6 +31,15 @@ import { FacturasVentaComponent } from './components/facturas-venta/facturas-ven
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
 import { ProveedorFiltroComponent } from './components/proveedor-filtro/proveedor-filtro.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
+import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
+import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
+import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
+import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/renglon-pedido-modal.component';
+import { CuentaCorrienteClienteModalComponent } from './components/cuenta-corriente-cliente-modal/cuenta-corriente-cliente-modal.component';
+import { UbicacionFacturacionComponent } from './components/ubicacion-facturacion-component/ubicacion-facturacion.component';
+import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
+import { EliminarRengloPedidoModalComponent } from './components/eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
+import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
 
 library.add(fas);
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -50,6 +59,15 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     FacturasCompraComponent,
     ProveedorFiltroComponent,
     TopBarComponent,
+    NuevoPedidoComponent,
+    ProductoModalComponent,
+    BusquedaCuentaCorrienteClienteComponent,
+    RenglonPedidoModalComponent,
+    CuentaCorrienteClienteModalComponent,
+    UbicacionFacturacionComponent,
+    UbicacionEnvioComponent,
+    UbicacionModalComponent,
+    EliminarRengloPedidoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +88,13 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuariosService,
     ClientesService,
     ProductosService,
+  ],
+  entryComponents: [
+    ProductoModalComponent,
+    RenglonPedidoModalComponent,
+    CuentaCorrienteClienteModalComponent,
+    UbicacionModalComponent,
+    EliminarRengloPedidoModalComponent
   ],
   bootstrap: [AppComponent]
 })

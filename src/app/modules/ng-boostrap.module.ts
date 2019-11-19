@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
 import {
-  NgbAlertModule,
+  NgbAccordionModule,
+  NgbAlertModule, NgbButtonsModule,
   NgbCollapseModule,
   NgbDatepickerModule,
-  NgbDropdownModule,
-  NgbPaginationModule, NgbPopoverModule
+  NgbDropdownModule, NgbModalModule,
+  NgbPopoverModule, NgbTypeaheadModule
 } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
-    NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbPaginationModule, NgbDatepickerModule, NgbPopoverModule
+    NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbDatepickerModule, NgbPopoverModule, NgbAccordionModule,
+    NgbModalModule, NgbTypeaheadModule, NgbButtonsModule
   ],
   exports: [
-    NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbPaginationModule, NgbDatepickerModule, NgbPopoverModule
+    NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbDatepickerModule, NgbPopoverModule, NgbAccordionModule,
+    NgbModalModule, NgbTypeaheadModule, NgbButtonsModule
   ]
 })
 export class NgBoostrapModule { }

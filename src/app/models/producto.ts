@@ -1,12 +1,35 @@
+import { CantidadEnSucursal } from './cantidad-en-sucursal';
+
 export interface Producto {
   idProducto: number;
-  hayStock: boolean;
   codigo: string;
   descripcion: string;
+  cantidadEnSucursales: Array<CantidadEnSucursal>;
+  cantidadTotalEnSucursales: number;
+  hayStock: boolean;
+  cantMinima: number;
+  bulto: number;
   nombreMedida: string;
-  nombreRubro: string;
+  precioCosto: number;
+  gananciaPorcentaje: number;
+  gananciaNeto: number;
+  precioVentaPublico: number;
+  ivaPorcentaje: number;
+  ivaNeto: number;
   precioLista: number;
-  precioBonificado: number;
-  ventaMinima: number;
+  nombreRubro: string;
+  ilimitado: boolean;
+  publico: boolean;
+  oferta: boolean;
+  porcentajeBonificacionOferta: number;
+  precioListaBonificado: number;
+  fechaUltimaModificacion: Date;
+  estanteria: string;
+  estante: string;
+  razonSocialProveedor: string;
+  nota: string;
+  fechaAlta: Date;
+  fechaVencimiento: Date;
+  eliminado: boolean;
   urlImagen: string;
 }

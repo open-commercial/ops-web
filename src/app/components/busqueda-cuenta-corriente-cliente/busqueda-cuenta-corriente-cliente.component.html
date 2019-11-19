@@ -1,0 +1,37 @@
+<div class="d-flex flex-row align-items-center">
+  <div class="flex-fill p-2">
+    <!--<em *ngIf="!ccc">(Cliente no seleccionado)</em>-->
+    <div *ngIf="ccc" class="d-flex flex-column">
+      <span class="mr-2">
+        #{{ ccc.cliente.nroCliente }}
+        <span class="badge badge-success" *ngIf="ccc.cliente.bonificacion"> {{ ccc.cliente.bonificacion }}% bonif</span>
+      </span>
+      <span>
+        <div *ngIf="ccc.cliente.idFiscal">CUIT ó DNI: {{ ccc.cliente.idFiscal }}</div>
+        <strong>{{ ccc.cliente.nombreFiscal }}</strong><em *ngIf="ccc.cliente.nombreFantasia"> - {{ ccc.cliente.nombreFantasia }}</em>
+      </span>
+      <span *ngIf="ccc.cliente.ubicacionEnvio">
+        Ubi. facturación: {{ helper.formatUbicacion(ccc.cliente.ubicacionFacturacion) }}
+      </span>
+      <span *ngIf="ccc.cliente.ubicacionEnvio">
+        Ubi. envio: {{ helper.formatUbicacion(ccc.cliente.ubicacionEnvio) }}
+      </span>
+      <span>
+        Saldo: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.0-2'}}</span>
+      </span>
+    </div>
+    <div *ngIf="!ccc">
+      <em>Busque un Cliente para poder continuar</em>
+    </div>
+  </div>
+  <div class="p-2">
+    <ul class="list-unstyled p-0 m-0">
+      <li class="mb-2">
+        <button class="btn btn-primary" type="button" (click)="showCccModal()">
+          <fa-icon [icon]="['fas', 'search']"></fa-icon>
+        </button>
+      </li>
+      <!--<li><button class="btn btn-outline-secondary" type="button" (click)="clearCcc()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button></li>-->
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="modal-body p-2">
+  <div *ngIf="producto">
+    <div class="d-flex flex-row align-items-center">
+      <div class="img-container d-flex align-items-center flex-grow-0 flex-shrink-0">
+        <img [src]="producto.urlImagen ? producto.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
+      </div>
+      <div class="info flex-fill">
+        <span class="codigo">{{ producto.codigo }}</span>&nbsp;
+        <span *ngIf="producto.oferta" class="badge badge-success">OFERTA {{ producto.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
+        <p class="m-0"><strong>{{ producto.descripcion }}</strong></p>
+        <span *ngIf="producto.oferta && producto.bulto > 1">Llevando {{ producto.bulto }}+ {{ producto.nombreMedida }}</span>
+      </div>
+    </div>
+    <form [formGroup]="form" (submit)="submit()" *ngIf="!loading">
+      <div class="form-group mb-0">
+        <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad para este producto.</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()"><fa-icon [icon]="['fas', 'minus']"></fa-icon></button>
+          </div>
+          <input type="number" class="form-control" id="cantidad" placeholder="Cantidad"
+                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }" ngbAutofocus>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></button>
+          </div>
+        </div>
+        <div class="invalid-feedback" *ngIf="submitted && f.cantidad.errors">
+          <div *ngIf="f.cantidad.errors.required">Requerido</div>
+          <div *ngIf="f.cantidad.errors.min">Mínimo: {{ f.cantidad.errors.min.min }}</div>
+        </div>
+      </div>
+      <button tabindex="-1" class="sr-only" type="submit">Aceptar</button>
+    </form>
+  </div>
+  <div *ngIf="loading || productoLoading" class="text-center">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+</div>
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!producto || loading">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar
+  </button>
+</div>
+

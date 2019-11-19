@@ -5,7 +5,8 @@ import { Usuario } from '../../models/usuario';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { EmpresaService } from "../../services/empresa.service";
+import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from '../../models/sucursal';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private fb: FormBuilder,
-              private router: Router) { }
+              private router: Router,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
     this.errors.subscribe((message) => this.errorMessage = message);
@@ -55,19 +57,46 @@ export class LoginComponent implements OnInit {
         .subscribe(
         () => {
           this.authService.getLoggedInUsuario()
-            .pipe(
-              finalize(() => { this.loading = false; this.form.enable(); })
-            )
-            .subscribe((usuario: Usuario) => {
-              EmpresaService.setIdEmpresa(usuario.idEmpresaPredeterminada.toString());
-              this.router.navigate(['']);
-            });
+            .subscribe(
+              (usuario: Usuario) => {
+                this.sucursalesService.getSucursales()
+                  .pipe(
+                    finalize(() => { this.loading = false; this.form.enable(); })
+                  )
+                  .subscribe(
+                    sucs => {
+                      if (sucs.length)  {
+                        const aux = sucs.filter((s: Sucursal) => s.idSucursal === usuario.idSucursalPredeterminada);
+                        if (aux.length) {
+                          this.sucursalesService.seleccionarSucursal(aux[0]);
+                        } else {
+                          this.sucursalesService.seleccionarSucursal(sucs[0]);
+                        }
+                        this.router.navigate(['']);
+                      } else {
+                        this.showErrorMessage('No se pudieron obtener sucursales.');
+                        this.authService.logout();
+                      }
+                    },
+                    err => {
+                      this.showErrorMessage(err);
+                    }
+                  )
+                ;
+              },
+              err => {
+                this.showErrorMessage(err);
+                this.loading = false;
+                this.form.enable();
+              }
+            );
         },
         err => {
           this.showErrorMessage(err);
           this.loading = false;
           this.form.enable();
-        });
+        })
+      ;
     }
   }
 

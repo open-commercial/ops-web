@@ -5,17 +5,23 @@
 
   <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
+      <!--<li class="nav-item">
         <a class="nav-link dropdown-toggle" [routerLink]="null">
           <fa-icon [icon]="['fas', 'bell']"></fa-icon>
           <span class="d-none d-md-inline">&nbsp;Avisos</span>
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" [routerLink]="null">
-          <fa-icon [icon]="['fas', 'store']"></fa-icon>
-          <span class="d-none d-md-inline">&nbsp;Globo Distribuciones</span>
+      </li>-->
+      <li class="nav-item dropdown" ngbDropdown >
+        <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownSucursales" ngbDropdownToggle>
+            <fa-icon [icon]="['fas', 'store']"></fa-icon>
+            <span class="d-none d-md-inline">&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}</span>
         </a>
+        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownSucursales">
+          <a [routerLink]="null" class="dropdown-item" *ngFor="let s of sucursales"
+             (click)="seleccionarSucursal(s)" [class.active]="s && sucursalSeleccionada && s.idSucursal === sucursalSeleccionada.idSucursal">
+            <fa-icon [icon]="['fas', 'store']"></fa-icon> {{ s.nombre }}
+          </a>
+        </div>
       </li>
       <li class="nav-item dropdown" ngbDropdown >
         <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownUser" ngbDropdownToggle>
@@ -31,3 +37,7 @@
     </ul>
   </div>
 </nav>
+<div class="bg-primary d-md-none text-center py-1 px-2">
+  <fa-icon [icon]="['fas', 'store']"></fa-icon>&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}
+</div>
+
