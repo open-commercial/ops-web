@@ -18,7 +18,7 @@ import { NuevoPedido } from '../../models/nuevo-pedido';
 import { AuthService } from '../../services/auth.service';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
 import { EliminarRengloPedidoModalComponent } from '../eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
@@ -146,13 +146,20 @@ export class NuevoPedidoComponent implements OnInit {
       }
     });
 
-    this.getSucursales();
+    this.form.valueChanges.subscribe(v => this.setStorageData(v));
 
     this.cccPredeterminadoLoading = true;
-    this.clientesService.existeClientePredetermiando()
+    combineLatest([
+      this.sucursalesService.getPuntosDeRetito(),
+      this.clientesService.existeClientePredetermiando()
+    ])
+      .pipe()
       .subscribe(
-        (existe: boolean) => {
-          if (existe) {
+        (v: [Array<Sucursal>, boolean]) => {
+          this.sucursales = v[0];
+          const data = this.getStorageData();
+          if (data) { this.loadForm(data); }
+          if (v[1] && (!data || !data.ccc)) {
             this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
               .pipe(finalize(() => this.cccPredeterminadoLoading = false))
               .subscribe(
@@ -172,6 +179,28 @@ export class NuevoPedidoComponent implements OnInit {
     ;
   }
 
+  getStorageData(): any {
+    return JSON.parse(localStorage.getItem('nuevo-pedido'));
+  }
+
+  setStorageData(data: any) {
+    localStorage.setItem('nuevo-pedido', JSON.stringify(data));
+  }
+
+  loadForm(data) {
+    this.form.get('ccc').setValue(data.ccc);
+    data.renglonesPedido.forEach(d => {
+      this.renglonesPedido.push(this.createRenglonPedidoForm(d.renglonPedido));
+    });
+    this.form.get('observaciones').setValue(data.observaciones);
+    this.form.get('descuento').setValue(data.descuento);
+    this.form.get('recargo').setValue(data.recargo);
+    this.form.get('opcionEnvio').setValue(data.opcionEnvio);
+    this.form.get('sucursal').setValue(data.sucursal);
+    this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion);
+    this.form.get('resultados').setValue(data.resultados);
+  }
+
   clienteHasUbicacionFacturacion() {
     const cliente: Cliente = this.form.get('ccc') && this.form.get('ccc').value.cliente ? this.form.get('ccc').value.cliente : null;
     return !!(cliente && cliente.ubicacionFacturacion);
@@ -180,15 +209,6 @@ export class NuevoPedidoComponent implements OnInit {
   clienteHasUbicacionEnvio() {
     const cliente: Cliente = this.form.get('ccc') && this.form.get('ccc').value.cliente ? this.form.get('ccc').value.cliente : null;
     return !!(cliente && cliente.ubicacionEnvio);
-  }
-
-  getSucursales() {
-    this.sucursalesService.getPuntosDeRetito()
-      .subscribe((data: Array<Sucursal>) => {
-        this.sucursales = data;
-        // if (this.sucursales.length) { this.form.get('sucursal').setValue(this.sucursales[0]); }
-      })
-    ;
   }
 
   submit() {
@@ -272,6 +292,7 @@ export class NuevoPedidoComponent implements OnInit {
       sucursal: null,
       resultados: null,
     });
+    localStorage.removeItem('nuevo-pedido');
   }
 
   get renglonesPedido() {
@@ -496,6 +517,10 @@ export class NuevoPedidoComponent implements OnInit {
         })
       ;
     }
+  }
+
+  compareSucursalesFn(s1: any, s2: any): boolean {
+    return s1 && s2 ? s1.id === s2.id : s1 === s2;
   }
 }
 
