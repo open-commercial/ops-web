@@ -13,8 +13,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AuthGuard } from './guards/auth.guard';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -41,7 +40,6 @@ import { UbicacionModalComponent } from './components/ubicacion-modal-component/
 import { EliminarRengloPedidoModalComponent } from './components/eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
 import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
 
-library.add(fas);
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
 @NgModule({
@@ -98,4 +96,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas);
+  }
+}

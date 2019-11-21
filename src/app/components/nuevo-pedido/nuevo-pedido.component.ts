@@ -23,6 +23,7 @@ import { ProductosService } from '../../services/productos.service';
 import { EliminarRengloPedidoModalComponent } from '../eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
+import { StorageService } from '../../services/storage.service';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -71,7 +72,8 @@ export class NuevoPedidoComponent implements OnInit {
               private sucursalesService: SucursalesService,
               private authService: AuthService,
               private router: Router,
-              private productosService: ProductosService) {
+              private productosService: ProductosService,
+              private storageService: StorageService) {
 
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -146,7 +148,7 @@ export class NuevoPedidoComponent implements OnInit {
       }
     });
 
-    this.form.valueChanges.subscribe(v => this.setStorageData(v));
+    this.form.valueChanges.subscribe(data => this.storageService.setItem('nuevo-pedido', data));
 
     this.cccPredeterminadoLoading = true;
     combineLatest([
@@ -157,7 +159,7 @@ export class NuevoPedidoComponent implements OnInit {
       .subscribe(
         (v: [Array<Sucursal>, boolean]) => {
           this.sucursales = v[0];
-          const data = this.getStorageData();
+          const data = this.storageService.getItem('nuevo-pedido');
           if (data) { this.loadForm(data); }
           if (v[1] && (!data || !data.ccc)) {
             this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
@@ -179,14 +181,6 @@ export class NuevoPedidoComponent implements OnInit {
     ;
   }
 
-  getStorageData(): any {
-    return JSON.parse(localStorage.getItem('nuevo-pedido'));
-  }
-
-  setStorageData(data: any) {
-    localStorage.setItem('nuevo-pedido', JSON.stringify(data));
-  }
-
   loadForm(data) {
     this.form.get('ccc').setValue(data.ccc);
     data.renglonesPedido.forEach(d => {
@@ -199,6 +193,9 @@ export class NuevoPedidoComponent implements OnInit {
     this.form.get('sucursal').setValue(data.sucursal);
     this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion);
     this.form.get('resultados').setValue(data.resultados);
+    if (data.descuento > 0 || data.recargo > 0) {
+      this.calcularResultados();
+    }
   }
 
   clienteHasUbicacionFacturacion() {
@@ -263,7 +260,7 @@ export class NuevoPedidoComponent implements OnInit {
 
     const np: NuevoPedido = {
       observaciones: this.form.get('observaciones').value,
-      idSucursal: Number(SucursalesService.getIdSucursal()),
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
       tipoDeEnvio: te,
       idUsuario: Number(this.authService.getLoggedInIdUsuario()),
       idCliente: ccc && ccc.cliente ? ccc.cliente.idCliente : null,
@@ -292,7 +289,7 @@ export class NuevoPedidoComponent implements OnInit {
       sucursal: null,
       resultados: null,
     });
-    localStorage.removeItem('nuevo-pedido');
+    this.storageService.removeItem('nuevo-pedido');
   }
 
   get renglonesPedido() {

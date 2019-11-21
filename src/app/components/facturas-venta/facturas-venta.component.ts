@@ -55,7 +55,8 @@ export class FacturasVentaComponent implements OnInit {
 
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
     this.createFilterForm();
@@ -126,7 +127,7 @@ export class FacturasVentaComponent implements OnInit {
   getFormValues(): BusquedaFacturaVentaCriteria {
     const values = this.filterForm.value;
     const criteria: BusquedaFacturaVentaCriteria = {
-      idSucursal: Number(SucursalesService.getIdSucursal()),
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: 0,
     };
 

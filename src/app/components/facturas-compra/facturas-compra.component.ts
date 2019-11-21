@@ -5,8 +5,8 @@ import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
-import { BusquedaFacturaCompraCriteria } from "../../models/criterias/busqueda-factura-compra-criteria";
-import { SucursalesService } from "../../services/sucursales.service";
+import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-factura-compra-criteria';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -50,7 +50,8 @@ export class FacturasCompraComponent implements OnInit {
   helper = HelperService;
 
   constructor(private facturasCompraService: FacturasCompraService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
     this.createFilterForm();
@@ -115,7 +116,7 @@ export class FacturasCompraComponent implements OnInit {
   getFormValues() {
     const values = this.filterForm.value;
     const criteria: BusquedaFacturaCompraCriteria = {
-      idSucursal: Number(SucursalesService.getIdSucursal()),
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: 0
     };
 

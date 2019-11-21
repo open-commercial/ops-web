@@ -40,4 +40,4 @@ const routes: Routes = [
 export class AppRoutingModule { }
 
 // runGuardsAndResolvers: 'always' + onSameUrlNavigation: 'reload' se usan para que logout funcione bien
-// si el logout redirecciona a la misma ruta, ej: desde home autenticado, localStorage.clear y navigate to home.
+// si el logout redirecciona a la misma ruta, ej: desde home autenticado, this.storageService.clear y navigate to home.

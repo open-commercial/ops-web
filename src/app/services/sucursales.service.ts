@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { Sucursal } from '../models/sucursal';
 import { environment } from '../../environments/environment';
 import { HelperService } from './helper.service';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,18 +15,19 @@ export class SucursalesService {
   private sucursalSubject = new Subject<Sucursal>();
   sucursal$ = this.sucursalSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private storageService: StorageService) { }
 
-  static getIdSucursal() {
-    return localStorage.getItem('idSucursal');
+  getIdSucursal() {
+    return this.storageService.getItem('idSucursal');
   }
 
-  static setIdSucursal(idSucursal: string) {
-    localStorage.setItem('idSucursal', idSucursal);
+  setIdSucursal(idSucursal: string) {
+    this.storageService.setItem('idSucursal', idSucursal);
   }
 
   seleccionarSucursal(s: Sucursal) {
-    SucursalesService.setIdSucursal(s.idSucursal.toString());
+    this.setIdSucursal(s.idSucursal.toString());
     this.sucursalSubject.next(s);
   }
 

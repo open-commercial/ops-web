@@ -30,7 +30,8 @@ export class ProductoModalComponent implements OnInit {
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {}
 
@@ -82,7 +83,7 @@ export class ProductoModalComponent implements OnInit {
 
   getCantOtrasSucursales(p: Producto) {
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal === Number(SucursalesService.getIdSucursal())
+      c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
     );
     const cant = aux.length ? aux[0].cantidad : 0;
     return p.cantidadTotalEnSucursales - cant;

@@ -40,7 +40,8 @@ export class PedidosComponent implements OnInit {
   applyFilters = [];
 
   constructor(private pedidosService: PedidosService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private sucursalesService: SucursalesService) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -107,7 +108,7 @@ export class PedidosComponent implements OnInit {
   getFormValues() {
     const values = this.filterForm.value;
     const ret: BusquedaPedidoCriteria = {
-      idSucursal: Number(SucursalesService.getIdSucursal()),
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: 0
     };
 

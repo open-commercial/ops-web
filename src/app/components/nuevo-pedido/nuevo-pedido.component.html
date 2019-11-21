@@ -1,7 +1,7 @@
 <div class="app-punto-vetnta my-3">
   <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nuevo Pedido</h1>
   <ngb-alert class="my-3" *ngIf="message" [type]="messageType" (close)="message = null">{{ message }}</ngb-alert>
-  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2"> <!--(ngSubmit)="submit()"-->
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2">
     <ngb-accordion #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
         <ng-template ngbPanelContent>
@@ -31,10 +31,11 @@
             </div>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">
+                <caption class="sr-only">Productos del Pedido</caption>
                 <thead>
                 <tr>
-                  <th class="w-100 align-middle">Descripción</th>
-                  <th></th>
+                  <th class="w-100 align-middle" scope="col">Descripción</th>
+                  <th scope="col">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,6 +75,7 @@
             <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
           </div>
           <table class="table table-bordered table-sm" style="width: fit-content;">
+            <caption class="sr-only">Totales</caption>
             <tbody>
             <tr>
               <th colspan="2" scope="row" class="align-middle text-right">Subtotal</th>
@@ -87,7 +89,7 @@
               </th>
               <td class="align-middle">
                 <input class="form-control" type="number" id="descuento" formControlName="descuento"
-                       (keyup.enter)="onChange($event)" (blur)="onChange($event)"><!--  [disabled]="loadingResultados" -->
+                       (keyup.enter)="onChange($event)" (blur)="onChange($event)" [disabled]="loadingResultados">
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? (-1 * form.get('resultados').value.descuentoNeto) : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -99,7 +101,7 @@
               </th>
               <td class="align-middle">
                 <input class="form-control" type="number" id="recargo" formControlName="recargo"
-                       (keyup.enter)="onChange($event)" (blur)="onChange($event)"><!--  [disabled]="loadingResultados" -->
+                       (keyup.enter)="onChange($event)" (blur)="onChange($event)" [disabled]="loadingResultados">
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? form.get('resultados').value.recargoNeto : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -119,7 +121,7 @@
           <label for="opcionEnvio">Seleccione el tipo de Envío:</label>&nbsp;
           <div class="btn-group btn-group-toggle" id="opcionEnvio" ngbRadioGroup name="radioBasic" formControlName="opcionEnvio">
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
-              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length"><!--  [disabled]="!sucursales.length" -->
+              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length">
               Retiro en sucursal
             </label>
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
@@ -129,7 +131,7 @@
           </div>
           <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
             <label for="sucursal" class="sr-only">Sucursal</label>
-            <select class="form-control" id="sucursal" formControlName="sucursal" [compareWith]="compareSucursalesFn"><!--  [disabled]="!sucursales.length" -->
+            <select class="form-control" id="sucursal" formControlName="sucursal" [compareWith]="compareSucursalesFn">
               <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">{{ sucursal.nombre }}</option>
             </select>
           </div>
