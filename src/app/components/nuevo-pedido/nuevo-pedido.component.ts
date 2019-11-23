@@ -382,7 +382,6 @@ export class NuevoPedidoComponent implements OnInit {
 
     if (opcionEnvio && opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL) {
       label = ': Retiro en sucursal';
-      if (sucursal) { label += ` (${sucursal.nombre})`; }
     }
 
     if (opcionEnvio && opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO) {
@@ -518,6 +517,11 @@ export class NuevoPedidoComponent implements OnInit {
 
   compareSucursalesFn(s1: any, s2: any): boolean {
     return s1 && s2 ? s1.id === s2.id : s1 === s2;
+  }
+
+  getSucursalLabel(s: Sucursal) {
+    if (!s) { return ''; }
+    return s.nombre + (s.detalleUbicacion ? ' (' + s.detalleUbicacion + ')' : '');
   }
 }
 
