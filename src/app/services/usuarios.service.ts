@@ -15,10 +15,10 @@ export class UsuariosService {
 
   constructor(private http: HttpClient) {}
 
-  getUsuarios(input, page = 0, roles: Array<Rol> = []): Observable<Pagination> {
+  getUsuarios(input, page = 0, rols: Array<Rol> = []): Observable<Pagination> {
     const criteria: BusquedaUsuarioCriteria = {
       username: input, nombre: input, apellido: input, email: input,
-      roles: roles,
+      roles: rols,
       pagina: page
     };
 
@@ -31,5 +31,9 @@ export class UsuariosService {
 
   saveUsuario(usuario: Usuario) {
     return this.http.put(this.url, usuario);
+  }
+
+  setSucursalPredeterminadaDeUsuario(idUsuario: number, idSucursal: number): Observable<void> {
+    return this.http.put<void>(this.url + `/${idUsuario}/sucursales/${idSucursal}`, null);
   }
 }

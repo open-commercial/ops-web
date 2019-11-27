@@ -1,6 +1,5 @@
 <div class="d-flex flex-row align-items-center">
   <div class="flex-fill p-2">
-    <!--<em *ngIf="!ccc">(Cliente no seleccionado)</em>-->
     <div *ngIf="ccc" class="d-flex flex-column">
       <span class="mr-2">
         #{{ ccc.cliente.nroCliente }}
@@ -31,7 +30,6 @@
           <fa-icon [icon]="['fas', 'search']"></fa-icon>
         </button>
       </li>
-      <!--<li><button class="btn btn-outline-secondary" type="button" (click)="clearCcc()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button></li>-->
     </ul>
   </div>
 </div>

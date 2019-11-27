@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RenglonPedido } from '../../models/renglon-pedido';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../models/producto';
@@ -14,7 +14,7 @@ import { ProductosService } from '../../services/productos.service';
   templateUrl: './renglon-pedido-modal.component.html',
   styleUrls: ['./renglon-pedido-modal.component.scss']
 })
-export class RenglonPedidoModalComponent implements OnInit {
+export class RenglonPedidoModalComponent implements OnInit, AfterViewInit {
   cliente: Cliente;
   cantidad = 1;
   producto: Producto = null;
@@ -23,6 +23,8 @@ export class RenglonPedidoModalComponent implements OnInit {
   submitted = false;
   loading = false;
 
+  @ViewChild('cantidadInput', { static: false }) cantidadInput: ElementRef;
+
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal,
               private pedidosService: PedidosService,
@@ -30,6 +32,10 @@ export class RenglonPedidoModalComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.cantidadInput.nativeElement.focus(), 200);
   }
 
   public loadProducto(idProductoItem: number) {

@@ -16,12 +16,16 @@
         <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad para este producto.</label>
         <div class="input-group">
           <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()"><fa-icon [icon]="['fas', 'minus']"></fa-icon></button>
+            <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()">
+              <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+            </button>
           </div>
-          <input type="number" class="form-control" id="cantidad" placeholder="Cantidad"
-                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }" ngbAutofocus>
+          <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" #cantidadInput
+                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></button>
+            <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+            </button>
           </div>
         </div>
         <div class="invalid-feedback" *ngIf="submitted && f.cantidad.errors">

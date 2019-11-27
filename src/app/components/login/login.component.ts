@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
+import { Rol } from '../../models/rol';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,13 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   loading = false;
   submitted = false;
+
+  allowedRoles: Rol[] = [
+    Rol.ADMINISTRADOR,
+    Rol.ENCARGADO,
+    Rol.VENDEDOR,
+    Rol.VIAJANTE,
+  ];
 
   private errors = new Subject<string>();
   errorMessage: string;
@@ -59,6 +67,14 @@ export class LoginComponent implements OnInit {
           this.authService.getLoggedInUsuario()
             .subscribe(
               (usuario: Usuario) => {
+                if (!this.tienePermisos(usuario)) {
+                  this.showErrorMessage('No posee permisos para ingresar.');
+                  this.loading = false;
+                  this.form.enable();
+                  this.authService.logout();
+                  return;
+                }
+
                 this.sucursalesService.getSucursales()
                   .pipe(
                     finalize(() => { this.loading = false; this.form.enable(); })
@@ -98,6 +114,11 @@ export class LoginComponent implements OnInit {
         })
       ;
     }
+  }
+
+  tienePermisos(u: Usuario) {
+    const intersect = u.roles.filter(x => this.allowedRoles.includes(x));
+    return intersect.length > 0;
   }
 
   showErrorMessage(message: string) {

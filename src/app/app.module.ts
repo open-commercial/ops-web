@@ -37,7 +37,7 @@ import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/r
 import { CuentaCorrienteClienteModalComponent } from './components/cuenta-corriente-cliente-modal/cuenta-corriente-cliente-modal.component';
 import { UbicacionFacturacionComponent } from './components/ubicacion-facturacion-component/ubicacion-facturacion.component';
 import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
-import { EliminarRengloPedidoModalComponent } from './components/eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
+import { EliminarRenglonPedidoModalComponent } from './components/eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -65,7 +65,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UbicacionFacturacionComponent,
     UbicacionEnvioComponent,
     UbicacionModalComponent,
-    EliminarRengloPedidoModalComponent,
+    EliminarRenglonPedidoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,7 +92,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     RenglonPedidoModalComponent,
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
-    EliminarRengloPedidoModalComponent
+    EliminarRenglonPedidoModalComponent
   ],
   bootstrap: [AppComponent]
 })

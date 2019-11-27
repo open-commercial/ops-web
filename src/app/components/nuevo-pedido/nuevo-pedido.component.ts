@@ -20,7 +20,7 @@ import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { combineLatest, Subject } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
-import { EliminarRengloPedidoModalComponent } from '../eliminar-renglo-pedido-modal/eliminar-renglo-pedido-modal.component';
+import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
 import { StorageService } from '../../services/storage.service';
@@ -48,6 +48,7 @@ export class NuevoPedidoComponent implements OnInit {
   sucursales: Array<Sucursal> = [];
 
   saving = false;
+  cccPredeterminado: CuentaCorrienteCliente = null;
   cccPredeterminadoLoading = false;
 
   private messages = new Subject<string>();
@@ -91,7 +92,37 @@ export class NuevoPedidoComponent implements OnInit {
       .pipe(debounceTime(5000))
       .subscribe(() => this.productoPorCodigoErrorMessage = null);
 
-    this.createFrom();
+    this.cccPredeterminadoLoading = true;
+    combineLatest([
+      this.sucursalesService.getPuntosDeRetito(),
+      this.clientesService.existeClientePredetermiando()
+    ])
+      .pipe()
+      .subscribe(
+        (v: [Array<Sucursal>, boolean]) => {
+          this.sucursales = v[0];
+          if (v[1]) {
+            this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
+              .pipe(finalize(() => this.cccPredeterminadoLoading = false))
+              .subscribe(
+                ccc => {
+                  this.cccPredeterminado = ccc;
+                  this.createFrom();
+                },
+                err => this.showErrorMessage(err.error),
+              )
+            ;
+          } else {
+            this.createFrom();
+            this.cccPredeterminadoLoading = false;
+          }
+        },
+        err => {
+          this.cccPredeterminadoLoading = false;
+          this.showErrorMessage(err.error);
+        }
+      )
+    ;
   }
 
   panelBeforeChange($event) {
@@ -148,50 +179,29 @@ export class NuevoPedidoComponent implements OnInit {
       }
     });
 
-    this.form.valueChanges.subscribe(data => this.storageService.setItem('nuevo-pedido', data));
+    this.form.valueChanges.subscribe(v => this.storageService.setItem('nuevoPedido', v));
 
-    this.cccPredeterminadoLoading = true;
-    combineLatest([
-      this.sucursalesService.getPuntosDeRetito(),
-      this.clientesService.existeClientePredetermiando()
-    ])
-      .pipe()
-      .subscribe(
-        (v: [Array<Sucursal>, boolean]) => {
-          this.sucursales = v[0];
-          const data = this.storageService.getItem('nuevo-pedido');
-          if (data) { this.loadForm(data); }
-          if (v[1] && (!data || !data.ccc)) {
-            this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-              .pipe(finalize(() => this.cccPredeterminadoLoading = false))
-              .subscribe(
-                ccc => this.form.get('ccc').setValue(ccc),
-                err => this.showErrorMessage(err.error),
-              )
-            ;
-          } else {
-            this.cccPredeterminadoLoading = false;
-          }
-        },
-        err => {
-          this.cccPredeterminadoLoading = false;
-          this.showErrorMessage(err.error);
-        }
-      )
-    ;
+    const data = this.storageService.getItem('nuevoPedido');
+    if (data) { this.loadForm(data); } else { this.form.get('ccc').setValue(this.cccPredeterminado); }
   }
 
   loadForm(data) {
-    this.form.get('ccc').setValue(data.ccc);
+    this.form.get('ccc').setValue(data.ccc ? data.ccc : this.cccPredeterminado);
     data.renglonesPedido.forEach(d => {
       this.renglonesPedido.push(this.createRenglonPedidoForm(d.renglonPedido));
     });
     this.form.get('observaciones').setValue(data.observaciones);
     this.form.get('descuento').setValue(data.descuento);
     this.form.get('recargo').setValue(data.recargo);
+
     this.form.get('opcionEnvio').setValue(data.opcionEnvio);
-    this.form.get('sucursal').setValue(data.sucursal);
     this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion);
+
+    if (data.sucursal) {
+        const idx = this.sucursales.findIndex((s: Sucursal) => s.idSucursal === data.sucursal.idSucursal);
+        if (idx >= 0) { this.form.get('sucursal').setValue(this.sucursales[idx]); }
+    }
+
     this.form.get('resultados').setValue(data.resultados);
     if (data.descuento > 0 || data.recargo > 0) {
       this.calcularResultados();
@@ -211,7 +221,6 @@ export class NuevoPedidoComponent implements OnInit {
   submit() {
     if (this.form.valid) {
       const np: NuevoPedido = this.getNuevoPedido();
-      // console.log(np); return;
       this.saving = true;
       this.pedidosService.savePedido(np)
         .pipe(finalize(() => this.saving = false))
@@ -260,7 +269,7 @@ export class NuevoPedidoComponent implements OnInit {
 
     const np: NuevoPedido = {
       observaciones: this.form.get('observaciones').value,
-      idSucursal: Number(this.sucursalesService.getIdSucursal()),
+      idSucursal: sucursalEnvio ? sucursalEnvio.idSucursal : null,
       tipoDeEnvio: te,
       idUsuario: Number(this.authService.getLoggedInIdUsuario()),
       idCliente: ccc && ccc.cliente ? ccc.cliente.idCliente : null,
@@ -289,7 +298,8 @@ export class NuevoPedidoComponent implements OnInit {
       sucursal: null,
       resultados: null,
     });
-    this.storageService.removeItem('nuevo-pedido');
+    this.storageService.removeItem('nuevoPedido');
+    this.form.get('ccc').setValue(this.cccPredeterminado);
   }
 
   get renglonesPedido() {
@@ -323,8 +333,7 @@ export class NuevoPedidoComponent implements OnInit {
       const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
 
       this.showCantidadModal(p.idProducto, cPrevia);
-    }, (reason) => { /*console.log(reason);*/
-    });
+    }, (reason) => {});
   }
 
   // modal de cantidad
@@ -336,8 +345,7 @@ export class NuevoPedidoComponent implements OnInit {
     modalRef.componentInstance.loadProducto(idProductoItem);
     modalRef.result.then((rp: RenglonPedido) => {
       this.handleRenglonPedido(rp);
-    }, (reason) => { /*console.log(reason);*/
-    });
+    }, (reason) => {});
   }
 
   editRenglon(rpControl: AbstractControl) {
@@ -349,12 +357,11 @@ export class NuevoPedidoComponent implements OnInit {
 
   eliminarRenglon(index: number) {
     const rp: RenglonPedido = this.renglonesPedido.at(index).get('renglonPedido').value;
-    const modalRef = this.modalService.open(EliminarRengloPedidoModalComponent);
+    const modalRef = this.modalService.open(EliminarRenglonPedidoModalComponent);
     modalRef.componentInstance.rp = rp;
     modalRef.result.then(() => {
       this.renglonesPedido.removeAt(index);
-    }, (reason) => { /*console.log(reason);*/
-    });
+    }, (reason) => {});
   }
 
   searchRPInRenglones(idProducto): AbstractControl {
@@ -491,7 +498,7 @@ export class NuevoPedidoComponent implements OnInit {
   }
 
   updateRenglones() {
-    const cliente: Cliente = this.form.get('ccc').value.cliente;
+    const cliente: Cliente = this.form.get('ccc').value ? this.form.get('ccc').value.cliente : null;
     const renglones: NuevoRenglonPedido[] = [];
     this.renglonesPedido.controls.forEach(c => {
       const rp: RenglonPedido = c.get('renglonPedido').value;

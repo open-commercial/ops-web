@@ -1,6 +1,6 @@
 <div class="form-group">
   <label for="idProveedor">Proveedor</label>
-  <ng-select class="filtro" id="idProveedor" [items]="proveedores$ | async"
+  <ng-select class="filtro ops-ng-select" id="idProveedor" [items]="proveedores$ | async"
              bindLabel="razonSocial"
              [loading]="loading"
              [typeahead]="input$"
@@ -13,8 +13,7 @@
     <ng-template ng-label-tmp let-item="item">
       <div *ngIf="item">
         <span class="nroProveedor"><fa-icon [icon]="['fas', 'portrait']"></fa-icon> {{ item.nroProveedor }}</span>&nbsp;-&nbsp;
-        <span class="nombreFiscal">{{ item.razonSocial }}</span>&nbsp;
-        <!--<span class="nombreFantasia" *ngIf="item.nombreFantasia">{{ item.nombreFantasia }}</span>-->
+        <span class="nombreFiscal">{{ item.razonSocial }}</span>
       </div>
     </ng-template>
 
@@ -23,7 +22,6 @@
         <div class="card-header"><fa-icon [icon]="['fas', 'portrait']"></fa-icon>&nbsp;&nbsp;{{ item.nroProveedor }}</div>
         <div class="card-body">
           <strong>{{ item.razonSocial }}</strong>
-          <!--<br><span *ngIf="item.nombreFantasia">{{ item.nombreFantasia }}</span>-->
         </div>
       </div>
     </ng-template>
