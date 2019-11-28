@@ -59,7 +59,6 @@ export class NuevoPedidoComponent implements OnInit {
   productoPorCodigoErrorMessage: string;
 
   loadingProducto = false;
-  loadingResultados = false;
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
 
@@ -156,13 +155,27 @@ export class NuevoPedidoComponent implements OnInit {
     this.form.get('renglonesPedido').valueChanges
       .subscribe(v => this.calcularResultados());
 
-    /*this.form.get('descuento').valueChanges.subscribe(
-      v => this.calcularResultados()
-    );
+    this.form.get('descuento').valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(v => {
+        const d = parseFloat(v);
+        if (Number.isNaN(d) || d < 0) {
+          this.form.get('descuento').setValue(0);
+          return;
+        }
+        this.calcularResultados();
+      });
 
-    this.form.get('recargo').valueChanges.subscribe(
-      v => this.calcularResultados()
-    );*/
+    this.form.get('recargo').valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(v => {
+        const r = parseFloat(v);
+        if (Number.isNaN(r) || r < 0) {
+          this.form.get('recargo').setValue(0);
+          return;
+        }
+        this.calcularResultados();
+      });
 
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
@@ -384,7 +397,6 @@ export class NuevoPedidoComponent implements OnInit {
 
   getEnvioLabel() {
     const opcionEnvio = this.form.get('opcionEnvio').value;
-    const sucursal = this.form.get('sucursal').value;
     let label = '';
 
     if (opcionEnvio && opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL) {
@@ -398,29 +410,33 @@ export class NuevoPedidoComponent implements OnInit {
   }
 
   calcularResultados() {
+    const dp = this.form.get('descuento').value;
+    const rp = this.form.get('recargo').value;
+
+    if (dp < 0 || rp < 0) {
+      if (dp < 0) { this.form.get('descuento').setValue(0); }
+      if (rp < 0) { this.form.get('recargo').setValue(0); }
+      return;
+    }
+
     const nrp: NuevosResultadosPedido = {
-      descuentoPorcentaje: this.form.get('descuento').value,
-      recargoPorcentaje: this.form.get('recargo').value,
+      descuentoPorcentaje: dp,
+      recargoPorcentaje: rp,
       renglones: this.form.get('renglonesPedido').value.map(e => e.renglonPedido)
     };
 
-    this.loadingResultados = true;
+    this.form.get('descuento').disable({ onlySelf: true, emitEvent: false });
+    this.form.get('recargo').disable({ onlySelf: true, emitEvent: false });
     this.pedidosService.calcularResultadosPedido(nrp)
       .pipe(
-        finalize(() => this.loadingResultados = false)
+        finalize(() => {
+          this.form.get('descuento').enable({ onlySelf: true, emitEvent: false });
+          this.form.get('recargo').enable({ onlySelf: true, emitEvent: false });
+        })
       )
       .subscribe((r: Resultados) => {
         this.form.get('resultados').setValue(r);
       });
-  }
-
-  onChange($event) {
-    let v = parseFloat($event.target.value);
-    if (Number.isNaN(0)) {
-      $event.target.value = '0';
-      v = 0;
-    }
-    this.calcularResultados();
   }
 
   showMessage(message, type = 'success') {

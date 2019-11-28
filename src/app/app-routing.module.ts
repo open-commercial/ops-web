@@ -18,8 +18,7 @@ const routes: Routes = [
   { path: '**', redirectTo: '' }
 ];
 
-/*
-const routes: Routes = [
+/*const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
@@ -30,8 +29,7 @@ const routes: Routes = [
     ]
   },
   { path: '**', redirectTo: '' }
-];
-*/
+];*/
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],

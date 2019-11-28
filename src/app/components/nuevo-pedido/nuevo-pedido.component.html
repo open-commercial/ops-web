@@ -88,8 +88,7 @@
                 <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="descuento" formControlName="descuento"
-                       (keyup.enter)="onChange($event)" (blur)="onChange($event)" [disabled]="loadingResultados">
+                <input class="form-control" type="number" id="descuento" formControlName="descuento">
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? (-1 * form.get('resultados').value.descuentoNeto) : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -100,8 +99,7 @@
                 <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="recargo" formControlName="recargo"
-                       (keyup.enter)="onChange($event)" (blur)="onChange($event)" [disabled]="loadingResultados">
+                <input class="form-control" type="number" id="recargo" formControlName="recargo">
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? form.get('resultados').value.recargoNeto : 0) | currency:'ARS':'symbol':'1.0-2' }}

@@ -84,13 +84,13 @@ body {
   font-weight: bold;
 }
 
-app-menu {
+.ops-app-menu {
   margin-left: -15rem;
   transition: margin-left 250ms;
   &.opened {
     margin-left: 0;
   }
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(lg) {
     margin-left: 0;
   }
 }
