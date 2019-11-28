@@ -1,14 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ubicacion } from '../../models/ubicacion';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UbicacionesService } from '../../services/ubicaciones.service';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { Provincia } from '../../models/provincia';
 import { Localidad } from '../../models/localidad';
-import { Observable, of, Subject } from "rxjs";
-import { Cliente } from "../../models/cliente";
-import { Pagination } from "../../models/pagination";
 
 @Component({
   selector: 'app-ubicacion-modal-component',
@@ -18,7 +15,6 @@ import { Pagination } from "../../models/pagination";
 export class UbicacionModalComponent implements OnInit {
   private _ubicacion: Ubicacion;
 
-  // @Input()
   set ubicacion(u: Ubicacion) {
     this._ubicacion = u;
   }

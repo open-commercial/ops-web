@@ -216,9 +216,6 @@ export class NuevoPedidoComponent implements OnInit {
     }
 
     this.form.get('resultados').setValue(data.resultados);
-    if (data.descuento > 0 || data.recargo > 0) {
-      this.calcularResultados();
-    }
   }
 
   clienteHasUbicacionFacturacion() {
