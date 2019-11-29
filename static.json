@@ -1,0 +1,8 @@
+{
+  "root": "produccion/",
+  "routes": {
+    "/**": "index.html"
+  },
+  "clean_urls": true,
+  "https_only": true
+}
