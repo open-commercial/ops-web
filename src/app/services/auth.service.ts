@@ -14,7 +14,7 @@ export class AuthService {
 
   urlLogin = environment.apiUrl + '/api/v1/login';
   urlLogout = environment.apiUrl + '/api/v1/logout';
-  urlPasswordRecovery = environment.apiUrl + '/api/v1/password-recovery?idEmpresa=' + environment.idEmpresa;
+  urlPasswordRecovery = environment.apiUrl + '/api/v1/password-recovery';
   jwtHelper = new JwtHelperService();
   private nombreUsuarioLoggedInSubject = new Subject<string>();
   nombreUsuarioLoggedIn$ = this.nombreUsuarioLoggedInSubject.asObservable();

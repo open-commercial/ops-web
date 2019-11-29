@@ -20,14 +20,6 @@ export class ClientesService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
-  getClienteDelUsuario(idUsuario): Observable<Cliente> {
-    return this.http.get<Cliente>(this.url + '/usuarios/' + idUsuario + '/empresas/' + environment.idEmpresa);
-  }
-
-  getCliente(idCliente): Observable<Cliente> {
-    return this.http.get<Cliente>(this.url + '/' + idCliente);
-  }
-
   saveCliente(cliente: Cliente): Observable<Cliente> {
     return this.http.put<Cliente>(this.url, cliente);
   }
