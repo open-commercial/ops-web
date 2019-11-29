@@ -1,0 +1,6 @@
+- Eliminar todo el contenido de /dist
+- Generar el bundle nuevo ejecutando ng build --prod
+- Eliminar todo el contenido de /produccion
+- Copiar todo el contenido desde /dist hacia /produccion
+- Commit todo el contenido de /produccion
+- Al hacer merge al branch "produccion" la app va ser deployed con el hook de Heroku automaticamente
