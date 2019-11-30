@@ -137,8 +137,6 @@ export class FacturasCompraComponent implements OnInit {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    // console.log(values); return;
-
     if (values.proveedor && values.proveedor.id_Proveedor) {
       const val = values.proveedor.nroProveedor + ' - ' + values.proveedor.razonSocial;
       this.applyFilters.push({ label: 'Cliente', value: val });

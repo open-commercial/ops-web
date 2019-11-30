@@ -88,7 +88,7 @@
                 <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="descuento" formControlName="descuento">
+                <input class="form-control" type="number" id="descuento" formControlName="descuento" #descuentoInput>
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? (-1 * form.get('resultados').value.descuentoNeto) : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -99,7 +99,7 @@
                 <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="recargo" formControlName="recargo">
+                <input class="form-control" type="number" id="recargo" formControlName="recargo" #recargoInput>
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? form.get('resultados').value.recargoNeto : 0) | currency:'ARS':'symbol':'1.0-2' }}

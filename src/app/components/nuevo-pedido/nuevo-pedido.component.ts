@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -59,8 +59,11 @@ export class NuevoPedidoComponent implements OnInit {
   productoPorCodigoErrorMessage: string;
 
   loadingProducto = false;
+  loadingResultados = false;
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+  @ViewChild('descuentoInput', { static: false }) descuentoInput: ElementRef;
+  @ViewChild('recargoInput', { static: false }) recargoInput: ElementRef;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -153,28 +156,30 @@ export class NuevoPedidoComponent implements OnInit {
       });
 
     this.form.get('renglonesPedido').valueChanges
-      .subscribe(v => this.calcularResultados());
+      .subscribe(v => {
+        if (!this.loadingResultados) { this.calcularResultados(); }
+      });
 
     this.form.get('descuento').valueChanges
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(700))
       .subscribe(v => {
         const d = parseFloat(v);
         if (Number.isNaN(d) || d < 0) {
           this.form.get('descuento').setValue(0);
           return;
         }
-        this.calcularResultados();
+        if (!this.loadingResultados) { this.calcularResultados(); }
       });
 
     this.form.get('recargo').valueChanges
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(700))
       .subscribe(v => {
         const r = parseFloat(v);
         if (Number.isNaN(r) || r < 0) {
           this.form.get('recargo').setValue(0);
           return;
         }
-        this.calcularResultados();
+        if (!this.loadingResultados) { this.calcularResultados(); }
       });
 
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
@@ -416,19 +421,22 @@ export class NuevoPedidoComponent implements OnInit {
       return;
     }
 
+    this.loadingResultados = true;
+
     const nrp: NuevosResultadosPedido = {
       descuentoPorcentaje: dp,
       recargoPorcentaje: rp,
       renglones: this.form.get('renglonesPedido').value.map(e => e.renglonPedido)
     };
 
-    this.form.get('descuento').disable({ onlySelf: true, emitEvent: false });
-    this.form.get('recargo').disable({ onlySelf: true, emitEvent: false });
+    /*this.form.get('descuento').disable({ onlySelf: true, emitEvent: false });
+    this.form.get('recargo').disable({ onlySelf: true, emitEvent: false });*/
     this.pedidosService.calcularResultadosPedido(nrp)
       .pipe(
         finalize(() => {
-          this.form.get('descuento').enable({ onlySelf: true, emitEvent: false });
-          this.form.get('recargo').enable({ onlySelf: true, emitEvent: false });
+          this.loadingResultados = false;
+          /*this.form.get('descuento').enable({ onlySelf: true, emitEvent: false });
+          this.form.get('recargo').enable({ onlySelf: true, emitEvent: false });*/
         })
       )
       .subscribe((r: Resultados) => {

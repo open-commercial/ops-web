@@ -32,7 +32,7 @@ export class BusquedaCuentaCorrienteClienteComponent implements OnInit {
     modalRef.result.then((ccc: CuentaCorrienteCliente) => {
       this.ccc = ccc;
       this.select.emit(this.ccc);
-    }, (reason) => { /*console.log(reason);*/ });
+    }, (reason) => {});
   }
 
   clearCcc() {

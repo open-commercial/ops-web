@@ -54,7 +54,7 @@ export class UbicacionEnvioComponent implements OnInit {
           },
           err => { this.updating = false; alert(err.error); }
         );
-    }, (reason) => { /*console.log(reason);*/ });
+    }, (reason) => {});
   }
 
   getUbicacionStr() {

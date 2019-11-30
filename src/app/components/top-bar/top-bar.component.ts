@@ -57,8 +57,7 @@ export class TopBarComponent implements OnInit {
     if (s && this.sucursalSeleccionada && s.idSucursal === this.sucursalSeleccionada.idSucursal) { return; }
     this.sucursalesService.seleccionarSucursal(s);
     if (this.usuario) {
-      this.usuariosService.setSucursalPredeterminadaDeUsuario(this.usuario.idUsuario, s.idSucursal)
-        .subscribe(() => console.log(`Sucursal predeterminada de ${this.usuario.nombre}: ${s.nombre}`));
+      this.usuariosService.setSucursalPredeterminadaDeUsuario(this.usuario.idUsuario, s.idSucursal).subscribe();
     }
   }
 }
