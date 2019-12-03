@@ -13,8 +13,32 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AuthGuard } from './guards/auth.guard';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
+
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { fas } from '@fortawesome/free-solid-svg-icons';
+// import { fas } from '@fortawesome/free-solid-svg-icons';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faCashRegister } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBarcode } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faStore } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
@@ -39,6 +63,8 @@ import { UbicacionFacturacionComponent } from './components/ubicacion-facturacio
 import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
 import { EliminarRenglonPedidoModalComponent } from './components/eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
+
+
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -98,6 +124,27 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIconPacks(fas);
+    library.addIcons(faCircleNotch);
+    library.addIcons(faFileInvoice);
+    library.addIcons(faFilter);
+    library.addIcons(faSearch);
+    library.addIcons(faTrash);
+    library.addIcons(faCalendar);
+    library.addIcons(faHashtag);
+    library.addIcons(faBullseye);
+    library.addIcons(faPortrait);
+    library.addIcons(faTimes);
+    library.addIcons(faCheck);
+    library.addIcons(faExclamationTriangle);
+    library.addIcons(faCashRegister);
+    library.addIcons(faClipboardList);
+    library.addIcons(faPlus);
+    library.addIcons(faBarcode);
+    library.addIcons(faEdit);
+    library.addIcons(faBoxOpen);
+    library.addIcons(faMinus);
+    library.addIcons(faStore);
+    library.addIcons(faUser);
+    library.addIcons(faSignOutAlt);
   }
 }

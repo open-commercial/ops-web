@@ -35,7 +35,7 @@ export class RenglonPedidoModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.cantidadInput.nativeElement.focus(), 200);
+    setTimeout(() => { if (this.cantidadInput) { this.cantidadInput.nativeElement.focus(); }}, 500);
   }
 
   public loadProducto(idProductoItem: number) {
