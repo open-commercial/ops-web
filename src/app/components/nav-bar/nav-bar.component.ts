@@ -7,11 +7,11 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { combineLatest } from 'rxjs';
 
 @Component({
-  selector: 'app-top-bar',
-  templateUrl: './top-bar.component.html',
-  styleUrls: ['./top-bar.component.scss']
+  selector: 'app-nav-bar',
+  templateUrl: './nav-bar.component.html',
+  styleUrls: ['./nav-bar.component.scss']
 })
-export class TopBarComponent implements OnInit {
+export class NavBarComponent implements OnInit {
   @Output() menuButtonClick = new EventEmitter<void>();
 
   isCollapsed = true;

@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
 import { UsuariosService } from './services/usuarios.service';
 import { LoginComponent } from './components/login/login.component';
-import { MenuComponent } from './components/menu/menu.component';
+import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AuthGuard } from './guards/auth.guard';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -52,7 +52,7 @@ import { RangoFechaFiltroComponent } from './components/rango-fecha-filtro/rango
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
 import { ProveedorFiltroComponent } from './components/proveedor-filtro/proveedor-filtro.component';
-import { TopBarComponent } from './components/top-bar/top-bar.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
 import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
 import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
@@ -69,7 +69,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
   declarations: [
     AppComponent,
     LoginComponent,
-    MenuComponent,
+    SideNavComponent,
     HomeComponent,
     PedidosComponent,
     ClienteFiltroComponent,
@@ -79,7 +79,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     FacturasVentaComponent,
     FacturasCompraComponent,
     ProveedorFiltroComponent,
-    TopBarComponent,
+    NavBarComponent,
     NuevoPedidoComponent,
     ProductoModalComponent,
     BusquedaCuentaCorrienteClienteComponent,
