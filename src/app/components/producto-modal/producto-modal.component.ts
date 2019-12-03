@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Producto } from '../../models/producto';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { SucursalesService } from '../../services/sucursales.service';
@@ -81,11 +81,19 @@ export class ProductoModalComponent implements OnInit {
     }
   }
 
-  getCantOtrasSucursales(p: Producto) {
+  getCantidad(p: Producto) {
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
       c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
     );
-    const cant = aux.length ? aux[0].cantidad : 0;
-    return p.cantidadTotalEnSucursales - cant;
+    return aux.length ? aux[0].cantidad : 0;
+  }
+
+  getCantOtrasSucursales(p: Producto) {
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
+      c => c.idSucursal !== Number(this.sucursalesService.getIdSucursal())
+    );
+    let cant = 0;
+    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
+    return cant;
   }
 }

@@ -18,12 +18,14 @@ import { NuevoPedido } from '../../models/nuevo-pedido';
 import { AuthService } from '../../services/auth.service';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { combineLatest, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
 import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
 import { StorageService } from '../../services/storage.service';
+import { Usuario } from '../../models/usuario';
+import { Rol } from '../../models/rol';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -65,6 +67,8 @@ export class NuevoPedidoComponent implements OnInit {
   @ViewChild('descuentoInput', { static: false }) descuentoInput: ElementRef;
   @ViewChild('recargoInput', { static: false }) recargoInput: ElementRef;
 
+  usuario: Usuario = null;
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -94,37 +98,48 @@ export class NuevoPedidoComponent implements OnInit {
       .pipe(debounceTime(5000))
       .subscribe(() => this.productoPorCodigoErrorMessage = null);
 
-    this.cccPredeterminadoLoading = true;
-    combineLatest([
-      this.sucursalesService.getPuntosDeRetito(),
-      this.clientesService.existeClientePredetermiando()
-    ])
-      .pipe()
-      .subscribe(
-        (v: [Array<Sucursal>, boolean]) => {
-          this.sucursales = v[0];
-          if (v[1]) {
-            this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-              .pipe(finalize(() => this.cccPredeterminadoLoading = false))
-              .subscribe(
-                ccc => {
-                  this.cccPredeterminado = ccc;
-                  this.createFrom();
-                },
-                err => this.showErrorMessage(err.error),
-              )
-            ;
-          } else {
-            this.createFrom();
-            this.cccPredeterminadoLoading = false;
-          }
-        },
-        err => {
-          this.cccPredeterminadoLoading = false;
-          this.showErrorMessage(err.error);
-        }
-      )
+    this.sucursalesService.getPuntosDeRetito()
+      .subscribe((sucs: Array<Sucursal>) => this.sucursales = sucs)
     ;
+
+    this.authService.getLoggedInUsuario()
+      .subscribe((u: Usuario) => {
+        this.usuario = u;
+        this.handleCCCPredeterminado();
+      })
+    ;
+  }
+
+  handleCCCPredeterminado() {
+    const debeCargarCCCPredetermiando = !((this.usuario.roles.indexOf(Rol.VIAJANTE) >= 0 && this.usuario.roles.length === 1) ||
+      (this.usuario.roles.indexOf(Rol.VIAJANTE) >= 0 && this.usuario.roles.indexOf(Rol.COMPRADOR) >= 0 && this.usuario.roles.length === 2));
+    if (debeCargarCCCPredetermiando) {
+      this.cccPredeterminadoLoading = true;
+      this.clientesService.existeClientePredetermiando()
+        .subscribe((v: boolean) => {
+            if (v) {
+              this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
+                .pipe(finalize(() => this.cccPredeterminadoLoading = false))
+                .subscribe(
+                  ccc => {
+                    this.cccPredeterminado = ccc;
+                    this.createFrom();
+                  },
+                  err => this.showErrorMessage(err.error),
+                )
+              ;
+            } else {
+              this.createFrom();
+              this.cccPredeterminadoLoading = false;
+            }
+          },
+          err => {
+            this.cccPredeterminadoLoading = false;
+            this.showErrorMessage(err.error);
+          }
+        )
+      ;
+    } else { this.createFrom(); }
   }
 
   panelBeforeChange($event) {
@@ -429,16 +444,8 @@ export class NuevoPedidoComponent implements OnInit {
       renglones: this.form.get('renglonesPedido').value.map(e => e.renglonPedido)
     };
 
-    /*this.form.get('descuento').disable({ onlySelf: true, emitEvent: false });
-    this.form.get('recargo').disable({ onlySelf: true, emitEvent: false });*/
     this.pedidosService.calcularResultadosPedido(nrp)
-      .pipe(
-        finalize(() => {
-          this.loadingResultados = false;
-          /*this.form.get('descuento').enable({ onlySelf: true, emitEvent: false });
-          this.form.get('recargo').enable({ onlySelf: true, emitEvent: false });*/
-        })
-      )
+      .pipe(finalize(() => this.loadingResultados = false))
       .subscribe((r: Resultados) => {
         this.form.get('resultados').setValue(r);
       });
