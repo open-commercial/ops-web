@@ -15,7 +15,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-// import { fas } from '@fortawesome/free-solid-svg-icons';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -63,8 +62,6 @@ import { UbicacionFacturacionComponent } from './components/ubicacion-facturacio
 import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
 import { EliminarRenglonPedidoModalComponent } from './components/eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
-
-
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 

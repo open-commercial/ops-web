@@ -11,6 +11,7 @@
             <span class="d-none d-md-inline">&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownSucursales">
+          <h6 class="dropdown-header d-md-none">Sucursales</h6>
           <a [routerLink]="null" class="dropdown-item" *ngFor="let s of sucursales"
              (click)="seleccionarSucursal(s)" [class.active]="s && sucursalSeleccionada && s.idSucursal === sucursalSeleccionada.idSucursal">
             <fa-icon [icon]="['fas', 'store']"></fa-icon> {{ s.nombre }}
@@ -23,6 +24,7 @@
           <span class="d-none d-md-inline">&nbsp;{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownUser">
+          <h6 class="dropdown-header d-md-none">{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</h6>
           <a [routerLink]="null" class="dropdown-item" (click)="logout()">
             <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir
           </a>
