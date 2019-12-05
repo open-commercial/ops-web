@@ -1,83 +1,84 @@
 <div class="app-facturas-venta">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
+    <div class="text-right m-0">
+      <button type="button" class="btn btn-primary" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"
+              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
+              [disabled]="clearLoading || loading">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="facturasVentaFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
+      <div class="row">
+        <div class="col-md-6">
+          <app-cliente-filtro formControlName="cliente"></app-cliente-filtro>
+          <app-usuario-filtro formControlName="usuario"></app-usuario-filtro>
+          <app-producto-filtro formControlName="producto"></app-producto-filtro>
+          <app-usuario-filtro formControlName="viajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
+        </div>
+        <div class="col-md-6">
+          <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
+          <div class="form-group">
+            <label for="tipo_factura">Tipo de Factura</label>
+            <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
+              <option></option>
+              <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nro-pedido">Nº Pedido</label>
+            <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
+          </div>
+          <div class="form-group">
+            <label>Nº Factura</label>
+            <div class="row">
+              <div class="col-4">
+                <label class="sr-only" for="num-serie">Número de serie</label>
+                <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
+              </div>
+              <div class="col-8">
+                <label class="sr-only" for="num-factura">Número de Factura</label>
+                <input type="text" class="form-control" id="num-factura" formControlName="numFactura">
+              </div>
+            </div>
+          </div>
+          <div class="card card-body bg-light mb-3">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="ordenar-por">Ordenar Por</span>
+              </div>
+              <select class="custom-select" aria-label="Ordernar por" aria-describedby="ordenar-por" formControlName="ordenarPor">
+                <option *ngFor="let opo of ordenarPorOptions" value="{{ opo.val }}">{{ opo.text }}</option>
+              </select>
+            </div>
+            <div class="input-group mb-0">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="sentido">Sentido</span>
+              </div>
+              <select class="custom-select" aria-label="Ordernar por" aria-describedby="sentido" formControlName="sentido">
+                <option *ngFor="let so of sentidoOptions" value="{{ so.val }}">{{ so.text }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="text-right list-inline mb-0">
+        <li class="list-inline-item">
+          <button type="submit" class="btn btn-primary"><fa-icon [icon]="['fas', 'search']"></fa-icon></button>
+        </li>
+        <li class="list-inline-item">
+          <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+        </li>
+      </ul>
+    </form>
+  </div>
   <div *ngIf="clearLoading" class="text-center my-3">
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
   <div *ngIf="!clearLoading">
-    <div class="d-flex flex-row align-items-center my-3">
-      <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
-      <div class="text-right m-0">
-        <button type="button" class="btn btn-primary" (click)="isFiltersCollapsed = !isFiltersCollapsed"
-                [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="collapseExample"
-                [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed">
-          <fa-icon [icon]="['fas', 'filter']"></fa-icon>
-        </button>
-      </div>
-    </div>
-    <div id="collapseExample" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-      <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
-        <div class="row">
-          <div class="col-md-6">
-            <app-cliente-filtro formControlName="cliente"></app-cliente-filtro>
-            <app-usuario-filtro formControlName="usuario"></app-usuario-filtro>
-            <app-producto-filtro formControlName="producto"></app-producto-filtro>
-            <app-usuario-filtro formControlName="viajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
-          </div>
-          <div class="col-md-6">
-            <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
-            <div class="form-group">
-              <label for="tipo_factura">Tipo de Factura</label>
-              <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
-                <option></option>
-                <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="nro-pedido">Nº Pedido</label>
-              <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
-            </div>
-            <div class="form-group">
-              <label>Nº Factura</label>
-              <div class="row">
-                <div class="col-4">
-                  <label class="sr-only" for="num-serie">Número de serie</label>
-                  <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
-                </div>
-                <div class="col-8">
-                  <label class="sr-only" for="num-factura">Número de Factura</label>
-                  <input type="text" class="form-control" id="num-factura" formControlName="numFactura">
-                </div>
-              </div>
-            </div>
-            <div class="card card-body bg-light mb-3">
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="ordenar-por">Ordenar Por</span>
-                </div>
-                <select class="custom-select" aria-label="Ordernar por" aria-describedby="ordenar-por" formControlName="ordenarPor">
-                  <option *ngFor="let opo of ordenarPorOptions" value="{{ opo.val }}">{{ opo.text }}</option>
-                </select>
-              </div>
-              <div class="input-group mb-0">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="sentido">Sentido</span>
-                </div>
-                <select class="custom-select" aria-label="Ordernar por" aria-describedby="sentido" formControlName="sentido">
-                  <option *ngFor="let so of sentidoOptions" value="{{ so.val }}">{{ so.text }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <ul class="text-right list-inline mb-0">
-          <li class="list-inline-item">
-            <button type="submit" class="btn btn-primary"><fa-icon [icon]="['fas', 'search']"></fa-icon></button>
-          </li>
-          <li class="list-inline-item">
-            <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
-          </li>
-        </ul>
-      </form>
-    </div>
     <div class="alert alert-globo">
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
