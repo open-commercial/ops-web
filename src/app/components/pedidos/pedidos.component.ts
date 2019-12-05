@@ -113,11 +113,11 @@ export class PedidosComponent implements OnInit {
     };
 
     if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
-    if (values.usuario) { ret.idUsuario = values.usuario.id_Usuario; }
+    if (values.usuario) { ret.idUsuario = values.usuario.idUsuario; }
     if (values.producto) { ret.idProducto = values.producto.idProducto; }
-    if (values.viajante) { ret.idViajante = values.viajante.id_Usuario; }
-    if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getTimeStamp(values.rangoFecha.desde); }
-    if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getTimeStamp(values.rangoFecha.hasta); }
+    if (values.viajante) { ret.idViajante = values.viajante.idUsuario; }
+    if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getDateFromNgbDate(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getDateFromNgbDate(values.rangoFecha.hasta); }
     if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
     if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
 
@@ -150,13 +150,13 @@ export class PedidosComponent implements OnInit {
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.applyFilters.push({
-        label: 'Fecha (desde)', value: HelperService.getFormattedDate(values.rangoFecha.desde)
+        label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
       this.applyFilters.push({
-        label: 'Fecha (hasta)', value: HelperService.getFormattedDate(values.rangoFecha.hasta)
+        label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 

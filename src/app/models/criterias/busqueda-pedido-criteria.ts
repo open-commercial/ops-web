@@ -3,8 +3,8 @@ import {TipoDeEnvio} from '../tipo-de-envio';
 
 export interface BusquedaPedidoCriteria {
   idSucursal: number;
-  fechaDesde?: number; // Timestap por eso el type number;
-  fechaHasta?: number; // Timestap por eso el type number;
+  fechaDesde?: Date;
+  fechaHasta?: Date;
   idCliente?: number;
   idUsuario?: number;
   idViajante?: number;

@@ -131,12 +131,12 @@ export class FacturasVentaComponent implements OnInit {
       pagina: 0,
     };
 
-    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getTimeStamp(values.rangoFecha.desde); }
-    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getTimeStamp(values.rangoFecha.hasta); }
+    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getDateFromNgbDate(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getDateFromNgbDate(values.rangoFecha.hasta); }
     if (values.cliente) { criteria.idCliente = values.cliente.idCliente; }
     if (values.tipoFactura) { criteria.tipoComprobante = values.tipoFactura; }
-    if (values.usuario) { criteria.idUsuario = values.usuario.id_Usuario; }
-    if (values.viajante) { criteria.idViajante = values.viajante.id_Usuario; }
+    if (values.usuario) { criteria.idUsuario = values.usuario.idUsuario; }
+    if (values.viajante) { criteria.idViajante = values.viajante.idUsuario; }
     if (values.numSerie) { criteria.numSerie = values.numSerie; }
     if (values.numFactura) { criteria.numFactura = values.numFactura; }
     if (values.nroPedido) { criteria.nroPedido = values.nroPedido; }
@@ -173,13 +173,13 @@ export class FacturasVentaComponent implements OnInit {
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.applyFilters.push({
-        label: 'Fecha (desde)', value: HelperService.getFormattedDate(values.rangoFecha.desde)
+        label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
       this.applyFilters.push({
-        label: 'Fecha (hasta)', value: HelperService.getFormattedDate(values.rangoFecha.hasta)
+        label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 
