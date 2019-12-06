@@ -44,10 +44,8 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
     this.cuentasCorrienteService.getCuentasCorriente(this.busqueda, this.page)
       .pipe(
         finalize(() => {
-          this.loading = false; this.clearLoading = false;
-          if (clearResults) {
-            setTimeout(() => this.searchInput.nativeElement.focus(), 300);
-          }
+          this.loading = false;
+          this.clearLoading = false;
         })
       )
       .subscribe((p: Pagination) => {

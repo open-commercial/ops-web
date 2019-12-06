@@ -43,7 +43,10 @@
                   <tr [formGroupName]="i">
                     <td class="align-middle">
                       <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span>&nbsp;
-                      <span *ngIf="rp.get('renglonPedido').value.oferta && rp.get('renglonPedido').value.bonificacionPorcentaje > 0" class="badge badge-success">OFERTA {{ rp.get('renglonPedido').value.bonificacionPorcentaje }}%</span><br>
+                      <span  *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje > 0" class="badge badge-success">
+                        {{ rp.get('renglonPedido').value.oferta ? "OFERTA" : "BONIF." }} {{ rp.get('renglonPedido').value.bonificacionPorcentaje }}%
+                      </span>
+                      <br>
                       <strong>{{ rp.get('renglonPedido').value.descripcionItem }}</strong>
                       <div class="text-right">
                         {{ rp.get('renglonPedido').value.cantidad }} {{ rp.get('renglonPedido').value.medidaItem }} x {{ rp.get('renglonPedido').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
@@ -74,7 +77,7 @@
             <label for="observaciones">Observaciones</label>
             <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
           </div>
-          <table class="table table-bordered table-sm" style="width: fit-content;">
+          <table class="table table-bordered table-sm totales">
             <caption class="sr-only">Totales</caption>
             <tbody>
             <tr>
