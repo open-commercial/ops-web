@@ -1,8 +1,8 @@
 <div class="modal-body d-flex flex-column p-2">
   <div class="input-group">
     <label class="sr-only" for="cccmCcc">Buscar Cliente</label>
-    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="text" class="form-control" id="cccmCcc" placeholder="Buscar Cliente..."
-           (keyup.enter)="buscar()" [disabled]="clearLoading || loading">
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="search" class="form-control" id="cccmCcc" placeholder="Buscar Cliente..."
+           (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
     <div class="input-group-append">
       <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>

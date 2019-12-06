@@ -48,10 +48,8 @@ export class ProductoModalComponent implements OnInit {
     this.productosService.getProductos(this.busqueda, this.page)
       .pipe(
         finalize(() => {
-          this.loading = false; this.clearLoading = false;
-          if (clearResults) {
-            setTimeout(() => this.searchInput.nativeElement.focus(), 300);
-          }
+          this.loading = false;
+          this.clearLoading = false;
         })
       )
       .subscribe((p: Pagination) => {
