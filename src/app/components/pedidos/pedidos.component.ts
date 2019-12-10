@@ -10,6 +10,11 @@ import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
 import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
+import { Usuario } from '../../models/usuario';
+import { AuthService } from '../../services/auth.service';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { Sucursal } from '../../models/sucursal';
 
 @Component({
   selector: 'app-pedidos',
@@ -22,6 +27,7 @@ export class PedidosComponent implements OnInit {
   loading = false;
   estado = EstadoPedido;
   rol = Rol;
+  usuario: Usuario;
 
   estados = [
     { value: EstadoPedido.ABIERTO, text: EstadoPedido[EstadoPedido.ABIERTO] },
@@ -39,9 +45,18 @@ export class PedidosComponent implements OnInit {
   filterForm: FormGroup;
   applyFilters = [];
 
+  allowedRolesToDelete: Rol[] = [
+    Rol.ADMINISTRADOR,
+    Rol.ENCARGADO,
+    Rol.VENDEDOR,
+  ];
+  hasRolToDelete = false;
+
   constructor(private pedidosService: PedidosService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService) { }
+              private sucursalesService: SucursalesService,
+              private authService: AuthService,
+              private mensajeService: MensajeService) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -49,7 +64,13 @@ export class PedidosComponent implements OnInit {
 
   ngOnInit() {
     this.createFilterForm();
+    this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
+      this.usuario = u;
+      this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+    });
     this.getPedidos(true);
+
+    this.sucursalesService.sucursal$.subscribe((s: Sucursal) => this.filter());
   }
 
   getPedidos(clearResults: boolean = false) {
@@ -174,11 +195,30 @@ export class PedidosComponent implements OnInit {
   }
 
   downloadPedidoPdf(pedido: Pedido) {
-    this.pedidosService.getPedidoPdf(pedido).subscribe(
+    this.pedidosService.getPedidoPdf(pedido.idPedido).subscribe(
       (res) => {
         const file = new Blob([res], {type: 'application/pdf'});
         saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
       }
     );
+  }
+
+  puedeElimarPedido(p: Pedido) {
+    return this.hasRolToDelete && p.estado === EstadoPedido.ABIERTO;
+  }
+
+  eliminarPedido(pedido: Pedido, idx: number) {
+    const msg = `Èsta seguro que desea eliminar el pedido # ${pedido.nroPedido}?`;
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.pedidosService.eliminarPedido(pedido.idPedido)
+          .subscribe(
+            () => this.filter(),
+            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
+          )
+        ;
+      }
+    }, (reason) => {});
   }
 }

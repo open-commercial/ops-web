@@ -1,0 +1,24 @@
+<div class="modal-body">
+  <div class="d-flex flex-column flex-md-row align-items-center">
+    <div class="p-2">
+      <fa-icon [icon]="['fas', 'info-circle']" [size]="'3x'" *ngIf="type === typeEnum.INFO"></fa-icon>
+      <fa-icon [icon]="['fas', 'exclamation-triangle']" [size]="'3x'" *ngIf="type === typeEnum.ALERT"></fa-icon>
+      <fa-icon [icon]="['fas', 'question-circle']" [size]="'3x'" *ngIf="type === typeEnum.CONFIRM"></fa-icon>
+      <fa-icon [icon]="['fas', 'times-circle']" [size]="'3x'" *ngIf="type === typeEnum.ERROR"></fa-icon>
+    </div>
+    <div class="p-2 flex-fill">{{ mensaje }}</div>
+  </div>
+</div>
+<div class="modal-footer">
+  <ng-template [ngIf]="type === typeEnum.INFO || type === typeEnum.ERROR">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">OK</button>
+  </ng-template>
+  <ng-template [ngIf]="type === typeEnum.ALERT">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(false)">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close(true)">Aceptar</button>
+  </ng-template>
+  <ng-template [ngIf]="type === typeEnum.CONFIRM">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(false)">No</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close(true)">Sí</button>
+  </ng-template>
+</div>

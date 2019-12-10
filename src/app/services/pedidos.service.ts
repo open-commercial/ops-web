@@ -34,8 +34,8 @@ export class PedidosService {
     return this.http.get(this.urlBusqueda + '&idCliente=' + cliente.idCliente + '&pagina=' + pagina);
   }*/
 
-  getPedidoPdf(pedido: Pedido): Observable<Blob> {
-    return this.http.get(`${this.url}/${pedido.idPedido}/reporte`, {responseType: 'blob'});
+  getPedidoPdf(idPedido: number): Observable<Blob> {
+    return this.http.get(`${this.url}/${idPedido}/reporte`, {responseType: 'blob'});
   }
 
   calcularRenglones(renglones: NuevoRenglonPedido[], idCliente: number): Observable<Array<RenglonPedido>> {
@@ -48,5 +48,9 @@ export class PedidosService {
 
   savePedido(np: NuevoPedido): Observable<Pedido> {
     return this.http.post<Pedido>(this.url, np);
+  }
+
+  eliminarPedido(idPedido: number): Observable<void> {
+    return this.http.delete<void>(this.url + `/${idPedido}`);
   }
 }
