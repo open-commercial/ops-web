@@ -9,7 +9,7 @@ import { NuevoRenglonPedido } from '../models/nuevo-renglon-pedido';
 import { RenglonPedido } from '../models/renglon-pedido';
 import { NuevosResultadosPedido } from '../models/nuevos-resultados-pedido';
 import { Resultados } from '../models/resultados';
-import { NuevoPedido } from '../models/nuevo-pedido';
+import { DetallePedido } from '../models/detalle-pedido';
 import { BusquedaPedidoCriteria } from '../models/criterias/busqueda-pedido-criteria';
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,10 @@ export class PedidosService {
     return this.http.get(this.urlBusqueda + '&idCliente=' + cliente.idCliente + '&pagina=' + pagina);
   }*/
 
+  getPedido(idPedido: number): Observable<Pedido> {
+    return this.http.get<Pedido>(`${this.url}/${idPedido}`);
+  }
+
   getPedidoPdf(idPedido: number): Observable<Blob> {
     return this.http.get(`${this.url}/${idPedido}/reporte`, {responseType: 'blob'});
   }
@@ -46,11 +50,15 @@ export class PedidosService {
     return this.http.post<Resultados>(`${this.url}/calculo-pedido`, nrp);
   }
 
-  savePedido(np: NuevoPedido): Observable<Pedido> {
+  savePedido(np: DetallePedido): Observable<Pedido> {
     return this.http.post<Pedido>(this.url, np);
   }
 
   eliminarPedido(idPedido: number): Observable<void> {
     return this.http.delete<void>(this.url + `/${idPedido}`);
+  }
+
+  getRenglonesDePedido(idPedido: number): Observable<RenglonPedido[]> {
+    return this.http.get<RenglonPedido[]>(this.url + `/${idPedido}/renglones`);
   }
 }

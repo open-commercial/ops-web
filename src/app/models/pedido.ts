@@ -1,4 +1,5 @@
 import {EstadoPedido} from './estado.pedido';
+import { Cliente } from './cliente';
 
 export interface Pedido {
   idPedido: number;
@@ -22,5 +23,5 @@ export interface Pedido {
   detalleEnvio: string;
   idViajante: number;
   nombreViajante: string;
+  cliente: Cliente;
 }
-

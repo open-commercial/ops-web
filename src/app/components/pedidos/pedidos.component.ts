@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { Sucursal } from '../../models/sucursal';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pedidos',
@@ -52,11 +53,19 @@ export class PedidosComponent implements OnInit {
   ];
   hasRolToDelete = false;
 
+  allowedRolesToEdit: Rol[] = [
+    Rol.ADMINISTRADOR,
+    Rol.ENCARGADO,
+    Rol.VENDEDOR,
+  ];
+  hasRolToEdit = false;
+
   constructor(private pedidosService: PedidosService,
               private fb: FormBuilder,
               private sucursalesService: SucursalesService,
               private authService: AuthService,
-              private mensajeService: MensajeService) { }
+              private mensajeService: MensajeService,
+              private router: Router) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -67,6 +76,7 @@ export class PedidosComponent implements OnInit {
     this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
       this.usuario = u;
       this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+      this.hasRolToEdit = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToEdit.includes(x)).length > 0;
     });
     this.getPedidos(true);
 
@@ -207,7 +217,16 @@ export class PedidosComponent implements OnInit {
     return this.hasRolToDelete && p.estado === EstadoPedido.ABIERTO;
   }
 
-  eliminarPedido(pedido: Pedido, idx: number) {
+  puedeEditarPedido(p: Pedido) {
+    return this.hasRolToEdit && p.estado === EstadoPedido.ABIERTO;
+  }
+
+  eliminarPedido(pedido: Pedido) {
+    if (!this.puedeElimarPedido(pedido)) {
+      this.mensajeService.msg('No posee permiso para eliminar un pedido.', MensajeModalType.ERROR);
+      return;
+    }
+
     const msg = `Èsta seguro que desea eliminar el pedido # ${pedido.nroPedido}?`;
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
@@ -220,5 +239,14 @@ export class PedidosComponent implements OnInit {
         ;
       }
     }, (reason) => {});
+  }
+
+  editarPedido(pedido: Pedido) {
+    if (!this.puedeEditarPedido(pedido)) {
+      this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/pedidos/editar', pedido.idPedido]);
   }
 }
