@@ -120,9 +120,9 @@ export class FacturasCompraComponent implements OnInit {
       pagina: 0
     };
 
-    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getTimeStamp(values.rangoFecha.desde); }
-    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getTimeStamp(values.rangoFecha.hasta); }
-    if (values.proveedor) { criteria.idProveedor = values.proveedor.id_Proveedor; }
+    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getDateFromNgbDate(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getDateFromNgbDate(values.rangoFecha.hasta); }
+    if (values.proveedor) { criteria.idProveedor = values.proveedor.idProveedor; }
     if (values.numSerie) { criteria.numSerie = values.numSerie; }
     if (values.numFactura) { criteria.numFactura = values.numFactura; }
     if (values.tipoFactura) { criteria.tipoComprobante = values.tipoFactura; }
@@ -137,7 +137,7 @@ export class FacturasCompraComponent implements OnInit {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.proveedor && values.proveedor.id_Proveedor) {
+    if (values.proveedor && values.proveedor.idProveedor) {
       const val = values.proveedor.nroProveedor + ' - ' + values.proveedor.razonSocial;
       this.applyFilters.push({ label: 'Cliente', value: val });
     }
@@ -148,13 +148,13 @@ export class FacturasCompraComponent implements OnInit {
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.applyFilters.push({
-        label: 'Fecha (desde)', value: HelperService.getFormattedDate(values.rangoFecha.desde)
+        label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
       this.applyFilters.push({
-        label: 'Fecha (hasta)', value: HelperService.getFormattedDate(values.rangoFecha.hasta)
+        label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 

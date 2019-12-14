@@ -8,7 +8,7 @@ import { FacturasVentaComponent } from './components/facturas-venta/facturas-ven
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
 import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
 
-const routes: Routes = [
+/*const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
@@ -16,12 +16,13 @@ const routes: Routes = [
     ]
   },
   { path: '**', redirectTo: '' }
-];
+];*/
 
-/*const routes: Routes = [
+const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
+      { path: '', redirectTo: '/nuevo-pedido', pathMatch: 'full' },
       { path: 'nuevo-pedido', component: NuevoPedidoComponent },
       { path: 'pedidos', component: PedidosComponent },
       { path: 'facturas-venta', component: FacturasVentaComponent },
@@ -29,7 +30,7 @@ const routes: Routes = [
     ]
   },
   { path: '**', redirectTo: '' }
-];*/
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],

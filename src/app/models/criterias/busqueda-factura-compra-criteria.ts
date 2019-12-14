@@ -2,8 +2,8 @@ import { TipoDeComprobante } from '../tipo-de-comprobante';
 
 export interface BusquedaFacturaCompraCriteria {
   idSucursal: number;
-  fechaDesde?: number; // Timestamp
-  fechaHasta?: number; // Timestamp
+  fechaDesde?: Date;
+  fechaHasta?: Date;
   idProveedor?: number;
   numSerie?: number;
   numFactura?: number;
