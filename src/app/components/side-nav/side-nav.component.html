@@ -1,14 +1,14 @@
 <div class="side-nav">
-  <h2><span class="label">&nbsp;COMPRAS</span></h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2">
+  <h2 *ngIf="tieneRolAdminOEncargado()"><span class="label">&nbsp;COMPRAS</span></h2>
+  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado()">
     <li class="nav-item">
       <a class="nav-link" routerLink="/facturas-compra" routerLinkActive="active" (click)="optionClick()">
         <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas
       </a>
     </li>
   </ul>
-  <h2>&nbsp;VENTAS</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2">
+  <h2 *ngIf="tieneRolAdminOEncargado()">&nbsp;VENTAS</h2>
+  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado()">
     <li class="nav-item">
       <a class="nav-link" routerLink="/facturas-venta" routerLinkActive="active" (click)="optionClick()">
         <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas
