@@ -16,8 +16,8 @@ import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
 import { DetallePedido } from '../../models/detalle-pedido';
 import { AuthService } from '../../services/auth.service';
-import { debounceTime, finalize, switchMap } from 'rxjs/operators';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { debounceTime, finalize } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Subject } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
 import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
@@ -27,6 +27,8 @@ import { StorageService } from '../../services/storage.service';
 import { Usuario } from '../../models/usuario';
 import { Rol } from '../../models/rol';
 import { Pedido } from '../../models/pedido';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { MensajeService } from '../../services/mensaje.service';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -75,10 +77,14 @@ export class PedidoComponent implements OnInit {
   datosParaEdicion = {
     pedido: null,
     ccc: null,
-    renglones: []
+    renglones: [],
+    sucursal: null,
+    opcionEnvio: null,
+    opcionEnvioUbicacion: null,
   };
 
   cccReadOnly = false;
+  localStorageKey = 'nuevoPedido';
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -92,7 +98,8 @@ export class PedidoComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private productosService: ProductosService,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              private mensajeService: MensajeService) {
 
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -116,6 +123,8 @@ export class PedidoComponent implements OnInit {
 
     if (this.route.snapshot.paramMap.has('id')) {
       this.title = 'Editar Pedido';
+      this.localStorageKey = 'pedido';
+      this.cccReadOnly = true;
       const id = Number(this.route.snapshot.paramMap.get('id'));
       this.getDatosParaEditar(id);
     } else {
@@ -140,7 +149,19 @@ export class PedidoComponent implements OnInit {
         ]).subscribe(
           (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
             this.datosParaEdicion.ccc = v[0];
-            this.datosParaEdicion.renglones = v[1].map(e => { return { renglonPedido : e}; });
+            this.datosParaEdicion.renglones = v[1].map(e => ({ renglonPedido : e }));
+            this.datosParaEdicion.sucursal = null;
+            if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
+              this.datosParaEdicion.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
+              this.datosParaEdicion.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
+            } else {
+              this.datosParaEdicion.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
+              if (p.tipoDeEnvio) {
+                this.datosParaEdicion.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
+                  OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
+              }
+            }
+
             this.createFrom();
           }
         );
@@ -192,6 +213,7 @@ export class PedidoComponent implements OnInit {
 
   createFrom() {
     this.form = this.fb.group({
+      idPedido: null,
       ccc: [null, Validators.required],
       renglonesPedido: this.fb.array([]),
       observaciones: ['', Validators.maxLength(250)],
@@ -250,37 +272,47 @@ export class PedidoComponent implements OnInit {
       }
     });
 
-    if (!this.datosParaEdicion.pedido) {
-      this.form.valueChanges.subscribe(v => this.storageService.setItem('nuevoPedido', v));
-    }
+    this.form.valueChanges.subscribe(v => {
+      this.storageService.setItem(this.localStorageKey, v);
+    });
 
     const data = this.getDataForForm();
     if (data) { this.loadForm(data); } else { this.form.get('ccc').setValue(this.cccPredeterminado); }
   }
 
   getDataForForm() {
-    let data = {
-      ccc: null,
-      renglonesPedido: [],
-      observaciones: '',
-      descuento: 0,
-      recargo: 0,
-    };
+    const data = this.storageService.getItem(this.localStorageKey) ?
+      this.storageService.getItem(this.localStorageKey) :
+      {
+        idPedido: null,
+        ccc: null,
+        renglonesPedido: [],
+        observaciones: '',
+        descuento: 0,
+        recargo: 0,
+        opcionEnvio: null,
+        sucursal: null,
+        opcionEnvioUbicacion: null,
+      };
     if (this.datosParaEdicion.pedido) {
-      data.ccc = this.datosParaEdicion.ccc;
-      data.renglonesPedido = this.datosParaEdicion.renglones;
-      data.observaciones = this.datosParaEdicion.pedido.observaciones;
-      data.descuento = this.datosParaEdicion.pedido.descuentoPorcentaje;
-      data.recargo = this.datosParaEdicion.pedido.recargoPorcentaje;
-    } else {
-      data = this.storageService.getItem('nuevoPedido');
+      if (data.idPedido !== this.datosParaEdicion.pedido.idPedido) {
+        data.idPedido = this.datosParaEdicion.pedido.idPedido;
+        data.ccc = this.datosParaEdicion.ccc;
+        data.renglonesPedido = this.datosParaEdicion.renglones;
+        data.observaciones = this.datosParaEdicion.pedido.observaciones;
+        data.descuento = this.datosParaEdicion.pedido.descuentoPorcentaje;
+        data.recargo = this.datosParaEdicion.pedido.recargoPorcentaje;
+        data.opcionEnvio = this.datosParaEdicion.opcionEnvio;
+        data.opcionEnvioUbicacion = this.datosParaEdicion.opcionEnvioUbicacion;
+        data.sucursal = this.datosParaEdicion.sucursal;
+      }
     }
     return data;
   }
 
   loadForm(data) {
+    this.form.get('idPedido').setValue(data.idPedido ? data.idPedido : null);
     this.form.get('ccc').setValue(data.ccc ? data.ccc : this.cccPredeterminado);
-    // console.log(data.renglonesPedido);
     data.renglonesPedido.forEach(d => {
       this.renglonesPedido.push(this.createRenglonPedidoForm(d.renglonPedido));
     });
@@ -295,8 +327,6 @@ export class PedidoComponent implements OnInit {
         const idx = this.sucursales.findIndex((s: Sucursal) => s.idSucursal === data.sucursal.idSucursal);
         if (idx >= 0) { this.form.get('sucursal').setValue(this.sucursales[idx]); }
     }
-
-    // this.form.get('resultados').setValue(data.resultados);
   }
 
   clienteHasUbicacionFacturacion() {
@@ -316,8 +346,12 @@ export class PedidoComponent implements OnInit {
       this.pedidosService.savePedido(np)
         .pipe(finalize(() => this.saving = false))
         .subscribe(p => {
-          this.showMessage('Pedido enviado correctamente!');
           this.reset();
+          // this.showMessage('Pedido enviado correctamente!');
+          const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
+          this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
+            this.router.navigate(['/pedidos']);
+          });
         })
       ;
     }
@@ -358,7 +392,7 @@ export class PedidoComponent implements OnInit {
     const resultados: Resultados = this.form.get('resultados').value ? this.form.get('resultados').value : null;
 
     const np: DetallePedido = {
-      idPedido: null,
+      idPedido: this.form.get('idPedido').value,
       observaciones: this.form.get('observaciones').value,
       idSucursal: sucursalEnvio ? sucursalEnvio.idSucursal : null,
       tipoDeEnvio: te,
@@ -379,6 +413,7 @@ export class PedidoComponent implements OnInit {
   reset() {
     this.renglonesPedido.clear();
     this.form.reset({
+      idPedido: null,
       ccc: null,
       renglonesPedido: [],
       observaciones: '',
@@ -388,8 +423,8 @@ export class PedidoComponent implements OnInit {
       sucursal: null,
       resultados: null,
     });
-    this.storageService.removeItem('nuevoPedido');
-    this.form.get('ccc').setValue(this.cccPredeterminado);
+    this.storageService.removeItem(this.localStorageKey);
+    // this.form.get('ccc').setValue(this.cccPredeterminado);
   }
 
   get renglonesPedido() {
@@ -496,8 +531,6 @@ export class PedidoComponent implements OnInit {
     }
 
     this.loadingResultados = true;
-
-    console.log(this.form.get('renglonesPedido').value);
 
     const nrp: NuevosResultadosPedido = {
       descuentoPorcentaje: dp,

@@ -25,4 +25,3 @@ export interface Cliente {
   detalleUbicacionDeFacturacion: string;
   detalleUbicacionDeEnvio: string;
 }
-

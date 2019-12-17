@@ -51,7 +51,8 @@ export class PedidosService {
   }
 
   savePedido(np: DetallePedido): Observable<Pedido> {
-    return this.http.post<Pedido>(this.url, np);
+    const method = np.idPedido ? 'put' : 'post';
+    return this.http[method]<Pedido>(this.url, np);
   }
 
   eliminarPedido(idPedido: number): Observable<void> {
