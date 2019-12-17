@@ -26,7 +26,7 @@ export class SideNavComponent implements OnInit {
   }
 
   usuarioTieneRol(r: Rol) {
-    return this.usuario.roles.filter(x => x === r).length > 0;
+    return this.usuario && this.usuario.roles.filter(x => x === r).length > 0;
   }
 
   tieneRolAdminOEncargado() {
