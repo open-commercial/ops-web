@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario';
 import { UsuariosService } from './usuarios.service';
 import { StorageService } from './storage.service';
+import { Aplicacion } from '../models/aplicacion';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,7 @@ export class AuthService {
   }
 
   login(user: string, pass: string) {
-    const credential = { username: user, password: pass};
+    const credential = { username: user, password: pass, aplicacion: Aplicacion.SIC_OPS_WEB };
     return this.http.post(this.urlLogin, credential, {responseType: 'text'})
       .pipe(
         map(data => {
@@ -76,7 +77,7 @@ export class AuthService {
   }
 
   cambiarPassword(k: string, i: number) {
-    return this.http.post(this.urlPasswordRecovery, { key: k, id: i }, {responseType: 'text'});
+    return this.http.post(this.urlPasswordRecovery, { key: k, id: i, aplicacion: Aplicacion.SIC_OPS_WEB }, {responseType: 'text'});
   }
 
   setAuthenticationInfo(token: string) {
