@@ -41,6 +41,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
+import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -68,6 +69,7 @@ import { EliminarRenglonPedidoModalComponent } from './components/eliminar-rengl
 import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
 import { MensajeModalComponent } from './components/mensaje-modal/mensaje-modal.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
+import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -97,6 +99,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     EliminarRenglonPedidoModalComponent,
     MensajeModalComponent,
     PedidosHomeComponent,
+    VerPedidoComponent,
   ],
   imports: [
     BrowserModule,
@@ -156,5 +159,6 @@ export class AppModule {
     library.addIcons(faQuestionCircle);
     library.addIcons(faTimesCircle);
     library.addIcons(faFileSignature);
+    library.addIcons(faFileDownload);
   }
 }

@@ -8,6 +8,7 @@ import { FacturasVentaComponent } from './components/facturas-venta/facturas-ven
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
+import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 
 /*const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -28,7 +29,8 @@ const routes: Routes = [
         children: [
           { path: '', component: PedidosComponent },
           { path: 'nuevo', component: PedidoComponent },
-          { path: 'editar/:id', component: PedidoComponent }
+          { path: 'editar/:id', component: PedidoComponent },
+          { path: 'ver/:id', component: VerPedidoComponent }
         ]
       },
       { path: 'facturas-venta', component: FacturasVentaComponent },

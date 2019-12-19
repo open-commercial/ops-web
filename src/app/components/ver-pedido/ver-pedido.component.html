@@ -1,0 +1,26 @@
+<div class="app-ver-pedido my-3">
+  <div *ngIf="loading" class="text-center my-3">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <div *ngIf="pedido && !loading">
+    <h1 class="h3 m-0 flex-fill">
+      <div class="d-flex flex-row align-items-center">
+        <div><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon></div>
+        <div class="px-2">Pedido #{{ pedido.nroPedido }}</div>
+      </div>
+    </h1>
+    <ul class="list-inline text-right">
+      <li class="list-inline-item">
+        <button class="btn btn-primary" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
+          <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+        </button>
+      </li>
+    </ul>
+    <table class="table table-bordered">
+      <tbody>
+      <tr><th>Cliente</th><td>{{ getNombreCliente() }}</td></tr>
+      <tr><th>Fecha</th><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

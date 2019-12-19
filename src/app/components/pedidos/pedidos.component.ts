@@ -203,7 +203,7 @@ export class PedidosComponent implements OnInit {
   loadMore() {
     this.getPedidos();
   }
-
+/*
   downloadPedidoPdf(pedido: Pedido) {
     this.pedidosService.getPedidoPdf(pedido.idPedido).subscribe(
       (res) => {
@@ -211,6 +211,10 @@ export class PedidosComponent implements OnInit {
         saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
       }
     );
+  }*/
+
+  verPedido(pedido: Pedido) {
+    this.router.navigate(['/pedidos/ver', pedido.idPedido]);
   }
 
   puedeElimarPedido(p: Pedido) {

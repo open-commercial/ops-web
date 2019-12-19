@@ -2,7 +2,9 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
     <div class="text-right m-0">
-      <a class="btn btn-primary" routerLink="/pedidos/nuevo">Nuevo Pedido</a>&nbsp;&nbsp;
+      <a class="btn btn-primary" routerLink="/pedidos/nuevo" title="Nuevo Pedido">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </a>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="pedidosFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
@@ -91,7 +93,7 @@
         <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadPedidoPdf(p)">
+              <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verPedido(p)">
                 <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
               </a>
             </li>

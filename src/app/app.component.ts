@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { environment } from '../environments/environment';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'sic-ops-web';
+  constructor(private storageService: StorageService) {
+    this.checkAppVersion();
+  }
+
+  checkAppVersion() {
+    if (environment.version !== this.storageService.getItem('app-version')) {
+      this.storageService.clear();
+    }
+  }
 }

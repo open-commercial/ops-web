@@ -83,5 +83,6 @@ export class AuthService {
     this.storageService.setItem('token', token);
     const decodedToken = this.jwtHelper.decodeToken(token);
     this.storageService.setItem('idUsuario', decodedToken.idUsuario);
+    this.storageService.setItem('app-version', environment.version);
   }
 }
