@@ -14,7 +14,7 @@ export class AppComponent {
   }
 
   checkAppVersion() {
-    if (environment.version !== this.storageService.getItem('app-version')) {
+    if (environment.appVersion !== this.storageService.getItem('app-version')) {
       this.storageService.clear();
     }
   }

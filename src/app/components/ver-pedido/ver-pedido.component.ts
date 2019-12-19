@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { RenglonPedido } from '../../models/renglon-pedido';
+import { saveAs } from 'file-saver';
+import { TipoDeEnvio } from '../../models/tipo-de-envio';
 
 @Component({
   selector: 'app-ver-pedido',
@@ -15,6 +17,8 @@ export class VerPedidoComponent implements OnInit {
   loading = false;
   pedido: Pedido = null;
   renglones: RenglonPedido[] = [];
+
+  tipoDeEnvio = TipoDeEnvio
 
   constructor(private route: ActivatedRoute,
               private pedidosService: PedidosService) { }
@@ -41,5 +45,14 @@ export class VerPedidoComponent implements OnInit {
       ret = `(#${c.nroCliente}) ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
     }
     return ret;
+  }
+
+  downloadPedidoPdf(pedido: Pedido) {
+    this.pedidosService.getPedidoPdf(pedido.idPedido).subscribe(
+      (res) => {
+        const file = new Blob([res], {type: 'application/pdf'});
+        saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
+      }
+    );
   }
 }

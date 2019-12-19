@@ -203,15 +203,6 @@ export class PedidosComponent implements OnInit {
   loadMore() {
     this.getPedidos();
   }
-/*
-  downloadPedidoPdf(pedido: Pedido) {
-    this.pedidosService.getPedidoPdf(pedido.idPedido).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
-      }
-    );
-  }*/
 
   verPedido(pedido: Pedido) {
     this.router.navigate(['/pedidos/ver', pedido.idPedido]);
