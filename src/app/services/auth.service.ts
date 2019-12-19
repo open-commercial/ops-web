@@ -50,9 +50,11 @@ export class AuthService {
   logout() {
     this.http.put(this.urlLogout, null)
       .subscribe(data => {
-        this.storageService.clear();
+        const keysToRemove = ['token', 'idUsuario'];
+        keysToRemove.forEach(v => this.storageService.removeItem(v));
         this.router.navigate(['']);
-      });
+      })
+    ;
   }
 
   getToken(): string {
@@ -83,6 +85,6 @@ export class AuthService {
     this.storageService.setItem('token', token);
     const decodedToken = this.jwtHelper.decodeToken(token);
     this.storageService.setItem('idUsuario', decodedToken.idUsuario);
-    this.storageService.setItem('app-version', environment.version);
+    this.storageService.setItem('appVersion', environment.appVersion);
   }
 }

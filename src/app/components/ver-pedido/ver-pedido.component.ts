@@ -18,7 +18,7 @@ export class VerPedidoComponent implements OnInit {
   pedido: Pedido = null;
   renglones: RenglonPedido[] = [];
 
-  tipoDeEnvio = TipoDeEnvio
+  tipoDeEnvio = TipoDeEnvio;
 
   constructor(private route: ActivatedRoute,
               private pedidosService: PedidosService) { }
