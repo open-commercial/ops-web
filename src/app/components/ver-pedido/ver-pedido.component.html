@@ -21,8 +21,8 @@
       <tbody class="thead-dark">
       <tr><th scope="row">Cliente</th><td>{{ getNombreCliente() }}</td></tr>
       <tr><th scope="row">Fecha</th><td>{{ pedido.fecha | date:'dd/MM/yyyy hh:mm' }}</td></tr>
-      <tr *ngIf="pedido.nombreUsuario"><th>Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
-      <tr *ngIf="pedido.nombreViajante"><th>Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
+      <tr *ngIf="pedido.nombreUsuario"><th scope="row">Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
+      <tr *ngIf="pedido.nombreViajante"><th scope="row">Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
       <tr><th scope="row" colspan="2">Artículos</th></tr>
       <tr>
         <td colspan="2">
