@@ -1,15 +1,16 @@
 import {EstadoPedido} from './estado.pedido';
+import { Cliente } from './cliente';
+import { TipoDeEnvio } from './tipo-de-envio';
 
 export interface Pedido {
   idPedido: number;
   nroPedido: number;
   fecha: Date;
-  fechaVencimiento: Date;
-  cantidadArticulos: number;
   observaciones: string;
-  nombreEmpresa: string;
+  idSucursal: number;
+  nombreSucursal: string;
   eliminado: boolean;
-  nombreFiscalCliente: string;
+  cliente: Cliente;
   nombreUsuario: string;
   subTotal: number;
   recargoPorcentaje: number;
@@ -19,8 +20,9 @@ export interface Pedido {
   totalEstimado: number;
   totalActual: number;
   estado: EstadoPedido;
+  cantidadArticulos: number;
   detalleEnvio: string;
+  tipoDeEnvio: TipoDeEnvio;
   idViajante: number;
   nombreViajante: string;
 }
-

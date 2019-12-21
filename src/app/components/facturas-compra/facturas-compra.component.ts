@@ -7,6 +7,7 @@ import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-factura-compra-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from '../../models/sucursal';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -56,6 +57,7 @@ export class FacturasCompraComponent implements OnInit {
   ngOnInit() {
     this.createFilterForm();
     this.getFacturas(true);
+    this.sucursalesService.sucursal$.subscribe((s: Sucursal) => this.filter());
   }
 
   createFilterForm() {

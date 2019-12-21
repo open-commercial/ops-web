@@ -6,13 +6,15 @@ import { AuthGuard } from './guards/auth.guard';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
-import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
+import { PedidoComponent } from './components/pedido/pedido.component';
+import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
+import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 
 /*const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
-      { path: '', component: NuevoPedidoComponent },
+      { path: '', component: PedidoComponent },
     ]
   },
   { path: '**', redirectTo: '' }
@@ -22,9 +24,15 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
-      { path: '', redirectTo: '/nuevo-pedido', pathMatch: 'full' },
-      { path: 'nuevo-pedido', component: NuevoPedidoComponent },
-      { path: 'pedidos', component: PedidosComponent },
+      { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
+      { path: 'pedidos', component: PedidosHomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
+        children: [
+          { path: '', component: PedidosComponent },
+          { path: 'nuevo', component: PedidoComponent },
+          { path: 'editar/:id', component: PedidoComponent },
+          { path: 'ver/:id', component: VerPedidoComponent }
+        ]
+      },
       { path: 'facturas-venta', component: FacturasVentaComponent },
       { path: 'facturas-compra', component: FacturasCompraComponent }
     ]

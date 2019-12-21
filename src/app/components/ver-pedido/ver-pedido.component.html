@@ -1,0 +1,83 @@
+<div class="app-ver-pedido my-3">
+  <div *ngIf="loading" class="text-center my-3">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <div *ngIf="pedido && !loading">
+    <h1 class="h3 m-0 flex-fill">
+      <div class="d-flex flex-row align-items-center">
+        <div><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon></div>
+        <div class="px-2">Pedido #{{ pedido.nroPedido }}</div>
+      </div>
+    </h1>
+    <ul class="list-inline text-right">
+      <li class="list-inline-item">
+        <button class="btn btn-primary" (click)="downloadPedidoPdf(pedido)" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
+          <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+        </button>
+      </li>
+    </ul>
+    <table class="table table-bordered table-hover table-sm">
+      <caption class="sr-only">Datos del pedido</caption>
+      <tbody class="thead-dark">
+      <tr><th scope="row">Cliente</th><td>{{ getNombreCliente() }}</td></tr>
+      <tr><th scope="row">Fecha</th><td>{{ pedido.fecha | date:'dd/MM/yyyy hh:mm' }}</td></tr>
+      <tr *ngIf="pedido.nombreUsuario"><th scope="row">Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
+      <tr *ngIf="pedido.nombreViajante"><th scope="row">Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
+      <tr><th scope="row" colspan="2">Artículos</th></tr>
+      <tr>
+        <td colspan="2">
+          <div *ngFor="let r of renglones" class="d-flex flex-column flex-md-row align-items-md-center articulo">
+            <div class="item-info">
+              <span class="codigo">{{ r.codigoItem }}</span>&nbsp;
+              <span *ngIf="r.bonificacionPorcentaje">({{ r.bonificacionPorcentaje | number:'1.0-2' }}% {{ r.oferta ? 'OFF' : 'Bonif.' }})</span>
+
+              <br>
+              <span class="descripcion">{{ r.descripcionItem }}</span>
+            </div>
+            <div class="item-numeros text-right">
+              <!--4 UN x $ 40 = $ 160-->
+              {{ r.cantidad }}&nbsp;{{ r.medidaItem }} x {{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
+              = <span *ngIf="r.bonificacionPorcentaje"><s>{{ r.importeAnterior | currency: 'ARS':'symbol':'1.0-2' }}</s></span>
+              {{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr><th scope="row">Observaciones</th><td>{{ pedido.observaciones }}</td></tr>
+      <tr><th scope="row">Subtotal</th><td>{{ pedido.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr>
+        <th scope="row">Desc.&nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <td><span *ngIf="pedido.descuentoNeto > 0">-&nbsp;</span>{{ pedido.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Recargo&nbsp;<span *ngIf="pedido.recargoPorcentaje > 0">({{ pedido.recargoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <td>{{ pedido.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Total</th>
+        <td>{{ pedido.totalActual | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered">
+      <caption class="sr-only">Envio del Pedido</caption>
+      <tbody>
+        <tr><th scope="row" class="text-nowrap">Tipo de Envio</th><td class="w-100">{{ getEnvioLabel() }}</td></tr>
+        <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.RETIRO_EN_SUCURSAL">
+          <th scope="row" class="text-nowrap">Sucursal</th>
+          <td class="w-100">
+            {{ pedido.nombreSucursal }}
+            <span *ngIf="pedido.detalleEnvio">({{ pedido.detalleEnvio }})</span>
+          </td>
+        </tr>
+        <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION || pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">
+          <th scope="row" class="text-nowrap">Dirección</th>
+          <td class="w-100">
+            <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION">{{ pedido.cliente.detalleUbicacionDeFacturacion }}</span>
+            <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">{{ pedido.cliente.detalleUbicacionDeEnvio }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

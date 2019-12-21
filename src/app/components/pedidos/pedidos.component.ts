@@ -10,6 +10,12 @@ import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
 import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
+import { Usuario } from '../../models/usuario';
+import { AuthService } from '../../services/auth.service';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { Sucursal } from '../../models/sucursal';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pedidos',
@@ -22,6 +28,7 @@ export class PedidosComponent implements OnInit {
   loading = false;
   estado = EstadoPedido;
   rol = Rol;
+  usuario: Usuario;
 
   estados = [
     { value: EstadoPedido.ABIERTO, text: EstadoPedido[EstadoPedido.ABIERTO] },
@@ -39,9 +46,26 @@ export class PedidosComponent implements OnInit {
   filterForm: FormGroup;
   applyFilters = [];
 
+  allowedRolesToDelete: Rol[] = [
+    Rol.ADMINISTRADOR,
+    Rol.ENCARGADO,
+    Rol.VENDEDOR,
+  ];
+  hasRolToDelete = false;
+
+  allowedRolesToEdit: Rol[] = [
+    Rol.ADMINISTRADOR,
+    Rol.ENCARGADO,
+    Rol.VENDEDOR,
+  ];
+  hasRolToEdit = false;
+
   constructor(private pedidosService: PedidosService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService) { }
+              private sucursalesService: SucursalesService,
+              private authService: AuthService,
+              private mensajeService: MensajeService,
+              private router: Router) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -49,7 +73,14 @@ export class PedidosComponent implements OnInit {
 
   ngOnInit() {
     this.createFilterForm();
+    this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
+      this.usuario = u;
+      this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+      this.hasRolToEdit = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToEdit.includes(x)).length > 0;
+    });
     this.getPedidos(true);
+
+    this.sucursalesService.sucursal$.subscribe((s: Sucursal) => this.filter());
   }
 
   getPedidos(clearResults: boolean = false) {
@@ -173,12 +204,47 @@ export class PedidosComponent implements OnInit {
     this.getPedidos();
   }
 
-  downloadPedidoPdf(pedido: Pedido) {
-    this.pedidosService.getPedidoPdf(pedido).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
+  verPedido(pedido: Pedido) {
+    this.router.navigate(['/pedidos/ver', pedido.idPedido]);
+  }
+
+  puedeElimarPedido(p: Pedido) {
+    return this.hasRolToDelete && p.estado === EstadoPedido.ABIERTO;
+  }
+
+  puedeEditarPedido(p: Pedido) {
+    return this.hasRolToEdit && p.estado === EstadoPedido.ABIERTO;
+  }
+
+  eliminarPedido(pedido: Pedido) {
+    if (!this.puedeElimarPedido(pedido)) {
+      this.mensajeService.msg('No posee permiso para eliminar un pedido.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = `Está seguro que desea eliminar el pedido # ${pedido.nroPedido}?`;
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.pedidosService.eliminarPedido(pedido.idPedido)
+          .subscribe(
+            () => {
+              const idx: number = this.pedidos.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
+              if (idx >= 0) { this.pedidos.splice(idx, 1); }
+            },
+            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
+          )
+        ;
       }
-    );
+    }, (reason) => {});
+  }
+
+  editarPedido(pedido: Pedido) {
+    if (!this.puedeEditarPedido(pedido)) {
+      this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/pedidos/editar', pedido.idPedido]);
   }
 }

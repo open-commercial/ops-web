@@ -23,7 +23,7 @@
       <em>Busque un Cliente para poder continuar</em>
     </div>
   </div>
-  <div class="p-2">
+  <div class="p-2" *ngIf="!readOnly">
     <ul class="list-unstyled p-0 m-0">
       <li class="mb-2">
         <button class="btn btn-primary" type="button" (click)="showCccModal()">

@@ -37,6 +37,11 @@ import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { faStore } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
+import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -53,7 +58,7 @@ import { FacturasVentaComponent } from './components/facturas-venta/facturas-ven
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
 import { ProveedorFiltroComponent } from './components/proveedor-filtro/proveedor-filtro.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
+import { PedidoComponent } from './components/pedido/pedido.component';
 import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
 import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
 import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/renglon-pedido-modal.component';
@@ -62,6 +67,9 @@ import { UbicacionFacturacionComponent } from './components/ubicacion-facturacio
 import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
 import { EliminarRenglonPedidoModalComponent } from './components/eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/ubicacion-envio.component';
+import { MensajeModalComponent } from './components/mensaje-modal/mensaje-modal.component';
+import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
+import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -80,7 +88,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     FacturasCompraComponent,
     ProveedorFiltroComponent,
     NavBarComponent,
-    NuevoPedidoComponent,
+    PedidoComponent,
     ProductoModalComponent,
     BusquedaCuentaCorrienteClienteComponent,
     RenglonPedidoModalComponent,
@@ -89,6 +97,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UbicacionEnvioComponent,
     UbicacionModalComponent,
     EliminarRenglonPedidoModalComponent,
+    MensajeModalComponent,
+    PedidosHomeComponent,
+    VerPedidoComponent,
   ],
   imports: [
     BrowserModule,
@@ -115,7 +126,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     RenglonPedidoModalComponent,
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
-    EliminarRenglonPedidoModalComponent
+    EliminarRenglonPedidoModalComponent,
+    MensajeModalComponent
   ],
   bootstrap: [AppComponent]
 })
@@ -143,5 +155,10 @@ export class AppModule {
     library.addIcons(faStore);
     library.addIcons(faUser);
     library.addIcons(faSignOutAlt);
+    library.addIcons(faInfoCircle);
+    library.addIcons(faQuestionCircle);
+    library.addIcons(faTimesCircle);
+    library.addIcons(faFileSignature);
+    library.addIcons(faFileDownload);
   }
 }

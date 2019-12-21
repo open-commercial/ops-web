@@ -50,9 +50,11 @@ export class AuthService {
   logout() {
     this.http.put(this.urlLogout, null)
       .subscribe(data => {
-        this.storageService.clear();
+        const keysToRemove = ['token', 'idUsuario'];
+        keysToRemove.forEach(v => this.storageService.removeItem(v));
         this.router.navigate(['']);
-      });
+      })
+    ;
   }
 
   getToken(): string {

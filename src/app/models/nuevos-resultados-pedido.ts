@@ -1,7 +1,5 @@
-import { RenglonPedido } from './renglon-pedido';
-
 export interface NuevosResultadosPedido {
-  renglones: Array<RenglonPedido>;
+  importes: Array<number>;
   descuentoPorcentaje: number;
   recargoPorcentaje: number;
 }

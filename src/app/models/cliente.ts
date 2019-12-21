@@ -20,4 +20,8 @@ export interface Cliente {
   predeterminado: boolean;
   ubicacionFacturacion: Ubicacion;
   ubicacionEnvio: Ubicacion;
+  saldoCuentaCorriente: number;
+  fechaUltimoMovimiento: Date;
+  detalleUbicacionDeFacturacion: string;
+  detalleUbicacionDeEnvio: string;
 }
