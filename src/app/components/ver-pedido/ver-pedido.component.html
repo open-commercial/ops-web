@@ -62,12 +62,20 @@
     <table class="table table-bordered">
       <caption class="sr-only">Envio del Pedido</caption>
       <tbody>
-        <tr><th scope="row" class="text-nowrap">Tipo de Envio</th><td class="w-100">{{ pedido.tipoDeEnvio }}</td></tr>
+        <tr><th scope="row" class="text-nowrap">Tipo de Envio</th><td class="w-100">{{ getEnvioLabel() }}</td></tr>
         <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.RETIRO_EN_SUCURSAL">
-          <th scope="row" class="text-nowrap">Sucursal</th><td class="w-100">{{ pedido.nombreSucursal }} <span *ngIf="pedido.detalleEnvio">({{ pedido.detalleEnvio }})</span> </td>
+          <th scope="row" class="text-nowrap">Sucursal</th>
+          <td class="w-100">
+            {{ pedido.nombreSucursal }}
+            <span *ngIf="pedido.detalleEnvio">({{ pedido.detalleEnvio }})</span>
+          </td>
         </tr>
         <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION || pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">
-          <th scope="row" class="text-nowrap">Dirección</th><td class="w-100">{{ pedido.detalleEnvio }}</td>
+          <th scope="row" class="text-nowrap">Dirección</th>
+          <td class="w-100">
+            <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION">{{ pedido.cliente.detalleUbicacionDeFacturacion }}</span>
+            <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">{{ pedido.cliente.detalleUbicacionDeEnvio }}</span>
+          </td>
         </tr>
       </tbody>
     </table>

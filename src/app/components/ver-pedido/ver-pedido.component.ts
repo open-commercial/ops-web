@@ -31,7 +31,6 @@ export class VerPedidoComponent implements OnInit {
     ])
       .pipe(finalize(() => this.loading = false))
       .subscribe((v: [Pedido, RenglonPedido[]]) => {
-        console.log(v);
         this.pedido = v[0];
         this.renglones = v[1];
       })
@@ -54,5 +53,23 @@ export class VerPedidoComponent implements OnInit {
         saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
       }
     );
+  }
+
+  getEnvioLabel() {
+    if (!this.pedido || !this.pedido.tipoDeEnvio) {
+      return '';
+    }
+
+    if (this.pedido.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
+      return 'Retiro en Sucursal';
+    }
+
+    if (this.pedido.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION) {
+      return 'Usar Ubicación de Facturación';
+    }
+
+    if (this.pedido.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_ENVIO) {
+      return 'Usar Ubicación de Envío';
+    }
   }
 }

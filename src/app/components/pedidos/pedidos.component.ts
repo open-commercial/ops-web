@@ -228,7 +228,10 @@ export class PedidosComponent implements OnInit {
       if (result) {
         this.pedidosService.eliminarPedido(pedido.idPedido)
           .subscribe(
-            () => this.filter(),
+            () => {
+              const idx: number = this.pedidos.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
+              if (idx >= 0) { this.pedidos.splice(idx, 1); }
+            },
             err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
           )
         ;
