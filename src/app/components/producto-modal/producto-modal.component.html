@@ -24,14 +24,20 @@
             </span>
             <span class="flex-fill d-flex flex-column p-2 info">
               <span>
-                <span class="mr-2 codigo">{{ p.codigo }}</span>&nbsp;<span *ngIf="p.oferta" class="badge badge-success">OFERTA {{ p.porcentajeBonificacionOferta }}%</span>
+                <span class="mr-2 codigo">{{ p.codigo }}</span>
+                <span *ngIf="p.oferta" class="badge badge-success">OFERTA {{ p.porcentajeBonificacionOferta }}%</span>
+                <span *ngIf="!p.oferta && estaBonificado(p)" class="badge badge-success">BONIF. {{ p.porcentajeBonificacionPrecio }}%</span>
               </span>
               <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
               <span class="mr-2">Stock: <strong>{{ getCantidad(p) }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
-              <span class="mr-2" *ngIf="p.bulto > 1">Llevando {{ p.bulto }}+ {{ p.nombreMedida }}</span>
+              <span class="mr-2" *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más</span>
               <span class="mr-2">
-                <span class="text-nowrap">P.U. <span class="precio" [class.tachado]="p.oferta && p.bulto == 1">{{ p.precioLista | currency:'ARS':'symbol':'1.0-2' }}</span></span>&nbsp;
-                <span class="text-nowrap" *ngIf="p.oferta">P.U. Oferta <span class="precio">{{ p.precioListaBonificado | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+                <span class="text-nowrap" *ngIf="!((p.oferta || estaBonificado(p)) && p.bulto == 1)">
+                  P.U. <span class="precio" [class.tachado]="(p.oferta || estaBonificado(p)) && p.bulto == 1">{{ p.precioLista | currency:'ARS':'symbol':'1.0-2' }}</span>
+                </span>
+                <span class="text-nowrap" *ngIf="p.oferta || estaBonificado(p)">
+                  P.U. {{ p.oferta ? "Oferta" : "Bonif."}} <span class="precio">{{ p.precioBonificado | currency:'ARS':'symbol':'1.0-2' }}</span>
+                </span>
               </span>
             </span>
           </span>
