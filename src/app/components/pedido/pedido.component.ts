@@ -345,14 +345,16 @@ export class PedidoComponent implements OnInit {
       this.saving = true;
       this.pedidosService.savePedido(np)
         .pipe(finalize(() => this.saving = false))
-        .subscribe(p => {
-          this.reset();
-          // this.showMessage('Pedido enviado correctamente!');
-          const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
-          this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
-            this.router.navigate(['/pedidos']);
-          });
-        })
+        .subscribe(
+          p => {
+            this.reset();
+            const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
+            this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
+              this.router.navigate(['/pedidos']);
+            });
+          },
+          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        )
       ;
     }
   }
@@ -647,6 +649,21 @@ export class PedidoComponent implements OnInit {
   getSucursalLabel(s: Sucursal) {
     if (!s) { return ''; }
     return s.nombre + (s.detalleUbicacion ? ' (' + s.detalleUbicacion + ')' : '');
+  }
+
+  totalSuperaCompraMinima() {
+    let ret = false;
+    if (this.form && this.form.get('resultados') && this.form.get('resultados').value) {
+      const v: Resultados = this.form.get('resultados').value;
+      const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
+      ret = ccc && (v.total >= ccc.cliente.montoCompraMinima);
+    }
+    return ret;
+  }
+
+  getMontoCompraMinima() {
+    const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
+    return ccc.cliente.montoCompraMinima;
   }
 }
 

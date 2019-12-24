@@ -22,7 +22,8 @@ export interface Producto {
   publico: boolean;
   oferta: boolean;
   porcentajeBonificacionOferta: number;
-  precioListaBonificado: number;
+  porcentajeBonificacionPrecio: number;
+  precioBonificado: number;
   fechaUltimaModificacion: Date;
   estanteria: string;
   estante: string;

@@ -42,6 +42,7 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
 import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -160,5 +161,6 @@ export class AppModule {
     library.addIcons(faTimesCircle);
     library.addIcons(faFileSignature);
     library.addIcons(faFileDownload);
+    library.addIcons(faChevronLeft);
   }
 }
