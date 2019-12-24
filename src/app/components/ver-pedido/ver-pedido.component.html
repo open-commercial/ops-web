@@ -42,7 +42,7 @@
       <tr><th scope="row">Observaciones</th><td>{{ pedido.observaciones }}</td></tr>
       <tr><th scope="row">Subtotal</th><td>{{ pedido.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr>
-        <th scope="row">Desc.&nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <th scope="row">Descuento &nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
         <td><span *ngIf="pedido.descuentoNeto > 0">-&nbsp;</span>{{ pedido.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
