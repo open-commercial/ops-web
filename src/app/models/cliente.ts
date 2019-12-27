@@ -3,12 +3,13 @@ import {Ubicacion} from './ubicacion';
 
 export interface Cliente {
   idCliente: number;
-  bonificacion: number;
   nroCliente: string;
   nombreFiscal: string;
   nombreFantasia: string;
   categoriaIVA: CategoriaIVA;
-  idFiscal: number;
+  idFiscal: string;
+  ubicacionFacturacion: Ubicacion;
+  ubicacionEnvio: Ubicacion;
   email: string;
   telefono: string;
   contacto: string;
@@ -18,10 +19,8 @@ export interface Cliente {
   idCredencial: number;
   nombreCredencial: string;
   predeterminado: boolean;
-  ubicacionFacturacion: Ubicacion;
-  ubicacionEnvio: Ubicacion;
   saldoCuentaCorriente: number;
-  fechaUltimoMovimiento: Date;
+  montoCompraMinima: number;
   detalleUbicacionDeFacturacion: string;
   detalleUbicacionDeEnvio: string;
 }

@@ -19,7 +19,7 @@
         <label class="form-check-label d-block" for="ccc_{{ ccc.idCuentaCorriente }}">
           <span class="d-flex flex-column">
             <span class="mr-2">
-              <span class="numero">#{{ ccc.cliente.nroCliente }}</span>&nbsp;<span class="badge badge-success" *ngIf="ccc.cliente.bonificacion"> {{ ccc.cliente.bonificacion }}% bonif</span>
+              <span class="numero">#{{ ccc.cliente.nroCliente }}</span>
             </span>
             <span>
               <div *ngIf="ccc.cliente.idFiscal">CUIT ó DNI: {{ ccc.cliente.idFiscal }}</div>
@@ -30,6 +30,9 @@
             </span>
             <span *ngIf="ccc.cliente.ubicacionEnvio">
               Ubi. envio: {{ helper.formatUbicacion(ccc.cliente.ubicacionEnvio) }}
+            </span>
+            <span *ngIf="ccc.cliente.montoCompraMinima">
+              Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
             </span>
           </span>
         </label>

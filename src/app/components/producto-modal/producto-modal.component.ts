@@ -94,4 +94,8 @@ export class ProductoModalComponent implements OnInit {
     aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
     return cant;
   }
+
+  estaBonificado(p: Producto) {
+    return p && p.precioBonificado && p.precioBonificado < p.precioLista;
+  }
 }

@@ -3,19 +3,17 @@
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
   <div *ngIf="pedido && !loading">
-    <h1 class="h3 m-0 flex-fill">
-      <div class="d-flex flex-row align-items-center">
-        <div><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon></div>
-        <div class="px-2">Pedido #{{ pedido.nroPedido }}</div>
-      </div>
-    </h1>
-    <ul class="list-inline text-right">
-      <li class="list-inline-item">
-        <button class="btn btn-primary" (click)="downloadPedidoPdf(pedido)" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
-          <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-        </button>
-      </li>
-    </ul>
+    <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
+      <h1 class="h3 pr-2 mb-0 flex-fill">
+        <a class="btn" routerLink="/pedidos" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave">
+          <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+        </a>
+        <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedido #{{ pedido.nroPedido }}
+      </h1>
+      <button class="btn btn-primary" (click)="downloadPedidoPdf(pedido)" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+      </button>
+    </div>
     <table class="table table-bordered table-hover table-sm">
       <caption class="sr-only">Datos del pedido</caption>
       <tbody class="thead-dark">
@@ -29,13 +27,11 @@
           <div *ngFor="let r of renglones" class="d-flex flex-column flex-md-row align-items-md-center articulo">
             <div class="item-info">
               <span class="codigo">{{ r.codigoItem }}</span>&nbsp;
-              <span *ngIf="r.bonificacionPorcentaje">({{ r.bonificacionPorcentaje | number:'1.0-2' }}% {{ r.oferta ? 'OFF' : 'Bonif.' }})</span>
-
+              <span *ngIf="r.bonificacionPorcentaje" class="badge badge-success">{{ r.oferta ? 'OFERTA' : 'BONIF.' }} {{ r.bonificacionPorcentaje | number:'1.0-2' }}%</span>
               <br>
               <span class="descripcion">{{ r.descripcionItem }}</span>
             </div>
             <div class="item-numeros text-right">
-              <!--4 UN x $ 40 = $ 160-->
               {{ r.cantidad }}&nbsp;{{ r.medidaItem }} x {{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
               = <span *ngIf="r.bonificacionPorcentaje"><s>{{ r.importeAnterior | currency: 'ARS':'symbol':'1.0-2' }}</s></span>
               {{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}
@@ -46,7 +42,7 @@
       <tr><th scope="row">Observaciones</th><td>{{ pedido.observaciones }}</td></tr>
       <tr><th scope="row">Subtotal</th><td>{{ pedido.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr>
-        <th scope="row">Desc.&nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <th scope="row">Descuento &nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
         <td><span *ngIf="pedido.descuentoNeto > 0">-&nbsp;</span>{{ pedido.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
