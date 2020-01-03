@@ -1,10 +1,10 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
-import { Observable, of, Subject } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { Producto } from '../../models/producto';
 import { ProductosService } from '../../services/productos.service';
+import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-producto-filtro',
@@ -19,26 +19,32 @@ import { ProductosService } from '../../services/productos.service';
   ]
 })
 export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
-
-  productos$: Observable<Producto[]>;
   loading = false;
-  input$  = new Subject<string>();
+  producto: Producto = null;
 
   value;
-  isDisabled: boolean;
+  isDisabled = false;
   onChange = (_: any) => { };
   onTouch = () => { };
 
-  constructor(private productosService: ProductosService) { }
+  constructor(private productosService: ProductosService,
+              private modalService: NgbModal) { }
 
-  ngOnInit() {
-    this.loadProductos();
+  ngOnInit() {}
+
+  select() {
+    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
+    modalRef.result.then((p: Producto) => {
+      this.producto = p;
+      this.value = p.idProducto;
+      this.onTouch();
+      this.onChange(this.value);
+    }, (reason) => {});
   }
 
-  select(obj: any) {
-    this.value = obj;
-    this.onTouch();
-    this.onChange(this.value);
+  clearValue() {
+    this.producto = null;
+    this.value = null;
   }
 
   registerOnChange(fn: any): void {
@@ -53,11 +59,33 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  writeValue(obj: any): void {
-    this.value = obj;
+  writeValue(idProducto: number): void {
+    if (!idProducto) {
+      this.value = null;
+      return;
+    }
+    this.getProducto(idProducto);
   }
 
-  loadProductos() {
+  getProducto(idProducto: number) {
+    this.loading = true;
+    this.productosService.getProducto(idProducto)
+      .pipe(finalize(() => this.loading = false ))
+      .subscribe((p: Producto) => {
+        this.producto = p;
+        this.value = p.idProducto;
+      })
+    ;
+  }
+
+  getDisplayValue() {
+    if (this.producto) {
+      return this.producto.codigo + ' - ' + this.producto.descripcion;
+    }
+    return '';
+  }
+
+  /*loadProductos() {
     this.input$.pipe(
       debounceTime(700),
       distinctUntilChanged(),
@@ -68,5 +96,5 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
         tap(() => this.loading = false)
       ))
     ).subscribe();
-  }
+  }*/
 }

@@ -6,7 +6,6 @@ import { EstadoPedido } from '../../models/estado.pedido';
 import { finalize } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
-import { saveAs } from 'file-saver';
 import { HelperService } from '../../services/helper.service';
 import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
@@ -14,8 +13,7 @@ import { Usuario } from '../../models/usuario';
 import { AuthService } from '../../services/auth.service';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { Sucursal } from '../../models/sucursal';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pedidos',
@@ -65,7 +63,8 @@ export class PedidosComponent implements OnInit {
               private sucursalesService: SucursalesService,
               private authService: AuthService,
               private mensajeService: MensajeService,
-              private router: Router) { }
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -80,7 +79,10 @@ export class PedidosComponent implements OnInit {
     });
     this.getPedidos(true);
 
-    this.sucursalesService.sucursal$.subscribe((s: Sucursal) => this.filter());
+    this.sucursalesService.sucursal$.subscribe(() => this.filter());
+    /*this.route.queryParamMap.subscribe(params => {
+      const terminos = this.createCriteriaFromValues(params.params);
+    });*/
   }
 
   getPedidos(clearResults: boolean = false) {
@@ -110,7 +112,7 @@ export class PedidosComponent implements OnInit {
     this.filterForm = this.fb.group({
       cliente: '',
       usuario: '',
-      producto: '',
+      idProducto: '',
       viajante: '',
       rangoFecha: null,
       estadoPedido: '',
@@ -119,15 +121,23 @@ export class PedidosComponent implements OnInit {
   }
 
   filter() {
-      this.getPedidos(true);
-      this.isFiltersCollapsed = true;
+    /*const qParams = this.getFormValues();
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.route,
+        queryParams: qParams,
+        // queryParamsHandling: 'merge'
+      });*/
+    this.getPedidos(true);
+    this.isFiltersCollapsed = true;
   }
 
   reset() {
     this.filterForm.reset({
       cliente: '',
       usuario: '',
-      producto: '',
+      idProducto: '',
       viajante: '',
       rangoFecha: null,
       estadoPedido: '',
@@ -145,12 +155,43 @@ export class PedidosComponent implements OnInit {
 
     if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
     if (values.usuario) { ret.idUsuario = values.usuario.idUsuario; }
-    if (values.producto) { ret.idProducto = values.producto.idProducto; }
+    if (values.idProducto) { ret.idProducto = values.idProducto; }
     if (values.viajante) { ret.idViajante = values.viajante.idUsuario; }
     if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getDateFromNgbDate(values.rangoFecha.desde); }
     if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getDateFromNgbDate(values.rangoFecha.hasta); }
     if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
     if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
+
+    return ret;
+  }
+
+  /*getFormValues(): {[k: string]: any} {
+    const values = this.filterForm.value;
+    const ret: {[k: string]: any} = {};
+
+    if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
+    if (values.usuario) { ret.idUsuario = values.usuario.idUsuario; }
+    if (values.idProducto) { ret.idProducto = values.idProducto; }
+    if (values.viajante) { ret.idViajante = values.viajante.idUsuario; }
+    if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getDateFromNgbDate(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getDateFromNgbDate(values.rangoFecha.hasta); }
+    if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
+    if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
+
+    return ret;
+  }*/
+
+  createCriteriaFromValues(values: {[k: string]: any} = {}): BusquedaPedidoCriteria {
+    const ret: BusquedaPedidoCriteria = {
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
+      pagina: 0
+    };
+
+    for (const k in values) {
+      if (values.hasOwnProperty(k)) {
+        ret[k] = values[k];
+      }
+    }
 
     return ret;
   }
@@ -170,8 +211,9 @@ export class PedidosComponent implements OnInit {
       this.applyFilters.push({ label: 'Usuario', value: val });
     }
 
-    if (values.producto) {
-      this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
+    if (values.idProducto) {
+      this.applyFilters.push({ label: 'Producto', value: `${values.idProducto}` });
+      // this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
     }
 
     if (values.viajante) {
