@@ -106,38 +106,4 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   getLabelForId() {
     return `${this.label.toLowerCase().replace(' ', '_')}`;
   }
-/*  select(obj: any) {
-    this.value = obj;
-    this.onTouch();
-    this.onChange(this.value);
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouch = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
-  }
-
-  writeValue(obj: any): void {
-    this.value = obj;
-  }
-
-  loadUsuarios() {
-    this.input$.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
-      tap(() => this.loading = true),
-      switchMap(term => this.usuario$ = this.usuariosService.getUsuarios(term, 0, this.pRoles).pipe(
-        map((v: Pagination) => v.content),
-        catchError(() => of([])), // empty list on error
-        tap(() => this.loading = false)
-      ))
-    ).subscribe();
-  }*/
 }

@@ -428,7 +428,6 @@ export class PedidoComponent implements OnInit {
       resultados: null,
     });
     this.storageService.removeItem(this.localStorageKey);
-    // this.form.get('ccc').setValue(this.cccPredeterminado);
   }
 
   get renglonesPedido() {
@@ -454,7 +453,6 @@ export class PedidoComponent implements OnInit {
     this.form.get('ccc').setValue(ccc);
   }
 
-  // modal de producto
   showProductoModal() {
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.result.then((p: Producto) => {
@@ -465,9 +463,8 @@ export class PedidoComponent implements OnInit {
     }, (reason) => {});
   }
 
-  // modal de cantidad
   showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
-    const modalRef = this.modalService.open(RenglonPedidoModalComponent/*, { size: 'xl' }*/);
+    const modalRef = this.modalService.open(RenglonPedidoModalComponent);
     modalRef.componentInstance.cliente = this.form.get('ccc').value.cliente;
     modalRef.componentInstance.cantidad = cantidadPrevia;
     modalRef.componentInstance.loadProducto(idProductoItem);

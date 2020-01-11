@@ -30,10 +30,6 @@ export class PedidosService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
-  /*getPedidosCliente(cliente: Cliente, pagina: number) {
-    return this.http.get(this.urlBusqueda + '&idCliente=' + cliente.idCliente + '&pagina=' + pagina);
-  }*/
-
   getPedido(idPedido: number): Observable<Pedido> {
     return this.http.get<Pedido>(`${this.url}/${idPedido}`);
   }

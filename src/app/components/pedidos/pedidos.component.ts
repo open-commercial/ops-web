@@ -227,8 +227,6 @@ export class PedidosComponent implements OnInit {
     if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
     if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
 
-    console.log(ret);
-
     return ret;
   }
 
@@ -237,23 +235,18 @@ export class PedidosComponent implements OnInit {
     this.applyFilters = [];
 
     if (values.idCliente) {
-      /*let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
-      if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }*/
       this.applyFilters.push({ label: 'Cliente', value: values.idCliente });
     }
 
     if (values.idUsuario) {
-      /*const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;*/
       this.applyFilters.push({ label: 'Usuario', value: values.idUsuario });
     }
 
     if (values.idProducto) {
       this.applyFilters.push({ label: 'Producto', value: values.idProducto });
-      // this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
     }
 
     if (values.idViajante) {
-      /*const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;*/
       this.applyFilters.push({ label: 'Viajante', value: values.idViajante });
     }
 
