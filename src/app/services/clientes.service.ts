@@ -13,6 +13,10 @@ export class ClientesService {
 
   constructor(private http: HttpClient) {}
 
+  getCliente(idCliente: number): Observable<Cliente> {
+    return this.http.get<Cliente>(this.url + `/${idCliente}`);
+  }
+
   getClientes(input, page = 0): Observable<Pagination> {
     const criteria: BusquedaClienteCriteria = {
       nombreFiscal: input, nombreFantasia: input, nroDeCliente: input, pagina: page

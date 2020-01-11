@@ -1,11 +1,13 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, Subject } from 'rxjs';
 import { Usuario } from '../../models/usuario';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Rol } from '../../models/rol';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Producto } from '../../models/producto';
+import { UsuarioModalComponent } from '../usuario-modal/usuario-modal.component';
 
 
 @Component({
@@ -21,13 +23,9 @@ import { Rol } from '../../models/rol';
   ]
 })
 export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
-
-  usuario$: Observable<Usuario[]>;
   loading = false;
-  input$  = new Subject<string>();
+  usuario: Usuario = null;
 
-  // El prefijo p en pRoles es para establecer una convención para variables privadas
-  // ya que ahora el prefijo _ (guión bajo) lo subraya en rojo.
   private pRoles: Array<Rol>;
   private pLabel = 'Usuario';
 
@@ -46,13 +44,69 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   set label(label: string) { this.pLabel = label; }
   get label() { return this.pLabel; }
 
-  constructor(private usuariosService: UsuariosService) { }
+  constructor(private usuariosService: UsuariosService,
+              private modalService: NgbModal) { }
 
-  ngOnInit() {
-    this.loadUsuarios();
+  ngOnInit() {}
+
+  private setUsuario(u: Usuario, applyChange = true) {
+    this.usuario = u;
+    this.value = u ? u.idUsuario : null;
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+    }
   }
 
-  select(obj: any) {
+  select() {
+    const modalRef = this.modalService.open(UsuarioModalComponent, {scrollable: true});
+    modalRef.componentInstance.roles = this.pRoles;
+    modalRef.result.then((u: Usuario) => {
+      this.setUsuario(u);
+    }, (reason) => {});
+  }
+
+  clearValue() {
+    this.setUsuario(null);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouch = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  writeValue(idUsuario: number): void {
+    if (!idUsuario) {
+      this.setUsuario(null, false);
+      return;
+    }
+    this.loading = true;
+    this.usuariosService.getUsuario(idUsuario)
+      .pipe(finalize(() => this.loading = false ))
+      .subscribe((u: Usuario) => {
+        this.setUsuario(u, false);
+      })
+    ;
+  }
+
+  getDisplayValue() {
+    if (this.usuario) {
+      return this.usuario.username + ' - ' + this.usuario.nombre + this.usuario.apellido;
+    }
+    return '';
+  }
+
+  getLabelForId() {
+    return `${this.label.toLowerCase().replace(' ', '_')}`;
+  }
+/*  select(obj: any) {
     this.value = obj;
     this.onTouch();
     this.onChange(this.value);
@@ -85,5 +139,5 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
         tap(() => this.loading = false)
       ))
     ).subscribe();
-  }
+  }*/
 }

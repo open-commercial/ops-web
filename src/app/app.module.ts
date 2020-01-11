@@ -71,6 +71,9 @@ import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/
 import { MensajeModalComponent } from './components/mensaje-modal/mensaje-modal.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
+import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.component';
+import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
+import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -101,6 +104,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     MensajeModalComponent,
     PedidosHomeComponent,
     VerPedidoComponent,
+    ClienteModalComponent,
+    UsuarioModalComponent,
+    ProveedorModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -128,7 +134,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
     EliminarRenglonPedidoModalComponent,
-    MensajeModalComponent
+    MensajeModalComponent,
+    ClienteModalComponent,
+    UsuarioModalComponent,
+    ProveedorModalComponent,
   ],
   bootstrap: [AppComponent]
 })

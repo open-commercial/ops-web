@@ -29,6 +29,7 @@ import { Rol } from '../../models/rol';
 import { Pedido } from '../../models/pedido';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
+import { Location } from '@angular/common';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -99,7 +100,8 @@ export class PedidoComponent implements OnInit {
               private route: ActivatedRoute,
               private productosService: ProductosService,
               private storageService: StorageService,
-              private mensajeService: MensajeService) {
+              private mensajeService: MensajeService,
+              private location: Location) {
 
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -664,6 +666,10 @@ export class PedidoComponent implements OnInit {
   getMontoCompraMinima() {
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
     return ccc.cliente.montoCompraMinima;
+  }
+
+  volverAlListado() {
+    this.location.back();
   }
 }
 

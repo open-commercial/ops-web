@@ -51,22 +51,28 @@ export class RangoFechaFiltroComponent implements OnInit, ControlValueAccessor {
       this.onFromDateSelection(null);
       this.onToDateSelection(null);
     } else {
-      this.value = obj;
+      // this.value = obj;
+      this.onFromDateSelection(obj.desde, false);
+      this.onToDateSelection(obj.hasta, false);
     }
   }
 
-  onFromDateSelection(date) {
+  onFromDateSelection(date, applyChange = true) {
     this.fromDate = date;
     this.value.desde = this.fromDate;
-    this.onTouch();
-    this.onChange(this.value);
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+    }
   }
 
-  onToDateSelection(date) {
+  onToDateSelection(date, applyChange = true) {
     this.toDate = date;
     this.value.hasta = this.toDate;
-    this.onTouch();
-    this.onChange(this.value);
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+    }
   }
 
   clearFromDate() {

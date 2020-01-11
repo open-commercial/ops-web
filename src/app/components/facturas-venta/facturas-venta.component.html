@@ -14,10 +14,10 @@
     <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
       <div class="row">
         <div class="col-md-6">
-          <app-cliente-filtro formControlName="cliente"></app-cliente-filtro>
-          <app-usuario-filtro formControlName="usuario"></app-usuario-filtro>
-          <app-producto-filtro formControlName="producto"></app-producto-filtro>
-          <app-usuario-filtro formControlName="viajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
+          <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
+          <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
+          <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
+          <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
         </div>
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
@@ -124,7 +124,7 @@
         <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadFacturaPdf(f)">
+              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadFacturaPdf(f)">
                 <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
               </a>
             </li>

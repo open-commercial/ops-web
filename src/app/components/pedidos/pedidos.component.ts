@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-pedidos',
@@ -77,16 +78,88 @@ export class PedidosComponent implements OnInit {
       this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
       this.hasRolToEdit = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToEdit.includes(x)).length > 0;
     });
-    this.getPedidos(true);
 
-    this.sucursalesService.sucursal$.subscribe(() => this.filter());
-    /*this.route.queryParamMap.subscribe(params => {
-      const terminos = this.createCriteriaFromValues(params.params);
-    });*/
+    this.sucursalesService.sucursal$.subscribe(() => this.getPedidosFromQueryParams());
+    this.route.queryParamMap.subscribe(params => this.getPedidosFromQueryParams(params));
   }
 
-  getPedidos(clearResults: boolean = false) {
-    const terminos = this.getFormValues();
+  getTerminosFromQueryParams(params = null) {
+    const terminos: BusquedaPedidoCriteria = {
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
+      pagina: 0,
+    };
+
+    this.filterForm.reset({
+      idCliente: '',
+      idUsuario: '',
+      idProducto: '',
+      idViajante: '',
+      rangoFecha: null,
+      estadoPedido: '',
+      nroPedido: '',
+    });
+
+    const ps = params ? params.params : this.route.snapshot.queryParams;
+
+    if (ps.idCliente && !isNaN(ps.idCliente)) {
+      this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
+      terminos.idCliente = Number(ps.idCliente);
+    }
+
+    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
+      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
+      terminos.idUsuario = Number(ps.idUsuario);
+    }
+
+    if (ps.idProducto && !isNaN(ps.idProducto)) {
+      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
+      terminos.idProducto = Number(ps.idProducto);
+    }
+
+    if (ps.idViajante && !isNaN(ps.idViajante)) {
+      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
+      terminos.idViajante = Number(ps.idViajante);
+    }
+
+    if (ps.fechaDesde || ps.fechaHasta) {
+      const aux = { desde: null, hasta: null };
+
+      if (ps.fechaDesde) {
+        const d = moment.unix(ps.fechaDesde).local();
+        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+        terminos.fechaDesde = d.toDate();
+      }
+
+      if (ps.fechaHasta) {
+        const h = moment.unix(ps.fechaHasta).local();
+        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+        terminos.fechaHasta = h.toDate();
+      }
+
+      this.filterForm.get('rangoFecha').setValue(aux);
+    }
+
+    if (ps.estadoPedido) {
+      this.filterForm.get('estadoPedido').setValue(ps.estadoPedido);
+      terminos.estadoPedido = ps.estadoPedido;
+    }
+
+    if (ps.nroPedido) {
+      this.filterForm.get('nroPedido').setValue(ps.nroPedido);
+      terminos.nroPedido = ps.nroPedido;
+    }
+
+    return terminos;
+  }
+
+  getPedidosFromQueryParams(params = null, clearResults = true) {
+    const terminos = this.getTerminosFromQueryParams(params);
+    this.getPedidos(clearResults, terminos);
+  }
+
+  getPedidos(clearResults: boolean = false, terminos = null) {
+    terminos = terminos || this.getFormValues();
+    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
     this.page += 1;
     if (clearResults) {
       this.clearLoading = true;
@@ -105,15 +178,16 @@ export class PedidosComponent implements OnInit {
         this.totalElements = p.totalElements;
         this.totalPages = p.totalPages;
         this.size = p.size;
-      });
+      })
+    ;
   }
 
   createFilterForm() {
     this.filterForm = this.fb.group({
-      cliente: '',
-      usuario: '',
+      idCliente: '',
+      idUsuario: '',
       idProducto: '',
-      viajante: '',
+      idViajante: '',
       rangoFecha: null,
       estadoPedido: '',
       nroPedido: '',
@@ -121,77 +195,39 @@ export class PedidosComponent implements OnInit {
   }
 
   filter() {
-    /*const qParams = this.getFormValues();
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.route,
-        queryParams: qParams,
-        // queryParamsHandling: 'merge'
-      });*/
-    this.getPedidos(true);
+    const qParams = this.getFormValues();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: qParams,
+    });
     this.isFiltersCollapsed = true;
   }
 
   reset() {
-    this.filterForm.reset({
-      cliente: '',
-      usuario: '',
-      idProducto: '',
-      viajante: '',
-      rangoFecha: null,
-      estadoPedido: '',
-      nroPedido: '',
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: [],
     });
-    this.getPedidos(true);
   }
 
   getFormValues() {
     const values = this.filterForm.value;
-    const ret: BusquedaPedidoCriteria = {
-      idSucursal: Number(this.sucursalesService.getIdSucursal()),
-      pagina: 0
-    };
-
-    if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
-    if (values.usuario) { ret.idUsuario = values.usuario.idUsuario; }
-    if (values.idProducto) { ret.idProducto = values.idProducto; }
-    if (values.viajante) { ret.idViajante = values.viajante.idUsuario; }
-    if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getDateFromNgbDate(values.rangoFecha.desde); }
-    if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getDateFromNgbDate(values.rangoFecha.hasta); }
-    if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
-    if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
-
-    return ret;
-  }
-
-  /*getFormValues(): {[k: string]: any} {
-    const values = this.filterForm.value;
     const ret: {[k: string]: any} = {};
 
-    if (values.cliente) { ret.idCliente = values.cliente.idCliente; }
-    if (values.usuario) { ret.idUsuario = values.usuario.idUsuario; }
+    if (values.idCliente) { ret.idCliente = values.idCliente; }
+    if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
     if (values.idProducto) { ret.idProducto = values.idProducto; }
-    if (values.viajante) { ret.idViajante = values.viajante.idUsuario; }
-    if (values.rangoFecha && values.rangoFecha.desde) { ret.fechaDesde = HelperService.getDateFromNgbDate(values.rangoFecha.desde); }
-    if (values.rangoFecha && values.rangoFecha.hasta) { ret.fechaHasta = HelperService.getDateFromNgbDate(values.rangoFecha.hasta); }
+    if (values.idViajante) { ret.idViajante = values.idViajante; }
+    if (values.rangoFecha && values.rangoFecha.desde) {
+      ret.fechaDesde = HelperService.getUnixDateFromNgbDate(values.rangoFecha.desde);
+    }
+    if (values.rangoFecha && values.rangoFecha.hasta) {
+      ret.fechaHasta = HelperService.getUnixDateFromNgbDate(values.rangoFecha.hasta);
+    }
     if (values.estadoPedido) { ret.estadoPedido = values.estadoPedido; }
     if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
 
-    return ret;
-  }*/
-
-  createCriteriaFromValues(values: {[k: string]: any} = {}): BusquedaPedidoCriteria {
-    const ret: BusquedaPedidoCriteria = {
-      idSucursal: Number(this.sucursalesService.getIdSucursal()),
-      pagina: 0
-    };
-
-    for (const k in values) {
-      if (values.hasOwnProperty(k)) {
-        ret[k] = values[k];
-      }
-    }
+    console.log(ret);
 
     return ret;
   }
@@ -200,25 +236,25 @@ export class PedidosComponent implements OnInit {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.cliente && values.cliente.idCliente) {
-      let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
-      if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
-      this.applyFilters.push({ label: 'Cliente', value: val });
+    if (values.idCliente) {
+      /*let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
+      if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }*/
+      this.applyFilters.push({ label: 'Cliente', value: values.idCliente });
     }
 
-    if (values.usuario) {
-      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
-      this.applyFilters.push({ label: 'Usuario', value: val });
+    if (values.idUsuario) {
+      /*const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;*/
+      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: `${values.idProducto}` });
+      this.applyFilters.push({ label: 'Producto', value: values.idProducto });
       // this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
     }
 
-    if (values.viajante) {
-      const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;
-      this.applyFilters.push({ label: 'Viajante', value: val });
+    if (values.idViajante) {
+      /*const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;*/
+      this.applyFilters.push({ label: 'Viajante', value: values.idViajante });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
@@ -243,7 +279,7 @@ export class PedidosComponent implements OnInit {
   }
 
   loadMore() {
-    this.getPedidos();
+    this.getPedidosFromQueryParams(null, false);
   }
 
   verPedido(pedido: Pedido) {

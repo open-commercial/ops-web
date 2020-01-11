@@ -1,0 +1,44 @@
+<div class="modal-body d-flex flex-column p-2">
+  <div class="input-group">
+    <label class="sr-only" for="pmProveedor"></label>
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="search" class="form-control" id="pmProveedor" placeholder="Buscar Proveedor..."
+           (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
+    <div class="input-group-append">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
+        <fa-icon [icon]="['fas', 'search']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="clearLoading" class="text-center mt-3">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <form (submit)="seleccionarProveedor()" class="flex-fill mt-2" *ngIf="!clearLoading && proveedores.length">
+    <div class="proveedores">
+      <div *ngFor="let p of proveedores; let f = first;" [class.border-top]="f" class="proveedor form-check border-bottom p-0"
+           [class.selected]="p && proveedorSeleccionado && p.idProveedor === proveedorSeleccionado.idProveedor">
+        <input class="form-check-input" type="radio" name="proveedores" id="p_{{ p.idProveedor }}" value="{{ p.idProveedor }}" (focus)="select(p)">
+        <label class="form-check-label d-block" for="p_{{ p.idProveedor }}">
+          <span class="d-flex flex-row align-items-center">
+            <span class="flex-fill d-flex flex-column p-2 info">
+              <span class="mr-2 numero">{{ p.nroProveedor }}</span>
+              <span class="mr-2"><strong>{{ p.razonSocial }}</strong></span>
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="text-center pt-2">
+      <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+      <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
+    </div>
+    <button class="sr-only" type="submit"></button>
+  </form>
+</div>
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading || clearLoading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="seleccionarProveedor()" [disabled]="!proveedorSeleccionado || loading || clearLoading">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Seleccionar
+  </button>
+</div>

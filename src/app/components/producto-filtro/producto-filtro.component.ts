@@ -32,19 +32,24 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {}
 
+  private setProducto(p: Producto, applyChange = true) {
+    this.producto = p;
+    this.value = p ? p.idProducto : null;
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+    }
+  }
+
   select() {
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.result.then((p: Producto) => {
-      this.producto = p;
-      this.value = p.idProducto;
-      this.onTouch();
-      this.onChange(this.value);
+      this.setProducto(p);
     }, (reason) => {});
   }
 
   clearValue() {
-    this.producto = null;
-    this.value = null;
+    this.setProducto(null);
   }
 
   registerOnChange(fn: any): void {
@@ -61,19 +66,14 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
 
   writeValue(idProducto: number): void {
     if (!idProducto) {
-      this.value = null;
+      this.setProducto(null, false);
       return;
     }
-    this.getProducto(idProducto);
-  }
-
-  getProducto(idProducto: number) {
     this.loading = true;
     this.productosService.getProducto(idProducto)
       .pipe(finalize(() => this.loading = false ))
       .subscribe((p: Producto) => {
-        this.producto = p;
-        this.value = p.idProducto;
+        this.setProducto(p, false);
       })
     ;
   }
@@ -84,17 +84,4 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
     }
     return '';
   }
-
-  /*loadProductos() {
-    this.input$.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
-      tap(() => this.loading = true),
-      switchMap(term => this.productos$ = this.productosService.getProductos(term).pipe(
-        map((v: Pagination) => v.content),
-        catchError(() => of([])), // empty list on error
-        tap(() => this.loading = false)
-      ))
-    ).subscribe();
-  }*/
 }

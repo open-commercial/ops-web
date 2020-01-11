@@ -1,31 +1,31 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
-  <a class="navbar-brand" routerLink="." (click)="menuBtnClick()">
+  <a class="navbar-brand fake-cursor" (click)="menuBtnClick()">
     <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1557317339/assets/logo-globodeoro-200x200px.png'" alt="">
   </a>
 
   <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown" ngbDropdown >
-        <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownSucursales" ngbDropdownToggle>
+        <a class="nav-link dropdown-toggle fake-cursor" id="dropdownSucursales" ngbDropdownToggle>
             <fa-icon [icon]="['fas', 'store']"></fa-icon>
             <span class="d-none d-md-inline">&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownSucursales">
           <h6 class="dropdown-header d-md-none">Sucursales</h6>
-          <a [routerLink]="null" class="dropdown-item" *ngFor="let s of sucursales"
+          <a class="dropdown-item fake-cursor" *ngFor="let s of sucursales"
              (click)="seleccionarSucursal(s)" [class.active]="s && sucursalSeleccionada && s.idSucursal === sucursalSeleccionada.idSucursal">
             <fa-icon [icon]="['fas', 'store']"></fa-icon> {{ s.nombre }}
           </a>
         </div>
       </li>
       <li class="nav-item dropdown" ngbDropdown >
-        <a [routerLink]="null" class="nav-link dropdown-toggle" id="dropdownUser" ngbDropdownToggle>
+        <a class="nav-link dropdown-toggle fake-cursor" id="dropdownUser" ngbDropdownToggle>
           <fa-icon [icon]="['fas', 'user']"></fa-icon>
           <span class="d-none d-md-inline">&nbsp;{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownUser">
           <h6 class="dropdown-header d-md-none">{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</h6>
-          <a [routerLink]="null" class="dropdown-item" (click)="logout()">
+          <a class="dropdown-item fake-cursor" (click)="logout()">
             <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir
           </a>
         </div>

@@ -10,16 +10,6 @@ import { PedidoComponent } from './components/pedido/pedido.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 
-/*const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
-    children: [
-      { path: '', component: PedidoComponent },
-    ]
-  },
-  { path: '**', redirectTo: '' }
-];*/
-
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
@@ -33,8 +23,8 @@ const routes: Routes = [
           { path: 'ver/:id', component: VerPedidoComponent }
         ]
       },
-      { path: 'facturas-venta', component: FacturasVentaComponent },
-      { path: 'facturas-compra', component: FacturasCompraComponent }
+      { path: 'facturas-venta', component: FacturasVentaComponent, runGuardsAndResolvers: 'always' },
+      { path: 'facturas-compra', component: FacturasCompraComponent, runGuardsAndResolvers: 'always' }
     ]
   },
   { path: '**', redirectTo: '' }

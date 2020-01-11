@@ -14,8 +14,8 @@
     <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
       <div class="row">
         <div class="col-md-6">
-          <app-proveedor-filtro formControlName="proveedor"></app-proveedor-filtro>
-          <app-producto-filtro formControlName="producto"></app-producto-filtro>
+          <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
+          <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
         </div>
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
