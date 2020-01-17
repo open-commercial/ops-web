@@ -16,9 +16,6 @@
         <div class="col-md-6">
           <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
           <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
-        </div>
-        <div class="col-md-6">
-          <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="form-group">
             <label for="tipo_factura">Tipo de Factura</label>
             <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
@@ -39,6 +36,9 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="col-md-6">
+          <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -80,7 +80,11 @@
           <li *ngFor="let f of applyFilters">{{ f.label }}: {{ f.value }}</li>
         </ul>
       </div>
-      <strong><em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}</em></strong>
+      <em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}.</em>
+      <div>
+        <span *ngIf="ordenarPorAplicado">Ordenado por: <em>"{{ ordenarPorAplicado }}"</em></span>
+        <span *ngIf="sentidoAplicado">&nbsp;Sentido: <em>"{{ sentidoAplicado }}"</em></span>
+      </div>
     </div>
     <div class="facturas my-2">
       <div *ngFor="let f of facturas" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">

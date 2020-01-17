@@ -55,6 +55,9 @@ export class FacturasVentaComponent implements OnInit {
 
   helper = HelperService;
 
+  ordenarPorAplicado = '';
+  sentidoAplicado = '';
+
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
@@ -285,13 +288,23 @@ export class FacturasVentaComponent implements OnInit {
       this.applyFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
     }
 
-    if (values.numSerie) {
-      this.applyFilters.push({ label: 'Nº Serie', value: values.numSerie });
+    if (values.numSerie || values.numFactura) {
+      let ns = null;
+      let nf = null;
+      if (values.numSerie) {
+        ns = Number(values.numSerie);
+        ns = !isNaN(ns) ? ns : null;
+      }
+      if (values.numFactura) {
+        nf = Number(values.numFactura);
+        nf = !isNaN(nf) ? nf : null;
+      }
+
+      if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
-    if (values.numFactura) {
-      this.applyFilters.push({ label: 'Nº Factura', value: values.numFactura });
-    }
+    this.ordenarPorAplicado = this.getTextoOrdenarPor();
+    this.sentidoAplicado = this.getTextoSentido();
   }
 
   loadMore() {
@@ -305,5 +318,23 @@ export class FacturasVentaComponent implements OnInit {
         saveAs(file, `factura-venta.pdf`);
       }
     );
+  }
+
+  getTextoOrdenarPor() {
+    if (this.filterForm && this.filterForm.get('ordenarPor')) {
+      const val = this.filterForm.get('ordenarPor').value;
+      const aux = this.ordenarPorOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getTextoSentido() {
+    if (this.filterForm && this.filterForm.get('sentido')) {
+      const val = this.filterForm.get('sentido').value;
+      const aux = this.sentidoOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
   }
 }

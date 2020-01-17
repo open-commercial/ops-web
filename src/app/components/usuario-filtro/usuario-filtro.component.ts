@@ -1,12 +1,10 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Usuario } from '../../models/usuario';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
+import { finalize } from 'rxjs/operators';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Rol } from '../../models/rol';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Producto } from '../../models/producto';
 import { UsuarioModalComponent } from '../usuario-modal/usuario-modal.component';
 
 
@@ -29,6 +27,8 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   private pRoles: Array<Rol>;
   private pLabel = 'Usuario';
 
+  icono = 'user';
+
   value;
   isDisabled: boolean;
   onChange = (_: any) => { };
@@ -37,6 +37,9 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   @Input()
   set roles(roles: Array<Rol>) {
     this.pRoles = roles;
+    if (this.pRoles.filter(e => e === Rol.VIAJANTE).length) {
+      this.icono = 'suitcase';
+    }
   }
   get roles(): Array<Rol> { return this.pRoles; }
 
@@ -97,10 +100,7 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   getDisplayValue() {
-    if (this.usuario) {
-      return this.usuario.username + ' - ' + this.usuario.nombre + this.usuario.apellido;
-    }
-    return '';
+    return this.usuario ? this.usuario.nombre + ' ' + this.usuario.apellido : '';
   }
 
   getLabelForId() {

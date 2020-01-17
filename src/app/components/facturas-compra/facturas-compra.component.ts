@@ -31,7 +31,7 @@ export class FacturasCompraComponent implements OnInit {
 
   ordenarPorOptions = [
     { val: 'fecha', text: 'Fecha de factura' },
-    { val: 'cliente.nombreFiscal', text: 'Cliente' },
+    { val: 'proveedor.razonSocial', text: 'Proveedor' },
     { val: 'total', text: 'Total' },
   ];
 
@@ -51,6 +51,9 @@ export class FacturasCompraComponent implements OnInit {
   applyFilters = [];
 
   helper = HelperService;
+
+  ordenarPorAplicado = '';
+  sentidoAplicado = '';
 
   constructor(private facturasCompraService: FacturasCompraService,
               private fb: FormBuilder,
@@ -226,7 +229,7 @@ export class FacturasCompraComponent implements OnInit {
     this.applyFilters = [];
 
     if (values.idProveedor) {
-      this.applyFilters.push({ label: 'Cliente', value: values.idProveedor });
+      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor });
     }
 
     if (values.idProducto) {
@@ -249,16 +252,44 @@ export class FacturasCompraComponent implements OnInit {
       this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
     }
 
-    if (values.numSerie) {
-      this.applyFilters.push({ label: 'Nº Serie', value: values.numSerie });
+    if (values.numSerie || values.numFactura) {
+      let ns = null;
+      let nf = null;
+      if (values.numSerie) {
+        ns = Number(values.numSerie);
+        ns = !isNaN(ns) ? ns : null;
+      }
+      if (values.numFactura) {
+        nf = Number(values.numFactura);
+        nf = !isNaN(nf) ? nf : null;
+      }
+
+      if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
-    if (values.numFactura) {
-      this.applyFilters.push({ label: 'Nº Factura', value: values.numFactura });
-    }
+    this.ordenarPorAplicado = this.getTextoOrdenarPor();
+    this.sentidoAplicado = this.getTextoSentido();
   }
 
   loadMore() {
     this.getFacturasFromQueryParams(null, false);
+  }
+
+  getTextoOrdenarPor() {
+    if (this.filterForm && this.filterForm.get('ordenarPor')) {
+      const val = this.filterForm.get('ordenarPor').value;
+      const aux = this.ordenarPorOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getTextoSentido() {
+    if (this.filterForm && this.filterForm.get('sentido')) {
+      const val = this.filterForm.get('sentido').value;
+      const aux = this.sentidoOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
   }
 }

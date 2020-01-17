@@ -29,10 +29,6 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="nro-pedido">Nº Pedido</label>
-            <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
-          </div>
-          <div class="form-group">
             <label>Nº Factura</label>
             <div class="row">
               <div class="col-4">
@@ -44,6 +40,10 @@
                 <input type="text" class="form-control" id="num-factura" formControlName="numFactura">
               </div>
             </div>
+          </div>
+          <div class="form-group">
+            <label for="nro-pedido">Nº Pedido</label>
+            <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
           </div>
           <div class="card card-body bg-light mb-3">
             <div class="input-group mb-3">
@@ -86,7 +86,11 @@
           <li *ngFor="let f of applyFilters">{{ f.label }}: {{ f.value }}</li>
         </ul>
       </div>
-      <strong><em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}</em></strong>
+      <em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}</em>
+      <div>
+        <span *ngIf="ordenarPorAplicado">Ordenado por: <em>"{{ ordenarPorAplicado }}"</em></span>
+        <span *ngIf="sentidoAplicado">&nbsp;Sentido: <em>"{{ sentidoAplicado }}"</em></span>
+      </div>
     </div>
     <div class="facturas my-2">
       <div *ngFor="let f of facturas" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">

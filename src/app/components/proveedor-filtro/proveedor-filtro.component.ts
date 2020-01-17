@@ -83,9 +83,6 @@ export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   getDisplayValue() {
-    if (this.proveedor) {
-      return this.proveedor.nroProveedor + ' - ' + this.proveedor.razonSocial;
-    }
-    return '';
+    return this.proveedor ? this.proveedor.razonSocial : '';
   }
 }

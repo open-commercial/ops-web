@@ -2,7 +2,7 @@
   <label for="{{ getLabelForId() }}">{{ label }}</label>
   <div class="input-group mb-3">
     <div class="input-group-prepend">
-      <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', 'user']"></fa-icon></span>
+      <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', icono]"></fa-icon></span>
     </div>
     <input type="text" class="form-control" [attr.aria-label]="label" disabled [attr.aria-describedby]="'find-' + getLabelForId() + '-button'"
            tabindex="-1" id="{{ getLabelForId() }}" [value]="getDisplayValue()">

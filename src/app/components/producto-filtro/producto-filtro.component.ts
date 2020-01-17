@@ -79,9 +79,6 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   getDisplayValue() {
-    if (this.producto) {
-      return this.producto.codigo + ' - ' + this.producto.descripcion;
-    }
-    return '';
+    return this.producto ? this.producto.descripcion : '';
   }
 }

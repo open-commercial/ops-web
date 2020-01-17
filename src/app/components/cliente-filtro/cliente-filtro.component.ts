@@ -84,9 +84,6 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   getDisplayValue() {
-    if (this.cliente) {
-      return this.cliente.nroCliente + ' - ' + this.cliente.nombreFiscal;
-    }
-    return '';
+    return this.cliente ? this.cliente.nombreFiscal : '';
   }
 }
