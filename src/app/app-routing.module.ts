@@ -9,6 +9,8 @@ import { FacturasCompraComponent } from './components/facturas-compra/facturas-c
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
+import { FacturasVentaHomeComponent } from './components/facturas-venta-home/facturas-venta-home.component';
+import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
 
 /*const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -25,7 +27,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
-      { path: 'pedidos', component: PedidosHomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
+      { path: 'pedidos', component: PedidosHomeComponent,
         children: [
           { path: '', component: PedidosComponent },
           { path: 'nuevo', component: PedidoComponent },
@@ -33,7 +35,13 @@ const routes: Routes = [
           { path: 'ver/:id', component: VerPedidoComponent }
         ]
       },
-      { path: 'facturas-venta', component: FacturasVentaComponent },
+      { path: 'facturas-venta', component: FacturasVentaHomeComponent,
+        children: [
+          { path: '', component: FacturasVentaComponent },
+          { path: 'nueva', component: FacturaVentaComponent },
+          { path: 'editar/:id', component: FacturaVentaComponent },
+        ]
+      },
       { path: 'facturas-compra', component: FacturasCompraComponent }
     ]
   },

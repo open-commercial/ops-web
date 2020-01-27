@@ -9,7 +9,7 @@ import { RenglonPedido } from '../../models/renglon-pedido';
 import { RenglonPedidoModalComponent } from '../renglon-pedido-modal/renglon-pedido-modal.component';
 import { Producto } from '../../models/producto';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
-import { NuevosResultadosPedido } from '../../models/nuevos-resultados-pedido';
+import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
 import { Resultados } from '../../models/resultados';
 import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
 import { SucursalesService } from '../../services/sucursales.service';
@@ -29,6 +29,7 @@ import { Rol } from '../../models/rol';
 import { Pedido } from '../../models/pedido';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
+import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -343,7 +344,7 @@ export class PedidoComponent implements OnInit {
     if (this.form.valid) {
       const np: DetallePedido = this.getNuevoPedido();
       this.saving = true;
-      this.pedidosService.savePedido(np)
+      this.pedidosService.guardarPedido(np)
         .pipe(finalize(() => this.saving = false))
         .subscribe(
           p => {
@@ -534,10 +535,14 @@ export class PedidoComponent implements OnInit {
 
     this.loadingResultados = true;
 
-    const nrp: NuevosResultadosPedido = {
+    const nrp: NuevosResultadosComprobante = {
+      tipoDeComprobante: TipoDeComprobante.PEDIDO,
       descuentoPorcentaje: dp,
       recargoPorcentaje: rp,
-      importes: this.form.get('renglonesPedido').value.map(e => e.renglonPedido.importe)
+      importe: this.form.get('renglonesPedido').value.map(e => e.renglonPedido.importe),
+      cantidades: this.form.get('renglonesPedido').value.map(e => e.renglonPedido.cantidad),
+      ivaNetos: [],
+      ivaPorcentajes: [],
     };
 
     this.pedidosService.calcularResultadosPedido(nrp)

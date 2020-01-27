@@ -7,7 +7,7 @@ import { Pagination } from '../models/pagination';
 import { SucursalesService } from './sucursales.service';
 import { NuevoRenglonPedido } from '../models/nuevo-renglon-pedido';
 import { RenglonPedido } from '../models/renglon-pedido';
-import { NuevosResultadosPedido } from '../models/nuevos-resultados-pedido';
+import { NuevosResultadosComprobante } from '../models/nuevos-resultados-comprobante';
 import { Resultados } from '../models/resultados';
 import { DetallePedido } from '../models/detalle-pedido';
 import { BusquedaPedidoCriteria } from '../models/criterias/busqueda-pedido-criteria';
@@ -42,15 +42,15 @@ export class PedidosService {
     return this.http.get(`${this.url}/${idPedido}/reporte`, {responseType: 'blob'});
   }
 
-  calcularRenglones(renglones: NuevoRenglonPedido[], idCliente: number): Observable<Array<RenglonPedido>> {
-    return this.http.post<Array<RenglonPedido>>(`${this.url}/renglones/clientes/${idCliente}`, renglones);
+  calcularRenglones(renglones: NuevoRenglonPedido[], idCliente: number): Observable<RenglonPedido[]> {
+    return this.http.post<RenglonPedido[]>(`${this.url}/renglones/clientes/${idCliente}`, renglones);
   }
 
-  calcularResultadosPedido(nrp: NuevosResultadosPedido): Observable<Resultados> {
+  calcularResultadosPedido(nrp: NuevosResultadosComprobante): Observable<Resultados> {
     return this.http.post<Resultados>(`${this.url}/calculo-pedido`, nrp);
   }
 
-  savePedido(np: DetallePedido): Observable<Pedido> {
+  guardarPedido(np: DetallePedido): Observable<Pedido> {
     const method = np.idPedido ? 'put' : 'post';
     return this.http[method]<Pedido>(this.url, np);
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FacturaVenta } from '../../models/factura';
+import { FacturaVenta } from '../../models/factura-venta';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
@@ -54,8 +54,7 @@ export class FacturasVentaComponent implements OnInit {
 
   helper = HelperService;
 
-  constructor(private facturasService: FacturasService,
-              private facturasVentaService: FacturasVentaService,
+  constructor(private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
               private sucursalesService: SucursalesService) { }
 
@@ -207,7 +206,7 @@ export class FacturasVentaComponent implements OnInit {
   }
 
   downloadFacturaPdf(factura: FacturaVenta) {
-    this.facturasService.getFacturaPdf(factura).subscribe(
+    this.facturasVentaService.getFacturaPdf(factura).subscribe(
       (res) => {
         const file = new Blob([res], {type: 'application/pdf'});
         saveAs(file, `factura-venta.pdf`);

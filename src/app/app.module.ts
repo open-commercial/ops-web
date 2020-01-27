@@ -71,6 +71,8 @@ import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/
 import { MensajeModalComponent } from './components/mensaje-modal/mensaje-modal.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
+import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
+import { FacturasVentaHomeComponent } from './components/facturas-venta-home/facturas-venta-home.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -101,6 +103,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     MensajeModalComponent,
     PedidosHomeComponent,
     VerPedidoComponent,
+    FacturaVentaComponent,
+    FacturasVentaHomeComponent,
   ],
   imports: [
     BrowserModule,
