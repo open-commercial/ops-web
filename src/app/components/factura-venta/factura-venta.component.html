@@ -4,7 +4,7 @@
       <a class="btn" routerLink="/facturas-venta" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> {{ title }}
+      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura de Venta
     </h1>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
