@@ -55,7 +55,11 @@
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
         <ul class="pl-3">
-          <li *ngFor="let f of applyFilters">{{ f.label }}: {{ f.value }}</li>
+          <li *ngFor="let f of applyFilters">
+            {{ f.label }}:
+            <app-mensaje-asicronico *ngIf="f.asyncFn" [asyncFn]="f.asyncFn"></app-mensaje-asicronico>
+            <span *ngIf="!f.asyncFn">{{ f.value }}</span>
+          </li>
         </ul>
       </div>
       <strong><em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}</em></strong>

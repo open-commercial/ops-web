@@ -29,7 +29,6 @@ export class HelperService {
   }
 
   static formatNumFactura(nSerie: number, nFac: number) {
-    console.log(nSerie, nFac);
     const nSerieString = nSerie !== null && nSerie >= 0 ? ('000' + nSerie).slice(-4) : 'XXXX';
     const nFacString = nFac !== null && nFac >= 0 ? ('0000000' + nFac).slice(-8) : 'XXXXXXXX';
     return nSerieString + '-' + nFacString;

@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgbDate, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-rango-fecha-filtro',
@@ -51,7 +51,6 @@ export class RangoFechaFiltroComponent implements OnInit, ControlValueAccessor {
       this.onFromDateSelection(null);
       this.onToDateSelection(null);
     } else {
-      // this.value = obj;
       this.onFromDateSelection(obj.desde, false);
       this.onToDateSelection(obj.hasta, false);
     }

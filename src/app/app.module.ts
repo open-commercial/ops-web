@@ -76,6 +76,7 @@ import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component
 import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.component';
 import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
 import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
+import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -109,6 +110,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ClienteModalComponent,
     UsuarioModalComponent,
     ProveedorModalComponent,
+    MensajeAsicronicoComponent,
   ],
   imports: [
     BrowserModule,

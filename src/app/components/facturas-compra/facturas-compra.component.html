@@ -77,14 +77,18 @@
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
         <ul class="pl-3">
-          <li *ngFor="let f of applyFilters">{{ f.label }}: {{ f.value }}</li>
+          <li *ngFor="let f of applyFilters">
+            {{ f.label }}:
+            <app-mensaje-asicronico *ngIf="f.asyncFn" [asyncFn]="f.asyncFn"></app-mensaje-asicronico>
+            <span *ngIf="!f.asyncFn">{{ f.value }}</span>
+          </li>
         </ul>
       </div>
-      <em>{{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}.</em>
-      <div>
-        <span *ngIf="ordenarPorAplicado">Ordenado por: <em>"{{ ordenarPorAplicado }}"</em></span>
-        <span *ngIf="sentidoAplicado">&nbsp;Sentido: <em>"{{ sentidoAplicado }}"</em></span>
-      </div>
+      <em>
+        {{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}
+        <span *ngIf="ordenarPorAplicado"> ordenado{{ totalElements == 1 ? '': 's' }} por {{ ordenarPorAplicado }}</span>
+        <span *ngIf="sentidoAplicado"> con sentido {{ sentidoAplicado }}</span>
+      </em>
     </div>
     <div class="facturas my-2">
       <div *ngFor="let f of facturas" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
@@ -97,10 +101,10 @@
           {{ f.tipoComprobante.replace('_', ' ') }}
         </span>
             <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(f.numSerie, f.numFactura ) }} <!--{{ f.numSerie }}-{{ f.numFactura }}-->
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(f.numSerie, f.numFactura ) }}
         </span>
             <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="f.numSerieAfip">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) }} <!--{{ f.numSerieAfip }}-{{ f.numFacturaAfip }}-->
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) }}
         </span>
             <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="f.cae">
           CAE: {{ f.cae }} (vto: {{ f.vencimientoCAE | date:'dd/MM/yyyy hh:mm' }})

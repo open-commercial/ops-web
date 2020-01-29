@@ -3,7 +3,7 @@ import { PedidosService } from '../../services/pedidos.service';
 import { Pedido } from '../../models/pedido';
 import { Pagination } from '../../models/pagination';
 import { EstadoPedido } from '../../models/estado.pedido';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
@@ -15,6 +15,12 @@ import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { Cliente } from '../../models/cliente';
+import { Producto } from '../../models/producto';
+import { ClientesService } from '../../services/clientes.service';
+import { UsuariosService } from '../../services/usuarios.service';
+import { ProductosService } from '../../services/productos.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -65,7 +71,10 @@ export class PedidosComponent implements OnInit {
               private authService: AuthService,
               private mensajeService: MensajeService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private clientesService: ClientesService,
+              private usuariosService: UsuariosService,
+              private productosService: ProductosService) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -235,19 +244,19 @@ export class PedidosComponent implements OnInit {
     this.applyFilters = [];
 
     if (values.idCliente) {
-      this.applyFilters.push({ label: 'Cliente', value: values.idCliente });
+      this.applyFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
     }
 
     if (values.idUsuario) {
-      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario });
+      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto });
+      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.idViajante) {
-      this.applyFilters.push({ label: 'Viajante', value: values.idViajante });
+      this.applyFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
@@ -317,5 +326,17 @@ export class PedidosComponent implements OnInit {
     }
 
     this.router.navigate(['/pedidos/editar', pedido.idPedido]);
+  }
+
+  getClienteInfoAsync(id: number): Observable<string> {
+    return this.clientesService.getCliente(id).pipe(map((c: Cliente) => c.nombreFiscal));
+  }
+
+  getUsuarioInfoAsync(id: number): Observable<string> {
+    return this.usuariosService.getUsuario(id).pipe(map((u: Usuario) => u.nombre + ' ' + u.apellido));
+  }
+
+  getProductoInfoAsync(id: number): Observable<string> {
+    return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
   }
 }

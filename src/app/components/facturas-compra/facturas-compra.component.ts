@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -10,6 +10,11 @@ import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
+import { Producto } from '../../models/producto';
+import { ProveedoresService } from '../../services/proveedores.service';
+import { ProductosService } from '../../services/productos.service';
+import { Proveedor } from '../../models/proveedor';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -30,7 +35,7 @@ export class FacturasCompraComponent implements OnInit {
   ];
 
   ordenarPorOptions = [
-    { val: 'fecha', text: 'Fecha de factura' },
+    { val: 'fecha', text: 'Fecha' },
     { val: 'proveedor.razonSocial', text: 'Proveedor' },
     { val: 'total', text: 'Total' },
   ];
@@ -59,7 +64,9 @@ export class FacturasCompraComponent implements OnInit {
               private fb: FormBuilder,
               private sucursalesService: SucursalesService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private proveedoresService: ProveedoresService,
+              private productosService: ProductosService) { }
 
   ngOnInit() {
     this.createFilterForm();
@@ -229,11 +236,11 @@ export class FacturasCompraComponent implements OnInit {
     this.applyFilters = [];
 
     if (values.idProveedor) {
-      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor });
+      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedoresInfoAsync(values.idProveedor) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto });
+      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
@@ -291,5 +298,13 @@ export class FacturasCompraComponent implements OnInit {
       return aux.length ? aux[0].text : '';
     }
     return '';
+  }
+
+  getProveedoresInfoAsync(id: number): Observable<string> {
+    return this.proveedoresService.getProveedor(id).pipe(map((p: Proveedor) => p.razonSocial));
+  }
+
+  getProductoInfoAsync(id: number): Observable<string> {
+    return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
   }
 }

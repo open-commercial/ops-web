@@ -1,14 +1,9 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Cliente } from '../../models/cliente';
-import { Observable, of, Subject } from 'rxjs';
 import { ClientesService } from '../../services/clientes.service';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
-import { ProductosService } from '../../services/productos.service';
+import { finalize } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
-import { Producto } from '../../models/producto';
 import { ClienteModalComponent } from '../cliente-modal/cliente-modal.component';
 
 @Component({
@@ -29,6 +24,7 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
 
   value;
   isDisabled = false;
+
   onChange = (_: any) => { };
   onTouch = () => { };
 

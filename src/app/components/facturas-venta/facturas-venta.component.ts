@@ -4,7 +4,7 @@ import { FacturaVenta } from '../../models/factura';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { FacturasService } from '../../services/facturas.service';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
@@ -13,6 +13,13 @@ import { BusquedaFacturaVentaCriteria } from '../../models/criterias/busqueda-fa
 import { SucursalesService } from '../../services/sucursales.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { Cliente } from '../../models/cliente';
+import { Observable } from 'rxjs';
+import { ClientesService } from '../../services/clientes.service';
+import { UsuariosService } from '../../services/usuarios.service';
+import { Usuario } from '../../models/usuario';
+import { ProductosService } from '../../services/productos.service';
+import { Producto } from '../../models/producto';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -33,7 +40,7 @@ export class FacturasVentaComponent implements OnInit {
   ];
 
   ordenarPorOptions = [
-    { val: 'fecha', text: 'Fecha de factura' },
+    { val: 'fecha', text: 'Fecha' },
     { val: 'cliente.nombreFiscal', text: 'Cliente' },
     { val: 'total', text: 'Total' },
   ];
@@ -63,7 +70,10 @@ export class FacturasVentaComponent implements OnInit {
               private fb: FormBuilder,
               private sucursalesService: SucursalesService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private clientesService: ClientesService,
+              private usuariosService: UsuariosService,
+              private productosService: ProductosService) { }
 
   ngOnInit() {
     this.createFilterForm();
@@ -253,19 +263,19 @@ export class FacturasVentaComponent implements OnInit {
     this.applyFilters = [];
 
     if (values.idCliente) {
-      this.applyFilters.push({ label: 'Cliente', value: values.idCliente });
+      this.applyFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
     }
 
     if (values.idUsuario) {
-      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario });
+      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto });
+      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.idViajante) {
-      this.applyFilters.push({ label: 'Viajante', value: values.idViajante });
+      this.applyFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
@@ -336,5 +346,17 @@ export class FacturasVentaComponent implements OnInit {
       return aux.length ? aux[0].text : '';
     }
     return '';
+  }
+
+  getClienteInfoAsync(id: number): Observable<string> {
+    return this.clientesService.getCliente(id).pipe(map((c: Cliente) => c.nombreFiscal));
+  }
+
+  getUsuarioInfoAsync(id: number): Observable<string> {
+    return this.usuariosService.getUsuario(id).pipe(map((u: Usuario) => u.nombre + ' ' + u.apellido));
+  }
+
+  getProductoInfoAsync(id: number): Observable<string> {
+    return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
   }
 }

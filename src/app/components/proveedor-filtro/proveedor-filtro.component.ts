@@ -1,13 +1,9 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, Subject } from 'rxjs';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Proveedor } from '../../models/proveedor';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
+import { finalize } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Producto } from '../../models/producto';
-import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { ProveedorModalComponent } from '../proveedor-modal/proveedor-modal.component';
 
 @Component({
