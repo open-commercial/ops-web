@@ -43,7 +43,7 @@ export class VerPedidoComponent implements OnInit {
     let ret = '';
     if (this.pedido && this.pedido.cliente) {
       const c = this.pedido.cliente;
-      ret = `(#${c.nroCliente}) ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
+      ret = `#${c.nroCliente} - ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
     }
     return ret;
   }
