@@ -1,10 +1,10 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, Subject } from 'rxjs';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Proveedor } from '../../models/proveedor';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
+import { finalize } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProveedorModalComponent } from '../proveedor-modal/proveedor-modal.component';
 
 @Component({
   selector: 'app-proveedor-filtro',
@@ -19,26 +19,37 @@ import { Pagination } from '../../models/pagination';
   ]
 })
 export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor {
-
-  proveedores$: Observable<Proveedor[]>;
   loading = false;
-  input$  = new Subject<string>();
+  proveedor: Proveedor = null;
 
   value;
   isDisabled: boolean;
   onChange = (_: any) => { };
   onTouch = () => { };
 
-  constructor(public proveedoresService: ProveedoresService) { }
+  constructor(public proveedoresService: ProveedoresService,
+              private modalService: NgbModal) { }
 
-  ngOnInit() {
-    this.loadProveedores();
+  ngOnInit() { }
+
+  setProveedor(p: Proveedor, applyChange = true) {
+    this.proveedor = p;
+    this.value = p ? p.idProveedor : null;
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+    }
   }
 
-  select(obj: any) {
-    this.value = obj;
-    this.onTouch();
-    this.onChange(this.value);
+  select() {
+    const modalRef = this.modalService.open(ProveedorModalComponent, {scrollable: true});
+    modalRef.result.then((p: Proveedor) => {
+      this.setProveedor(p);
+    }, (reason) => {});
+  }
+
+  clearValue() {
+    this.setProveedor(null);
   }
 
   registerOnChange(fn: any): void {
@@ -53,20 +64,21 @@ export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  writeValue(obj: any): void {
-    this.value = obj;
+  writeValue(idProveedor: number): void {
+    if (!idProveedor) {
+      this.setProveedor(null, false);
+      return;
+    }
+    this.loading = true;
+    this.proveedoresService.getProveedor(idProveedor)
+      .pipe(finalize(() => this.loading = false ))
+      .subscribe((p: Proveedor) => {
+        this.setProveedor(p, false);
+      })
+    ;
   }
 
-  loadProveedores() {
-    this.input$.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
-      tap(() => this.loading = true),
-      switchMap(term => this.proveedores$ = this.proveedoresService.getProveedores(term).pipe(
-        map((v: Pagination) => v.content),
-        catchError(() => of([])), // empty list on error
-        tap(() => this.loading = false)
-      ))
-    ).subscribe();
+  getDisplayValue() {
+    return this.proveedor ? this.proveedor.razonSocial : '';
   }
 }

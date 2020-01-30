@@ -5,7 +5,7 @@
       <div class="input-group">
         <input class="form-control" readonly [id]="label.toLowerCase() + '-desde'" [(ngModel)]="fromDate" (dateSelect)="onFromDateSelection($event)"
                [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
-               [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
+               [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker" [dayTemplateData]="t">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button" (click)="clearFromDate()">
             <fa-icon [icon]="['fas', 'times']"></fa-icon>
@@ -36,6 +36,7 @@
     </div>
   </div>
 </div>
+
 
 
 

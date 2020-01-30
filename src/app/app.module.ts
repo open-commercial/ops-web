@@ -43,6 +43,8 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
 import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
+import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -71,6 +73,10 @@ import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/
 import { MensajeModalComponent } from './components/mensaje-modal/mensaje-modal.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
+import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.component';
+import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
+import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
+import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -101,6 +107,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     MensajeModalComponent,
     PedidosHomeComponent,
     VerPedidoComponent,
+    ClienteModalComponent,
+    UsuarioModalComponent,
+    ProveedorModalComponent,
+    MensajeAsicronicoComponent,
   ],
   imports: [
     BrowserModule,
@@ -128,7 +138,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
     EliminarRenglonPedidoModalComponent,
-    MensajeModalComponent
+    MensajeModalComponent,
+    ClienteModalComponent,
+    UsuarioModalComponent,
+    ProveedorModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -162,5 +175,7 @@ export class AppModule {
     library.addIcons(faFileSignature);
     library.addIcons(faFileDownload);
     library.addIcons(faChevronLeft);
+    library.addIcons(faIndustry);
+    library.addIcons(faSuitcase);
   }
 }

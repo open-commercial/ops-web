@@ -29,6 +29,7 @@ import { Rol } from '../../models/rol';
 import { Pedido } from '../../models/pedido';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
+import { Location } from '@angular/common';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -99,7 +100,8 @@ export class PedidoComponent implements OnInit {
               private route: ActivatedRoute,
               private productosService: ProductosService,
               private storageService: StorageService,
-              private mensajeService: MensajeService) {
+              private mensajeService: MensajeService,
+              private location: Location) {
 
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -426,7 +428,6 @@ export class PedidoComponent implements OnInit {
       resultados: null,
     });
     this.storageService.removeItem(this.localStorageKey);
-    // this.form.get('ccc').setValue(this.cccPredeterminado);
   }
 
   get renglonesPedido() {
@@ -452,7 +453,6 @@ export class PedidoComponent implements OnInit {
     this.form.get('ccc').setValue(ccc);
   }
 
-  // modal de producto
   showProductoModal() {
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.result.then((p: Producto) => {
@@ -463,9 +463,8 @@ export class PedidoComponent implements OnInit {
     }, (reason) => {});
   }
 
-  // modal de cantidad
   showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
-    const modalRef = this.modalService.open(RenglonPedidoModalComponent/*, { size: 'xl' }*/);
+    const modalRef = this.modalService.open(RenglonPedidoModalComponent);
     modalRef.componentInstance.cliente = this.form.get('ccc').value.cliente;
     modalRef.componentInstance.cantidad = cantidadPrevia;
     modalRef.componentInstance.loadProducto(idProductoItem);
@@ -664,6 +663,10 @@ export class PedidoComponent implements OnInit {
   getMontoCompraMinima() {
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
     return ccc.cliente.montoCompraMinima;
+  }
+
+  volverAlListado() {
+    this.location.back();
   }
 }
 

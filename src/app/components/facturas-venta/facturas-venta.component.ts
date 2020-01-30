@@ -4,14 +4,22 @@ import { FacturaVenta } from '../../models/factura';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { FacturasService } from '../../services/facturas.service';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { BusquedaFacturaVentaCriteria } from '../../models/criterias/busqueda-factura-venta-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
-import { Sucursal } from '../../models/sucursal';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+import { Cliente } from '../../models/cliente';
+import { Observable } from 'rxjs';
+import { ClientesService } from '../../services/clientes.service';
+import { UsuariosService } from '../../services/usuarios.service';
+import { Usuario } from '../../models/usuario';
+import { ProductosService } from '../../services/productos.service';
+import { Producto } from '../../models/producto';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -32,7 +40,7 @@ export class FacturasVentaComponent implements OnInit {
   ];
 
   ordenarPorOptions = [
-    { val: 'fecha', text: 'Fecha de factura' },
+    { val: 'fecha', text: 'Fecha' },
     { val: 'cliente.nombreFiscal', text: 'Cliente' },
     { val: 'total', text: 'Total' },
   ];
@@ -54,23 +62,129 @@ export class FacturasVentaComponent implements OnInit {
 
   helper = HelperService;
 
+  ordenarPorAplicado = '';
+  sentidoAplicado = '';
+
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService) { }
+              private sucursalesService: SucursalesService,
+              private router: Router,
+              private route: ActivatedRoute,
+              private clientesService: ClientesService,
+              private usuariosService: UsuariosService,
+              private productosService: ProductosService) { }
 
   ngOnInit() {
     this.createFilterForm();
-    this.getFacturas(true);
-    this.sucursalesService.sucursal$.subscribe((s: Sucursal) => this.filter());
+    this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
+    this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
+  }
+
+  getTerminosFromQueryParams(params = null) {
+    const terminos: BusquedaFacturaVentaCriteria = {
+      idSucursal: Number(this.sucursalesService.getIdSucursal()),
+      pagina: 0,
+    };
+
+    this.filterForm.reset({
+      idCliente: '',
+      idUsuario: '',
+      idProducto: '',
+      idViajante: '',
+      rangoFecha: null,
+      tipoFactura: '',
+      nroPedido: '',
+      numSerie: '',
+      numFactura: '',
+      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
+      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
+    });
+
+    const ps = params ? params.params : this.route.snapshot.queryParams;
+
+    if (ps.idCliente && !isNaN(ps.idCliente)) {
+      this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
+      terminos.idCliente = Number(ps.idCliente);
+    }
+
+    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
+      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
+      terminos.idUsuario = Number(ps.idUsuario);
+    }
+
+    if (ps.idProducto && !isNaN(ps.idProducto)) {
+      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
+      terminos.idProducto = Number(ps.idProducto);
+    }
+
+    if (ps.idViajante && !isNaN(ps.idViajante)) {
+      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
+      terminos.idViajante = Number(ps.idViajante);
+    }
+
+    if (ps.fechaDesde || ps.fechaHasta) {
+      const aux = { desde: null, hasta: null };
+
+      if (ps.fechaDesde) {
+        const d = moment.unix(ps.fechaDesde).local();
+        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+        terminos.fechaDesde = d.toDate();
+      }
+
+      if (ps.fechaHasta) {
+        const h = moment.unix(ps.fechaHasta).local();
+        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+        terminos.fechaHasta = h.toDate();
+      }
+
+      this.filterForm.get('rangoFecha').setValue(aux);
+    }
+
+    if (ps.tipoComprobante) {
+      this.filterForm.get('tipoFactura').setValue(ps.tipoComprobante);
+      terminos.tipoComprobante = ps.tipoComprobante;
+    }
+
+    if (ps.nroPedido) {
+      this.filterForm.get('nroPedido').setValue(ps.nroPedido);
+      terminos.nroPedido = ps.nroPedido;
+    }
+
+    if (ps.numSerie) {
+      this.filterForm.get('numSerie').setValue(ps.numSerie);
+      terminos.numSerie = Number(ps.numSerie);
+    }
+
+    if (ps.numFactura) {
+      this.filterForm.get('numFactura').setValue(ps.numFactura);
+      terminos.numFactura = Number(ps.numFactura);
+    }
+
+    if (ps.ordenarPor) {
+      this.filterForm.get('ordenarPor').setValue(ps.ordenarPor);
+      terminos.ordenarPor = ps.ordenarPor;
+    }
+
+    if (ps.sentido) {
+      this.filterForm.get('sentido').setValue(ps.sentido);
+      terminos.sentido = ps.sentido;
+    }
+
+    return terminos;
+  }
+
+  getFacturasFromQueryParams(params = null, clearResults = true) {
+    const terminos = this.getTerminosFromQueryParams(params);
+    this.getFacturas(clearResults, terminos);
   }
 
   createFilterForm() {
     this.filterForm = this.fb.group({
-      cliente: '',
-      usuario: '',
-      producto: '',
-      viajante: '',
+      idCliente: '',
+      idUsuario: '',
+      idProducto: '',
+      idViajante: '',
       rangoFecha: null,
       tipoFactura: '',
       nroPedido: '',
@@ -81,8 +195,9 @@ export class FacturasVentaComponent implements OnInit {
     });
   }
 
-  getFacturas(clearResults: boolean = false) {
-    const criteria = this.getFormValues();
+  getFacturas(clearResults: boolean = false, terminos = null) {
+    terminos = terminos || this.getFormValues();
+    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
     this.page += 1;
     if (clearResults) {
       this.clearLoading = true;
@@ -92,7 +207,7 @@ export class FacturasVentaComponent implements OnInit {
       this.loading = true;
     }
     this.getApplyFilters();
-    this.facturasVentaService.buscar(criteria, this.page)
+    this.facturasVentaService.buscar(terminos, this.page)
       .pipe(
         finalize(() => { this.loading = false; this.clearLoading = false; })
       )
@@ -101,76 +216,66 @@ export class FacturasVentaComponent implements OnInit {
         this.totalElements = p.totalElements;
         this.totalPages = p.totalPages;
         this.size = p.size;
-      });
+      })
+    ;
   }
 
   filter() {
-    this.getFacturas(true);
+    const qParams = this.getFormValues();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: qParams,
+    });
     this.isFiltersCollapsed = true;
   }
 
   reset() {
-    this.filterForm.reset({
-      cliente: '',
-      usuario: '',
-      producto: '',
-      viajante: '',
-      rangoFecha: null,
-      tipoFactura: '',
-      nroPedido: '',
-      numSerie: '',
-      numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: [],
     });
-    this.getFacturas(true);
   }
 
-  getFormValues(): BusquedaFacturaVentaCriteria {
+  getFormValues() {
     const values = this.filterForm.value;
-    const criteria: BusquedaFacturaVentaCriteria = {
-      idSucursal: Number(this.sucursalesService.getIdSucursal()),
-      pagina: 0,
-    };
+    const ret: {[k: string]: any} = {};
 
-    if (values.rangoFecha && values.rangoFecha.desde) { criteria.fechaDesde = this.helper.getDateFromNgbDate(values.rangoFecha.desde); }
-    if (values.rangoFecha && values.rangoFecha.hasta) { criteria.fechaHasta = this.helper.getDateFromNgbDate(values.rangoFecha.hasta); }
-    if (values.cliente) { criteria.idCliente = values.cliente.idCliente; }
-    if (values.tipoFactura) { criteria.tipoComprobante = values.tipoFactura; }
-    if (values.usuario) { criteria.idUsuario = values.usuario.idUsuario; }
-    if (values.viajante) { criteria.idViajante = values.viajante.idUsuario; }
-    if (values.numSerie) { criteria.numSerie = values.numSerie; }
-    if (values.numFactura) { criteria.numFactura = values.numFactura; }
-    if (values.nroPedido) { criteria.nroPedido = values.nroPedido; }
-    if (values.producto) { criteria.idProducto = values.producto.idProducto; }
-    if (values.ordenarPor) { criteria.ordenarPor = values.ordenarPor; }
-    if (values.sentido) { criteria.sentido = values.sentido; }
+    if (values.rangoFecha && values.rangoFecha.desde) {
+      ret.fechaDesde = this.helper.getUnixDateFromNgbDate(values.rangoFecha.desde); }
+    if (values.rangoFecha && values.rangoFecha.hasta) {
+      ret.fechaHasta = this.helper.getUnixDateFromNgbDate(values.rangoFecha.hasta); }
+    if (values.idCliente) { ret.idCliente = values.idCliente; }
+    if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
+    if (values.idProducto) { ret.idProducto = values.idProducto; }
+    if (values.tipoFactura) { ret.tipoComprobante = values.tipoFactura; }
+    if (values.idViajante) { ret.idViajante = values.idViajante; }
+    if (values.numSerie) { ret.numSerie = values.numSerie; }
+    if (values.numFactura) { ret.numFactura = values.numFactura; }
+    if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
+    if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
+    if (values.sentido) { ret.sentido = values.sentido; }
 
-    return criteria;
+    return ret;
   }
 
   getApplyFilters() {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
-    if (values.cliente && values.cliente.idCliente) {
-      let val = values.cliente.nroCliente + ' - ' + values.cliente.nombreFiscal;
-      if (values.cliente.nombreFantasia) { val += '"' + values.cliente.nombreFantasia + '"'; }
-      this.applyFilters.push({ label: 'Cliente', value: val });
+    if (values.idCliente) {
+      this.applyFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
     }
 
-    if (values.usuario) {
-      const val = values.usuario.username + ' - ' + values.usuario.nombre + ' ' + values.usuario.apellido;
-      this.applyFilters.push({ label: 'Usuario', value: val });
+    if (values.idUsuario) {
+      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
-    if (values.producto) {
-      this.applyFilters.push({ label: 'Producto', value: `${values.producto.codigo} ${values.producto.descripcion}` });
+    if (values.idProducto) {
+      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
-    if (values.viajante) {
-      const val = values.viajante.username + ' - ' + values.viajante.nombre + ' ' + values.viajante.apellido;
-      this.applyFilters.push({ label: 'Viajante', value: val });
+    if (values.idViajante) {
+      this.applyFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
@@ -193,17 +298,27 @@ export class FacturasVentaComponent implements OnInit {
       this.applyFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
     }
 
-    if (values.numSerie) {
-      this.applyFilters.push({ label: 'Nº Serie', value: values.numSerie });
+    if (values.numSerie || values.numFactura) {
+      let ns = null;
+      let nf = null;
+      if (values.numSerie) {
+        ns = Number(values.numSerie);
+        ns = !isNaN(ns) ? ns : null;
+      }
+      if (values.numFactura) {
+        nf = Number(values.numFactura);
+        nf = !isNaN(nf) ? nf : null;
+      }
+
+      if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
-    if (values.numFactura) {
-      this.applyFilters.push({ label: 'Nº Factura', value: values.numFactura });
-    }
+    this.ordenarPorAplicado = this.getTextoOrdenarPor();
+    this.sentidoAplicado = this.getTextoSentido();
   }
 
   loadMore() {
-    this.getFacturas();
+    this.getFacturasFromQueryParams(null, false);
   }
 
   downloadFacturaPdf(factura: FacturaVenta) {
@@ -213,5 +328,35 @@ export class FacturasVentaComponent implements OnInit {
         saveAs(file, `factura-venta.pdf`);
       }
     );
+  }
+
+  getTextoOrdenarPor() {
+    if (this.filterForm && this.filterForm.get('ordenarPor')) {
+      const val = this.filterForm.get('ordenarPor').value;
+      const aux = this.ordenarPorOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getTextoSentido() {
+    if (this.filterForm && this.filterForm.get('sentido')) {
+      const val = this.filterForm.get('sentido').value;
+      const aux = this.sentidoOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getClienteInfoAsync(id: number): Observable<string> {
+    return this.clientesService.getCliente(id).pipe(map((c: Cliente) => c.nombreFiscal));
+  }
+
+  getUsuarioInfoAsync(id: number): Observable<string> {
+    return this.usuariosService.getUsuario(id).pipe(map((u: Usuario) => u.nombre + ' ' + u.apellido));
+  }
+
+  getProductoInfoAsync(id: number): Observable<string> {
+    return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
   }
 }

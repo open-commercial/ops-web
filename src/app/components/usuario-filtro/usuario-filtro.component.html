@@ -1,29 +1,20 @@
 <div class="form-group">
-  <label for="idCliente">{{ label }}</label>
-  <ng-select class="filtro ops-ng-select" id="idCliente" [items]="usuario$ | async"
-             bindLabel="username"
-             [loading]="loading"
-             [typeahead]="input$"
-             (change)="select($event)"
-             typeToSearchText="Escriba para buscar"
-             loadingText="Cargando..."
-             notFoundText="Sin resultados"
-             [(ngModel)]="value">
-    <ng-template ng-label-tmp let-item="item">
-      <div *ngIf="item">
-        <span class="username"><fa-icon [icon]="['fas', 'user']"></fa-icon> {{ item.username }}</span>
-        &nbsp;-&nbsp;
-        <span class="nomape"><strong>{{ item.nombre }} {{ item.apellido }}</strong></span>
-      </div>
-    </ng-template>
-
-    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-      <div class="card item-filtro">
-        <div class="card-header"><fa-icon [icon]="['fas', 'user']"></fa-icon>&nbsp;&nbsp;{{ item.username }}</div>
-        <div class="card-body">
-          <strong>{{ item.nombre }} {{ item.apellido }}</strong>
-        </div>
-      </div>
-    </ng-template>
-  </ng-select>
+  <label for="{{ getLabelForId() }}">{{ label }}</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', icono]"></fa-icon></span>
+    </div>
+    <input type="text" class="form-control" [attr.aria-label]="label" disabled [attr.aria-describedby]="'find-' + getLabelForId() + '-button'"
+           tabindex="-1" id="{{ getLabelForId() }}" [value]="getDisplayValue()">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled || loading" (click)="clearValue()">
+        <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar {{ label }}</span>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" id="find-{{ getLabelForId() }}-button" [disabled]="isDisabled || loading" (click)="select()">
+        <fa-icon [icon]="['fas', 'search']" *ngIf="!loading"></fa-icon>
+        <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
+        <span class="sr-only">Buscar {{ label }}</span>
+      </button>
+    </div>
+  </div>
 </div>

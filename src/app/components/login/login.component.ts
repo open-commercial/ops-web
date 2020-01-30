@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../models/usuario';
 import { debounceTime, finalize } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   loading = false;
   submitted = false;
+  returnUrl = '';
 
   allowedRoles: Rol[] = [
     Rol.ADMINISTRADOR,
@@ -32,6 +33,7 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService,
               private fb: FormBuilder,
               private router: Router,
+              private route: ActivatedRoute,
               private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
@@ -42,7 +44,12 @@ export class LoginComponent implements OnInit {
 
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['']);
+    } else {
+      this.route.queryParamMap.subscribe(params => {
+        if (params.has('return')) { this.returnUrl = params.get('return'); }
+      });
     }
+
     this.createForm();
   }
 
@@ -88,7 +95,11 @@ export class LoginComponent implements OnInit {
                         } else {
                           this.sucursalesService.seleccionarSucursal(sucs[0]);
                         }
-                        this.router.navigate(['']);
+                        if (this.returnUrl) {
+                          this.router.navigateByUrl(this.returnUrl);
+                        } else {
+                          this.router.navigate(['']);
+                        }
                       } else {
                         this.showErrorMessage('No se pudieron obtener sucursales.');
                         this.authService.logout();
