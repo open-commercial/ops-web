@@ -5,7 +5,8 @@
   <div *ngIf="pedido && !loading">
     <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
       <h1 class="h3 pr-2 mb-0 flex-fill">
-        <a class="btn" routerLink="/pedidos" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave">
+        <a class="btn fake-cursor" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+          (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
         <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedido #{{ pedido.nroPedido }}
@@ -18,7 +19,7 @@
       <caption class="sr-only">Datos del pedido</caption>
       <tbody class="thead-dark">
       <tr><th scope="row">Cliente</th><td>{{ getNombreCliente() }}</td></tr>
-      <tr><th scope="row">Fecha</th><td>{{ pedido.fecha | date:'dd/MM/yyyy hh:mm' }}</td></tr>
+      <tr><th scope="row">Fecha</th><td>{{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
       <tr *ngIf="pedido.nombreUsuario"><th scope="row">Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
       <tr *ngIf="pedido.nombreViajante"><th scope="row">Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
       <tr><th scope="row" colspan="2">Artículos</th></tr>

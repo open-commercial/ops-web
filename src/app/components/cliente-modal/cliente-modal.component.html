@@ -1,0 +1,56 @@
+<div class="modal-body d-flex flex-column p-2">
+  <div class="input-group">
+    <label class="sr-only" for="cmC">Buscar Cliente</label>
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="search" class="form-control" id="cmC" placeholder="Buscar Cliente..."
+           (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
+    <div class="input-group-append">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
+        <fa-icon [icon]="['fas', 'search']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="clearLoading" class="text-center mt-3">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <form (submit)="seleccionarCliente()" class="flex-fill mt-2" *ngIf="!clearLoading && clientes.length">
+    <div class="clientes">
+      <div *ngFor="let c of clientes; let f = first;" [class.border-top]="f" class="cliente form-check border-bottom p-2" [class.selected]="c && clienteSeleccionado && c.idCliente === clienteSeleccionado.idCliente">
+        <input class="form-check-input" type="radio" name="c" id="c_{{ c.idCliente }}" [value]="c.idCliente" (focus)="select(c)">
+        <label class="form-check-label d-block" for="c_{{ c.idCliente }}">
+          <span class="d-flex flex-column">
+            <span class="mr-2">
+              <span class="numero">#{{ c.nroCliente }}</span>
+            </span>
+            <span>
+              <div *ngIf="c.idFiscal">CUIT ó DNI: {{ c.idFiscal }}</div>
+              <strong>{{ c.nombreFiscal }}</strong><em *ngIf="c.nombreFantasia"> - {{ c.nombreFantasia }}</em>
+            </span>
+            <span *ngIf="c.ubicacionFacturacion">
+              Ubi. facturación: {{ helper.formatUbicacion(c.ubicacionFacturacion) }}
+            </span>
+            <span *ngIf="c.ubicacionEnvio">
+              Ubi. envio: {{ helper.formatUbicacion(c.ubicacionEnvio) }}
+            </span>
+            <span *ngIf="c.montoCompraMinima">
+              Compra mínima: {{ c.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="text-center pt-2">
+      <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+      <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
+    </div>
+    <button class="sr-only" type="submit"></button>
+  </form>
+</div>
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading || clearLoading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" [disabled]="!clienteSeleccionado || loading || clearLoading" (click)="seleccionarCliente()">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Seleccionar
+  </button>
+</div>
+

@@ -13,7 +13,7 @@ export class MensajeService {
   }
 
   msg(mensaje: string, type: MensajeModalType = MensajeModalType.ALERT) {
-    const modalRef = this.modalService.open(MensajeModalComponent/*, { size: 'xl' }*/);
+    const modalRef = this.modalService.open(MensajeModalComponent);
     modalRef.componentInstance.mensaje = mensaje;
     modalRef.componentInstance.type = type;
     return modalRef.result;

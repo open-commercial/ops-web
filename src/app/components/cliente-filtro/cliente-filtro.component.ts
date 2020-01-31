@@ -1,10 +1,10 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Cliente } from '../../models/cliente';
-import { Observable, of, Subject } from 'rxjs';
 import { ClientesService } from '../../services/clientes.service';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
+import { finalize } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ClienteModalComponent } from '../cliente-modal/cliente-modal.component';
 
 @Component({
   selector: 'app-cliente-filtro',
@@ -19,26 +19,38 @@ import { Pagination } from '../../models/pagination';
   ]
 })
 export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
-
-  clientes$: Observable<Cliente[]>;
   loading = false;
-  input$  = new Subject<string>();
+  cliente: Cliente = null;
 
   value;
-  isDisabled: boolean;
+  isDisabled = false;
+
   onChange = (_: any) => { };
   onTouch = () => { };
 
-  constructor(public clientesService: ClientesService) { }
+  constructor(public clientesService: ClientesService,
+              private modalService: NgbModal) { }
 
-  ngOnInit() {
-    this.loadClientes();
+  ngOnInit() {}
+
+  private setCliente(c: Cliente, applyChange = true) {
+    this.cliente = c;
+    this.value = c ? c.idCliente : null;
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+    }
   }
 
-  select(obj: any) {
-    this.value = obj;
-    this.onTouch();
-    this.onChange(this.value);
+  select() {
+    const modalRef = this.modalService.open(ClienteModalComponent, {scrollable: true});
+    modalRef.result.then((c: Cliente) => {
+      this.setCliente(c);
+    }, (reason) => {});
+  }
+
+  clearValue() {
+    this.setCliente(null);
   }
 
   registerOnChange(fn: any): void {
@@ -53,20 +65,21 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  writeValue(obj: any): void {
-    this.value = obj;
+  writeValue(idCliente: number): void {
+    if (!idCliente) {
+      this.setCliente(null, false);
+      return;
+    }
+    this.loading = true;
+    this.clientesService.getCliente(idCliente)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe((c: Cliente) => {
+        this.setCliente(c, false);
+      })
+    ;
   }
 
-  loadClientes() {
-    this.input$.pipe(
-      debounceTime(700),
-      distinctUntilChanged(),
-      tap(() => this.loading = true),
-      switchMap(term => this.clientes$ = this.clientesService.getClientes(term).pipe(
-        map((v: Pagination) => v.content),
-        catchError(() => of([])), // empty list on error
-        tap(() => this.loading = false)
-      ))
-    ).subscribe();
+  getDisplayValue() {
+    return this.cliente ? this.cliente.nombreFiscal : '';
   }
 }

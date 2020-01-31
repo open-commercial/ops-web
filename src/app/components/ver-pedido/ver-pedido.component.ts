@@ -7,6 +7,7 @@ import { combineLatest } from 'rxjs';
 import { RenglonPedido } from '../../models/renglon-pedido';
 import { saveAs } from 'file-saver';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ver-pedido',
@@ -21,7 +22,8 @@ export class VerPedidoComponent implements OnInit {
   tipoDeEnvio = TipoDeEnvio;
 
   constructor(private route: ActivatedRoute,
-              private pedidosService: PedidosService) { }
+              private pedidosService: PedidosService,
+              private location: Location) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -41,7 +43,7 @@ export class VerPedidoComponent implements OnInit {
     let ret = '';
     if (this.pedido && this.pedido.cliente) {
       const c = this.pedido.cliente;
-      ret = `(#${c.nroCliente}) ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
+      ret = `#${c.nroCliente} - ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
     }
     return ret;
   }
@@ -64,12 +66,15 @@ export class VerPedidoComponent implements OnInit {
       return 'Retiro en Sucursal';
     }
 
-    if (this.pedido.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION) {
-      return 'Usar Ubicación de Facturación';
+    if (
+      this.pedido.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ||
+      this.pedido.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_ENVIO
+    ) {
+      return 'Envio a Domicilio';
     }
+  }
 
-    if (this.pedido.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_ENVIO) {
-      return 'Usar Ubicación de Envío';
-    }
+  volverAlListado() {
+    this.location.back();
   }
 }

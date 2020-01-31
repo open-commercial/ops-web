@@ -43,6 +43,8 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
 import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
+import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -73,6 +75,11 @@ import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.com
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
 import { FacturasVentaHomeComponent } from './components/facturas-venta-home/facturas-venta-home.component';
+import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.component';
+import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
+import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
+import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
+import { BusquedaClienteComponent } from './components/busqueda-cliente/busqueda-cliente.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -105,6 +112,11 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     VerPedidoComponent,
     FacturaVentaComponent,
     FacturasVentaHomeComponent,
+    ClienteModalComponent,
+    UsuarioModalComponent,
+    ProveedorModalComponent,
+    MensajeAsicronicoComponent,
+    BusquedaClienteComponent,
   ],
   imports: [
     BrowserModule,
@@ -132,7 +144,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
     EliminarRenglonPedidoModalComponent,
-    MensajeModalComponent
+    MensajeModalComponent,
+    ClienteModalComponent,
+    UsuarioModalComponent,
+    ProveedorModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -166,5 +181,7 @@ export class AppModule {
     library.addIcons(faFileSignature);
     library.addIcons(faFileDownload);
     library.addIcons(faChevronLeft);
+    library.addIcons(faIndustry);
+    library.addIcons(faSuitcase);
   }
 }

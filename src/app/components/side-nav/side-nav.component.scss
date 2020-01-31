@@ -4,19 +4,16 @@
   height: 100%;
   width: 15rem;
   padding-top: 1rem;
-  //background: #fff6c9;
   h2 {
     margin: 0;
     padding: .2rem 1rem .2rem .2rem;
     font-size: 1.3rem;
-    //border-bottom: 0.2rem solid #212529;
   }
   a.nav-link {
     color: #212529;
     &:hover, &.active {
       background: $yellow-globo;
       border-radius: unset;
-      //border-left: .3rem solid #212529;
     }
   }
 }

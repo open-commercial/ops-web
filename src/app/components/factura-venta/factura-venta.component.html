@@ -1,7 +1,8 @@
 <div class="app-factura-venta my-3">
   <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
     <h1 class="h3 pr-2 mb-0 flex-fill">
-      <a class="btn" routerLink="/facturas-venta" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave">
+      <a class="btn" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
       <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura de Venta
@@ -11,6 +12,7 @@
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente">
       <ngb-panel id="cliente" [title]="'Cliente'">
         <ng-template ngbPanelContent>
+          <app-busqueda-cliente [cliente]="form.get('cliente').value" (select)="handleSelectCliente($event)" *ngIf="!clientePredeterminadoLoading"></app-busqueda-cliente>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="productos" [title]="'Productos'">

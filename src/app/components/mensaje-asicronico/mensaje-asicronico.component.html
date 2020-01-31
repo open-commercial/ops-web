@@ -1,0 +1,4 @@
+<span class="app-mensaje-asicronico" *ngIf="asyncFn">
+  <span *ngIf="(asyncFn | async) as msg; else loading">{{ msg }}</span>
+  <ng-template #loading><fa-icon [icon]="['fas', 'circle-notch']" [spin]="true"></fa-icon></ng-template>
+</span>

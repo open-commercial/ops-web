@@ -1,29 +1,20 @@
 <div class="form-group">
   <label for="idProveedor">Proveedor</label>
-  <ng-select class="filtro ops-ng-select" id="idProveedor" [items]="proveedores$ | async"
-             bindLabel="razonSocial"
-             [loading]="loading"
-             [typeahead]="input$"
-             (change)="select($event)"
-             typeToSearchText="Escriba para buscar"
-             loadingText="Cargando..."
-             notFoundText="Sin resultados"
-             [(ngModel)]="value"
-  >
-    <ng-template ng-label-tmp let-item="item">
-      <div *ngIf="item">
-        <span class="nroProveedor"><fa-icon [icon]="['fas', 'portrait']"></fa-icon> {{ item.nroProveedor }}</span>&nbsp;-&nbsp;
-        <span class="nombreFiscal">{{ item.razonSocial }}</span>
-      </div>
-    </ng-template>
-
-    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-      <div class="card item-filtro">
-        <div class="card-header"><fa-icon [icon]="['fas', 'portrait']"></fa-icon>&nbsp;&nbsp;{{ item.nroProveedor }}</div>
-        <div class="card-body">
-          <strong>{{ item.razonSocial }}</strong>
-        </div>
-      </div>
-    </ng-template>
-  </ng-select>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', 'industry']"></fa-icon></span>
+    </div>
+    <input type="text" class="form-control" aria-label="Proveedor" disabled aria-describedby="find-proveedor-button" tabindex="-1" id="idProveedor"
+           [value]="getDisplayValue()">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled || loading" (click)="clearValue()">
+        <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar proveedor</span>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" id="find-proveedor-button" [disabled]="isDisabled || loading" (click)="select()">
+        <fa-icon [icon]="['fas', 'search']" *ngIf="!loading"></fa-icon>
+        <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
+        <span class="sr-only">Buscar proveedor</span>
+      </button>
+    </div>
+  </div>
 </div>

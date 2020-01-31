@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Ubicacion } from '../models/ubicacion';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,9 @@ export class HelperService {
     return qsArray.join('&');
   }
 
-  static getDateFromNgbDate(dateObj: NgbDate): Date {
+  static getUnixDateFromNgbDate(dateObj: NgbDate): number {
     if (!dateObj) { return null; }
-    const dateStr = [dateObj.year, dateObj.month, dateObj.day].join('-');
-    return new Date(dateStr);
+    return moment({ year: dateObj.year, month: dateObj.month - 1, day: dateObj.day }).unix();
   }
 
   static getFormattedDateFromNgbDate(dateObj: NgbDate): string {
@@ -29,7 +29,9 @@ export class HelperService {
   }
 
   static formatNumFactura(nSerie: number, nFac: number) {
-    return ('000' + nSerie).slice(-4) + '-' + ('0000000' + nFac).slice(-8);
+    const nSerieString = nSerie !== null && nSerie >= 0 ? ('000' + nSerie).slice(-4) : 'XXXX';
+    const nFacString = nFac !== null && nFac >= 0 ? ('0000000' + nFac).slice(-8) : 'XXXXXXXX';
+    return nSerieString + '-' + nFacString;
   }
 
   static formatUbicacion(u: Ubicacion) {

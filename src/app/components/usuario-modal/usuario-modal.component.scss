@@ -1,0 +1,17 @@
+@import "../../../variables";
+
+.usuarios {
+  .usuario {
+    &.selected {
+      background: $primary-color;
+    }
+    .form-check-input {
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+    .username {
+      font-size: 12px;
+    }
+  }
+}

@@ -10,19 +10,19 @@ import { HelperService } from '../../services/helper.service';
   styleUrls: ['./busqueda-cuenta-corriente-cliente.component.scss']
 })
 export class BusquedaCuentaCorrienteClienteComponent implements OnInit {
-  private _readOnly = false;
-  private _ccc: CuentaCorrienteCliente = null;
+  private pReadOnly = false;
+  private pCcc: CuentaCorrienteCliente = null;
   helper = HelperService;
 
   @Input()
-  set ccc(ccc: CuentaCorrienteCliente) { this._ccc = ccc; }
-  get ccc(): CuentaCorrienteCliente { return this._ccc; }
+  set ccc(ccc: CuentaCorrienteCliente) { this.pCcc = ccc; }
+  get ccc(): CuentaCorrienteCliente { return this.pCcc; }
 
   @Output() select = new EventEmitter<CuentaCorrienteCliente>();
 
   @Input()
-  set readOnly(ro: boolean) { this._readOnly = ro; }
-  get readOnly() { return this._readOnly; }
+  set readOnly(ro: boolean) { this.pReadOnly = ro; }
+  get readOnly() { return this.pReadOnly; }
 
   constructor(private modalService: NgbModal) { }
 

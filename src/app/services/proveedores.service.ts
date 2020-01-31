@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { BusquedaProveedorCriteria } from '../models/criterias/busqueda-proveedor-criteria';
+import { Proveedor } from '../models/proveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +18,9 @@ export class ProveedoresService {
   getProveedores(input, page = 0): Observable<Pagination> {
     const criteria: BusquedaProveedorCriteria = { nroProveedor: input, razonSocial: input, pagina: page };
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
+  }
+
+  getProveedor(idProveedor: number): Observable<Proveedor> {
+    return this.http.get<Proveedor>(this.url + `/${idProveedor}`);
   }
 }

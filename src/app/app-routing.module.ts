@@ -12,16 +12,6 @@ import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component
 import { FacturasVentaHomeComponent } from './components/facturas-venta-home/facturas-venta-home.component';
 import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
 
-/*const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
-    children: [
-      { path: '', component: PedidoComponent },
-    ]
-  },
-  { path: '**', redirectTo: '' }
-];*/
-
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
