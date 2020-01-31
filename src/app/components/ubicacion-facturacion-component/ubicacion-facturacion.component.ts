@@ -15,16 +15,16 @@ export class UbicacionFacturacionComponent implements OnInit {
   ubicacion: Ubicacion = null;
   updating = false;
 
-  private _cliente: Cliente = null;
+  private pCliente: Cliente = null;
 
   @Input()
   set cliente(c: Cliente) {
-    this._cliente = c;
+    this.pCliente = c;
     this.setUbicacion(c);
   }
 
   get cliente(): Cliente {
-    return this._cliente;
+    return this.pCliente;
   }
 
   @Output() updated = new EventEmitter<Cliente>();

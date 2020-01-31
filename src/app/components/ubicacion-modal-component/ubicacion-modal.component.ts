@@ -13,13 +13,13 @@ import { Localidad } from '../../models/localidad';
   styleUrls: ['./ubicacion-modal.component.scss']
 })
 export class UbicacionModalComponent implements OnInit {
-  private _ubicacion: Ubicacion;
+  private pUbicacion: Ubicacion;
 
   set ubicacion(u: Ubicacion) {
-    this._ubicacion = u;
+    this.pUbicacion = u;
   }
 
-  get ubicacion(): Ubicacion { return this._ubicacion; }
+  get ubicacion(): Ubicacion { return this.pUbicacion; }
 
   title = 'Ubicación';
 
@@ -95,13 +95,13 @@ export class UbicacionModalComponent implements OnInit {
 
   setFormValues() {
     this.form.patchValue({
-      idProvincia: this._ubicacion ? this._ubicacion.idProvincia : null,
-      idLocalidad: this._ubicacion ? this._ubicacion.idLocalidad : null,
-      calle: this._ubicacion ? this._ubicacion.calle : '',
-      numero: this._ubicacion ? this._ubicacion.numero : '',
-      piso: this._ubicacion ? this._ubicacion.piso : '',
-      departamento: this._ubicacion ? this._ubicacion.departamento : '',
-      descripcion: this._ubicacion ? this._ubicacion.descripcion : '',
+      idProvincia: this.pUbicacion ? this.pUbicacion.idProvincia : null,
+      idLocalidad: this.pUbicacion ? this.pUbicacion.idLocalidad : null,
+      calle: this.pUbicacion ? this.pUbicacion.calle : '',
+      numero: this.pUbicacion ? this.pUbicacion.numero : '',
+      piso: this.pUbicacion ? this.pUbicacion.piso : '',
+      departamento: this.pUbicacion ? this.pUbicacion.departamento : '',
+      descripcion: this.pUbicacion ? this.pUbicacion.descripcion : '',
     });
   }
 
