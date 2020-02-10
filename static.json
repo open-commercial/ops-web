@@ -1,5 +1,5 @@
 {
-  "root": "produccion/",
+  "root": "dist/",
   "routes": {
     "/**": "index.html"
   },
