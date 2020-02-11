@@ -116,3 +116,8 @@ body {
 a.fake-cursor {
   cursor: pointer;
 }
+
+.custom-error-message {
+  font-size: 80%;
+  color: $danger;
+}

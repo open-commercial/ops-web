@@ -2,11 +2,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
 import { PedidosService } from '../../services/pedidos.service';
 import { RenglonPedido } from '../../models/renglon-pedido';
-import { RenglonPedidoModalComponent } from '../renglon-pedido-modal/renglon-pedido-modal.component';
+import { CantidadProductoModalComponent } from '../cantidad-producto-modal/cantidad-producto-modal.component';
 import { Producto } from '../../models/producto';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
 import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
@@ -71,8 +70,6 @@ export class PedidoComponent implements OnInit {
   loadingResultados = false;
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
-  @ViewChild('descuentoInput', { static: false }) descuentoInput: ElementRef;
-  @ViewChild('recargoInput', { static: false }) recargoInput: ElementRef;
 
   usuario: Usuario = null;
 
@@ -454,27 +451,48 @@ export class PedidoComponent implements OnInit {
     this.form.get('ccc').setValue(ccc);
   }
 
-  showProductoModal() {
-    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
-    modalRef.result.then((p: Producto) => {
-      const control = this.searchRPInRenglones(p.idProducto);
-      const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
-
-      this.showCantidadModal(p.idProducto, cPrevia);
-    }, (reason) => {});
+  selectProducto(p: Producto) {
+    const control = this.searchRPInRenglones(p.idProducto);
+    const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
+    this.showCantidadModal(p.idProducto, cPrevia);
   }
 
-  showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
-    const modalRef = this.modalService.open(RenglonPedidoModalComponent);
-    modalRef.componentInstance.cliente = this.form.get('ccc').value.cliente;
+  showCantidadModal(idProducto: number, cantidadPrevia = 1) {
+    const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
-    modalRef.componentInstance.loadProducto(idProductoItem);
-    modalRef.result.then((rp: RenglonPedido) => {
-      this.handleRenglonPedido(rp);
+    modalRef.componentInstance.loadProducto(idProducto);
+    modalRef.result.then((cant: number) => {
+      const nrp: NuevoRenglonPedido = {
+        idProductoItem: idProducto,
+        cantidad: cant,
+      };
+      this.addRenglonPedido(nrp);
     }, (reason) => {});
   }
 
-  editRenglon(rpControl: AbstractControl) {
+  directInputSeleccionProducto(p: Producto) {
+    const rp = this.searchRPInRenglones(p.idProducto);
+    let cant = 1;
+    if (rp) { cant = rp.get('renglonPedido').value.cantidad + 1; }
+
+    const nrp: NuevoRenglonPedido = {
+      idProductoItem: p.idProducto,
+      cantidad: cant,
+    };
+
+    this.addRenglonPedido(nrp);
+  }
+
+  addRenglonPedido(nrp: NuevoRenglonPedido) {
+    const cliente = this.form.get('ccc').value.cliente;
+    this.pedidosService.calcularRenglones([nrp], cliente.idCliente)
+      .subscribe(data =>  {
+        this.handleRenglonPedido(data[0]);
+      })
+    ;
+  }
+
+  editarRenglon(rpControl: AbstractControl) {
     if (rpControl) {
       const rp: RenglonPedido = rpControl.get('renglonPedido').value;
       this.showCantidadModal(rp.idProductoItem, rp.cantidad);
@@ -562,61 +580,6 @@ export class PedidoComponent implements OnInit {
 
   showProductoPorCodigoErrorMessage(message: string) {
     this.productoPorCodigoErrors.next(message);
-  }
-
-  ingresarProductoDirecto($event) {
-    const codigo = $event.target.value.trim();
-    $event.preventDefault();
-
-    if (!codigo) { return; }
-
-    this.loadingProducto = true;
-    this.productosService.getProductoPorCodigo(codigo)
-      .subscribe(
-        (p: Producto) => {
-          if (p) {
-            const rc = this.searchRPInRenglones(p.idProducto);
-            let cant = 1;
-            if (rc) { cant = rc.get('renglonPedido').value.cantidad + 1; }
-
-            const nrp: NuevoRenglonPedido = {
-              idProductoItem: p.idProducto,
-              cantidad: cant,
-            };
-
-            this.pedidosService.calcularRenglones([nrp], this.form.get('ccc').value.cliente.idCliente)
-              .pipe(
-                finalize(() => {
-                  this.loadingProducto = false;
-                  setTimeout(() => { $event.target.focus(); }, 500);
-                })
-              )
-              .subscribe(
-                data =>  {
-                  const rp: RenglonPedido = data[0];
-                  if (rc) {
-                    rc.get('renglonPedido').setValue(rp);
-                  } else {
-                    this.renglonesPedido.push(this.createRenglonPedidoForm(rp));
-                  }
-                  $event.target.value = '';
-                },
-                err => {
-                  this.showProductoPorCodigoErrorMessage(err.error);
-                }
-              );
-          } else {
-            this.loadingProducto = false;
-            this.showProductoPorCodigoErrorMessage(`No existe producto con codigo: "${codigo}"`);
-            setTimeout(() => { $event.target.focus(); }, 500);
-          }
-        },
-        err => {
-          this.loadingProducto = false;
-          this.showProductoPorCodigoErrorMessage(err.error);
-          setTimeout(() => { $event.target.focus(); }, 500);
-        }
-    );
   }
 
   updatedCliente($event: Cliente) {

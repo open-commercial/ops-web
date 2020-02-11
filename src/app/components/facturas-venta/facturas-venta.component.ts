@@ -32,11 +32,11 @@ export class FacturasVentaComponent implements OnInit {
   loading = false;
   rol = Rol;
   tiposFactura = [
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_A], text: 'Factura A' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_B], text: 'Factura B' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_X], text: 'Factura X' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_Y], text: 'Factura Y' },
-    { val: TipoDeComprobante[TipoDeComprobante.PRESUPUESTO], text: 'Presupuesto' },
+    { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
+    { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
+    { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
+    { val: TipoDeComprobante.FACTURA_Y, text: 'Factura Y' },
+    { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
   ordenarPorOptions = [

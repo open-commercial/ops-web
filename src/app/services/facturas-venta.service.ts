@@ -8,6 +8,8 @@ import { TipoDeComprobante } from '../models/tipo-de-comprobante';
 import { NuevoRenglonFactura } from '../models/nuevo-renglon-factura';
 import { FacturaVenta } from '../models/factura-venta';
 import { RenglonFactura } from '../models/renglon-factura';
+import { SucursalesService } from './sucursales.service';
+import { NuevaFacturaVenta } from '../models/nueva-factura-venta';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +18,16 @@ export class FacturasVentaService {
   url = environment.apiUrl + '/api/v1/facturas/ventas';
   urlBusqueda = this.url + '/busqueda/criteria';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private sucursalesService: SucursalesService) { }
 
   buscar(criteria: BusquedaFacturaVentaCriteria, page: number = 0): Observable<Pagination> {
     criteria.pagina = page;
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
-  getTiposDeComprobante(idSucursal: number, idCliente: number): Observable<TipoDeComprobante[]> {
+  getTiposDeComprobante(idCliente: number): Observable<TipoDeComprobante[]> {
+    const idSucursal = this.sucursalesService.getIdSucursal();
     return this.http.get<TipoDeComprobante[]>(this.url + `/tipos/sucursales/${idSucursal}/clientes/${idCliente}`);
   }
 
@@ -33,5 +37,9 @@ export class FacturasVentaService {
 
   getFacturaPdf(factura: FacturaVenta): Observable<Blob> {
     return this.http.get(`${this.url}/${factura.idFactura}/reporte`, {responseType: 'blob'});
+  }
+
+  guardarFacturaVenta(nfv: NuevaFacturaVenta): Observable<FacturaVenta[]> {
+    return this.http.post<FacturaVenta[]>(this.url, nfv);
   }
 }

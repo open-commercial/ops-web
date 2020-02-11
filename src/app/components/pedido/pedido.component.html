@@ -22,21 +22,8 @@
       <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!(form && form.get('ccc').value)">
         <ng-template ngbPanelContent>
           <div formArrayName="renglonesPedido">
-            <div class="d-flex align-items-center mb-4">
-              <h3 class="m-0">Productos</h3>
-              <a class="btn btn-primary ml-3" (click)="showProductoModal()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
-            </div>
-            <ngb-alert class="my-3" *ngIf="productoPorCodigoErrorMessage" type="danger" (close)="productoPorCodigoErrorMessage = null">{{ productoPorCodigoErrorMessage }}</ngb-alert>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="codigo-addon">
-                  <fa-icon [icon]="['fas', 'barcode']" *ngIf="!loadingProducto"></fa-icon>
-                  <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
-                </span>
-              </div>
-              <input autocomplete="off" id="codigoProducto" placeholder="Código de producto..." type="text" aria-describedby="codigo-addon"
-                     class="form-control" (keyup.enter)="ingresarProductoDirecto($event)" [disabled]="loadingProducto">
-            </div>
+            <app-busqueda-producto (seleccion)="selectProducto($event)"
+                                   (directInputSeleccion)="directInputSeleccionProducto($event)"></app-busqueda-producto>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">
                 <caption class="sr-only">Productos del Pedido</caption>
@@ -67,10 +54,10 @@
                     <td>
                       <ul class="list-unstyled text-center mb-0">
                         <li class="mb-2">
-                          <a class="btn btn-primary" (click)="editRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
+                          <a class="btn btn-primary fake-cursor" (click)="editarRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
                         </li>
                         <li>
-                          <a class="btn btn-primary" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                          <a class="btn btn-primary fake-cursor" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
                         </li>
                       </ul>
                     </td>
@@ -99,7 +86,7 @@
                 <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="descuento" formControlName="descuento" #descuentoInput>
+                <input class="form-control" type="number" id="descuento" formControlName="descuento">
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? (-1 * form.get('resultados').value.descuentoNeto) : 0) | currency:'ARS':'symbol':'1.0-2' }}
@@ -110,7 +97,7 @@
                 <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" id="recargo" formControlName="recargo" #recargoInput>
+                <input class="form-control" type="number" id="recargo" formControlName="recargo">
               </td>
               <td class="align-middle text-right">
                 {{ (form.get('resultados').value ? form.get('resultados').value.recargoNeto : 0) | currency:'ARS':'symbol':'1.0-2' }}

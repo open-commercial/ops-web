@@ -9,14 +9,211 @@
     </h1>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
-    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente">
-      <ngb-panel id="cliente" [title]="'Cliente'">
+    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
+      <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
         <ng-template ngbPanelContent>
-          <app-busqueda-cliente [cliente]="form.get('cliente').value" (select)="handleSelectCliente($event)" *ngIf="!clientePredeterminadoLoading"></app-busqueda-cliente>
+          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" (select)="handleSelectCcc($event)" *ngIf="!cccPredeterminadoLoading"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="productos" [title]="'Productos'">
+      <ngb-panel id="tipoDeComprobante" [title]="'Tipo de Comprobante: ' + getTipoComprobanteLabel()" [disabled]="!form.get('ccc').value">
         <ng-template ngbPanelContent>
+          <div class="form-group">
+            <label for="tipo-de-comprobante">Seleccione un tipo de comprobante</label>
+            <select class="form-control" id="tipo-de-comprobante" formControlName="tipoDeComprobante"
+                    [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
+              <option *ngFor="let tc of tiposDeComprobanteLabesForCombo" [value]="tc.val">{{ tc.text }}</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.tipoDeComprobante.errors">
+              <div *ngIf="f.tipoDeComprobante.errors.required">Requerido</div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="productos" [title]="'Productos' + ' (' + (form.get('renglones') ? form.get('renglones').value.length : 0) + ')'"
+                 [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value">
+        <ng-template ngbPanelContent>
+          <app-busqueda-producto (seleccion)="selectProducto($event)"
+                                 (directInputSeleccion)="directInputSeleccionProducto($event)"></app-busqueda-producto>
+          <div class="table-responsive" formArrayName="renglones">
+            <table class="table table-bordered table-sm mb-0">
+              <caption class="sr-only">Productos de la Factura de Venta</caption>
+              <thead>
+              <tr>
+                <th scope="col" class="text-center">
+                  <div class="custom-control custom-checkbox ml-2">
+                    <input type="checkbox" class="custom-control-input" id="check-all" (change)="toggleCheckAll($event)">
+                    <label class="custom-control-label" for="check-all"><span class="sr-only">Todos</span></label>
+                  </div>
+                </th>
+                <th class="w-100 align-middle" scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+              </tr>
+              </thead>
+              <tbody>
+              <ng-template ngFor let-rf [ngForOf]="renglones.controls" let-i="index">
+                <tr [formGroupName]="i">
+                  <td>
+                    <div class="custom-control custom-checkbox ml-2">
+                      <input type="checkbox" [id]="'cb_' + i" class="custom-control-input" formControlName="checked">
+                      <label [for]="'cb_' + i" class="custom-control-label"></label>
+                    </div>
+                  </td>
+                  <td class="align-middle">
+                    <span class="codigo">{{ rf.get('renglon').value.codigoItem }}</span>&nbsp;
+                    <span  *ngIf="rf.get('renglon').value.bonificacionPorcentaje > 0" class="badge badge-success">
+                      {{ rf.get('renglon').value.oferta ? "OFERTA" : "BONIF." }} {{ rf.get('renglon').value.bonificacionPorcentaje }}%
+                    </span>
+                    <br>
+                    <strong>{{ rf.get('renglon').value.descripcionItem }}</strong>
+                    <div class="text-right">
+                      {{ rf.get('renglon').value.cantidad }} {{ rf.get('renglon').value.medidaItem }} x {{ rf.get('renglon').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
+                      = <span [class.tachado]="rf.get('renglon').value.bonificacionPorcentaje">{{ rf.get('renglon').value.importeAnterior | currency:'ARS':'symbol':'1.0-2' }}</span>
+                      <span class="text-right text-nowrap" *ngIf="rf.get('renglon').value.bonificacionPorcentaje">
+                        &nbsp;<strong>{{ rf.get('renglon').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <ul class="list-unstyled text-center mb-0">
+                      <li class="mb-2">
+                        <a class="btn btn-primary fake-cursor" (click)="editarRenglon(rf)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
+                      </li>
+                      <li>
+                        <a class="btn btn-primary fake-cursor" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </ng-template>
+              </tbody>
+            </table>
+          </div>
+          <div class="custom-error-message" *ngIf="submitted && f.renglones.errors && f.renglones.errors.required">Debe ingresar al menos un producto.</div>
+          <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
+          </div>
+          <table class="table table-bordered table-sm totales">
+            <caption class="sr-only">Totales</caption>
+            <tbody>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Subtotal</th>
+              <td class="align-middle w-50 text-right">
+                {{ (resultados && resultados.subTotal ? resultados.subTotal: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="align-middle text-right">
+                <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
+              </th>
+              <td class="align-middle">
+                <input class="form-control" type="number" min="0" id="descuento" formControlName="descuento" [readOnly]="loadingResultados">
+              </td>
+              <td class="align-middle text-right">
+                {{ (resultados && resultados.descuentoNeto ? -1 * resultados.descuentoNeto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="align-middle text-right">
+                <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
+              </th>
+              <td class="align-middle">
+                <input class="form-control" type="number" min="0" id="recargo" formControlName="recargo" [readOnly]="loadingResultados">
+              </td>
+              <td class="align-middle text-right">
+                {{ (resultados && resultados.recargoNeto ? resultados.recargoNeto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Subtotal Bruto</th>
+              <td class="align-middle text-right">
+                {{ (resultados && resultados.subTotalBruto ? resultados.subTotalBruto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">IVA 10.5%</th>
+              <td class="align-middle text-right">
+                {{ (resultados && resultados.iva105Neto ? resultados.iva105Neto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">IVA 21%</th>
+              <td class="align-middle text-right">
+                {{ (resultados && resultados.iva21Neto ? resultados.iva21Neto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" scope="row" class="align-middle text-right">Total</th>
+              <td class="align-middle text-right">
+                {{ (resultados && resultados.total ? resultados.total: 0)| currency:'ARS':'symbol':'1.0-2' }}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="cerrarVenta" [title]="'Cerrar Venta ' + (this.resultados && this.resultados.total > 0 ? '[' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') + ']' :'')"
+                 [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
+        <ng-template ngbPanelContent>
+          <div class="form-group">
+            <label for="transportista">Transporte</label>
+            <select class="form-control" id="transportista" formControlName="idTransportista">
+              <option value=""></option>
+              <option *ngFor="let t of transportistas" [value]="t.idTransportista">{{ t.nombre }}</option>
+            </select>
+          </div>
+          <label for="formas-de-pago">Formas de Pago</label>
+          <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago">
+              <table class="table table-bordered table-sm">
+                <caption class="sr-only">Productos de la Factura de Venta</caption>
+                <thead>
+                <tr>
+                  <th class="align-middle text-center" scope="col">#</th>
+                  <th class="align-middle w-50" scope="col">Forma de Pago</th>
+                  <th class="align-middle text-right w-50" scope="col">Monto ($)</th>
+                  <th class="align-middle text-center" scope="col">
+                    <a class="btn btn-primary fake-cursor" (click)="agregarFormDePago()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-template ngFor let-fp [ngForOf]="formasPago.controls" let-i="index">
+                  <tr [formGroupName]="i">
+                    <td class="align-middle text-center">{{ i + 1 }}</td>
+                    <td class="align-middle">
+                      <div class="form-group m-0">
+                        <label [for]="'forma-de-pago_' + i" class="sr-only">Forma de pago</label>
+                        <select class="form-control" formControlName="idFormaDePago" [id]="'forma-de-pago_' + i"
+                                [ngClass]="{ 'is-invalid': submitted && fp.get('idFormaDePago').errors }">
+                          <option *ngFor="let fdp of formasDePago" [value]="fdp.idFormaDePago">{{ fdp.nombre }}</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf="submitted && fp.get('idFormaDePago').errors">
+                          <div *ngIf="fp.get('idFormaDePago').errors.required">Requerido</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle">
+                      <div class="form-group m-0">
+                        <label [for]="'monto_' + i" class="sr-only">Monto</label>
+                        <input class="form-control text-right" type="number" min="0" formControlName="monto" [id]="'monto_' + i"
+                               [ngClass]="{ 'is-invalid': submitted && fp.get('monto').errors }">
+                        <div class="invalid-feedback" *ngIf="submitted && fp.get('monto').errors">
+                          <div *ngIf="fp.get('monto').errors.required">Requerido</div>
+                          <div *ngIf="fp.get('monto').errors.min">Monto mínimo {{ fp.get('monto').errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle text-center">
+                      <a class="btn btn-primary" (click)="quitarFormaPago(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                    </td>
+                  </tr>
+                </ng-template>
+                </tbody>
+              </table>
+            </div>
+          <div class="text-right">
+            <button class="btn btn-primary" type="submit">Finalizar</button>
+          </div>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>

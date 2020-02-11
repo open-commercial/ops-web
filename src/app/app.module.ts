@@ -64,7 +64,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
 import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
-import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/renglon-pedido-modal.component';
+import { CantidadProductoModalComponent } from './components/cantidad-producto-modal/cantidad-producto-modal.component';
 import { CuentaCorrienteClienteModalComponent } from './components/cuenta-corriente-cliente-modal/cuenta-corriente-cliente-modal.component';
 import { UbicacionFacturacionComponent } from './components/ubicacion-facturacion-component/ubicacion-facturacion.component';
 import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
@@ -79,7 +79,7 @@ import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.
 import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
 import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
 import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
-import { BusquedaClienteComponent } from './components/busqueda-cliente/busqueda-cliente.component';
+import { BusquedaProductoComponent } from './components/busqueda-producto/busqueda-producto.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -101,7 +101,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     PedidoComponent,
     ProductoModalComponent,
     BusquedaCuentaCorrienteClienteComponent,
-    RenglonPedidoModalComponent,
+    CantidadProductoModalComponent,
     CuentaCorrienteClienteModalComponent,
     UbicacionFacturacionComponent,
     UbicacionEnvioComponent,
@@ -116,7 +116,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuarioModalComponent,
     ProveedorModalComponent,
     MensajeAsicronicoComponent,
-    BusquedaClienteComponent,
+    BusquedaProductoComponent,
   ],
   imports: [
     BrowserModule,
@@ -140,7 +140,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
   ],
   entryComponents: [
     ProductoModalComponent,
-    RenglonPedidoModalComponent,
+    CantidadProductoModalComponent,
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
     EliminarRenglonPedidoModalComponent,
