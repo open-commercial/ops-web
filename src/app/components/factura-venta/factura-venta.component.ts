@@ -24,7 +24,7 @@ import { Transportista } from '../../models/transportista';
 import { TransportistasService } from '../../services/transportistas.service';
 import { FormaDePago } from '../../models/forma-de-pago';
 import { FormasDePagoService } from '../../services/formas-de-pago.service';
-import { combineLatest, pipe } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageService } from '../../services/storage.service';
 
