@@ -11,7 +11,7 @@
         <span *ngIf="producto.bulto > 1">Llevando {{ producto.bulto }} o más</span>
       </div>
     </div>
-    <form [formGroup]="form" (submit)="submit()" *ngIf="!loading">
+    <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading && !productoLoading">
       <div class="form-group mb-0">
         <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad para este producto.</label>
         <div class="input-group">
@@ -21,7 +21,7 @@
             </button>
           </div>
           <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" #cantidadInput
-                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }">
+                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }" *ngIf="!!(form && form.get('cantidad'))">
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>

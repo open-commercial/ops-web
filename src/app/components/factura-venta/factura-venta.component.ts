@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
@@ -24,7 +24,7 @@ import { Transportista } from '../../models/transportista';
 import { TransportistasService } from '../../services/transportistas.service';
 import { FormaDePago } from '../../models/forma-de-pago';
 import { FormasDePagoService } from '../../services/formas-de-pago.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, pipe } from 'rxjs';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageService } from '../../services/storage.service';
 
@@ -71,6 +71,9 @@ export class FacturaVentaComponent implements OnInit {
   saving = false;
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+  @ViewChild('checkAllToggler', {static: false}) checkAllToggler: ElementRef;
+  checkingAll = false;
+  checkingRenglon = false;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -167,22 +170,23 @@ export class FacturaVentaComponent implements OnInit {
       descuento: [0, Validators.min(0)],
       recargo: [0, Validators.min(0)],
       idTransportista: null,
-      formasPago: this.fb.array([], [Validators.required]),
+      formasPago: this.fb.array([]),
     });
+
+    const data = this.storageService.getItem(this.localStorageKey);
+    if (data) { this.loadForm(data); }
 
     this.form.get('ccc').valueChanges.subscribe((ccc: CuentaCorrienteCliente) => {
       this.handleTiposComprobantes();
     });
 
     this.form.get('tipoDeComprobante').valueChanges
-      .subscribe(v => {
-        if (!this.loadingResultados) { this.recalcularRenglones(); }
-      })
+      .subscribe(v => { this.recalcularRenglones(); })
     ;
 
     this.form.get('renglones').valueChanges
       .subscribe(v => {
-        if (!this.loadingResultados && !this.recalculandoRenglones) { this.calcularResultados(); }
+        // if (!this.loadingResultados && !this.recalculandoRenglones) { this.calcularResultados(); }
       });
 
     this.form.get('descuento').valueChanges
@@ -193,7 +197,7 @@ export class FacturaVentaComponent implements OnInit {
           this.form.get('descuento').setValue(0);
           return;
         }
-        if (!this.loadingResultados) { this.calcularResultados(); }
+        this.calcularResultados();
       });
 
     this.form.get('recargo').valueChanges
@@ -204,16 +208,13 @@ export class FacturaVentaComponent implements OnInit {
           this.form.get('recargo').setValue(0);
           return;
         }
-        if (!this.loadingResultados) { this.calcularResultados(); }
+        this.calcularResultados();
       })
     ;
 
     this.form.valueChanges.subscribe(v => {
       this.storageService.setItem(this.localStorageKey, v);
     });
-
-    const fv = this.storageService.getItem(this.localStorageKey);
-    this.loadForm(fv);
   }
 
   loadForm(data) {
@@ -263,10 +264,24 @@ export class FacturaVentaComponent implements OnInit {
   }
 
   createRenglonForm(r: RenglonFactura, c = false) {
-    return this.fb.group({
+    const formGroup = this.fb.group({
       checked: c,
       renglon: r,
     });
+
+    formGroup.get('checked').valueChanges.subscribe(v => {
+      if (this.checkingAll) { return; }
+      this.checkingRenglon = true;
+      const checkedCount = this.renglones.controls.filter(control => control.get('checked').value).length;
+      this.checkAllToggler.nativeElement.checked = checkedCount === this.renglones.length;
+      this.checkingRenglon = false;
+    });
+
+    // formGroup.get('renglon').valueChanges.subscribe(v => {
+    //   if (!this.loadingResultados && !this.recalculandoRenglones) { this.calcularResultados(); }
+    // });
+
+    return formGroup;
   }
 
   handleRenglon(r: RenglonFactura) {
@@ -289,7 +304,10 @@ export class FacturaVentaComponent implements OnInit {
     const rf: RenglonFactura = this.renglones.at(index).get('renglon').value;
     const msg = `¿Desea quitar de la factura al producto #${rf.codigoItem} - ${rf.descripcionItem}?`;
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) { this.renglones.removeAt(index); }
+      if (result) {
+        this.renglones.removeAt(index);
+        this.calcularResultados();
+      }
     });
   }
 
@@ -297,8 +315,10 @@ export class FacturaVentaComponent implements OnInit {
     const tipoDeComprobante = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value ?
       this.form.get('tipoDeComprobante').value : null;
     if (!tipoDeComprobante) { return; }
+    this.recalculandoRenglones = true;
     this.facturasVentaService.calcularRenglones([nrf], tipoDeComprobante)
-      .subscribe((data: RenglonFactura[]) => this.handleRenglon(data[0]));
+      .pipe(finalize(() => this.recalculandoRenglones = false))
+      .subscribe((data: RenglonFactura[]) => { this.handleRenglon(data[0]); this.calcularResultados(); });
   }
 
   searchRFInRenglones(idProducto): AbstractControl {
@@ -330,7 +350,7 @@ export class FacturaVentaComponent implements OnInit {
           const rControl = this.searchRFInRenglones(rf.idProductoItem);
           rControl.get('renglon').setValue(rf);
         });
-        this.calcularResultados();
+        setTimeout(() => this.calcularResultados(), 500);
       })
     ;
   }
@@ -507,8 +527,13 @@ export class FacturaVentaComponent implements OnInit {
   }
 
   toggleCheckAll($event) {
-    console.log($event.target.checked);
+    if (this.checkingRenglon) { return; }
+    const checked = $event.target.checked ;
+    this.checkingAll = true;
+    this.renglones.controls.forEach(e => e.get('checked').setValue(checked));
+    this.checkingAll = false;
   }
+
 
   getCccLabel() {
     const ccc: CuentaCorrienteCliente = this.form && this.form.get('ccc') ? this.form.get('ccc').value : null;
@@ -525,5 +550,13 @@ export class FacturaVentaComponent implements OnInit {
       return aux.length ? aux[0].text : '';
     }
     return '';
+  }
+
+  esComprobanteDivido() {
+    if (!this.form || !this.form.get('renglones')) {
+      return false;
+    }
+    const formValue = this.form.value;
+    return formValue.renglones.map((e, i) => e.checked ? i : undefined).filter(x => x !== undefined).length > 0;
   }
 }

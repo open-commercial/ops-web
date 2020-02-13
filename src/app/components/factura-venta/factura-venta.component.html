@@ -5,7 +5,7 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura de Venta
+      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta
     </h1>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
@@ -18,7 +18,7 @@
       <ngb-panel id="tipoDeComprobante" [title]="'Tipo de Comprobante: ' + getTipoComprobanteLabel()" [disabled]="!form.get('ccc').value">
         <ng-template ngbPanelContent>
           <div class="form-group">
-            <label for="tipo-de-comprobante">Seleccione un tipo de comprobante</label>
+            <label for="tipo-de-comprobante">Seleccione un Tipo de Comprobante</label>
             <select class="form-control" id="tipo-de-comprobante" formControlName="tipoDeComprobante"
                     [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
               <option *ngFor="let tc of tiposDeComprobanteLabesForCombo" [value]="tc.val">{{ tc.text }}</option>
@@ -41,7 +41,7 @@
               <tr>
                 <th scope="col" class="text-center">
                   <div class="custom-control custom-checkbox ml-2">
-                    <input type="checkbox" class="custom-control-input" id="check-all" (change)="toggleCheckAll($event)">
+                    <input type="checkbox" class="custom-control-input" id="check-all" (change)="toggleCheckAll($event)" #checkAllToggler>
                     <label class="custom-control-label" for="check-all"><span class="sr-only">Todos</span></label>
                   </div>
                 </th>
@@ -51,8 +51,8 @@
               </thead>
               <tbody>
               <ng-template ngFor let-rf [ngForOf]="renglones.controls" let-i="index">
-                <tr [formGroupName]="i">
-                  <td>
+                <tr [formGroupName]="i" [class.table-success]="rf.get('checked') && rf.get('checked').value">
+                  <td class="align-middle">
                     <div class="custom-control custom-checkbox ml-2">
                       <input type="checkbox" [id]="'cb_' + i" class="custom-control-input" formControlName="checked">
                       <label [for]="'cb_' + i" class="custom-control-label"></label>
@@ -76,10 +76,10 @@
                   <td>
                     <ul class="list-unstyled text-center mb-0">
                       <li class="mb-2">
-                        <a class="btn btn-primary fake-cursor" (click)="editarRenglon(rf)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
+                        <button type="button" [disabled]="recalculandoRenglones || loadingResultados" class="btn btn-primary fake-cursor" (click)="editarRenglon(rf)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></button>
                       </li>
                       <li>
-                        <a class="btn btn-primary fake-cursor" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
+                        <button type="button" [disabled]="recalculandoRenglones || loadingResultados" class="btn btn-primary fake-cursor" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
                       </li>
                     </ul>
                   </td>
@@ -99,7 +99,10 @@
             <tr>
               <th colspan="2" scope="row" class="align-middle text-right">Subtotal</th>
               <td class="align-middle w-50 text-right">
-                {{ (resultados && resultados.subTotal ? resultados.subTotal: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
+                  {{ (resultados && resultados.subTotal ? resultados.subTotal: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             <tr>
@@ -107,10 +110,13 @@
                 <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" min="0" id="descuento" formControlName="descuento" [readOnly]="loadingResultados">
+                <input class="form-control" type="number" min="0" id="descuento" formControlName="descuento" [readOnly]="recalculandoRenglones || loadingResultados">
               </td>
               <td class="align-middle text-right">
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.descuentoNeto ? -1 * resultados.descuentoNeto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             <tr>
@@ -118,62 +124,77 @@
                 <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
               </th>
               <td class="align-middle">
-                <input class="form-control" type="number" min="0" id="recargo" formControlName="recargo" [readOnly]="loadingResultados">
+                <input class="form-control" type="number" min="0" id="recargo" formControlName="recargo" [readOnly]="recalculandoRenglones || loadingResultados">
               </td>
               <td class="align-middle text-right">
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.recargoNeto ? resultados.recargoNeto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             <tr>
               <th colspan="2" scope="row" class="align-middle text-right">Subtotal Bruto</th>
               <td class="align-middle text-right">
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.subTotalBruto ? resultados.subTotalBruto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             <tr>
               <th colspan="2" scope="row" class="align-middle text-right">IVA 10.5%</th>
               <td class="align-middle text-right">
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.iva105Neto ? resultados.iva105Neto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             <tr>
               <th colspan="2" scope="row" class="align-middle text-right">IVA 21%</th>
               <td class="align-middle text-right">
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.iva21Neto ? resultados.iva21Neto: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             <tr>
               <th colspan="2" scope="row" class="align-middle text-right">Total</th>
               <td class="align-middle text-right">
+                <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
+                <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.total ? resultados.total: 0)| currency:'ARS':'symbol':'1.0-2' }}
+                </span>
               </td>
             </tr>
             </tbody>
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="cerrarVenta" [title]="'Cerrar Venta ' + (this.resultados && this.resultados.total > 0 ? '[' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') + ']' :'')"
+      <ngb-panel id="cerrarVenta" [title]="'Cerrar Venta ' + (this.resultados && this.resultados.total > 0 ? '(' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') + ')' :'')"
                  [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
         <ng-template ngbPanelContent>
-          <div class="form-group">
-            <label for="transportista">Transporte</label>
-            <select class="form-control" id="transportista" formControlName="idTransportista">
-              <option value=""></option>
-              <option *ngFor="let t of transportistas" [value]="t.idTransportista">{{ t.nombre }}</option>
-            </select>
-          </div>
-          <label for="formas-de-pago">Formas de Pago</label>
-          <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago">
-              <table class="table table-bordered table-sm">
+          <div *ngIf="!saving">
+            <div class="form-group">
+              <label for="transportista">Transporte</label>
+              <select class="form-control" id="transportista" formControlName="idTransportista">
+                <option value=""></option>
+                <option *ngFor="let t of transportistas" [value]="t.idTransportista">{{ t.nombre }}</option>
+              </select>
+            </div>
+            <label for="formas-de-pago">Pagos</label>
+            <a class="btn btn-primary fake-cursor ml-2" (click)="agregarFormDePago()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
+            <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago">
+              <table class="table table-bordered table-sm mt-2">
                 <caption class="sr-only">Productos de la Factura de Venta</caption>
                 <thead>
                 <tr>
                   <th class="align-middle text-center" scope="col">#</th>
                   <th class="align-middle w-50" scope="col">Forma de Pago</th>
                   <th class="align-middle text-right w-50" scope="col">Monto ($)</th>
-                  <th class="align-middle text-center" scope="col">
-                    <a class="btn btn-primary fake-cursor" (click)="agregarFormDePago()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
-                  </th>
+                  <th class="align-middle text-center" scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -210,9 +231,18 @@
                 </ng-template>
                 </tbody>
               </table>
+              <div class="alert alert-success" *ngIf="esComprobanteDivido()">
+                ATENCION: Este comprobante será dividido.
+              </div>
             </div>
-          <div class="text-right">
-            <button class="btn btn-primary" type="submit">Finalizar</button>
+            <div class="text-right">
+              <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
+                <fa-icon [icon]="['fas', 'check']"></fa-icon> Finalizar
+              </button>
+            </div>
+          </div>
+          <div *ngIf="saving" class="text-center">
+            <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
           </div>
         </ng-template>
       </ngb-panel>
