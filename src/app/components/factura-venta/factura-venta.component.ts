@@ -27,6 +27,9 @@ import { FormasDePagoService } from '../../services/formas-de-pago.service';
 import { combineLatest } from 'rxjs';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageService } from '../../services/storage.service';
+import { ProductosService } from '../../services/productos.service';
+import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
+import { DisponibilidadStockModalComponent } from '../disponibilidad-stock-modal/disponibilidad-stock-modal.component';
 
 
 @Component({
@@ -75,6 +78,8 @@ export class FacturaVentaComponent implements OnInit {
   checkingAll = false;
   checkingRenglon = false;
 
+  verificandoDisponibilidadStock = false;
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -90,17 +95,19 @@ export class FacturaVentaComponent implements OnInit {
               private sucursalesService: SucursalesService,
               private transportistasService: TransportistasService,
               private formasDePagoService: FormasDePagoService,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              private productosService: ProductosService) {
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
     modalConfig.keyboard = false;
   }
 
   ngOnInit() {
-    this.getTransportistas();
-    this.getFormasDePago();
     this.createFrom();
     this.handleClientePredeterminado();
+    this.getTransportistas();
+    this.getFormasDePago();
+
     this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes());
   }
 
@@ -123,7 +130,11 @@ export class FacturaVentaComponent implements OnInit {
             this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
               .pipe(finalize(() => this.cccPredeterminadoLoading = false))
               .subscribe(
-                c => { this.cccPredeterminado = c; this.form.get('ccc').setValue(c); },
+                c => {
+                  this.cccPredeterminado = c;
+                  this.ininicializarForm();
+                  /*this.form.get('ccc').setValue(c);*/
+                },
                 e => this.mensajeService.msg(e.error, MensajeModalType.ERROR),
               )
             ;
@@ -172,22 +183,18 @@ export class FacturaVentaComponent implements OnInit {
       idTransportista: null,
       formasPago: this.fb.array([]),
     });
+  }
 
-    const data = this.storageService.getItem(this.localStorageKey);
-    if (data) { this.loadForm(data); }
-
+  ininicializarForm() {
     this.form.get('ccc').valueChanges.subscribe((ccc: CuentaCorrienteCliente) => {
       this.handleTiposComprobantes();
     });
 
+    this.loadForm();
+
     this.form.get('tipoDeComprobante').valueChanges
       .subscribe(v => { this.recalcularRenglones(); })
     ;
-
-    this.form.get('renglones').valueChanges
-      .subscribe(v => {
-        // if (!this.loadingResultados && !this.recalculandoRenglones) { this.calcularResultados(); }
-      });
 
     this.form.get('descuento').valueChanges
       .pipe(debounceTime(700))
@@ -217,10 +224,13 @@ export class FacturaVentaComponent implements OnInit {
     });
   }
 
-  loadForm(data) {
+  loadForm() {
+    // if (!data) { return; }
+    const data = this.storageService.getItem(this.localStorageKey);
+    this.form.get('ccc').setValue(data && data.ccc ? data.ccc : this.cccPredeterminado);
+
     if (!data) { return; }
 
-    this.form.get('ccc').setValue(data.ccc ? data.ccc : this.cccPredeterminado);
     this.form.get('tipoDeComprobante').setValue(data.tipoDeComprobante ? data.tipoDeComprobante : null);
     if (data.renglones && data.renglones.length) {
       data.renglones.forEach(d => this.renglones.push(this.createRenglonForm(d.renglon, d.checked)));
@@ -423,26 +433,72 @@ export class FacturaVentaComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      const total = this.getTotalFactura();
-      const totalEnFormasPago = this.form.value.formasPago.reduce((sum, v) => sum + v.monto, 0);
-      let montoWarning = '';
+      const formValue = this.form.value;
+      this.verificandoDisponibilidadStock = true;
+      const ppvs: ProductosParaVerificarStock = {
+        idSucursal: this.sucursalesService.getIdSucursal(),
+        idProducto: formValue.renglones.map(e => e.renglon.idProductoItem),
+        cantidad: formValue.renglones.map(e => e.renglon.cantidad),
+      };
+      this.productosService.getDisponibilidadEnStock(ppvs)
+        .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
+        .subscribe(snd => {
+            if (HelperService.isEmptyObject(snd)) {
+              this.doSubmit();
+            } else {
+              const ds = this.getDisponibilidadStock(snd);
+              const modalRef = this.modalService.open(DisponibilidadStockModalComponent, { size: 'lg', scrollable: true });
+              modalRef.componentInstance.data = ds;
+            }
+          }
+        )
+      ;
+    }
+  }
 
-      if (totalEnFormasPago > total) {
-        montoWarning = 'Los montos ingresados superan el total a pagar. ¿Desea continuar?';
-      }
+  doSubmit() {
+    const total = this.getTotalFactura();
+    const totalEnFormasPago = this.form.value.formasPago.reduce((sum, v) => sum + v.monto, 0);
+    let montoWarning = '';
 
-      if (totalEnFormasPago < total) {
-        montoWarning = 'Los montos ingresados no cubren el total a pagar. ¿Desea continuar?';
-      }
+    if (totalEnFormasPago > total) {
+      montoWarning = 'Los montos ingresados superan el total a pagar. ¿Desea continuar?';
+    }
 
-      if (montoWarning) {
-        this.mensajeService.msg(montoWarning, MensajeModalType.ALERT).then((result) => {
-          if (result) { this.guardarFactura(); }
-        });
-      } else {
-        this.guardarFactura();
+    if (totalEnFormasPago < total) {
+      montoWarning = 'Los montos ingresados no cubren el total a pagar. ¿Desea continuar?';
+    }
+
+    if (montoWarning) {
+      this.mensajeService.msg(montoWarning, MensajeModalType.ALERT).then((result) => {
+        if (result) { this.guardarFactura(); }
+      });
+    } else {
+      this.guardarFactura();
+    }
+  }
+
+  getDisponibilidadStock(snd) {
+    if (HelperService.isEmptyObject(snd)) { return []; }
+    const formValue = this.form.value;
+    const data = [];
+    for (const k in snd) {
+      if (snd.hasOwnProperty(k)) {
+        const aux = formValue.renglones.filter(e => e.renglon.idProductoItem === Number(k));
+        if (aux.length) {
+          const r = aux[0].renglon;
+          data.push({
+            id: r.idProductoItem,
+            codigo: r.codigoItem,
+            descripcion: r.descripcionItem,
+            cantidadSolicitada: r.cantidad,
+            cantidadDisponible: r.cantidad - Number(snd[k])
+          });
+        }
       }
     }
+
+    return data;
   }
 
   guardarFactura() {
@@ -498,13 +554,29 @@ export class FacturaVentaComponent implements OnInit {
     modalRef.componentInstance.cantidad = cantidadPrevia;
     modalRef.componentInstance.loadProducto(idProductoItem);
     modalRef.result.then((cant: number) => {
-      const nrf: NuevoRenglonFactura = {
-        cantidad: cant,
-        idProducto: idProductoItem,
-        bonificacion: null,
+
+      const ppvs: ProductosParaVerificarStock = {
+        idSucursal: this.sucursalesService.getIdSucursal(),
+        idProducto: [idProductoItem],
+        cantidad: [cant],
       };
 
-      this.addRenglonFactura(nrf);
+      this.verificandoDisponibilidadStock = true;
+      this.productosService.getDisponibilidadEnStock(ppvs)
+        .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
+        .subscribe(snd => {
+          if (HelperService.isEmptyObject(snd)) {
+            const nrf: NuevoRenglonFactura = {
+              cantidad: cant,
+              idProducto: idProductoItem,
+              bonificacion: null,
+            };
+            this.addRenglonFactura(nrf);
+          } else {
+            this.mensajeService.msg('La cantidad solicitada del producto supera el stock disponible.', MensajeModalType.ERROR);
+          }
+        })
+      ;
     }, (reason) => {});
   }
 

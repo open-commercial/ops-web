@@ -1,0 +1,25 @@
+<div class="modal-body p-2">
+  <h4 class="modal-title" id="modal-basic-title">
+    <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Faltantes de stock
+  </h4>
+  <div class="d-flex flex-column flex-sm-row align-items-sm-center p-2 border-bottom border-left border-right"
+       [class.border-top.round]="isFirst" [class.odd-row]="isOdd" *ngFor="let d of data; first as isFirst; odd as isOdd">
+    <div class="flex-fill">
+      <span class="codigo">#{{ d.codigo}}</span><br>
+      <span class="descripcion">{{ d.descripcion }}</span><br>
+    </div>
+    <div class="text-right">
+      <span class="text-nowrap">
+        <em>Solicitado: </em><strong>{{ d.cantidadSolicitada }}</strong>
+      </span><br>
+      <span class="text-nowrap">
+        <em>Disponible: </em><strong class="text-danger">{{ d.cantidadDisponible }}</strong>
+      </span>
+    </div>
+  </div>
+</div>
+<div class="modal-footer p-2">
+  <button type="button" class="btn btn-primary" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>&nbsp;Volver
+  </button>
+</div>

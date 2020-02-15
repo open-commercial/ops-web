@@ -80,6 +80,7 @@ import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.
 import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
 import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
 import { BusquedaProductoComponent } from './components/busqueda-producto/busqueda-producto.component';
+import { DisponibilidadStockModalComponent } from './components/disponibilidad-stock-modal/disponibilidad-stock-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -117,6 +118,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ProveedorModalComponent,
     MensajeAsicronicoComponent,
     BusquedaProductoComponent,
+    DisponibilidadStockModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -148,6 +150,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ClienteModalComponent,
     UsuarioModalComponent,
     ProveedorModalComponent,
+    DisponibilidadStockModalComponent,
   ],
   bootstrap: [AppComponent]
 })
