@@ -182,7 +182,7 @@ export class FacturaVentaComponent implements OnInit {
 
   checkAndLoadDataForForm() {
     if (this.pedido) {
-      this.localStorageKey = 'factura-de-pedido';
+      this.localStorageKey = 'facturaDePedido';
       let data = this.storageService.getItem(this.localStorageKey);
       this.cccReadOnly = true;
       if (!data || !data.idPedido || data.idPedido !== this.pedido.idPedido) {
