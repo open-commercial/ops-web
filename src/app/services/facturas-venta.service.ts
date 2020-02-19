@@ -10,6 +10,7 @@ import { FacturaVenta } from '../models/factura-venta';
 import { RenglonFactura } from '../models/renglon-factura';
 import { SucursalesService } from './sucursales.service';
 import { NuevaFacturaVenta } from '../models/nueva-factura-venta';
+import { HelperService } from './helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,8 @@ export class FacturasVentaService {
   }
 
   calcularRenglones(renglones: NuevoRenglonFactura[], tipoDeComprobante: TipoDeComprobante): Observable<RenglonFactura[]> {
-    return this.http.post<RenglonFactura[]>(this.url + `/renglones?tipoDeComprobante=${tipoDeComprobante}`, renglones);
+    const qs = HelperService.getQueryString({tipoDeComprobante});
+    return this.http.post<RenglonFactura[]>(this.url + `/renglones?${qs}`, renglones);
   }
 
   getFacturaPdf(factura: FacturaVenta): Observable<Blob> {
@@ -41,5 +43,10 @@ export class FacturasVentaService {
 
   guardarFacturaVenta(nfv: NuevaFacturaVenta): Observable<FacturaVenta[]> {
     return this.http.post<FacturaVenta[]>(this.url, nfv);
+  }
+
+  getReglonesDePedido(idPedido: number, tipoDeComprobante: TipoDeComprobante): Observable<RenglonFactura[]> {
+    const qs = HelperService.getQueryString({tipoDeComprobante});
+    return this.http.get<RenglonFactura[]>(`${this.url}/renglones/pedidos/${idPedido}?${qs}`);
   }
 }

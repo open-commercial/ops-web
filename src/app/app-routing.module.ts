@@ -29,6 +29,7 @@ const routes: Routes = [
         children: [
           { path: '', component: FacturasVentaComponent },
           { path: 'nueva', component: FacturaVentaComponent },
+          { path: 'de-pedido/:id', component: FacturaVentaComponent },
         ]
       },
       { path: 'facturas-compra', component: FacturasCompraComponent }

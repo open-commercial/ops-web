@@ -7,6 +7,7 @@ import { HelperService } from './helper.service';
 import { Pagination } from '../models/pagination';
 import { BusquedaProductoCriteria } from '../models/criterias/busqueda-producto-criteria';
 import { ProductosParaVerificarStock } from '../models/productos-para-verificar-stock';
+import { ProductoFaltante } from '../models/producto-faltante';
 
 @Injectable()
 export class ProductosService {
@@ -29,7 +30,7 @@ export class ProductosService {
     return this.http.get<Producto>(`${this.url}/busqueda?` + HelperService.getQueryString({ codigo: cod }));
   }
 
-  getDisponibilidadEnStock(ppvs: ProductosParaVerificarStock): Observable<{ number: number }[]> {
-    return this.http.post<{ number: number }[]>(this.url + '/disponibilidad-stock', ppvs);
+  getDisponibilidadEnStock(ppvs: ProductosParaVerificarStock): Observable<ProductoFaltante[]> {
+    return this.http.post<ProductoFaltante[]>(this.url + '/disponibilidad-stock', ppvs);
   }
 }

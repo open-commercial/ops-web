@@ -5,14 +5,14 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta
+      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta {{ pedido ? 'de Pedido Nº ' + pedido.nroPedido : '' }}
     </h1>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
         <ng-template ngbPanelContent>
-          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" (select)="handleSelectCcc($event)" *ngIf="!cccPredeterminadoLoading"></app-busqueda-cuenta-corriente-cliente>
+          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="cccReadOnly" (select)="handleSelectCcc($event)" *ngIf="!cccPredeterminadoLoading"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="tipoDeComprobante" [title]="'Tipo de Comprobante: ' + getTipoComprobanteLabel()" [disabled]="!form.get('ccc').value">

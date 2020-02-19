@@ -114,6 +114,12 @@
                 <fa-icon [icon]="['fas', 'trash']"></fa-icon>
               </a>
             </li>
+            <li class="list-inline-item" *ngIf="puedeFacturarPedido(p)">
+              <a routerLink="." class="btn btn-primary" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
+                 (click)="facturarPedido(p)">
+                <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon>
+              </a>
+            </li>
           </ul>
         </div>
       </div>

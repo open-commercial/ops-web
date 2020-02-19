@@ -296,6 +296,10 @@ export class PedidosComponent implements OnInit {
     return this.hasRolToEdit && p.estado === EstadoPedido.ABIERTO;
   }
 
+  puedeFacturarPedido(p: Pedido) {
+    return this.hasRolToEdit && (p.estado === EstadoPedido.ABIERTO || p.estado === EstadoPedido.ACTIVO);
+  }
+
   eliminarPedido(pedido: Pedido) {
     if (!this.puedeElimarPedido(pedido)) {
       this.mensajeService.msg('No posee permiso para eliminar un pedido.', MensajeModalType.ERROR);
@@ -326,6 +330,15 @@ export class PedidosComponent implements OnInit {
     }
 
     this.router.navigate(['/pedidos/editar', pedido.idPedido]);
+  }
+
+  facturarPedido(pedido: Pedido) {
+    if (!this.puedeFacturarPedido(pedido)) {
+      this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/facturas-venta/de-pedido', pedido.idPedido]);
   }
 
   getClienteInfoAsync(id: number): Observable<string> {
