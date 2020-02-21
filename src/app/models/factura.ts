@@ -27,7 +27,7 @@ export interface Factura {
   idEmpresa: number;
   nombreEmpresa: string;
   eliminada: boolean;
-  CAE: number;
+  cae: number;
   vencimientoCae: Date;
   numSerieAfip: number;
   numFacturaAfip: number;

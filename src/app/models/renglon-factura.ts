@@ -6,13 +6,12 @@ export interface RenglonFactura  {
   medidaItem: string;
   cantidad: number;
   precioUnitario: number;
-  descuentoPorcentaje: number;
-  descuentoNeto: number;
+  bonificacionPorcentaje: number;
+  bonificacionNeta: number;
   ivaPorcentaje: number;
   ivaNeto: number;
-  impuestoPorcentaje: number;
-  impuestoNeto: number;
   gananciaPorcentaje: number;
   gananciaNeto: number;
+  importeAnterior: number;
   importe: number;
 }

@@ -70,10 +70,7 @@ export class FacturaVentaComponent implements OnInit {
   resultados: Resultados;
   recalculandoRenglones = false;
 
-  loadingTransportistas = false;
   transportistas: Transportista[] = [];
-
-  loadingFormasDePago = false;
   formasDePago: FormaDePago[] = [];
   formaDePagoPredeterminada: FormaDePago;
 
@@ -244,14 +241,14 @@ export class FacturaVentaComponent implements OnInit {
   }
 
   ininicializarForm() {
-    this.form.get('ccc').valueChanges.subscribe((ccc: CuentaCorrienteCliente) => {
+    this.form.get('ccc').valueChanges.subscribe(() => {
       this.handleTiposComprobantes();
     });
 
     this.loadForm();
 
     this.form.get('tipoDeComprobante').valueChanges
-      .subscribe(v => { this.recalcularRenglones(); })
+      .subscribe(() => { this.recalcularRenglones(); })
     ;
 
     this.form.get('descuento').valueChanges
@@ -335,7 +332,7 @@ export class FacturaVentaComponent implements OnInit {
   createRenglonForm(r: RenglonFactura, c = false) {
     const formGroup = this.fb.group({ checked: c, renglon: r });
 
-    formGroup.get('checked').valueChanges.subscribe(v => {
+    formGroup.get('checked').valueChanges.subscribe(() => {
       if (this.checkingAll) { return; }
       this.checkingRenglon = true;
       const checkedCount = this.renglones.controls.filter(control => control.get('checked').value).length;
@@ -568,8 +565,9 @@ export class FacturaVentaComponent implements OnInit {
     this.facturasVentaService.guardarFacturaVenta(nfv)
       .pipe(finalize(() => this.saving = false))
       .subscribe(
-        fvs => {
+        () => {
           this.storageService.removeItem(this.localStorageKey);
+          this.pedido = null;
           this.router.navigate(['/facturas-venta']);
         },
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
@@ -615,7 +613,7 @@ export class FacturaVentaComponent implements OnInit {
           }
         })
       ;
-    }, (reason) => {});
+    }, () => {});
   }
 
   directInputSeleccionProducto(p: Producto) {
@@ -643,7 +641,6 @@ export class FacturaVentaComponent implements OnInit {
     this.renglones.controls.forEach(e => e.get('checked').setValue(checked));
     this.checkingAll = false;
   }
-
 
   getCccLabel() {
     const ccc: CuentaCorrienteCliente = this.form && this.form.get('ccc') ? this.form.get('ccc').value : null;

@@ -81,6 +81,7 @@ import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-
 import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
 import { BusquedaProductoComponent } from './components/busqueda-producto/busqueda-producto.component';
 import { DisponibilidadStockModalComponent } from './components/disponibilidad-stock-modal/disponibilidad-stock-modal.component';
+import { VerFacturaVentaComponent } from './components/ver-factura-venta/ver-factura-venta.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -119,6 +120,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     MensajeAsicronicoComponent,
     BusquedaProductoComponent,
     DisponibilidadStockModalComponent,
+    VerFacturaVentaComponent,
   ],
   imports: [
     BrowserModule,

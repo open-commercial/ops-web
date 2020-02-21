@@ -5,7 +5,6 @@ import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
 import { finalize, map } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
 import { FacturasService } from '../../services/facturas.service';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -31,7 +30,7 @@ export class FacturasVentaComponent implements OnInit {
   clearLoading = false;
   loading = false;
   rol = Rol;
-  tiposFactura = [
+  tiposDeComprobante = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
     { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
@@ -321,13 +320,8 @@ export class FacturasVentaComponent implements OnInit {
     this.getFacturasFromQueryParams(null, false);
   }
 
-  downloadFacturaPdf(factura: FacturaVenta) {
-    this.facturasVentaService.getFacturaPdf(factura).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `factura-venta.pdf`);
-      }
-    );
+  verFactura(factura: FacturaVenta) {
+    this.router.navigate(['/facturas-venta/ver', factura.idFactura]);
   }
 
   getTextoOrdenarPor() {

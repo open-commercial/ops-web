@@ -25,10 +25,10 @@
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="form-group">
-            <label for="tipo_factura">Tipo de Factura</label>
-            <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
+            <label for="tipo_de_comprobante">Tipo de Comprobante</label>
+            <select class="form-control" id="tipo_de_comprobante" formControlName="tipoFactura">
               <option></option>
-              <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
+              <option *ngFor="let tdc of tiposDeComprobante" [value]="tdc.val">{{ tdc.text }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -135,7 +135,7 @@
         <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadFacturaPdf(f)">
+              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)">
                 <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
               </a>
             </li>

@@ -1,0 +1,27 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.app-ver-factura-venta {
+  .articulo {
+    border-bottom: 1px solid #333;
+    &:last-child {
+      border-bottom: none;
+    }
+    .item-info {
+      width: 100%;
+      @include media-breakpoint-up(md) {
+        width: 60%;
+      }
+    }
+    .item-numeros {
+      width: 100%;
+      @include media-breakpoint-up(md) {
+        width: 40%;
+      }
+    }
+    .codigo {
+      font-size: 12px;
+    }
+  }
+}
