@@ -44,7 +44,7 @@ export class VerFacturaVentaComponent implements OnInit {
     ]).pipe(finalize(() => this.loading = false))
       .subscribe((data: [FacturaVenta, RenglonFactura[]]) => {
         this.factura = data[0];
-        this.renglones = data[1]; console.log(this.renglones);
+        this.renglones = data[1];
       })
     ;
   }
