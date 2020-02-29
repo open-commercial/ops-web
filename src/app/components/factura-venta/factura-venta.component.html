@@ -173,7 +173,7 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="cerrarVenta" [title]="'Cerrar Venta ' + (this.resultados && this.resultados.total > 0 ? '(' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') + ')' :'')"
+      <ngb-panel id="cerrarVenta" [title]="'Cerrar Venta ' + (this.resultados && this.resultados.total > 0 ? ': ' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') :'')"
                  [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
         <ng-template ngbPanelContent>
           <div *ngIf="!saving">
@@ -186,7 +186,7 @@
             </div>
             <label for="formas-de-pago">Pagos</label>
             <a class="btn btn-primary fake-cursor ml-2" (click)="agregarFormDePago()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
-            <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago">
+            <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago" *ngIf="this.form && this.form.get('formasPago') && this.form.get('formasPago').value.length">
               <table class="table table-bordered table-sm mt-2">
                 <caption class="sr-only">Productos de la Factura de Venta</caption>
                 <thead>

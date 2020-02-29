@@ -16,24 +16,26 @@
         <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad para este producto.</label>
         <div class="input-group">
           <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()">
+            <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
               <fa-icon [icon]="['fas', 'minus']"></fa-icon>
             </button>
           </div>
-          <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" #cantidadInput
-                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }" *ngIf="!!(form && form.get('cantidad'))">
+          <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" #cantidadInput [readOnly]="loading || verificandoDisponibilidadStock"
+                 formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && (f.cantidad.errors || form.errors) }" *ngIf="!!(form && form.get('cantidad'))">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()">
+            <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
               <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </div>
         </div>
-        <div class="invalid-feedback" *ngIf="submitted && f.cantidad.errors">
-          <div *ngIf="f.cantidad.errors.required">Requerido</div>
-          <div *ngIf="f.cantidad.errors.min">Mínimo: {{ f.cantidad.errors.min.min }}</div>
-        </div>
       </div>
-      <button tabindex="-1" class="sr-only" type="submit">Aceptar</button>
+      <div class="custom-error-message" *ngIf="submitted && f.cantidad.errors">
+        <div *ngIf="f.cantidad.errors.required">Requerido</div>
+        <div *ngIf="f.cantidad.errors.min">Mínimo: {{ f.cantidad.errors.min.min }}</div>
+      </div>
+      <div class="custom-error-message" *ngIf="submitted && !verificandoDisponibilidadStock && !hayStockDisponible">
+        Cantidad no disponible (disponibles: {{ stockDisponible }})
+      </div>
     </form>
   </div>
   <div *ngIf="loading || productoLoading" class="text-center">
@@ -41,11 +43,13 @@
   </div>
 </div>
 <div class="modal-footer p-2">
-  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading || verificandoDisponibilidadStock">
     <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
   </button>
-  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!producto || loading">
-    <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Aceptar
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!producto || loading || verificandoDisponibilidadStock">
+    <fa-icon *ngIf="!verificandoDisponibilidadStock" [icon]="['fas', 'check']"></fa-icon>
+    <fa-icon *ngIf="verificandoDisponibilidadStock" [icon]="['fas', 'circle-notch']" [spin]="true"></fa-icon>
+    Aceptar
   </button>
 </div>
 

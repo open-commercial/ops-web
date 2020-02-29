@@ -588,31 +588,15 @@ export class FacturaVentaComponent implements OnInit {
   showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
-    modalRef.componentInstance.loadProducto(idProductoItem);
+    // modalRef.componentInstance.loadProducto(idProductoItem);
+    modalRef.componentInstance.idProducto = idProductoItem;
     modalRef.result.then((cant: number) => {
-
-      const ppvs: ProductosParaVerificarStock = {
-        idSucursal: this.sucursalesService.getIdSucursal(),
-        idProducto: [idProductoItem],
-        cantidad: [cant],
+      const nrf: NuevoRenglonFactura = {
+        cantidad: cant,
+        idProducto: idProductoItem,
+        bonificacion: null,
       };
-
-      this.verificandoDisponibilidadStock = true;
-      this.productosService.getDisponibilidadEnStock(ppvs)
-        .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
-        .subscribe((pfs: ProductoFaltante[]) => {
-          if (!pfs.length) {
-            const nrf: NuevoRenglonFactura = {
-              cantidad: cant,
-              idProducto: idProductoItem,
-              bonificacion: null,
-            };
-            this.addRenglonFactura(nrf);
-          } else {
-            this.mensajeService.msg('La cantidad solicitada del producto supera el stock disponible.', MensajeModalType.ERROR);
-          }
-        })
-      ;
+      this.addRenglonFactura(nrf);
     }, () => {});
   }
 

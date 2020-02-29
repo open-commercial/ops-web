@@ -21,6 +21,7 @@ import { Producto } from '../../models/producto';
 import { ClientesService } from '../../services/clientes.service';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ProductosService } from '../../services/productos.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -74,7 +75,8 @@ export class PedidosComponent implements OnInit {
               private route: ActivatedRoute,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private storageService: StorageService) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -337,7 +339,7 @@ export class PedidosComponent implements OnInit {
       this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
       return;
     }
-
+    this.storageService.removeItem('facturaDePedido');
     this.router.navigate(['/facturas-venta/de-pedido', pedido.idPedido]);
   }
 

@@ -65,15 +65,15 @@
       </tr>
       <tr>
         <th scope="row">Subtotal Bruto</th>
-        <td>{{ factura.subTotalBruto }}</td>
+        <td>{{ factura.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
         <th scope="row">IVA 10.5%</th>
-        <td>{{ factura.iva105Neto }}</td>
+        <td>{{ factura.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
         <th scope="row">IVA 21%</th>
-        <td>{{ factura.iva21Neto }}</td>
+        <td>{{ factura.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
         <th scope="row">Total</th>

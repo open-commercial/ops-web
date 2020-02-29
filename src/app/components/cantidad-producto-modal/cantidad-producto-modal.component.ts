@@ -1,9 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { ProductosService } from '../../services/productos.service';
+import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
+import { SucursalesService } from '../../services/sucursales.service';
+import { ProductoFaltante } from '../../models/producto-faltante';
 
 @Component({
   selector: 'app-cantidad-producto-modal',
@@ -11,25 +14,33 @@ import { ProductosService } from '../../services/productos.service';
   styleUrls: ['./cantidad-producto-modal.component.scss']
 })
 export class CantidadProductoModalComponent implements OnInit, AfterViewInit {
+  idProducto = null;
   cantidad = 1;
   producto: Producto = null;
   productoLoading = false;
   form: FormGroup;
   submitted = false;
   loading = false;
+  verificandoDisponibilidadStock = false;
+  hayStockDisponible = false;
+  stockDisponible = 0;
 
   @ViewChild('cantidadInput', { static: false }) cantidadInput: ElementRef;
 
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
     this.createForm();
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => { if (this.cantidadInput) { this.cantidadInput.nativeElement.focus(); }}, 500);
+    setTimeout(() => {
+      if (this.cantidadInput) { this.cantidadInput.nativeElement.focus(); }
+      this.loadProducto(this.idProducto);
+    }, 500);
   }
 
   public loadProducto(idProductoItem: number) {
@@ -53,8 +64,25 @@ export class CantidadProductoModalComponent implements OnInit, AfterViewInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      const cant = this.form.value.cantidad;
-      this.activeModal.close(cant);
+      const ppvs: ProductosParaVerificarStock = {
+        idSucursal: this.sucursalesService.getIdSucursal(),
+        idProducto: [this.producto.idProducto],
+        cantidad: [this.form.value.cantidad],
+      };
+
+      this.verificandoDisponibilidadStock = true;
+      this.stockDisponible = 0;
+      this.productosService.getDisponibilidadEnStock(ppvs)
+        .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
+        .subscribe((pfs: ProductoFaltante[]) => {
+          const cant = this.form.value.cantidad;
+          this.hayStockDisponible = !pfs.length;
+          this.stockDisponible = pfs.length ? pfs[0].cantidadDisponible : 0;
+          if (!pfs.length) {
+            this.activeModal.close(cant);
+          }
+        })
+      ;
     }
   }
 

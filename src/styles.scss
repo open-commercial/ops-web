@@ -118,6 +118,8 @@ a.fake-cursor {
 }
 
 .custom-error-message {
+  display: block;
+  margin-top: 0.3rem;
   font-size: 80%;
   color: $danger;
 }
