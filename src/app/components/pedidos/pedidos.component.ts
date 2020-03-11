@@ -339,7 +339,7 @@ export class PedidosComponent implements OnInit {
       this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
       return;
     }
-    this.storageService.removeItem('facturaDePedido');
+    this.storageService.removeItem('facturarPedido');
     this.router.navigate(['/facturas-venta/de-pedido', pedido.idPedido]);
   }
 

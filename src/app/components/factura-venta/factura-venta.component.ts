@@ -55,6 +55,8 @@ export class FacturaVentaComponent implements OnInit {
   cccPredeterminadoLoading = false;
   cccReadOnly = false;
 
+  cccLoading = false;
+
   loadingTiposDeComprobante = false;
   tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
 
@@ -131,8 +133,12 @@ export class FacturaVentaComponent implements OnInit {
           this.formaDePagoPredeterminada = data[1];
           this.formasDePago = data[2];
           if (data[3]) {
+            this.cccPredeterminadoLoading = true;
             this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-              .pipe(finalize(() => this.loading = false))
+              .pipe(finalize(() => {
+                this.loading = false;
+                this.cccPredeterminadoLoading = false;
+              }))
               .subscribe(
                 (ccc: CuentaCorrienteCliente) => {
                   this.cccPredeterminado = ccc;
@@ -141,6 +147,8 @@ export class FacturaVentaComponent implements OnInit {
                 e => this.mensajeService.msg(e.error, MensajeModalType.ERROR),
               )
             ;
+          } else {
+            this.loading = false;
           }
         },
         e => {
@@ -179,7 +187,7 @@ export class FacturaVentaComponent implements OnInit {
 
   checkAndLoadDataForForm() {
     if (this.pedido) {
-      this.localStorageKey = 'facturaDePedido';
+      this.localStorageKey = 'facturarPedido';
       let data = this.storageService.getItem(this.localStorageKey);
       this.cccReadOnly = true;
       if (!data || !data.idPedido || data.idPedido !== this.pedido.idPedido) {
@@ -189,7 +197,9 @@ export class FacturaVentaComponent implements OnInit {
           data.ccc = this.cccPredeterminado;
           this.storageService.setItem(this.localStorageKey, data);
         } else {
+          this.cccLoading = true;
           this.cuentasCorrienteService.getCuentaCorriente(this.pedido.cliente.idCliente)
+            .pipe(finalize(() => this.cccLoading = false))
             .subscribe((ccc: CuentaCorrienteCliente) => {
               data.ccc = ccc;
               this.storageService.setItem(this.localStorageKey, data);

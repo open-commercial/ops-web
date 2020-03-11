@@ -123,7 +123,7 @@ export class PedidoComponent implements OnInit {
 
     if (this.route.snapshot.paramMap.has('id')) {
       this.title = 'Editar Pedido';
-      this.localStorageKey = 'pedido';
+      this.localStorageKey = 'editarPedido';
       this.cccReadOnly = true;
       const id = Number(this.route.snapshot.paramMap.get('id'));
       this.getDatosParaEditar(id);
@@ -226,12 +226,10 @@ export class PedidoComponent implements OnInit {
     });
 
     this.form.get('ccc').valueChanges
-      .subscribe(v => {
-        this.updateRenglones();
-      });
+      .subscribe(() => this.updateRenglones());
 
     this.form.get('renglonesPedido').valueChanges
-      .subscribe(v => {
+      .subscribe(() => {
         if (!this.loadingResultados) { this.calcularResultados(); }
       });
 
@@ -346,7 +344,7 @@ export class PedidoComponent implements OnInit {
       this.pedidosService.guardarPedido(np)
         .pipe(finalize(() => this.saving = false))
         .subscribe(
-          p => {
+          () => {
             this.reset();
             const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
             this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
@@ -375,7 +373,7 @@ export class PedidoComponent implements OnInit {
   }
 
   getNuevoPedido() {
-    let te: TipoDeEnvio = null;
+    let te: TipoDeEnvio;
     let sucursalEnvio: Sucursal = null;
 
     if (this.form.get('opcionEnvio').value === OpcionEnvio.RETIRO_EN_SUCURSAL) {
