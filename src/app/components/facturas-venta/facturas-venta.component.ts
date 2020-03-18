@@ -360,7 +360,7 @@ export class FacturasVentaComponent implements OnInit {
       .pipe(finalize(() => this.idFacturaAutorizando = null))
       .subscribe(
         (f: FacturaVenta) => {
-          const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === fv.idFactura);
+          const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
           if (idx >= 0) { this.facturas[idx] = f; }
         },
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
