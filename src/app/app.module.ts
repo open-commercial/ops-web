@@ -45,6 +45,7 @@ import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
 import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
 import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
+import { faPen  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -188,5 +189,6 @@ export class AppModule {
     library.addIcons(faChevronLeft);
     library.addIcons(faIndustry);
     library.addIcons(faSuitcase);
+    library.addIcons(faPen);
   }
 }

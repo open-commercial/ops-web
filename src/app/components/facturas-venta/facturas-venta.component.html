@@ -135,9 +135,19 @@
         <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)"
+                      [disabled]="estaAutorizandoUnaFactura()">
                 <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
-              </a>
+              </button>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeAutorizarFactura(f)">
+              <div class="text-center mt-2">
+                <fa-icon class="spinner-primary" *ngIf="estaAutorizandoEstaFactura(f)" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'lg'"></fa-icon>
+              </div>
+              <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" triggers="mouseenter:mouseleave" (click)="autorizarFactura(f)"
+                      [disabled]="estaAutorizandoUnaFactura()" *ngIf="!estaAutorizandoEstaFactura(f)">
+                <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
+              </button>
             </li>
           </ul>
         </div>

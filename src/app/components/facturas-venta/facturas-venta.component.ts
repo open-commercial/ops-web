@@ -19,6 +19,9 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { Usuario } from '../../models/usuario';
 import { ProductosService } from '../../services/productos.service';
 import { Producto } from '../../models/producto';
+import { AuthService } from '../../services/auth.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { MensajeService } from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -64,6 +67,16 @@ export class FacturasVentaComponent implements OnInit {
   ordenarPorAplicado = '';
   sentidoAplicado = '';
 
+  usuario: Usuario;
+  allowedRolesToAutorizar: Rol[] = [
+    Rol.ADMINISTRADOR,
+    Rol.ENCARGADO,
+    Rol.VENDEDOR,
+  ];
+  hasRolToAutorizar = false;
+
+  idFacturaAutorizando: number = null;
+
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
@@ -72,10 +85,17 @@ export class FacturasVentaComponent implements OnInit {
               private route: ActivatedRoute,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private authService: AuthService,
+              private mensajeService: MensajeService) { }
 
   ngOnInit() {
     this.createFilterForm();
+    this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
+      this.usuario = u;
+      this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
+    });
+
     this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
     this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
   }
@@ -322,6 +342,38 @@ export class FacturasVentaComponent implements OnInit {
 
   verFactura(factura: FacturaVenta) {
     this.router.navigate(['/facturas-venta/ver', factura.idFactura]);
+  }
+
+  puedeAutorizarFactura(f: FacturaVenta) {
+    return this.hasRolToAutorizar && !f.cae &&
+      [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C].indexOf(f.tipoComprobante) > 0;
+  }
+
+  autorizarFactura(factura: FacturaVenta) {
+    if (!this.puedeAutorizarFactura(factura)) {
+      this.mensajeService.msg('No posee permiso para autorizar una factura o bien ya se encuentra autorizada.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.idFacturaAutorizando = factura.idFactura;
+    this.facturasVentaService.autorizarFactura(factura.idFactura)
+      .pipe(finalize(() => this.idFacturaAutorizando = null))
+      .subscribe(
+        (f: FacturaVenta) => {
+          const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === fv.idFactura);
+          if (idx >= 0) { this.facturas[idx] = f; }
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
+  }
+
+  estaAutorizandoUnaFactura() {
+    return !!this.idFacturaAutorizando;
+  }
+
+  estaAutorizandoEstaFactura(f: FacturaVenta) {
+    return this.estaAutorizandoUnaFactura() && this.idFacturaAutorizando === f.idFactura;
   }
 
   getTextoOrdenarPor() {

@@ -49,4 +49,8 @@ export class FacturasVentaService {
     const qs = HelperService.getQueryString({tipoDeComprobante});
     return this.http.get<RenglonFactura[]>(`${this.url}/renglones/pedidos/${idPedido}?${qs}`);
   }
+
+  autorizarFactura(idFacturaVenta: number): Observable<FacturaVenta> {
+    return this.http.post<FacturaVenta>(`${this.url}/${idFacturaVenta}/autorizacion`, {});
+  }
 }
