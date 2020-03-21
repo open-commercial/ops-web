@@ -75,7 +75,13 @@ export class FacturasVentaComponent implements OnInit {
   ];
   hasRolToAutorizar = false;
 
+  allowedRolesToDelete: Rol[] = [
+    Rol.ADMINISTRADOR
+  ];
+  hasRolToDelete = false;
+
   idFacturaAutorizando: number = null;
+  idFacturaEliminando: number = null;
 
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
@@ -94,6 +100,7 @@ export class FacturasVentaComponent implements OnInit {
     this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
       this.usuario = u;
       this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
+      this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
     });
 
     this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
@@ -346,7 +353,7 @@ export class FacturasVentaComponent implements OnInit {
 
   puedeAutorizarFactura(f: FacturaVenta) {
     return this.hasRolToAutorizar && !f.cae &&
-      [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C].indexOf(f.tipoComprobante) > 0;
+      [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C].indexOf(f.tipoComprobante) >= 0;
   }
 
   autorizarFactura(factura: FacturaVenta) {
@@ -374,6 +381,45 @@ export class FacturasVentaComponent implements OnInit {
 
   estaAutorizandoEstaFactura(f: FacturaVenta) {
     return this.estaAutorizandoUnaFactura() && this.idFacturaAutorizando === f.idFactura;
+  }
+
+  puedeEliminarFactura(f: FacturaVenta) {
+    return this.hasRolToDelete && !f.cae;
+  }
+
+  eliminarFactura(factura: FacturaVenta) {
+    if (!this.puedeEliminarFactura(factura)) {
+      this.mensajeService.msg('No posee permiso para eliminar una factura.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = `Está seguro que desea eliminar la factura #${this.helper.formatNumFactura(factura.numSerie, factura.numFactura)}?`;
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.idFacturaEliminando = factura.idFactura;
+        // console.log(this.idFacturaEliminando); return;
+        this.facturasService.eliminarFactura(factura.idFactura)
+          .pipe(finalize(() => this.idFacturaEliminando = null))
+          .subscribe(
+            () => {
+              const idx: number = this.facturas.findIndex((f: FacturaVenta) => f.idFactura === factura.idFactura);
+              if (idx >= 0) { this.facturas.splice(idx, 1); }
+            },
+            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
+          )
+        ;
+      }
+    }, (reason) => {});
+  }
+
+
+  estaEliminandoUnaFactura() {
+    return !!this.idFacturaEliminando;
+  }
+
+  estaEliminandoEstaFactura(f: FacturaVenta) {
+    return this.estaEliminandoUnaFactura() && this.idFacturaEliminando === f.idFactura;
   }
 
   getTextoOrdenarPor() {

@@ -99,7 +99,7 @@
             <li class="list-inline-item">
               <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
                  (click)="verPedido(p)">
-                <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
+                <fa-icon [icon]="['far', 'eye']"></fa-icon>
               </a>
             </li>
             <li class="list-inline-item" *ngIf="puedeEditarPedido(p)">
@@ -117,7 +117,7 @@
             <li class="list-inline-item" *ngIf="puedeFacturarPedido(p)">
               <a class="btn btn-primary fake-cursor" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
                  (click)="facturarPedido(p)">
-                <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon>
+                <fa-icon [icon]="['fas', 'cash-register']"></fa-icon>
               </a>
             </li>
           </ul>

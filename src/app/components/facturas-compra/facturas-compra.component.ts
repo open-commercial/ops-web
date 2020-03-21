@@ -7,7 +7,6 @@ import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-factura-compra-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
-import { Sucursal } from '../../models/sucursal';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
@@ -15,6 +14,7 @@ import { Producto } from '../../models/producto';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { ProductosService } from '../../services/productos.service';
 import { Proveedor } from '../../models/proveedor';
+import { FacturaCompra } from '../../models/factura-compra';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -306,5 +306,9 @@ export class FacturasCompraComponent implements OnInit {
 
   getProductoInfoAsync(id: number): Observable<string> {
     return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
+  }
+
+  verFactura(factura: FacturaCompra) {
+    this.router.navigate(['/facturas-compra/ver', factura.idFactura]);
   }
 }

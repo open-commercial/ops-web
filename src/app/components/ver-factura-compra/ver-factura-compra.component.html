@@ -1,4 +1,4 @@
-<div class="app-ver-factura-venta my-3">
+<div class="app-ver-factura-compra my-3">
   <div *ngIf="loading" class="text-center my-3">
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
@@ -9,30 +9,20 @@
            (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
-        <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Factura Venta #{{ getNumeroDeComprobante() }}
+        <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Factura Compra #{{ getNumeroDeComprobante() }}
       </h1>
-      <button class="btn btn-primary" (click)="downloadFacturaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
-        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-      </button>
     </div>
     <table class="table table-bordered table-sm">
-      <caption class="sr-only">Datos de la factura de venta</caption>
+      <caption class="sr-only">Datos de la factura de compra</caption>
       <tbody class="thead-dark">
       <tr><th scope="row" class="w-25">Tipo de Comprobante</th><td>{{ getTipoComprobante() }}</td></tr>
       <tr>
         <th scope="row">Nº de Comprobante</th>
         <td>{{ getNumeroDeComprobante() }}<span *ngIf="factura.cae"><br>CAE: {{ factura.cae }} (vto: {{ factura.vencimientoCae | date:'dd/MM/yyyy HH:mm'  }})</span></td>
       </tr>
-      <tr>
-        <th scope="row">Cliente</th>
-        <td>
-          {{ getNombreCliente() }}
-          <span *ngIf="factura.categoriaIVACliente"><br>Categoría IVA: {{ factura.categoriaIVACliente }}</span>
-        </td>
-      </tr>
+      <tr><th scope="row">Proveedor</th><td>{{ factura.razonSocialProveedor }}</td></tr>
       <tr><th scope="row">Fecha</th><td>{{ factura.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
-      <tr *ngIf="factura.nombreUsuario"><th scope="row">Usuario</th> <td>{{ factura.nombreUsuario }}</td></tr>
-      <tr *ngIf="factura.nombreViajanteCliente"><th scope="row">Viajante</th><td>{{ factura.nombreViajanteCliente }}</td></tr>
+      <tr *ngIf="factura.nombreUsuario"><th scope="row">Usuario</th><td>{{ factura.nombreUsuario }}</td></tr>
       <tr><th scope="row" colspan="2">Artículos</th></tr>
       <tr>
         <td colspan="2">

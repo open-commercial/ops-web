@@ -136,17 +136,22 @@
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
               <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)"
-                      [disabled]="estaAutorizandoUnaFactura()">
-                <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
+                      [disabled]="estaAutorizandoUnaFactura() || estaEliminandoUnaFactura()">
+                <fa-icon [icon]="['far', 'eye']"></fa-icon>
               </button>
             </li>
             <li class="list-inline-item" *ngIf="puedeAutorizarFactura(f)">
-              <div class="text-center mt-2">
-                <fa-icon class="spinner-primary" *ngIf="estaAutorizandoEstaFactura(f)" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'lg'"></fa-icon>
-              </div>
               <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" triggers="mouseenter:mouseleave" (click)="autorizarFactura(f)"
-                      [disabled]="estaAutorizandoUnaFactura()" *ngIf="!estaAutorizandoEstaFactura(f)">
-                <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
+                      [disabled]="estaAutorizandoUnaFactura() || estaEliminandoUnaFactura()" *ngIf="!estaAutorizandoEstaFactura(f)">
+                <fa-icon *ngIf="estaAutorizandoEstaFactura(f)" [icon]="['fas', 'file-signature']"></fa-icon>
+                <fa-icon *ngIf="estaAutorizandoEstaFactura(f)" [icon]="['fas', 'circle-notch']" [spin]="true"></fa-icon>
+              </button>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeEliminarFactura(f)">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="eliminarFactura(f)"
+                      [disabled]="estaAutorizandoUnaFactura() || estaEliminandoUnaFactura()">
+                <fa-icon *ngIf="!estaEliminandoEstaFactura(f)" [icon]="['fas', 'trash']"></fa-icon>
+                <fa-icon *ngIf="estaEliminandoEstaFactura(f)" [icon]="['fas', 'circle-notch']" [spin]="true"></fa-icon>
               </button>
             </li>
           </ul>

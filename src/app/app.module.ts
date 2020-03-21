@@ -22,7 +22,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
-import { faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faEye } from '@fortawesome/free-regular-svg-icons';
 import { faPortrait } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -83,6 +83,8 @@ import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mens
 import { BusquedaProductoComponent } from './components/busqueda-producto/busqueda-producto.component';
 import { DisponibilidadStockModalComponent } from './components/disponibilidad-stock-modal/disponibilidad-stock-modal.component';
 import { VerFacturaVentaComponent } from './components/ver-factura-venta/ver-factura-venta.component';
+import { FacturasCompraHomeComponent } from './components/facturas-compra-home/facturas-compra-home.component';
+import { VerFacturaCompraComponent } from './components/ver-factura-compra/ver-factura-compra.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -122,6 +124,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     BusquedaProductoComponent,
     DisponibilidadStockModalComponent,
     VerFacturaVentaComponent,
+    FacturasCompraHomeComponent,
+    VerFacturaCompraComponent,
   ],
   imports: [
     BrowserModule,
@@ -166,7 +170,7 @@ export class AppModule {
     library.addIcons(faTrash);
     library.addIcons(faCalendar);
     library.addIcons(faHashtag);
-    library.addIcons(faBullseye);
+    library.addIcons(faEye);
     library.addIcons(faPortrait);
     library.addIcons(faTimes);
     library.addIcons(faCheck);

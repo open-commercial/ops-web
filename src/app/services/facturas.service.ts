@@ -26,4 +26,8 @@ export class FacturasService {
   calcularResultadosFactura(nrf: NuevosResultadosComprobante): Observable<Resultados> {
     return this.http.post<Resultados>(this.url + `/calculo-factura`, nrf);
   }
+
+  eliminarFactura(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
 }
