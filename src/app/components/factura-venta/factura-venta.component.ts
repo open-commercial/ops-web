@@ -34,6 +34,7 @@ import { PedidosService } from '../../services/pedidos.service';
 import { EstadoPedido } from '../../models/estado.pedido';
 import { Pedido } from '../../models/pedido';
 import { ProductoFaltante } from '../../models/producto-faltante';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 
 @Component({
@@ -105,7 +106,8 @@ export class FacturaVentaComponent implements OnInit {
               private formasDePagoService: FormasDePagoService,
               private storageService: StorageService,
               private productosService: ProductosService,
-              private pedidosService: PedidosService) {
+              private pedidosService: PedidosService,
+              public loadingOverlayService: LoadingOverlayService) {
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
     modalConfig.keyboard = false;
@@ -125,36 +127,29 @@ export class FacturaVentaComponent implements OnInit {
       this.clientesService.existeClientePredetermiando()
     ];
 
-    this.loading = true;
+    this.loadingOverlayService.activate();
     combineLatest(obs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (data: [Transportista[], FormaDePago, FormaDePago[], boolean]) => {
           this.transportistas = data[0];
           this.formaDePagoPredeterminada = data[1];
           this.formasDePago = data[2];
           if (data[3]) {
-            this.cccPredeterminadoLoading = true;
+            this.loadingOverlayService.activate();
             this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-              .pipe(finalize(() => {
-                this.loading = false;
-                this.cccPredeterminadoLoading = false;
-              }))
+              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe(
                 (ccc: CuentaCorrienteCliente) => {
                   this.cccPredeterminado = ccc;
                   this.verificarPedido();
                 },
-                e => this.mensajeService.msg(e.error, MensajeModalType.ERROR),
+                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
               )
             ;
-          } else {
-            this.loading = false;
           }
         },
-        e => {
-          this.loading = false;
-          this.mensajeService.msg(e.error, MensajeModalType.ERROR);
-        }
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       )
     ;
   }
@@ -164,9 +159,9 @@ export class FacturaVentaComponent implements OnInit {
       ? Number(this.route.snapshot.paramMap.get('id'))
       : null;
     if (idPedido && idPedido > 0) {
-      this.verificandoPedido = true;
+      this.loadingOverlayService.activate();
       this.pedidosService.getPedido(idPedido)
-        .pipe(finalize(() => this.verificandoPedido = false))
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(
           (p: Pedido) => {
             if ([EstadoPedido.ACTIVO, EstadoPedido.ABIERTO].indexOf(p.estado) >= 0) {
@@ -197,9 +192,9 @@ export class FacturaVentaComponent implements OnInit {
           data.ccc = this.cccPredeterminado;
           this.storageService.setItem(this.localStorageKey, data);
         } else {
-          this.cccLoading = true;
+          this.loadingOverlayService.activate();
           this.cuentasCorrienteService.getCuentaCorriente(this.pedido.cliente.idCliente)
-            .pipe(finalize(() => this.cccLoading = false))
+            .pipe(finalize(() => this.loadingOverlayService.deactivate()))
             .subscribe((ccc: CuentaCorrienteCliente) => {
               data.ccc = ccc;
               this.storageService.setItem(this.localStorageKey, data);
@@ -318,9 +313,9 @@ export class FacturaVentaComponent implements OnInit {
       this.form.get('ccc').value : null;
     const cliente = ccc && ccc.cliente ? ccc.cliente : null;
     if (!cliente) { return; }
-    this.loadingTiposDeComprobante = false;
+    this.loadingOverlayService.activate();
     this.facturasVentaService.getTiposDeComprobante(cliente.idCliente)
-      .pipe(finalize(() => this.loadingTiposDeComprobante = false))
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((tipos: TipoDeComprobante[]) => {
         let tdc = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value
           ? this.form.get('tipoDeComprobante').value : null;
@@ -384,9 +379,9 @@ export class FacturaVentaComponent implements OnInit {
     const tipoDeComprobante = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value ?
       this.form.get('tipoDeComprobante').value : null;
     if (!tipoDeComprobante) { return; }
-    this.recalculandoRenglones = true;
+    this.loadingOverlayService.activate();
     this.facturasVentaService.calcularRenglones([nrf], tipoDeComprobante)
-      .pipe(finalize(() => this.recalculandoRenglones = false))
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((data: RenglonFactura[]) => { this.handleRenglon(data[0]); this.calcularResultados(); });
   }
 
@@ -402,12 +397,13 @@ export class FacturaVentaComponent implements OnInit {
   recalcularRenglones() {
     const tipoDeComprobante = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value ?
       this.form.get('tipoDeComprobante').value : null;
+
     if (!tipoDeComprobante) { return; }
 
-    this.recalculandoRenglones = true;
     if (!this.renglones.length && this.pedido) {
+      this.loadingOverlayService.activate();
       this.facturasVentaService.getReglonesDePedido(this.pedido.idPedido, tipoDeComprobante)
-        .pipe(finalize(() => this.recalculandoRenglones = false))
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(data => this.setRenglonesFactura(data))
       ;
     } else {
@@ -420,8 +416,9 @@ export class FacturaVentaComponent implements OnInit {
         return nrf;
       });
 
+      this.loadingOverlayService.activate();
       this.facturasVentaService.calcularRenglones(nrfs, tipoDeComprobante)
-        .pipe(finalize(() => this.recalculandoRenglones = false))
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe((data: RenglonFactura[]) => {
           this.setRenglonesFactura(data);
         })
@@ -481,8 +478,6 @@ export class FacturaVentaComponent implements OnInit {
       return;
     }
 
-    this.loadingResultados = true;
-
     const nrf: NuevosResultadosComprobante = {
       tipoDeComprobante: tdc,
       descuentoPorcentaje: dp,
@@ -493,8 +488,9 @@ export class FacturaVentaComponent implements OnInit {
       ivaPorcentajes: this.form.get('renglones').value.map(e => e.renglon.ivaPorcentaje),
     };
 
+    this.loadingOverlayService.activate();
     this.facturasService.calcularResultadosFactura(nrf)
-      .pipe(finalize(() => this.loadingResultados = false))
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((r: Resultados) => this.resultados = r)
     ;
   }
@@ -503,14 +499,15 @@ export class FacturaVentaComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       const formValue = this.form.value;
-      this.verificandoDisponibilidadStock = true;
+
       const ppvs: ProductosParaVerificarStock = {
         idSucursal: this.sucursalesService.getIdSucursal(),
         idProducto: formValue.renglones.map(e => e.renglon.idProductoItem),
         cantidad: formValue.renglones.map(e => e.renglon.cantidad),
       };
+      this.loadingOverlayService.activate();
       this.productosService.getDisponibilidadEnStock(ppvs)
-        .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe((pfs: ProductoFaltante[]) => {
             if (!pfs.length) {
               this.doSubmit();
@@ -572,8 +569,12 @@ export class FacturaVentaComponent implements OnInit {
     };
 
     this.saving = true;
+    this.loadingOverlayService.activate();
     this.facturasVentaService.guardarFacturaVenta(nfv)
-      .pipe(finalize(() => this.saving = false))
+      .pipe(finalize(() => {
+        this.saving = false;
+        this.loadingOverlayService.deactivate();
+      }))
       .subscribe(
         () => {
           this.storageService.removeItem(this.localStorageKey);
@@ -598,8 +599,7 @@ export class FacturaVentaComponent implements OnInit {
   showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
-    // modalRef.componentInstance.loadProducto(idProductoItem);
-    modalRef.componentInstance.idProducto = idProductoItem;
+    modalRef.componentInstance.loadProducto(idProductoItem);
     modalRef.result.then((cant: number) => {
       const nrf: NuevoRenglonFactura = {
         cantidad: cant,

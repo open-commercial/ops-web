@@ -22,6 +22,7 @@ import { Producto } from '../../models/producto';
 import { AuthService } from '../../services/auth.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -30,8 +31,6 @@ import { MensajeService } from '../../services/mensaje.service';
 })
 export class FacturasVentaComponent implements OnInit {
   facturas = [];
-  clearLoading = false;
-  loading = false;
   rol = Rol;
   tiposDeComprobante = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
@@ -80,9 +79,6 @@ export class FacturasVentaComponent implements OnInit {
   ];
   hasRolToDelete = false;
 
-  idFacturaAutorizando: number = null;
-  idFacturaEliminando: number = null;
-
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
@@ -93,15 +89,19 @@ export class FacturasVentaComponent implements OnInit {
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
               private authService: AuthService,
-              private mensajeService: MensajeService) { }
+              private mensajeService: MensajeService,
+              public loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     this.createFilterForm();
-    this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
-      this.usuario = u;
-      this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
-      this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
-    });
+    this.loadingOverlayService.activate();
+    this.authService.getLoggedInUsuario()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((u: Usuario) => {
+        this.usuario = u;
+        this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
+        this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+      });
 
     this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
     this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
@@ -225,18 +225,14 @@ export class FacturasVentaComponent implements OnInit {
     terminos = terminos || this.getFormValues();
     terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
     this.page += 1;
+    this.loadingOverlayService.activate();
     if (clearResults) {
-      this.clearLoading = true;
       this.page = 0;
       this.facturas = [];
-    } else {
-      this.loading = true;
     }
     this.getApplyFilters();
     this.facturasVentaService.buscar(terminos, this.page)
-      .pipe(
-        finalize(() => { this.loading = false; this.clearLoading = false; })
-      )
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
         this.totalElements = p.totalElements;
@@ -362,9 +358,9 @@ export class FacturasVentaComponent implements OnInit {
       return;
     }
 
-    this.idFacturaAutorizando = factura.idFactura;
+    this.loadingOverlayService.activate();
     this.facturasVentaService.autorizarFactura(factura.idFactura)
-      .pipe(finalize(() => this.idFacturaAutorizando = null))
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (f: FacturaVenta) => {
           const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
@@ -373,14 +369,6 @@ export class FacturasVentaComponent implements OnInit {
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       )
     ;
-  }
-
-  estaAutorizandoUnaFactura() {
-    return !!this.idFacturaAutorizando;
-  }
-
-  estaAutorizandoEstaFactura(f: FacturaVenta) {
-    return this.estaAutorizandoUnaFactura() && this.idFacturaAutorizando === f.idFactura;
   }
 
   puedeEliminarFactura(f: FacturaVenta) {
@@ -397,10 +385,9 @@ export class FacturasVentaComponent implements OnInit {
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
-        this.idFacturaEliminando = factura.idFactura;
-        // console.log(this.idFacturaEliminando); return;
+        this.loadingOverlayService.activate()
         this.facturasService.eliminarFactura(factura.idFactura)
-          .pipe(finalize(() => this.idFacturaEliminando = null))
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
               const idx: number = this.facturas.findIndex((f: FacturaVenta) => f.idFactura === factura.idFactura);
@@ -411,15 +398,6 @@ export class FacturasVentaComponent implements OnInit {
         ;
       }
     }, (reason) => {});
-  }
-
-
-  estaEliminandoUnaFactura() {
-    return !!this.idFacturaEliminando;
-  }
-
-  estaEliminandoEstaFactura(f: FacturaVenta) {
-    return this.estaEliminandoUnaFactura() && this.idFacturaEliminando === f.idFactura;
   }
 
   getTextoOrdenarPor() {

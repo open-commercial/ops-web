@@ -15,6 +15,7 @@ import { ProveedoresService } from '../../services/proveedores.service';
 import { ProductosService } from '../../services/productos.service';
 import { Proveedor } from '../../models/proveedor';
 import { FacturaCompra } from '../../models/factura-compra';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -23,8 +24,6 @@ import { FacturaCompra } from '../../models/factura-compra';
 })
 export class FacturasCompraComponent implements OnInit {
   facturas = [];
-  clearLoading = false;
-  loading = false;
 
   tiposFactura = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
@@ -66,7 +65,8 @@ export class FacturasCompraComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private proveedoresService: ProveedoresService,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     this.createFilterForm();
@@ -172,18 +172,14 @@ export class FacturasCompraComponent implements OnInit {
     terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
 
     this.page += 1;
+    this.loadingOverlayService.activate();
     if (clearResults) {
-      this.clearLoading = true;
       this.page = 0;
       this.facturas = [];
-    } else {
-      this.loading = true;
     }
     this.getApplyFilters();
     this.facturasCompraService.buscar(terminos, this.page)
-      .pipe(
-        finalize(() => { this.loading = false; this.clearLoading = false; })
-      )
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
         this.totalElements = p.totalElements;

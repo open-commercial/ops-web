@@ -11,9 +11,8 @@ import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.com
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
 import { FacturasVentaHomeComponent } from './components/facturas-venta-home/facturas-venta-home.component';
 import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
-import { VerFacturaVentaComponent } from './components/ver-factura-venta/ver-factura-venta.component';
+import { VerFacturaComponent } from './components/ver-factura/ver-factura.component';
 import { FacturasCompraHomeComponent } from './components/facturas-compra-home/facturas-compra-home.component';
-import { VerFacturaCompraComponent } from './components/ver-factura-compra/ver-factura-compra.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -33,13 +32,13 @@ const routes: Routes = [
           { path: '', component: FacturasVentaComponent },
           { path: 'nueva', component: FacturaVentaComponent },
           { path: 'de-pedido/:id', component: FacturaVentaComponent },
-          { path: 'ver/:id', component: VerFacturaVentaComponent },
+          { path: 'ver/:id', component: VerFacturaComponent },
         ]
       },
       { path: 'facturas-compra', component: FacturasCompraHomeComponent,
         children: [
           { path: '', component: FacturasCompraComponent },
-          { path: 'ver/:id', component: VerFacturaCompraComponent }
+          { path: 'ver/:id', component: VerFacturaComponent }
         ]
       }
     ]

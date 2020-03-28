@@ -22,6 +22,7 @@ import { ClientesService } from '../../services/clientes.service';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ProductosService } from '../../services/productos.service';
 import { StorageService } from '../../services/storage.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -30,8 +31,6 @@ import { StorageService } from '../../services/storage.service';
 })
 export class PedidosComponent implements OnInit {
   pedidos: Pedido[] = [];
-  clearLoading = false;
-  loading = false;
   estado = EstadoPedido;
   rol = Rol;
   usuario: Usuario;
@@ -76,7 +75,8 @@ export class PedidosComponent implements OnInit {
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
-              private storageService: StorageService) { }
+              private storageService: StorageService,
+              public loadingOverlayService: LoadingOverlayService) { }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
@@ -84,11 +84,15 @@ export class PedidosComponent implements OnInit {
 
   ngOnInit() {
     this.createFilterForm();
-    this.authService.getLoggedInUsuario().subscribe((u: Usuario) => {
-      this.usuario = u;
-      this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
-      this.hasRolToEdit = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToEdit.includes(x)).length > 0;
-    });
+    this.loadingOverlayService.activate();
+    this.authService.getLoggedInUsuario()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((u: Usuario) => {
+        this.usuario = u;
+        this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+        this.hasRolToEdit = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToEdit.includes(x)).length > 0;
+      })
+    ;
 
     this.sucursalesService.sucursal$.subscribe(() => this.getPedidosFromQueryParams());
     this.route.queryParamMap.subscribe(params => this.getPedidosFromQueryParams(params));
@@ -172,18 +176,14 @@ export class PedidosComponent implements OnInit {
     terminos = terminos || this.getFormValues();
     terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
     this.page += 1;
+    this.loadingOverlayService.activate();
     if (clearResults) {
-      this.clearLoading = true;
       this.page = 0;
       this.pedidos = [];
-    } else {
-      this.loading = true;
     }
     this.getApplyFilters();
     this.pedidosService.buscar(terminos, this.page)
-      .pipe(
-        finalize(() => { this.loading = false; this.clearLoading = false; })
-      )
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.pedidos.push(e));
         this.totalElements = p.totalElements;
@@ -312,7 +312,9 @@ export class PedidosComponent implements OnInit {
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
+        this.loadingOverlayService.activate();
         this.pedidosService.eliminarPedido(pedido.idPedido)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
               const idx: number = this.pedidos.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);

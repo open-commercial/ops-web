@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
 import { Rol } from '../../models/rol';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +35,8 @@ export class LoginComponent implements OnInit {
               private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private sucursalesService: SucursalesService) { }
+              private sucursalesService: SucursalesService,
+              private loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     this.errors.subscribe((message) => this.errorMessage = message);
@@ -66,7 +68,7 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       const data = this.form.value;
-      this.loading = true;
+      this.loadingOverlayService.activate();
       this.form.disable();
       this.authService.login(data.username, data.password)
         .subscribe(
@@ -76,7 +78,7 @@ export class LoginComponent implements OnInit {
               (usuario: Usuario) => {
                 if (!this.tienePermisos(usuario)) {
                   this.showErrorMessage('No posee permisos para ingresar.');
-                  this.loading = false;
+                  this.loadingOverlayService.deactivate();
                   this.form.enable();
                   this.authService.logout();
                   return;
@@ -84,10 +86,14 @@ export class LoginComponent implements OnInit {
 
                 this.sucursalesService.getSucursales()
                   .pipe(
-                    finalize(() => { this.loading = false; this.form.enable(); })
+                    finalize(() => {
+                      this.loadingOverlayService.deactivate();
+                      this.form.enable();
+                    })
                   )
                   .subscribe(
                     sucs => {
+                      this.loadingOverlayService.deactivate();
                       if (sucs.length)  {
                         const aux = sucs.filter((s: Sucursal) => s.idSucursal === usuario.idSucursalPredeterminada);
                         if (aux.length) {
@@ -105,22 +111,20 @@ export class LoginComponent implements OnInit {
                         this.authService.logout();
                       }
                     },
-                    err => {
-                      this.showErrorMessage(err);
-                    }
+                    err => this.showErrorMessage(err)
                   )
                 ;
               },
               err => {
                 this.showErrorMessage(err);
-                this.loading = false;
+                this.loadingOverlayService.deactivate();
                 this.form.enable();
               }
             );
         },
         err => {
           this.showErrorMessage(err);
-          this.loading = false;
+          this.loadingOverlayService.deactivate();
           this.form.enable();
         })
       ;

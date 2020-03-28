@@ -8,15 +8,11 @@
       <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> {{ title }}
     </h1>
   </div>
-  <ngb-alert class="my-3" *ngIf="message" [type]="messageType" (close)="message = null">{{ message }}</ngb-alert>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
         <ng-template ngbPanelContent>
-          <div *ngIf="cccPredeterminadoLoading" class="text-center my-3">
-            <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-          </div>
-          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="cccReadOnly" (select)="handleSelectCcc($event)" *ngIf="!cccPredeterminadoLoading"></app-busqueda-cuenta-corriente-cliente>
+          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="cccReadOnly" (select)="handleSelectCcc($event)"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!(form && form.get('ccc').value)">
@@ -54,7 +50,7 @@
                     <td>
                       <ul class="list-unstyled text-center mb-0">
                         <li class="mb-2">
-                          <a class="btn btn-primary fake-cursor" (click)="editarRenglon(rp)"><fa-icon [icon]="['fas', 'edit']"></fa-icon></a>
+                          <a class="btn btn-primary fake-cursor" (click)="editarRenglon(rp)"><fa-icon [icon]="['fas', 'pen']"></fa-icon></a>
                         </li>
                         <li>
                           <a class="btn btn-primary fake-cursor" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
@@ -149,9 +145,6 @@
             <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled() || !totalSuperaCompraMinima()">
               <fa-icon [icon]="['fas', 'check']"></fa-icon> Enviar Pedido
             </button>
-          </div>
-          <div *ngIf="saving" class="text-center my-3">
-            <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
           </div>
         </ng-template>
       </ngb-panel>

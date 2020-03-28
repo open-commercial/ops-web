@@ -10,16 +10,18 @@ import { combineLatest } from 'rxjs';
 import { RenglonFactura } from '../../models/renglon-factura';
 import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
+import { FacturaCompra } from '../../models/factura-compra';
+import { Factura } from '../../models/factura';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-ver-factura-venta',
-  templateUrl: './ver-factura-venta.component.html',
-  styleUrls: ['./ver-factura-venta.component.scss']
+  templateUrl: './ver-factura.component.html',
+  styleUrls: ['./ver-factura.component.scss']
 })
-export class VerFacturaVentaComponent implements OnInit {
-  factura: FacturaVenta = null;
+export class VerFacturaComponent implements OnInit {
+  factura: Factura = null;
   renglones: RenglonFactura[]  = [];
-  loading = false;
   helper = HelperService;
 
   tiposDeComprobante = [
@@ -33,15 +35,16 @@ export class VerFacturaVentaComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
-              private location: Location) { }
+              private location: Location,
+              private loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loading = true;
+    this.loadingOverlayService.activate();
     combineLatest([
       this.facturasService.getFactura(id),
       this.facturasService.getRenglonesDeFactura(id)
-    ]).pipe(finalize(() => this.loading = false))
+    ]).pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((data: [FacturaVenta, RenglonFactura[]]) => {
         this.factura = data[0];
         this.renglones = data[1];
@@ -54,12 +57,16 @@ export class VerFacturaVentaComponent implements OnInit {
   }
 
   downloadFacturaPdf() {
-    this.facturasVentaService.getFacturaPdf(this.factura).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `factura-venta.pdf`);
-      }
-    );
+    if (this.factura.type === 'FacturaCompra') { return; }
+    this.loadingOverlayService.activate();
+    this.facturasVentaService.getFacturaPdf(this.factura as FacturaVenta)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (res) => {
+          const file = new Blob([res], {type: 'application/pdf'});
+          saveAs(file, `factura-venta.pdf`);
+        }
+      );
   }
 
   getNumeroDeComprobante() {
@@ -82,9 +89,9 @@ export class VerFacturaVentaComponent implements OnInit {
   }
 
   getNombreCliente() {
-    return this.factura && this.factura.idCliente
-      ? `#${this.factura.nroDeCliente} - ${this.factura.nombreFiscalCliente}`
-      : ''
-    ;
+    if (!this.factura) { return ''; }
+    if (this.factura.type === 'FacturaCompra') { return  ''; }
+    const f: FacturaVenta = this.factura as FacturaVenta;
+    return f && f.idCliente ? `#${f.nroDeCliente} - ${f.nombreFiscalCliente}` : '';
   }
 }

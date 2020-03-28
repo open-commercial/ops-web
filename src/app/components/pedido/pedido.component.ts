@@ -17,7 +17,7 @@ import { DetallePedido } from '../../models/detalle-pedido';
 import { AuthService } from '../../services/auth.service';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { ProductosService } from '../../services/productos.service';
 import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
@@ -30,6 +30,7 @@ import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { Location } from '@angular/common';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -47,7 +48,6 @@ enum OpcionEnvioUbicacion {
 })
 export class PedidoComponent implements OnInit {
   title = '';
-
   form: FormGroup;
 
   oe = OpcionEnvio;
@@ -57,17 +57,10 @@ export class PedidoComponent implements OnInit {
 
   saving = false;
   cccPredeterminado: CuentaCorrienteCliente = null;
-  cccPredeterminadoLoading = false;
 
-  private messages = new Subject<string>();
-  message: string;
-  messageType = 'success';
-
-  private productoPorCodigoErrors = new Subject<string>();
-  productoPorCodigoErrorMessage: string;
-
-  loadingProducto = false;
   loadingResultados = false;
+
+  calculandoRenglones = false;
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
 
@@ -99,7 +92,8 @@ export class PedidoComponent implements OnInit {
               private productosService: ProductosService,
               private storageService: StorageService,
               private mensajeService: MensajeService,
-              private location: Location) {
+              private location: Location,
+              public loadingOverlayService: LoadingOverlayService) {
 
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -107,18 +101,14 @@ export class PedidoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.messages.subscribe((message) => this.message = message);
-    this.messages
-      .pipe(debounceTime(5000))
-      .subscribe(() => this.message = null);
-
-    this.productoPorCodigoErrors.subscribe((message) => this.productoPorCodigoErrorMessage = message);
-    this.productoPorCodigoErrors
-      .pipe(debounceTime(5000))
-      .subscribe(() => this.productoPorCodigoErrorMessage = null);
-
+    this.createForm();
+    this.loadingOverlayService.activate();
     this.sucursalesService.getPuntosDeRetito()
-      .subscribe((sucs: Array<Sucursal>) => this.sucursales = sucs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (sucs: Array<Sucursal>) => this.sucursales = sucs,
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
     ;
 
     if (this.route.snapshot.paramMap.has('id')) {
@@ -129,43 +119,55 @@ export class PedidoComponent implements OnInit {
       this.getDatosParaEditar(id);
     } else {
       this.title = 'Nuevo Pedido';
+      this.loadingOverlayService.activate();
       this.authService.getLoggedInUsuario()
-        .subscribe((u: Usuario) => {
-          this.usuario = u;
-          this.handleCCCPredeterminado();
-        })
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe(
+          (u: Usuario) => {
+            this.usuario = u;
+            this.handleCCCPredeterminado();
+          },
+          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        )
       ;
     }
   }
 
   getDatosParaEditar(idPedido: number) {
+    this.loadingOverlayService.activate();
     this.pedidosService.getPedido(idPedido)
-      .subscribe((p: Pedido) => {
-        this.datosParaEdicion.pedido = p;
-        this.title += ' #' + p.nroPedido;
-        combineLatest([
-          this.cuentasCorrienteService.getCuentaCorriente(p.cliente.idCliente),
-          this.pedidosService.getRenglonesDePedido(p.idPedido)
-        ]).subscribe(
-          (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
-            this.datosParaEdicion.ccc = v[0];
-            this.datosParaEdicion.renglones = v[1].map(e => ({ renglonPedido : e }));
-            this.datosParaEdicion.sucursal = null;
-            if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
-              this.datosParaEdicion.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
-              this.datosParaEdicion.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
-            } else {
-              this.datosParaEdicion.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
-              if (p.tipoDeEnvio) {
-                this.datosParaEdicion.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
-                  OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (p: Pedido) => {
+          this.datosParaEdicion.pedido = p;
+          this.title += ' #' + p.nroPedido;
+          this.loadingOverlayService.activate();
+          combineLatest([
+            this.cuentasCorrienteService.getCuentaCorriente(p.cliente.idCliente),
+            this.pedidosService.getRenglonesDePedido(p.idPedido)
+          ])
+            .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+            .subscribe(
+            (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
+              this.datosParaEdicion.ccc = v[0];
+              this.datosParaEdicion.renglones = v[1].map(e => ({ renglonPedido : e }));
+              this.datosParaEdicion.sucursal = null;
+              if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
+                this.datosParaEdicion.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
+                this.datosParaEdicion.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
+              } else {
+                this.datosParaEdicion.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
+                if (p.tipoDeEnvio) {
+                  this.datosParaEdicion.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
+                    OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
+                }
               }
+              this.inicializarForm();
             }
-
-            this.createFrom();
-          }
-        );
-      })
+          );
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
     ;
   }
 
@@ -173,32 +175,33 @@ export class PedidoComponent implements OnInit {
     const debeCargarCCCPredetermiando = !((this.usuario.roles.indexOf(Rol.VIAJANTE) >= 0 && this.usuario.roles.length === 1) ||
       (this.usuario.roles.indexOf(Rol.VIAJANTE) >= 0 && this.usuario.roles.indexOf(Rol.COMPRADOR) >= 0 && this.usuario.roles.length === 2));
     if (debeCargarCCCPredetermiando) {
-      this.cccPredeterminadoLoading = true;
+      this.loadingOverlayService.activate();
       this.clientesService.existeClientePredetermiando()
-        .subscribe((v: boolean) => {
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe(
+          (v: boolean) => {
             if (v) {
+              this.loadingOverlayService.activate();
               this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-                .pipe(finalize(() => this.cccPredeterminadoLoading = false))
+                .pipe(finalize(() => this.loadingOverlayService.deactivate()))
                 .subscribe(
                   ccc => {
                     this.cccPredeterminado = ccc;
-                    this.createFrom();
+                    this.inicializarForm();
                   },
-                  err => this.showErrorMessage(err.error),
+                  err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 )
               ;
             } else {
-              this.createFrom();
-              this.cccPredeterminadoLoading = false;
+              this.inicializarForm();
             }
           },
-          err => {
-            this.cccPredeterminadoLoading = false;
-            this.showErrorMessage(err.error);
-          }
+          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         )
       ;
-    } else { this.createFrom(); }
+    } else {
+      this.inicializarForm();
+    }
   }
 
   panelBeforeChange($event) {
@@ -211,7 +214,7 @@ export class PedidoComponent implements OnInit {
     }
   }
 
-  createFrom() {
+  createForm() {
     this.form = this.fb.group({
       idPedido: null,
       ccc: [null, Validators.required],
@@ -224,7 +227,9 @@ export class PedidoComponent implements OnInit {
       opcionEnvioUbicacion: null,
       resultados: null,
     });
+  }
 
+  inicializarForm() {
     this.form.get('ccc').valueChanges
       .subscribe(() => this.updateRenglones());
 
@@ -270,12 +275,14 @@ export class PedidoComponent implements OnInit {
       }
     });
 
-    this.form.valueChanges.subscribe(v => {
-      this.storageService.setItem(this.localStorageKey, v);
-    });
+    this.form.valueChanges.subscribe(v => this.storageService.setItem(this.localStorageKey, v));
 
     const data = this.getDataForForm();
-    if (data) { this.loadForm(data); } else { this.form.get('ccc').setValue(this.cccPredeterminado); }
+    if (data) {
+      this.loadForm(data);
+    } else {
+      this.form.get('ccc').setValue(this.cccPredeterminado);
+    }
   }
 
   getDataForForm() {
@@ -340,9 +347,13 @@ export class PedidoComponent implements OnInit {
   submit() {
     if (this.form.valid) {
       const np: DetallePedido = this.getNuevoPedido();
+      this.loadingOverlayService.activate();
       this.saving = true;
       this.pedidosService.guardarPedido(np)
-        .pipe(finalize(() => this.saving = false))
+        .pipe(finalize(() => {
+          this.saving = false;
+          this.loadingOverlayService.deactivate();
+        }))
         .subscribe(
           () => {
             this.reset();
@@ -456,6 +467,7 @@ export class PedidoComponent implements OnInit {
   }
 
   showCantidadModal(idProducto: number, cantidadPrevia = 1) {
+    console.log(idProducto);
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
     modalRef.componentInstance.loadProducto(idProducto);
@@ -483,10 +495,13 @@ export class PedidoComponent implements OnInit {
 
   addRenglonPedido(nrp: NuevoRenglonPedido) {
     const cliente = this.form.get('ccc').value.cliente;
+    this.loadingOverlayService.activate();
     this.pedidosService.calcularRenglones([nrp], cliente.idCliente)
-      .subscribe(data =>  {
-        this.handleRenglonPedido(data[0]);
-      })
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        data => this.handleRenglonPedido(data[0]),
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
     ;
   }
 
@@ -548,8 +563,6 @@ export class PedidoComponent implements OnInit {
       return;
     }
 
-    this.loadingResultados = true;
-
     const nrp: NuevosResultadosComprobante = {
       tipoDeComprobante: TipoDeComprobante.PEDIDO,
       descuentoPorcentaje: dp,
@@ -560,24 +573,18 @@ export class PedidoComponent implements OnInit {
       ivaPorcentajes: [],
     };
 
+    this.loadingOverlayService.activate();
+    this.loadingResultados = true;
     this.pedidosService.calcularResultadosPedido(nrp)
-      .pipe(finalize(() => this.loadingResultados = false))
-      .subscribe((r: Resultados) => {
-        this.form.get('resultados').setValue(r);
-      });
-  }
-
-  showMessage(message, type = 'success') {
-    this.messageType = type;
-    this.messages.next(message);
-  }
-
-  showErrorMessage(message: string) {
-    this.showMessage(message, 'danger');
-  }
-
-  showProductoPorCodigoErrorMessage(message: string) {
-    this.productoPorCodigoErrors.next(message);
+      .pipe(finalize(() => {
+        this.loadingResultados = false;
+        this.loadingOverlayService.deactivate();
+      }))
+      .subscribe(
+        (r: Resultados) => this.form.get('resultados').setValue(r),
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
   }
 
   updatedCliente($event: Cliente) {
@@ -599,14 +606,17 @@ export class PedidoComponent implements OnInit {
     });
 
     if (cliente && renglones.length) {
+      this.loadingOverlayService.activate();
       this.pedidosService.calcularRenglones(renglones, cliente.idCliente)
-        .subscribe(rps => {
-          const nuevosRenglones = [];
-          rps.forEach((rp: RenglonPedido) => {
-            nuevosRenglones.push({ renglonPedido: rp });
-          });
-          this.renglonesPedido.setValue(nuevosRenglones);
-        })
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe(
+          rps => {
+            const nuevosRenglones = [];
+            rps.forEach((rp: RenglonPedido) => nuevosRenglones.push({ renglonPedido: rp }));
+            this.renglonesPedido.setValue(nuevosRenglones);
+          },
+          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        )
       ;
     }
   }

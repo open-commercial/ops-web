@@ -3,6 +3,7 @@ import { RenglonFactura } from './renglon-factura';
 
 export interface Factura {
   idFactura: number;
+  type: string;
   nombreUsuario: string;
   fecha: Date;
   tipoComprobante: TipoDeComprobante;

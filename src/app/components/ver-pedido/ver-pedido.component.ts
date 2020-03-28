@@ -8,6 +8,7 @@ import { RenglonPedido } from '../../models/renglon-pedido';
 import { saveAs } from 'file-saver';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
 import { Location } from '@angular/common';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-ver-pedido',
@@ -15,7 +16,6 @@ import { Location } from '@angular/common';
   styleUrls: ['./ver-pedido.component.scss']
 })
 export class VerPedidoComponent implements OnInit {
-  loading = false;
   pedido: Pedido = null;
   renglones: RenglonPedido[] = [];
 
@@ -23,15 +23,17 @@ export class VerPedidoComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private pedidosService: PedidosService,
-              private location: Location) { }
+              private location: Location,
+              public loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadingOverlayService.activate();
     combineLatest([
       this.pedidosService.getPedido(id),
       this.pedidosService.getRenglonesDePedido(id),
     ])
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((v: [Pedido, RenglonPedido[]]) => {
         this.pedido = v[0];
         this.renglones = v[1];
@@ -49,12 +51,16 @@ export class VerPedidoComponent implements OnInit {
   }
 
   downloadPedidoPdf(pedido: Pedido) {
-    this.pedidosService.getPedidoPdf(pedido.idPedido).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
-      }
-    );
+    this.loadingOverlayService.activate();
+    this.pedidosService.getPedidoPdf(pedido.idPedido)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (res) => {
+          const file = new Blob([res], {type: 'application/pdf'});
+          saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
+        }
+      )
+    ;
   }
 
   getEnvioLabel() {

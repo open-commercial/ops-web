@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../models/producto';
@@ -13,7 +13,7 @@ import { ProductoFaltante } from '../../models/producto-faltante';
   templateUrl: './cantidad-producto-modal.component.html',
   styleUrls: ['./cantidad-producto-modal.component.scss']
 })
-export class CantidadProductoModalComponent implements OnInit, AfterViewInit {
+export class CantidadProductoModalComponent implements OnInit {
   idProducto = null;
   cantidad = 1;
   producto: Producto = null;
@@ -34,13 +34,6 @@ export class CantidadProductoModalComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.createForm();
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this.cantidadInput) { this.cantidadInput.nativeElement.focus(); }
-      this.loadProducto(this.idProducto);
-    }, 500);
   }
 
   public loadProducto(idProductoItem: number) {

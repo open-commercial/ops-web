@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { throwError, Observable, Subject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, finalize } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario';
 import { UsuariosService } from './usuarios.service';
 import { StorageService } from './storage.service';
+import { LoadingOverlayService } from './loading-overlay.service';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,8 @@ export class AuthService {
   constructor(private http: HttpClient,
               private router: Router,
               private usuariosService: UsuariosService,
-              private storageService: StorageService) {}
+              private storageService: StorageService,
+              private loadingOverlayService: LoadingOverlayService) {}
 
   setNombreUsuarioLoggedIn(nombre: string) {
     this.nombreUsuarioLoggedInSubject.next(nombre);
@@ -48,7 +50,9 @@ export class AuthService {
   }
 
   logout() {
+    this.loadingOverlayService.activate();
     this.http.put(this.urlLogout, null)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(() => {
         const keysToRemove = ['token', 'idUsuario'];
         keysToRemove.forEach(v => this.storageService.removeItem(v));
