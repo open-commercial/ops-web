@@ -10,7 +10,6 @@ import { combineLatest } from 'rxjs';
 import { RenglonFactura } from '../../models/renglon-factura';
 import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
-import { FacturaCompra } from '../../models/factura-compra';
 import { Factura } from '../../models/factura';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
