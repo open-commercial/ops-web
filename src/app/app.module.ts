@@ -45,6 +45,7 @@ import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
 import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
 import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
+import { faBoxes  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -77,6 +78,8 @@ import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.
 import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
 import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
 import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
+import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
+import { ProductosComponent } from './components/productos/productos.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -111,6 +114,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuarioModalComponent,
     ProveedorModalComponent,
     MensajeAsicronicoComponent,
+    ProductosHomeComponent,
+    ProductosComponent,
   ],
   imports: [
     BrowserModule,
@@ -177,5 +182,6 @@ export class AppModule {
     library.addIcons(faChevronLeft);
     library.addIcons(faIndustry);
     library.addIcons(faSuitcase);
+    library.addIcons(faBoxes);
   }
 }

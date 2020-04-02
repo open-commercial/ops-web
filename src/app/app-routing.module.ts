@@ -9,6 +9,8 @@ import { FacturasCompraComponent } from './components/facturas-compra/facturas-c
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
+import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
+import { ProductosComponent } from './components/productos/productos.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,7 +26,12 @@ const routes: Routes = [
         ]
       },
       { path: 'facturas-venta', component: FacturasVentaComponent, runGuardsAndResolvers: 'always' },
-      { path: 'facturas-compra', component: FacturasCompraComponent, runGuardsAndResolvers: 'always' }
+      { path: 'facturas-compra', component: FacturasCompraComponent, runGuardsAndResolvers: 'always' },
+      { path: 'productos', component: ProductosHomeComponent, runGuardsAndResolvers: 'always',
+        children: [
+          { path: '', component: ProductosComponent }
+        ]
+      }
     ]
   },
   { path: '**', redirectTo: '' }
