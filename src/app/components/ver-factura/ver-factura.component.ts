@@ -12,6 +12,7 @@ import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { Factura } from '../../models/factura';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { FacturaCompra } from '../../models/factura-compra';
 
 @Component({
   selector: 'app-ver-factura-venta',
@@ -19,7 +20,7 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
   styleUrls: ['./ver-factura.component.scss']
 })
 export class VerFacturaComponent implements OnInit {
-  factura: Factura = null;
+  factura: FacturaVenta|FacturaCompra = null;
   renglones: RenglonFactura[]  = [];
   helper = HelperService;
 

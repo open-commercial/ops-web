@@ -2,13 +2,12 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" routerLink="/facturas-venta/nueva" title="Nueva Factura" [disabled]="clearLoading || loading">
+      <button class="btn btn-primary" routerLink="/facturas-venta/nueva" title="Nueva Factura">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"
-              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
-              [disabled]="clearLoading || loading">
+              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
@@ -132,20 +131,17 @@
         <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)"
-                      [disabled]="loadingOverlayService.isActive()">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verFactura(f)">
                 <fa-icon [icon]="['far', 'eye']"></fa-icon>
               </button>
             </li>
             <li class="list-inline-item" *ngIf="puedeAutorizarFactura(f)">
-              <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" triggers="mouseenter:mouseleave" (click)="autorizarFactura(f)"
-                      [disabled]="loadingOverlayService.isActive()">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizarFactura(f)">
                 <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
               </button>
             </li>
             <li class="list-inline-item" *ngIf="puedeEliminarFactura(f)">
-              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="eliminarFactura(f)"
-                      [disabled]="loadingOverlayService.isActive()">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarFactura(f)">
                 <fa-icon [icon]="['fas', 'trash']"></fa-icon>
               </button>
             </li>

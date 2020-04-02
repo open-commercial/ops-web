@@ -68,22 +68,25 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       const data = this.form.value;
-      this.loadingOverlayService.activate();
       this.form.disable();
+      this.loadingOverlayService.activate();
       this.authService.login(data.username, data.password)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(
         () => {
+          this.loadingOverlayService.activate();
           this.authService.getLoggedInUsuario()
+            .pipe(finalize(() => this.loadingOverlayService.deactivate()))
             .subscribe(
               (usuario: Usuario) => {
                 if (!this.tienePermisos(usuario)) {
                   this.showErrorMessage('No posee permisos para ingresar.');
-                  this.loadingOverlayService.deactivate();
                   this.form.enable();
                   this.authService.logout();
                   return;
                 }
 
+                this.loadingOverlayService.activate();
                 this.sucursalesService.getSucursales()
                   .pipe(
                     finalize(() => {
@@ -93,7 +96,6 @@ export class LoginComponent implements OnInit {
                   )
                   .subscribe(
                     sucs => {
-                      this.loadingOverlayService.deactivate();
                       if (sucs.length)  {
                         const aux = sucs.filter((s: Sucursal) => s.idSucursal === usuario.idSucursalPredeterminada);
                         if (aux.length) {
@@ -117,14 +119,12 @@ export class LoginComponent implements OnInit {
               },
               err => {
                 this.showErrorMessage(err);
-                this.loadingOverlayService.deactivate();
                 this.form.enable();
               }
             );
         },
         err => {
           this.showErrorMessage(err);
-          this.loadingOverlayService.deactivate();
           this.form.enable();
         })
       ;

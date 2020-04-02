@@ -2,13 +2,12 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" routerLink="/pedidos/nuevo" title="Nuevo Pedido" [disabled]="loadingOverlayService.isActive()">
+      <button class="btn btn-primary" routerLink="/pedidos/nuevo" title="Nuevo Pedido">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="pedidosFiltersCollapse"
-              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
-              [disabled]="loadingOverlayService.isActive()">
+              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
@@ -121,8 +120,7 @@
         </div>
       </div>
       <div class="text-center mt-2">
-        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages"
-                [disabled]="loadingOverlayService.isActive()">Mas resultados</button>
+        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
       </div>
     </div>
   </div>
