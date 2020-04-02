@@ -145,6 +145,11 @@
                 <fa-icon [icon]="['fas', 'trash']"></fa-icon>
               </button>
             </li>
+            <li class="list-inline-item" *ngIf="puedeEnviarPorEmail()">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Enviar por Email" placement="left" triggers="mouseenter:mouseleave" (click)="enviarPorEmail(f)">
+                <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+              </button>
+            </li>
           </ul>
         </div>
       </div>

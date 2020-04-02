@@ -67,17 +67,14 @@ export class FacturasVentaComponent implements OnInit {
   sentidoAplicado = '';
 
   usuario: Usuario;
-  allowedRolesToAutorizar: Rol[] = [
-    Rol.ADMINISTRADOR,
-    Rol.ENCARGADO,
-    Rol.VENDEDOR,
-  ];
+  allowedRolesToAutorizar: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToAutorizar = false;
 
-  allowedRolesToDelete: Rol[] = [
-    Rol.ADMINISTRADOR
-  ];
+  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRolToDelete = false;
+
+  allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  hasRolToEnviarPorEmail = false;
 
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
@@ -101,6 +98,8 @@ export class FacturasVentaComponent implements OnInit {
         this.usuario = u;
         this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
         this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+        this.hasRolToEnviarPorEmail = this.usuario &&
+          this.usuario.roles.filter(x => this.allowedRolesToEnviarPorEmail.includes(x)).length > 0;
       });
 
     this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
@@ -385,7 +384,7 @@ export class FacturasVentaComponent implements OnInit {
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
-        this.loadingOverlayService.activate()
+        this.loadingOverlayService.activate();
         this.facturasService.eliminarFactura(factura.idFactura)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
@@ -397,7 +396,27 @@ export class FacturasVentaComponent implements OnInit {
           )
         ;
       }
-    }, (reason) => {});
+    }, () => {});
+  }
+
+  puedeEnviarPorEmail() {
+    return this.hasRolToEnviarPorEmail;
+  }
+
+  enviarPorEmail(factura: FacturaVenta) {
+    if (!this.puedeEnviarPorEmail()) {
+      this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.loadingOverlayService.activate();
+    this.facturasVentaService.enviarPorEmail(factura.idFactura)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        () => this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO),
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
   }
 
   getTextoOrdenarPor() {

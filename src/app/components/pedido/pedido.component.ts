@@ -467,7 +467,6 @@ export class PedidoComponent implements OnInit {
   }
 
   showCantidadModal(idProducto: number, cantidadPrevia = 1) {
-    console.log(idProducto);
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
     modalRef.componentInstance.loadProducto(idProducto);
@@ -477,7 +476,7 @@ export class PedidoComponent implements OnInit {
         cantidad: cant,
       };
       this.addRenglonPedido(nrp);
-    }, (reason) => {});
+    }, () => {});
   }
 
   directInputSeleccionProducto(p: Producto) {
@@ -518,7 +517,7 @@ export class PedidoComponent implements OnInit {
     modalRef.componentInstance.rp = rp;
     modalRef.result.then(() => {
       this.renglonesPedido.removeAt(index);
-    }, (reason) => {});
+    }, () => {});
   }
 
   searchRPInRenglones(idProducto): AbstractControl {

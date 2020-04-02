@@ -37,8 +37,8 @@ export class FacturasVentaService {
     return this.http.post<RenglonFactura[]>(this.url + `/renglones?${qs}`, renglones);
   }
 
-  getFacturaPdf(factura: FacturaVenta): Observable<Blob> {
-    return this.http.get(`${this.url}/${factura.idFactura}/reporte`, {responseType: 'blob'});
+  getFacturaPdf(idFactura: number): Observable<Blob> {
+    return this.http.get(`${this.url}/${idFactura}/reporte`, {responseType: 'blob'});
   }
 
   guardarFacturaVenta(nfv: NuevaFacturaVenta): Observable<FacturaVenta[]> {
@@ -50,7 +50,11 @@ export class FacturasVentaService {
     return this.http.get<RenglonFactura[]>(`${this.url}/renglones/pedidos/${idPedido}?${qs}`);
   }
 
-  autorizarFactura(idFacturaVenta: number): Observable<FacturaVenta> {
-    return this.http.post<FacturaVenta>(`${this.url}/${idFacturaVenta}/autorizacion`, {});
+  autorizarFactura(idFactura: number): Observable<FacturaVenta> {
+    return this.http.post<FacturaVenta>(`${this.url}/${idFactura}/autorizacion`, {});
+  }
+
+  enviarPorEmail(idFactura: number): Observable<void> {
+    return this.http.get<void>(`${this.url}/email/${idFactura}`);
   }
 }

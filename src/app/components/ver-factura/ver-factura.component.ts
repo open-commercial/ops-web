@@ -10,7 +10,6 @@ import { combineLatest } from 'rxjs';
 import { RenglonFactura } from '../../models/renglon-factura';
 import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
-import { Factura } from '../../models/factura';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaCompra } from '../../models/factura-compra';
 
@@ -59,14 +58,15 @@ export class VerFacturaComponent implements OnInit {
   downloadFacturaPdf() {
     if (this.factura.type === 'FacturaCompra') { return; }
     this.loadingOverlayService.activate();
-    this.facturasVentaService.getFacturaPdf(this.factura as FacturaVenta)
+    this.facturasVentaService.getFacturaPdf(this.factura.idFactura)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `factura-venta.pdf`);
         }
-      );
+      )
+    ;
   }
 
   getNumeroDeComprobante() {
