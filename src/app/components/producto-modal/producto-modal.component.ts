@@ -18,7 +18,6 @@ export class ProductoModalComponent implements OnInit {
   clearLoading = false;
   loading = false;
   busqueda = '';
-  input$  = new Subject<string>();
 
   productoSeleccionado: Producto = null;
 

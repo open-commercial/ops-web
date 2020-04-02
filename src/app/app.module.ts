@@ -49,6 +49,7 @@ import { faSuitcase } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faBoxes  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -88,6 +89,8 @@ import { DisponibilidadStockModalComponent } from './components/disponibilidad-s
 import { VerFacturaComponent } from './components/ver-factura/ver-factura.component';
 import { FacturasCompraHomeComponent } from './components/facturas-compra-home/facturas-compra-home.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
+import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
+import { ProductosComponent } from './components/productos/productos.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -124,6 +127,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuarioModalComponent,
     ProveedorModalComponent,
     MensajeAsicronicoComponent,
+    ProductosHomeComponent,
+    ProductosComponent,
     BusquedaProductoComponent,
     DisponibilidadStockModalComponent,
     VerFacturaComponent,
@@ -197,6 +202,7 @@ export class AppModule {
     library.addIcons(faChevronLeft);
     library.addIcons(faIndustry);
     library.addIcons(faSuitcase);
+    library.addIcons(faBoxes);
     library.addIcons(faPen);
     library.addIcons(faEnvelope);
     library.addIcons(faLink);
