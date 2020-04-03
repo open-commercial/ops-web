@@ -47,6 +47,7 @@ import { faIndustry } from '@fortawesome/free-solid-svg-icons';
 import { faSuitcase } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -196,5 +197,6 @@ export class AppModule {
     library.addIcons(faSuitcase);
     library.addIcons(faPen);
     library.addIcons(faEnvelope);
+    library.addIcons(faLink);
   }
 }
