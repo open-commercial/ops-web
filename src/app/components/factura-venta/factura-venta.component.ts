@@ -187,6 +187,8 @@ export class FacturaVentaComponent implements OnInit {
       if (!data || !data.idPedido || data.idPedido !== this.pedido.idPedido) {
         data = this.getDefaultEmptyDataForForm();
         data.idPedido = this.pedido.idPedido;
+        data.descuento = this.pedido.descuentoPorcentaje;
+        data.recargo = this.pedido.recargoPorcentaje;
         if (this.cccPredeterminado && this.cccPredeterminado.cliente.idCliente === this.pedido.cliente.idCliente) {
           data.ccc = this.cccPredeterminado;
           this.storageService.setItem(this.localStorageKey, data);
@@ -548,7 +550,7 @@ export class FacturaVentaComponent implements OnInit {
       idSucursal: this.sucursalesService.getIdSucursal(),
       idPedido: formValue.idPedido,
       idCliente: formValue.ccc.cliente.idCliente,
-      idTransportista: formValue.transportista ? Number(formValue.transportista) : null,
+      idTransportista: formValue.idTransportista ? Number(formValue.idTransportista) : null,
       fechaVencimiento: null,
       tipoDeComprobante: formValue.tipoDeComprobante,
       observaciones: formValue.observaciones,
