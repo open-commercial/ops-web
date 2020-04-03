@@ -2,12 +2,13 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" routerLink="/pedidos/nuevo" title="Nuevo Pedido">
+      <button class="btn btn-primary" routerLink="/pedidos/nuevo" ngbPopover="Nuevo Pedido" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="pedidosFiltersCollapse"
-              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed">
+              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
@@ -99,13 +100,13 @@
               </a>
             </li>
             <li class="list-inline-item" *ngIf="puedeEditarPedido(p)">
-              <a class="btn btn-primary fake-cursor" ngbPopover="Editar pedido" triggers="mouseenter:mouseleave" placement="left"
+              <a class="btn btn-primary fake-cursor" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left"
                  (click)="editarPedido(p)">
                 <fa-icon [icon]="['fas', 'pen']"></fa-icon>
               </a>
             </li>
             <li class="list-inline-item" *ngIf="puedeElimarPedido(p)">
-              <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar pedido" triggers="mouseenter:mouseleave" placement="left"
+              <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left"
                  (click)="eliminarPedido(p)">
                 <fa-icon [icon]="['fas', 'trash']"></fa-icon>
               </a>
