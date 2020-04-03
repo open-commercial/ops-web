@@ -409,14 +409,20 @@ export class FacturasVentaComponent implements OnInit {
       return;
     }
 
-    this.loadingOverlayService.activate();
-    this.facturasVentaService.enviarPorEmail(factura.idFactura)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        () => this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO),
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
-    ;
+    const msg = 'Está seguro que desea enviar un email con la factura al Cliente?';
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.facturasVentaService.enviarPorEmail(factura.idFactura)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            () => this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO),
+            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          )
+        ;
+      }
+    });
   }
 
   getTextoOrdenarPor() {

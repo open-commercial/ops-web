@@ -58,7 +58,6 @@ export class FacturaVentaComponent implements OnInit {
 
   cccLoading = false;
 
-  loadingTiposDeComprobante = false;
   tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
 
   tiposDeComprobanteLabels = [
@@ -599,6 +598,7 @@ export class FacturaVentaComponent implements OnInit {
   showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
+    modalRef.componentInstance.verificarStock = true;
     modalRef.componentInstance.loadProducto(idProductoItem);
     modalRef.result.then((cant: number) => {
       const nrf: NuevoRenglonFactura = {

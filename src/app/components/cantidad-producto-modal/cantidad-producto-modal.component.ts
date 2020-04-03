@@ -21,6 +21,7 @@ export class CantidadProductoModalComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   loading = false;
+  verificarStock = false;
   verificandoDisponibilidadStock = false;
   hayStockDisponible = false;
   stockDisponible = 0;
@@ -63,19 +64,23 @@ export class CantidadProductoModalComponent implements OnInit {
         cantidad: [this.form.value.cantidad],
       };
 
-      this.verificandoDisponibilidadStock = true;
-      this.stockDisponible = 0;
-      this.productosService.getDisponibilidadEnStock(ppvs)
-        .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
-        .subscribe((pfs: ProductoFaltante[]) => {
-          const cant = this.form.value.cantidad;
-          this.hayStockDisponible = !pfs.length;
-          this.stockDisponible = pfs.length ? pfs[0].cantidadDisponible : 0;
-          if (!pfs.length) {
-            this.activeModal.close(cant);
-          }
-        })
-      ;
+      if (this.verificarStock) {
+        this.verificandoDisponibilidadStock = true;
+        this.stockDisponible = 0;
+        this.productosService.getDisponibilidadEnStock(ppvs)
+          .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
+          .subscribe((pfs: ProductoFaltante[]) => {
+            const cant = this.form.get('cantidad').value;
+            this.hayStockDisponible = !pfs.length;
+            this.stockDisponible = pfs.length ? pfs[0].cantidadDisponible : 0;
+            if (!pfs.length) {
+              this.activeModal.close(cant);
+            }
+          })
+        ;
+      } else {
+        this.activeModal.close(this.form.get('cantidad').value);
+      }
     }
   }
 
