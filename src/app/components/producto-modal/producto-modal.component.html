@@ -1,7 +1,7 @@
 <div class="modal-body d-flex flex-column p-2">
   <div class="input-group">
     <label class="sr-only" for="pmProducto"></label>
-    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="search" class="form-control" id="pmProducto" placeholder="Buscar Producto..."
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" type="search" class="form-control" id="pmProducto" placeholder="Buscar Producto..."
            (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
     <div class="input-group-append">
       <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
@@ -16,8 +16,8 @@
     <div class="productos">
       <div *ngFor="let p of productos; let f = first;" [class.border-top]="f" class="producto form-check border-bottom p-0"
            [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto">
-        <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (focus)="select(p)">
         <label class="form-check-label d-block" for="p_{{ p.idProducto }}">
+          <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (focus)="select(p)">
           <span class="d-flex flex-row align-items-center">
             <span class="img-container flex-grow-0 flex-shrink-0 d-flex align-items-center">
               <img [src]="p.urlImagen ? p.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">

@@ -5,13 +5,13 @@
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasCompraFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
-              [disabled]="clearLoading || loading">
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
   <div id="facturasCompraFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
+    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pt-0 pb-2 container-fluid">
       <div class="row">
         <div class="col-md-6">
           <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
@@ -69,10 +69,7 @@
       </ul>
     </form>
   </div>
-  <div *ngIf="clearLoading" class="text-center my-3">
-    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-  </div>
-  <div *ngIf="!clearLoading">
+  <div>
     <div class="alert alert-globo">
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
@@ -123,14 +120,18 @@
             </div>
           </div>
         </div>
-        <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
+        <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
           <ul class="list-inline mb-0 text-center d-inline-block">
+            <li class="list-inline-item">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)" placement="left">
+                <fa-icon [icon]="['far', 'eye']"></fa-icon>
+              </button>
+            </li>
           </ul>
         </div>
       </div>
       <div class="text-center mt-2">
-        <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
+        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
       </div>
     </div>
   </div>

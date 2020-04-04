@@ -2,16 +2,19 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
     <div class="text-right m-0">
-      <button type="button" class="btn btn-primary" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button class="btn btn-primary" routerLink="/facturas-venta/nueva" ngbPopover="Nueva Factura" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
-              [disabled]="clearLoading || loading">
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
   <div id="facturasVentaFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pb-2">
+    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pt-0 pb-2 container-fluid">
       <div class="row">
         <div class="col-md-6">
           <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
@@ -22,10 +25,10 @@
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="form-group">
-            <label for="tipo_factura">Tipo de Factura</label>
-            <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
+            <label for="tipo_de_comprobante">Tipo de Comprobante</label>
+            <select class="form-control" id="tipo_de_comprobante" formControlName="tipoFactura">
               <option></option>
-              <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
+              <option *ngFor="let tdc of tiposDeComprobante" [value]="tdc.val">{{ tdc.text }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -75,10 +78,7 @@
       </ul>
     </form>
   </div>
-  <div *ngIf="clearLoading" class="text-center my-3">
-    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-  </div>
-  <div *ngIf="!clearLoading">
+  <div>
     <div class="alert alert-globo">
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
@@ -129,19 +129,33 @@
             </div>
           </div>
         </div>
-        <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
+        <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="downloadFacturaPdf(f)">
-                <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
-              </a>
+              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verFactura(f)">
+                <fa-icon [icon]="['far', 'eye']"></fa-icon>
+              </button>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeAutorizarFactura(f)">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizarFactura(f)">
+                <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
+              </button>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeEliminarFactura(f)">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarFactura(f)">
+                <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+              </button>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeEnviarPorEmail()">
+              <button class="btn btn-primary fake-cursor" ngbPopover="Enviar por Email" placement="left" triggers="mouseenter:mouseleave" (click)="enviarPorEmail(f)">
+                <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+              </button>
             </li>
           </ul>
         </div>
       </div>
       <div class="text-center mt-2">
-        <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
+        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
       </div>
     </div>
   </div>

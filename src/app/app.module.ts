@@ -22,7 +22,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
-import { faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faEye } from '@fortawesome/free-regular-svg-icons';
 import { faPortrait } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -40,11 +40,14 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
-import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
-import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
-import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
-import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature } from '@fortawesome/free-solid-svg-icons';
+import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry } from '@fortawesome/free-solid-svg-icons';
+import { faSuitcase } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -64,7 +67,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
 import { BusquedaCuentaCorrienteClienteComponent } from './components/busqueda-cuenta-corriente-cliente/busqueda-cuenta-corriente-cliente.component';
-import { RenglonPedidoModalComponent } from './components/renglon-pedido-modal/renglon-pedido-modal.component';
+import { CantidadProductoModalComponent } from './components/cantidad-producto-modal/cantidad-producto-modal.component';
 import { CuentaCorrienteClienteModalComponent } from './components/cuenta-corriente-cliente-modal/cuenta-corriente-cliente-modal.component';
 import { UbicacionFacturacionComponent } from './components/ubicacion-facturacion-component/ubicacion-facturacion.component';
 import { UbicacionModalComponent } from './components/ubicacion-modal-component/ubicacion-modal.component';
@@ -73,10 +76,17 @@ import { UbicacionEnvioComponent } from './components/ubicacion-envio-component/
 import { MensajeModalComponent } from './components/mensaje-modal/mensaje-modal.component';
 import { PedidosHomeComponent } from './components/pedidos-home/pedidos-home.component';
 import { VerPedidoComponent } from './components/ver-pedido/ver-pedido.component';
+import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
+import { FacturasVentaHomeComponent } from './components/facturas-venta-home/facturas-venta-home.component';
 import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.component';
 import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
 import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
 import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
+import { BusquedaProductoComponent } from './components/busqueda-producto/busqueda-producto.component';
+import { DisponibilidadStockModalComponent } from './components/disponibilidad-stock-modal/disponibilidad-stock-modal.component';
+import { VerFacturaComponent } from './components/ver-factura/ver-factura.component';
+import { FacturasCompraHomeComponent } from './components/facturas-compra-home/facturas-compra-home.component';
+import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -98,7 +108,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     PedidoComponent,
     ProductoModalComponent,
     BusquedaCuentaCorrienteClienteComponent,
-    RenglonPedidoModalComponent,
+    CantidadProductoModalComponent,
     CuentaCorrienteClienteModalComponent,
     UbicacionFacturacionComponent,
     UbicacionEnvioComponent,
@@ -107,10 +117,17 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     MensajeModalComponent,
     PedidosHomeComponent,
     VerPedidoComponent,
+    FacturaVentaComponent,
+    FacturasVentaHomeComponent,
     ClienteModalComponent,
     UsuarioModalComponent,
     ProveedorModalComponent,
     MensajeAsicronicoComponent,
+    BusquedaProductoComponent,
+    DisponibilidadStockModalComponent,
+    VerFacturaComponent,
+    FacturasCompraHomeComponent,
+    LoadingOverlayComponent,
   ],
   imports: [
     BrowserModule,
@@ -134,7 +151,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
   ],
   entryComponents: [
     ProductoModalComponent,
-    RenglonPedidoModalComponent,
+    CantidadProductoModalComponent,
     CuentaCorrienteClienteModalComponent,
     UbicacionModalComponent,
     EliminarRenglonPedidoModalComponent,
@@ -142,6 +159,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ClienteModalComponent,
     UsuarioModalComponent,
     ProveedorModalComponent,
+    DisponibilidadStockModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -154,7 +172,7 @@ export class AppModule {
     library.addIcons(faTrash);
     library.addIcons(faCalendar);
     library.addIcons(faHashtag);
-    library.addIcons(faBullseye);
+    library.addIcons(faEye);
     library.addIcons(faPortrait);
     library.addIcons(faTimes);
     library.addIcons(faCheck);
@@ -177,5 +195,8 @@ export class AppModule {
     library.addIcons(faChevronLeft);
     library.addIcons(faIndustry);
     library.addIcons(faSuitcase);
+    library.addIcons(faPen);
+    library.addIcons(faEnvelope);
+    library.addIcons(faLink);
   }
 }

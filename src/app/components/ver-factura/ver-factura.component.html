@@ -1,0 +1,96 @@
+<div class="app-ver-factura-venta my-3">
+  <div *ngIf="factura">
+    <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
+      <h1 class="h3 pr-2 mb-0 flex-fill">
+        <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+           (click)="volverAlListado()">
+          <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+        </a>
+        <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
+        Factura {{ factura.type === 'FacturaVenta' ? 'Venta' : 'Compra' }} #{{ getNumeroDeComprobante() }}
+      </h1>
+      <button class="btn btn-primary" (click)="downloadFacturaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
+              *ngIf="factura.type === 'FacturaVenta'">
+        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+      </button>
+    </div>
+    <table class="table table-bordered table-sm">
+      <caption class="sr-only">Datos de la factura de venta</caption>
+      <tbody class="thead-dark">
+      <tr><th scope="row" class="w-25">Tipo de Comprobante</th><td>{{ getTipoComprobante() }}</td></tr>
+      <tr>
+        <th scope="row">Nº de Comprobante</th>
+        <td>{{ getNumeroDeComprobante() }}<span *ngIf="factura.cae"><br>CAE: {{ factura.cae }} (vto: {{ factura.vencimientoCae | date:'dd/MM/yyyy HH:mm'  }})</span></td>
+      </tr>
+      <tr *ngIf="factura.type === 'FacturaVenta'">
+        <th scope="row">Cliente</th>
+        <td>
+          {{ getNombreCliente() }}
+          <span *ngIf="factura.categoriaIVACliente"><br>Categoría IVA: {{ factura.categoriaIVACliente }}</span>
+        </td>
+      </tr>
+      <tr *ngIf="factura.type === 'FacturaCompra'">
+        <th scope="row">Proveedor</th><td>{{ factura.razonSocialProveedor }}</td>
+      </tr>
+      <tr><th scope="row">Fecha</th><td>{{ factura.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
+      <tr *ngIf="factura.nombreUsuario"><th scope="row">Usuario</th> <td>{{ factura.nombreUsuario }}</td></tr>
+      <tr *ngIf="factura.nombreViajanteCliente"><th scope="row">Viajante</th><td>{{ factura.nombreViajanteCliente }}</td></tr>
+      <tr><th scope="row" colspan="2">Artículos</th></tr>
+      <tr>
+        <td colspan="2">
+          <div *ngFor="let r of renglones" class="d-flex flex-column flex-md-row align-items-md-center articulo">
+            <div class="item-info">
+              <span class="codigo">{{ r.codigoItem }}</span>&nbsp;
+              <span *ngIf="r.bonificacionPorcentaje" class="badge badge-success">
+                BONIF. {{ r.bonificacionPorcentaje | number:'1.0-2' }}%
+              </span>
+              <br>
+              <span class="descripcion">{{ r.descripcionItem }}</span>
+            </div>
+            <div class="item-numeros text-right">
+              {{ r.cantidad }}&nbsp;{{ r.medidaItem }} x {{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
+              = <span *ngIf="r.bonificacionPorcentaje"><s>{{ r.importeAnterior | currency: 'ARS':'symbol':'1.0-2' }}</s></span>
+              {{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr><th scope="row">Observaciones</th><td>{{ factura.observaciones }}</td></tr>
+      <tr><th scope="row">Subtotal</th><td>{{ factura.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr>
+        <th scope="row">Descuento &nbsp;<span *ngIf="factura.descuentoPorcentaje > 0">({{ factura.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <td><span *ngIf="factura.descuentoNeto > 0">-&nbsp;</span>{{ factura.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Recargo&nbsp;<span *ngIf="factura.recargoPorcentaje > 0">({{ factura.recargoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <td>{{ factura.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Subtotal Bruto</th>
+        <td>{{ factura.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">IVA 10.5%</th>
+        <td>{{ factura.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">IVA 21%</th>
+        <td>{{ factura.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Total</th>
+        <td>{{ factura.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered" *ngIf="factura.nombreTransportista">
+      <caption class="sr-only">Información adicional Factura</caption>
+      <tbody>
+      <tr>
+        <th scope="row" class="w-25">Transportista</th>
+        <td>{{ factura.nombreTransportista }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
