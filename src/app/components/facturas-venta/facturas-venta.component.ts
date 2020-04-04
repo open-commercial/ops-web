@@ -362,8 +362,13 @@ export class FacturasVentaComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (f: FacturaVenta) => {
-          const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
-          if (idx >= 0) { this.facturas[idx] = f; }
+          if (f.cae) {
+            const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
+            if (idx >= 0) { this.facturas[idx] = f; }
+            this.mensajeService.msg('La factura fué autorizada correctamente.', MensajeModalType.INFO);
+          } else {
+            this.mensajeService.msg('La factura NO fué autorizada por AFIP.', MensajeModalType.ERROR);
+          }
         },
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       )
