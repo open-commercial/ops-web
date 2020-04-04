@@ -43,6 +43,7 @@ export class CantidadProductoModalComponent implements OnInit {
       .pipe(finalize(() => this.productoLoading = false))
       .subscribe((p: Producto) => {
          this.producto = p;
+         setTimeout(() => this.cantidadInput.nativeElement.focus(), 500);
       })
     ;
   }
