@@ -2,7 +2,8 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" routerLink="/facturas-venta/nueva" ngbPopover="Nueva Factura" triggers="mouseenter:mouseleave" placement="left">
+      <button class="btn btn-primary" (click)="crearFactura()" ngbPopover="Nueva Factura" triggers="mouseenter:mouseleave" placement="left"
+              *ngIf="puedeCrearFactura()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"

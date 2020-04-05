@@ -67,6 +67,10 @@ export class FacturasVentaComponent implements OnInit {
   sentidoAplicado = '';
 
   usuario: Usuario;
+
+  allowedRolesToCrear: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  hasRolToCrear = false;
+
   allowedRolesToAutorizar: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToAutorizar = false;
 
@@ -96,6 +100,7 @@ export class FacturasVentaComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((u: Usuario) => {
         this.usuario = u;
+        this.hasRolToCrear = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToCrear.includes(x)).length > 0;
         this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
         this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
         this.hasRolToEnviarPorEmail = this.usuario &&
@@ -340,6 +345,19 @@ export class FacturasVentaComponent implements OnInit {
 
   loadMore() {
     this.getFacturasFromQueryParams(null, false);
+  }
+
+  puedeCrearFactura() {
+    return this.hasRolToCrear;
+  }
+
+  crearFactura() {
+    if (!this.puedeCrearFactura()) {
+      this.mensajeService.msg('No posee permiso para crear una factura.');
+      return;
+    }
+
+    this.router.navigate(['/facturas-venta/nueva']);
   }
 
   verFactura(factura: FacturaVenta) {
