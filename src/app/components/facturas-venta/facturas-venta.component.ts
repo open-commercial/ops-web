@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FacturaVenta } from '../../models/factura';
+import { FacturaVenta } from '../../models/factura-venta';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { Pagination } from '../../models/pagination';
 import { finalize, map } from 'rxjs/operators';
-import { saveAs } from 'file-saver';
 import { FacturasService } from '../../services/facturas.service';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -20,6 +19,10 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { Usuario } from '../../models/usuario';
 import { ProductosService } from '../../services/productos.service';
 import { Producto } from '../../models/producto';
+import { AuthService } from '../../services/auth.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { MensajeService } from '../../services/mensaje.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -28,15 +31,13 @@ import { Producto } from '../../models/producto';
 })
 export class FacturasVentaComponent implements OnInit {
   facturas = [];
-  clearLoading = false;
-  loading = false;
   rol = Rol;
-  tiposFactura = [
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_A], text: 'Factura A' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_B], text: 'Factura B' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_X], text: 'Factura X' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_Y], text: 'Factura Y' },
-    { val: TipoDeComprobante[TipoDeComprobante.PRESUPUESTO], text: 'Presupuesto' },
+  tiposDeComprobante = [
+    { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
+    { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
+    { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
+    { val: TipoDeComprobante.FACTURA_Y, text: 'Factura Y' },
+    { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
   ordenarPorOptions = [
@@ -65,6 +66,20 @@ export class FacturasVentaComponent implements OnInit {
   ordenarPorAplicado = '';
   sentidoAplicado = '';
 
+  usuario: Usuario;
+
+  allowedRolesToCrear: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  hasRolToCrear = false;
+
+  allowedRolesToAutorizar: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  hasRolToAutorizar = false;
+
+  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  hasRolToDelete = false;
+
+  allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  hasRolToEnviarPorEmail = false;
+
   constructor(private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
@@ -73,10 +88,25 @@ export class FacturasVentaComponent implements OnInit {
               private route: ActivatedRoute,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private authService: AuthService,
+              private mensajeService: MensajeService,
+              public loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     this.createFilterForm();
+    this.loadingOverlayService.activate();
+    this.authService.getLoggedInUsuario()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((u: Usuario) => {
+        this.usuario = u;
+        this.hasRolToCrear = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToCrear.includes(x)).length > 0;
+        this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
+        this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
+        this.hasRolToEnviarPorEmail = this.usuario &&
+          this.usuario.roles.filter(x => this.allowedRolesToEnviarPorEmail.includes(x)).length > 0;
+      });
+
     this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
     this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
   }
@@ -199,18 +229,14 @@ export class FacturasVentaComponent implements OnInit {
     terminos = terminos || this.getFormValues();
     terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
     this.page += 1;
+    this.loadingOverlayService.activate();
     if (clearResults) {
-      this.clearLoading = true;
       this.page = 0;
       this.facturas = [];
-    } else {
-      this.loading = true;
     }
     this.getApplyFilters();
     this.facturasVentaService.buscar(terminos, this.page)
-      .pipe(
-        finalize(() => { this.loading = false; this.clearLoading = false; })
-      )
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
         this.totalElements = p.totalElements;
@@ -321,13 +347,105 @@ export class FacturasVentaComponent implements OnInit {
     this.getFacturasFromQueryParams(null, false);
   }
 
-  downloadFacturaPdf(factura: FacturaVenta) {
-    this.facturasService.getFacturaPdf(factura).subscribe(
-      (res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `factura-venta.pdf`);
+  puedeCrearFactura() {
+    return this.hasRolToCrear;
+  }
+
+  crearFactura() {
+    if (!this.puedeCrearFactura()) {
+      this.mensajeService.msg('No posee permiso para crear una factura.');
+      return;
+    }
+
+    this.router.navigate(['/facturas-venta/nueva']);
+  }
+
+  verFactura(factura: FacturaVenta) {
+    this.router.navigate(['/facturas-venta/ver', factura.idFactura]);
+  }
+
+  puedeAutorizarFactura(f: FacturaVenta) {
+    return this.hasRolToAutorizar && !f.cae &&
+      [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C].indexOf(f.tipoComprobante) >= 0;
+  }
+
+  autorizarFactura(factura: FacturaVenta) {
+    if (!this.puedeAutorizarFactura(factura)) {
+      this.mensajeService.msg('No posee permiso para autorizar una factura o bien ya se encuentra autorizada.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.loadingOverlayService.activate();
+    this.facturasVentaService.autorizarFactura(factura.idFactura)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (f: FacturaVenta) => {
+          if (f.cae) {
+            const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
+            if (idx >= 0) { this.facturas[idx] = f; }
+            this.mensajeService.msg('La factura fué autorizada correctamente.', MensajeModalType.INFO);
+          } else {
+            this.mensajeService.msg('La factura NO fué autorizada por AFIP.', MensajeModalType.ERROR);
+          }
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
+  }
+
+  puedeEliminarFactura(f: FacturaVenta) {
+    return this.hasRolToDelete && !f.cae;
+  }
+
+  eliminarFactura(factura: FacturaVenta) {
+    if (!this.puedeEliminarFactura(factura)) {
+      this.mensajeService.msg('No posee permiso para eliminar una factura.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = `Está seguro que desea eliminar la factura #${this.helper.formatNumFactura(factura.numSerie, factura.numFactura)}?`;
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.facturasService.eliminarFactura(factura.idFactura)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            () => {
+              const idx: number = this.facturas.findIndex((f: FacturaVenta) => f.idFactura === factura.idFactura);
+              if (idx >= 0) { this.facturas.splice(idx, 1); }
+            },
+            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
+          )
+        ;
       }
-    );
+    }, () => {});
+  }
+
+  puedeEnviarPorEmail() {
+    return this.hasRolToEnviarPorEmail;
+  }
+
+  enviarPorEmail(factura: FacturaVenta) {
+    if (!this.puedeEnviarPorEmail()) {
+      this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = 'Está seguro que desea enviar un email con la factura al Cliente?';
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.facturasVentaService.enviarPorEmail(factura.idFactura)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            () => this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO),
+            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          )
+        ;
+      }
+    });
   }
 
   getTextoOrdenarPor() {

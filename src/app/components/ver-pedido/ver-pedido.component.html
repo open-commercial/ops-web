@@ -1,11 +1,8 @@
 <div class="app-ver-pedido my-3">
-  <div *ngIf="loading" class="text-center my-3">
-    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-  </div>
-  <div *ngIf="pedido && !loading">
+  <div *ngIf="pedido">
     <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
       <h1 class="h3 pr-2 mb-0 flex-fill">
-        <a class="btn fake-cursor" placement="left" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+        <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
           (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
@@ -15,7 +12,7 @@
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
       </button>
     </div>
-    <table class="table table-bordered table-hover table-sm">
+    <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del pedido</caption>
       <tbody class="thead-dark">
       <tr><th scope="row">Cliente</th><td>{{ getNombreCliente() }}</td></tr>

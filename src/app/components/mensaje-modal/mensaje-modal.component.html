@@ -11,7 +11,7 @@
 </div>
 <div class="modal-footer">
   <ng-template [ngIf]="type === typeEnum.INFO || type === typeEnum.ERROR">
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">OK</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close()">OK</button>
   </ng-template>
   <ng-template [ngIf]="type === typeEnum.ALERT">
     <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(false)">Cancelar</button>

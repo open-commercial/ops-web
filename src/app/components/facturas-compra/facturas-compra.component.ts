@@ -7,7 +7,6 @@ import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-factura-compra-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
-import { Sucursal } from '../../models/sucursal';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
@@ -15,6 +14,8 @@ import { Producto } from '../../models/producto';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { ProductosService } from '../../services/productos.service';
 import { Proveedor } from '../../models/proveedor';
+import { FacturaCompra } from '../../models/factura-compra';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -23,15 +24,13 @@ import { Proveedor } from '../../models/proveedor';
 })
 export class FacturasCompraComponent implements OnInit {
   facturas = [];
-  clearLoading = false;
-  loading = false;
 
   tiposFactura = [
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_A], text: 'Factura A' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_B], text: 'Factura B' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_X], text: 'Factura X' },
-    { val: TipoDeComprobante[TipoDeComprobante.FACTURA_Y], text: 'Factura Y' },
-    { val: TipoDeComprobante[TipoDeComprobante.PRESUPUESTO], text: 'Presupuesto' },
+    { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
+    { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
+    { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
+    { val: TipoDeComprobante.FACTURA_Y, text: 'Factura Y' },
+    { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
   ordenarPorOptions = [
@@ -66,7 +65,8 @@ export class FacturasCompraComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private proveedoresService: ProveedoresService,
-              private productosService: ProductosService) { }
+              private productosService: ProductosService,
+              private loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     this.createFilterForm();
@@ -172,18 +172,14 @@ export class FacturasCompraComponent implements OnInit {
     terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
 
     this.page += 1;
+    this.loadingOverlayService.activate();
     if (clearResults) {
-      this.clearLoading = true;
       this.page = 0;
       this.facturas = [];
-    } else {
-      this.loading = true;
     }
     this.getApplyFilters();
     this.facturasCompraService.buscar(terminos, this.page)
-      .pipe(
-        finalize(() => { this.loading = false; this.clearLoading = false; })
-      )
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
         this.totalElements = p.totalElements;
@@ -306,5 +302,9 @@ export class FacturasCompraComponent implements OnInit {
 
   getProductoInfoAsync(id: number): Observable<string> {
     return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
+  }
+
+  verFactura(factura: FacturaCompra) {
+    this.router.navigate(['/facturas-compra/ver', factura.idFactura]);
   }
 }

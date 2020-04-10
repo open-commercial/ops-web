@@ -1,0 +1,14 @@
+.app-factura-venta {
+  .tachado {
+    text-decoration: line-through;
+  }
+  .codigo {
+    font-size: 12px;
+  }
+  .letra-negra {
+    color: #212529;
+  }
+  .totales {
+    width: unset;
+  }
+}

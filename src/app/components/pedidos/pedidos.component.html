@@ -2,19 +2,19 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" routerLink="/pedidos/nuevo" title="Nuevo Pedido" [disabled]="clearLoading || loading">
+      <button class="btn btn-primary" routerLink="/pedidos/nuevo" ngbPopover="Nuevo Pedido" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="pedidosFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
-              [disabled]="clearLoading || loading">
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
   <div id="pedidosFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="pb-2">
+    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pt-0 pb-2 container-fluid">
       <div class="row">
         <div class="col-md-6">
           <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
@@ -47,10 +47,7 @@
       </ul>
     </form>
   </div>
-  <div *ngIf="clearLoading" class="text-center my-3">
-    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-  </div>
-  <div *ngIf="!clearLoading">
+  <div>
     <div class="alert alert-globo">
       <div *ngIf="applyFilters.length">
         Filtros aplicados:
@@ -94,32 +91,43 @@
             </div>
           </div>
         </div>
-        <div class="text-right flex-fill flex-shrink-0 flex-grow-0">
+        <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
           <ul class="list-inline mb-0 text-center d-inline-block">
             <li class="list-inline-item">
-              <a routerLink="." class="btn btn-primary" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
+              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
                  (click)="verPedido(p)">
-                <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
+                <fa-icon [icon]="['far', 'eye']"></fa-icon>
               </a>
             </li>
             <li class="list-inline-item" *ngIf="puedeEditarPedido(p)">
-              <a routerLink="." class="btn btn-primary" ngbPopover="Editar pedido" triggers="mouseenter:mouseleave" placement="left"
+              <a class="btn btn-primary fake-cursor" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left"
                  (click)="editarPedido(p)">
-                <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
+                <fa-icon [icon]="['fas', 'pen']"></fa-icon>
               </a>
             </li>
             <li class="list-inline-item" *ngIf="puedeElimarPedido(p)">
-              <a routerLink="." class="btn btn-primary" ngbPopover="Eliminar pedido" triggers="mouseenter:mouseleave" placement="left"
+              <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left"
                  (click)="eliminarPedido(p)">
                 <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+              </a>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeFacturarPedido(p)">
+              <a class="btn btn-primary fake-cursor" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
+                 (click)="facturarPedido(p)">
+                <fa-icon [icon]="['fas', 'cash-register']"></fa-icon>
+              </a>
+            </li>
+            <li class="list-inline-item" *ngIf="puedeVerFacturas(p)">
+              <a class="btn btn-primary fake-cursor" ngbPopover="Ver Facturas" triggers="mouseenter:mouseleave" placement="left"
+                 (click)="verFacturas(p)">
+                <fa-icon [icon]="['fas', 'link']"></fa-icon>
               </a>
             </li>
           </ul>
         </div>
       </div>
       <div class="text-center mt-2">
-        <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
+        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
       </div>
     </div>
   </div>
