@@ -15,4 +15,8 @@ export class RubrosService {
   getRubros(): Observable<Rubro[]> {
     return this.http.get<Rubro[]>(this.url);
   }
+
+  getRubro(idRubro: number): Observable<Rubro> {
+    return this.http.get<Rubro>(this.url + `/${idRubro}`);
+  }
 }

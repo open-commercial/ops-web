@@ -17,8 +17,7 @@ export class ProductosService {
 
   constructor(private http: HttpClient) {}
 
-  getProductos(input, page: number = 0): Observable<Pagination> {
-    const criteria: BusquedaProductoCriteria = { codigo: input, descripcion: input, pagina: page };
+  buscar(criteria: BusquedaProductoCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 

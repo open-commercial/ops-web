@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
 import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { SucursalesService } from '../../services/sucursales.service';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
+import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
 
 @Component({
   selector: 'app-producto-modal',
@@ -44,7 +44,12 @@ export class ProductoModalComponent implements OnInit {
       this.loading = true;
     }
 
-    this.productosService.getProductos(this.busqueda, this.page)
+    const criteria: BusquedaProductoCriteria = {
+      codigo: this.busqueda,
+      descripcion: this.busqueda,
+      pagina: this.page,
+    };
+    this.productosService.buscar(criteria)
       .pipe(
         finalize(() => {
           this.loading = false;
