@@ -1,10 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SucursalesService } from '../../services/sucursales.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
 import { Rubro } from '../../models/rubro';
 import { RubrosService } from '../../services/rubros.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { finalize, map } from 'rxjs/operators';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { Producto } from '../../models/producto';
+import { Pagination } from '../../models/pagination';
+import { ProductosService } from '../../services/productos.service';
+import { Observable } from 'rxjs';
+import { Proveedor } from '../../models/proveedor';
+import { ProveedoresService } from '../../services/proveedores.service';
+import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 
 @Component({
   selector: 'app-productos',
@@ -12,8 +23,7 @@ import { RubrosService } from '../../services/rubros.service';
   styleUrls: ['./productos.component.scss']
 })
 export class ProductosComponent implements OnInit {
-  // productos: Producto[] = [];
-
+  productos: Producto[] = [];
   isFiltersCollapsed = true;
 
   page = 0;
@@ -25,9 +35,8 @@ export class ProductosComponent implements OnInit {
   applyFilters = [];
 
   ordenarPorOptions = [
-    { val: 'fecha', text: 'Fecha' },
-    { val: 'proveedor.razonSocial', text: 'Proveedor' },
-    { val: 'total', text: 'Total' },
+    { val: 'descripcion', text: 'Descripción' },
+    { val: 'codigo', text: 'Código' }
   ];
 
   sentidoOptions = [
@@ -44,18 +53,29 @@ export class ProductosComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private rubrosService: RubrosService,
               private sucursalesService: SucursalesService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private router: Router,
+              public loadingOverlayService: LoadingOverlayService,
+              private mensajeService: MensajeService,
+              private productosService: ProductosService,
+              private proveedoresService: ProveedoresService) { }
 
   ngOnInit() {
     this.getRubros();
     this.createFilterForm();
-    this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
+    this.sucursalesService.sucursal$.subscribe(() => this.getProductosFromQueryParams());
+    this.route.queryParamMap.subscribe(params => this.getProductosFromQueryParams(params));
   }
 
   getRubros() {
+    this.loadingOverlayService.activate();
     this.rubrosService.getRubros()
-      .subscribe((rubros: Rubro[]) => this.rubros = rubros);
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (rubros: Rubro[]) => this.rubros = rubros,
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
   }
 
   getTerminosFromQueryParams(params = null) {
@@ -84,27 +104,40 @@ export class ProductosComponent implements OnInit {
 
     if (this.visibilidades.indexOf(ps.visibilidad) >= 0) {
       this.filterForm.get('visibilidad').setValue(ps.visibilidad);
-      terminos.publico = ps.visibilidad === 'público';
+      if (ps.visibilidad === 'público') { terminos.publico = true; }
+      if (ps.visibilidad === 'privado') { terminos.publico = false; }
     }
 
-    if (ps.ofertas) {
-      this.filterForm.get('ofertas').setValue(true);
+    if (ps.oferta) {
+      this.filterForm.get('oferta').setValue(true);
+      terminos.oferta = true;
     }
 
+    if (ps.ordenarPor) {
+      this.filterForm.get('ordenarPor').setValue(ps.ordenarPor);
+      terminos.ordenarPor = ps.ordenarPor;
+    }
+
+    if (ps.sentido) {
+      this.filterForm.get('sentido').setValue(ps.sentido);
+      terminos.sentido = ps.sentido;
+    }
+
+    return terminos;
   }
 
-  getFacturasFromQueryParams(params = null, clearResults = true) {
+  getProductosFromQueryParams(params = null, clearResults = true) {
     const terminos = this.getTerminosFromQueryParams(params);
-    // this.getFacturas(clearResults, terminos);
+    this.getProductos(clearResults, terminos);
   }
 
   createFilterForm() {
     this.filterForm = this.fb.group({
       codODes: '',
       idRubro: null,
-      proveedor: null,
+      idProveedor: null,
       visibilidad: null,
-      ofertas: false,
+      oferta: false,
       ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
       sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
     });
@@ -114,14 +147,141 @@ export class ProductosComponent implements OnInit {
     this.filterForm.reset({
       codODes: '',
       idRubro: null,
-      proveedor: null,
+      idProveedor: null,
       visibilidad: null,
-      ofertas: null,
+      oferta: false,
       ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
       sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
     });
   }
 
+  getProductos(clearResults: boolean = false, terminos = null) {
+    terminos = terminos || this.getFormValues();
+    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
+    this.page += 1;
+    this.loadingOverlayService.activate();
+    if (clearResults) {
+      this.page = 0;
+      this.productos = [];
+    }
+    this.getApplyFilters();
+    terminos.pagina = this.page;
+    this.productosService.buscar(terminos)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((p: Pagination) => {
+        p.content.forEach((e) => this.productos.push(e));
+        this.totalElements = p.totalElements;
+        this.totalPages = p.totalPages;
+        this.size = p.size;
+      })
+    ;
+  }
+
   filter() {
+    const qParams = this.getFormValues();
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: qParams,
+    });
+    this.isFiltersCollapsed = true;
+  }
+
+  reset() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: [],
+    });
+  }
+
+  getFormValues() {
+    const values = this.filterForm.value;
+    const ret: {[k: string]: any} = {};
+
+    if (values.codODes) { ret.codODes = values.codODes; }
+    if (values.idRubro) { ret.idRubro = values.idRubro; }
+    if (values.idProveedor) { ret.idProveedor = values.idProveedor; }
+    if (values.visibilidad) { ret.visibilidad = values.visibilidad; }
+    if (values.oferta) { ret.oferta = values.oferta; }
+    if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
+    if (values.sentido) { ret.sentido = values.sentido; }
+
+    return ret;
+  }
+
+  getApplyFilters() {
+    const values = this.filterForm.value;
+    this.applyFilters = [];
+
+    if (values.codODes) {
+      this.applyFilters.push({ label: 'Código o descripción', value: values.codODes });
+    }
+
+    if (values.idRubro) {
+      this.applyFilters.push({ label: 'Rubro', value: values.idRubro, asyncFn: this.getRubroInfoAsync(values.idRubro) });
+    }
+
+    if (values.idProveedor) {
+      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
+    }
+
+    if (values.visibilidad) {
+      this.applyFilters.push({ label: 'Visibilidad', value: values.visibilidad });
+    }
+
+    if (values.oferta) {
+      this.applyFilters.push({ label: 'Ofertas', value: 'Sí' });
+    }
+    this.ordenarPorAplicado = this.getTextoOrdenarPor();
+    this.sentidoAplicado = this.getTextoSentido();
+  }
+
+  loadMore() {
+    this.getProductosFromQueryParams(null, false);
+  }
+
+  getTextoOrdenarPor() {
+    if (this.filterForm && this.filterForm.get('ordenarPor')) {
+      const val = this.filterForm.get('ordenarPor').value;
+      const aux = this.ordenarPorOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getTextoSentido() {
+    if (this.filterForm && this.filterForm.get('sentido')) {
+      const val = this.filterForm.get('sentido').value;
+      const aux = this.sentidoOptions.filter(e => e.val === val);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getRubroInfoAsync(id: number): Observable<string> {
+    return this.rubrosService.getRubro(id).pipe(map((r: Rubro) => r.nombre));
+  }
+
+  getProveedorInfoAsync(id: number): Observable<string> {
+    return this.proveedoresService.getProveedor(id).pipe(map((p: Proveedor) => p.razonSocial));
+  }
+
+  getCantidad(p: Producto) {
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
+      c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
+    );
+    return aux.length ? aux[0].cantidad : 0;
+  }
+
+  getCantOtrasSucursales(p: Producto) {
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
+      c => c.idSucursal !== Number(this.sucursalesService.getIdSucursal())
+    );
+    let cant = 0;
+    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
+    return cant;
+  }
+
+  estaBonificado(p: Producto) {
+    return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
 }

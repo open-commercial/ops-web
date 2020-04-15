@@ -178,7 +178,9 @@ export class FacturasCompraComponent implements OnInit {
       this.facturas = [];
     }
     this.getApplyFilters();
-    this.facturasCompraService.buscar(terminos, this.page)
+
+    terminos.pagina = this.page;
+    this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));
@@ -232,7 +234,7 @@ export class FacturasCompraComponent implements OnInit {
     this.applyFilters = [];
 
     if (values.idProveedor) {
-      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedoresInfoAsync(values.idProveedor) });
+      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
     }
 
     if (values.idProducto) {
@@ -296,7 +298,7 @@ export class FacturasCompraComponent implements OnInit {
     return '';
   }
 
-  getProveedoresInfoAsync(id: number): Observable<string> {
+  getProveedorInfoAsync(id: number): Observable<string> {
     return this.proveedoresService.getProveedor(id).pipe(map((p: Proveedor) => p.razonSocial));
   }
 

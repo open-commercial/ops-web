@@ -235,7 +235,9 @@ export class FacturasVentaComponent implements OnInit {
       this.facturas = [];
     }
     this.getApplyFilters();
-    this.facturasVentaService.buscar(terminos, this.page)
+
+    terminos.pagina = this.page;
+    this.facturasVentaService.buscar(terminos as BusquedaFacturaVentaCriteria)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.facturas.push(e));

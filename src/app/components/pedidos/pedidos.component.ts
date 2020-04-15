@@ -182,7 +182,9 @@ export class PedidosComponent implements OnInit {
       this.pedidos = [];
     }
     this.getApplyFilters();
-    this.pedidosService.buscar(terminos, this.page)
+
+    terminos.pagina = this.page;
+    this.pedidosService.buscar(terminos as BusquedaPedidoCriteria)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
         p.content.forEach((e) => this.pedidos.push(e));
@@ -328,7 +330,7 @@ export class PedidosComponent implements OnInit {
           )
         ;
       }
-    }, (reason) => {});
+    }, () => {});
   }
 
   editarPedido(pedido: Pedido) {
