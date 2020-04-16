@@ -36,7 +36,13 @@ export class ProductosComponent implements OnInit {
 
   ordenarPorOptions = [
     { val: 'descripcion', text: 'Descripción' },
-    { val: 'codigo', text: 'Código' }
+    { val: 'codigo', text: 'Código' },
+    { val: 'cantidadTotalEnSucursales', text: 'Total Sucursales' },
+    { val: 'bulto', text: 'Venta x Cantidad' },
+    { val: 'precioCosto', text: 'Precio Costo' },
+    { val: 'gananciaPorcentaje', text: '% Ganancia' },
+    { val: 'precioLista', text: 'Precio Lista' },
+    { val: 'fechaAlta', text: 'Fecha Alta' },
   ];
 
   sentidoOptions = [
