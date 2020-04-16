@@ -91,6 +91,7 @@ import { FacturasCompraHomeComponent } from './components/facturas-compra-home/f
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
 import { ProductosComponent } from './components/productos/productos.component';
+import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -134,6 +135,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     VerFacturaComponent,
     FacturasCompraHomeComponent,
     LoadingOverlayComponent,
+    ProductosHomeComponent,
+    ProductosComponent,
+    VerProductoComponent,
   ],
   imports: [
     BrowserModule,

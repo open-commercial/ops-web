@@ -4,7 +4,8 @@
     <div class="text-right m-0">
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="productosFiltersCollapse"
-              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed">
+              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
@@ -93,7 +94,7 @@
         <div class="img-container px-2 flex-shrink-0 flex-grow-0">
           <img [src]="p.urlImagen ? p.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
         </div>
-        <div class="flex-fill d-flex flex-column p-2 info">
+        <div class="flex-fill d-flex flex-column">
           <span>
             <span class="mr-2 codigo">{{ p.codigo }}</span>
             <span *ngIf="p.oferta" class="badge badge-success">OFERTA {{ p.porcentajeBonificacionOferta }}%</span>
@@ -115,7 +116,7 @@
       <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
         <ul class="list-inline mb-0 text-center d-inline-block">
           <li class="list-inline-item">
-            <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave">
+            <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verProducto(p)">
               <fa-icon [icon]="['far', 'eye']"></fa-icon>
             </button>
           </li>

@@ -284,4 +284,8 @@ export class ProductosComponent implements OnInit {
   estaBonificado(p: Producto) {
     return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
+
+  verProducto(producto: Producto) {
+    this.router.navigate(['/productos/ver', producto.idProducto]);
+  }
 }
