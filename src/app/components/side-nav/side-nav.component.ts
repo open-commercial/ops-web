@@ -10,6 +10,7 @@ import { Rol } from '../../models/rol';
 })
 export class SideNavComponent implements OnInit {
   usuario: Usuario;
+  tieneRolAdminOEncargado = false;
 
   @Output() menuOptionClick = new EventEmitter<void>();
 
@@ -17,7 +18,10 @@ export class SideNavComponent implements OnInit {
 
   ngOnInit() {
     this.authService.getLoggedInUsuario()
-      .subscribe((u: Usuario) => this.usuario = u)
+      .subscribe((u: Usuario) => {
+        this.usuario = u;
+        this.tieneRolAdminOEncargado = this.usuarioTieneRol(Rol.ADMINISTRADOR) || this.usuarioTieneRol(Rol.ENCARGADO);
+      })
     ;
   }
 
@@ -27,9 +31,5 @@ export class SideNavComponent implements OnInit {
 
   usuarioTieneRol(r: Rol) {
     return this.usuario && this.usuario.roles.filter(x => x === r).length > 0;
-  }
-
-  tieneRolAdminOEncargado() {
-    return this.usuarioTieneRol(Rol.ADMINISTRADOR) || this.usuarioTieneRol(Rol.ENCARGADO);
   }
 }

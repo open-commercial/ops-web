@@ -1,4 +1,3 @@
-import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 
 export class MomentDateFormatter {
