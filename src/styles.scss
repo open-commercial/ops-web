@@ -20,6 +20,10 @@ body {
   overflow-x: hidden;
 }
 
+.navbar {
+  padding: .5rem;
+}
+
 .ng-select.ng-select-single .ng-select-container {
   height: 38px;
 }
@@ -123,3 +127,4 @@ a.fake-cursor {
   font-size: 80%;
   color: $danger;
 }
+

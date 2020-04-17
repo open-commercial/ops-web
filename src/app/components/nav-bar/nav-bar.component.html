@@ -1,7 +1,10 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
-  <a class="navbar-brand fake-cursor" (click)="menuBtnClick()">
+  <span class="navbar-brand">
+    <button type="button" class="btn btn-link d-md-none fake-cursor mr-1" (click)="menuBtnClick()">
+      <fa-icon [icon]="['fas', 'bars']" size="lg"></fa-icon>
+    </button>
     <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1557317339/assets/logo-globodeoro-200x200px.png'" alt="">
-  </a>
+  </span>
 
   <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
     <ul class="navbar-nav ml-auto">

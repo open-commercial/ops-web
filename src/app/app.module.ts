@@ -15,6 +15,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -165,6 +166,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
+    library.addIcons(faBars);
     library.addIcons(faCircleNotch);
     library.addIcons(faFileInvoice);
     library.addIcons(faFilter);

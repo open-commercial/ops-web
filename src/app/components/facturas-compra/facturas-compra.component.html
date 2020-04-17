@@ -92,7 +92,7 @@
         <div class="d-flex flex-column flex-fill">
           <div class="d-flex flex-row flex-wrap">
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ f.fecha | date:'dd/MM/yyyy hh:mm' }}
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ f.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
             <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1">
           {{ f.tipoComprobante.replace('_', ' ') }}
@@ -104,7 +104,7 @@
           <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) }}
         </span>
             <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="f.cae">
-          CAE: {{ f.cae }} (vto: {{ f.vencimientoCAE | date:'dd/MM/yyyy hh:mm' }})
+          CAE: {{ f.cae }} (vto: {{ f.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
         </span>
           </div>
           <div class="px-2 flex-fill">
