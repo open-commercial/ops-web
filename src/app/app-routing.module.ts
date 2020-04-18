@@ -16,6 +16,7 @@ import { FacturasCompraHomeComponent } from './components/facturas-compra-home/f
 import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
+import { ProductoComponent } from './components/producto/producto.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -47,6 +48,8 @@ const routes: Routes = [
       { path: 'productos', component: ProductosHomeComponent, runGuardsAndResolvers: 'always',
         children: [
           { path: '', component: ProductosComponent },
+          { path: 'nuevo', component: ProductoComponent },
+          { path: 'editar/:id', component: ProductoComponent },
           { path: 'ver/:id', component: VerProductoComponent }
         ]
       }

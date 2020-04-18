@@ -91,6 +91,7 @@ import { LoadingOverlayComponent } from './components/loading-overlay/loading-ov
 import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
+import { ProductoComponent } from './components/producto/producto.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -135,6 +136,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ProductosHomeComponent,
     ProductosComponent,
     VerProductoComponent,
+    ProductoComponent,
   ],
   imports: [
     BrowserModule,
