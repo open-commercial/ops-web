@@ -40,22 +40,8 @@
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="ordenar-por">Ordenar Por</span>
-              </div>
-              <select class="custom-select" aria-label="Ordernar por" aria-describedby="ordenar-por" formControlName="ordenarPor">
-                <option *ngFor="let opo of ordenarPorOptions" value="{{ opo.val }}">{{ opo.text }}</option>
-              </select>
-            </div>
-            <div class="input-group mb-0">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="sentido">Sentido</span>
-              </div>
-              <select class="custom-select" aria-label="Ordernar por" aria-describedby="sentido" formControlName="sentido">
-                <option *ngFor="let so of sentidoOptions" value="{{ so.val }}">{{ so.text }}</option>
-              </select>
-            </div>
+              <app-ordenar-por-filtro [values]="ordenarPorOptions" formControlName="ordenarPor" #ordernarPor></app-ordenar-por-filtro>
+              <app-sentido-filtro formControlName="sentido" #sentido></app-sentido-filtro>
           </div>
         </div>
       </div>
@@ -88,7 +74,7 @@
       </em>
     </div>
     <div class="facturas my-2">
-      <div *ngFor="let f of facturas" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
+      <div *ngFor="let f of items" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
         <div class="d-flex flex-column flex-fill">
           <div class="d-flex flex-row flex-wrap">
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1">

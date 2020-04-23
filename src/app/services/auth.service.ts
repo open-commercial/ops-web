@@ -9,6 +9,7 @@ import { Usuario } from '../models/usuario';
 import { UsuariosService } from './usuarios.service';
 import { StorageService } from './storage.service';
 import { LoadingOverlayService } from './loading-overlay.service';
+import { Rol } from '../models/rol';
 
 @Injectable()
 export class AuthService {
@@ -91,5 +92,9 @@ export class AuthService {
 
   setAuthenticationInfo(token: string) {
     this.storageService.setItem('token', token);
+  }
+
+  userHasAnyOfTheseRoles(u: Usuario, roles: Rol[]): boolean {
+    return u && u.roles.filter(x => roles.includes(x)).length > 0;
   }
 }

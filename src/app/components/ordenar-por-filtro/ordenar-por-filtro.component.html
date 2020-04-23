@@ -1,0 +1,8 @@
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="ordenar-por">Ordenar Por</span>
+  </div>
+  <select [value]="value" class="custom-select" aria-label="Ordernar por" aria-describedby="ordenar-por" (change)="select($event)">
+    <option *ngFor="let v of values" [value]="v.val">{{ v.text }}</option>
+  </select>
+</div>

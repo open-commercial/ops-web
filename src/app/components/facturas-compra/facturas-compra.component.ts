@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
 import { finalize, map } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
@@ -16,15 +16,15 @@ import { ProductosService } from '../../services/productos.service';
 import { Proveedor } from '../../models/proveedor';
 import { FacturaCompra } from '../../models/factura-compra';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
+import { ListaBaseComponent } from '../lista-base.component';
 
 @Component({
   selector: 'app-facturas-compra',
   templateUrl: './facturas-compra.component.html',
   styleUrls: ['./facturas-compra.component.scss']
 })
-export class FacturasCompraComponent implements OnInit {
-  facturas = [];
-
+export class FacturasCompraComponent extends ListaBaseComponent implements OnInit {
   tiposFactura = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
@@ -39,39 +39,26 @@ export class FacturasCompraComponent implements OnInit {
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptions = [
-    { val: 'DESC', text: 'Descendente' },
-    { val: 'ASC',  text: 'Ascendente' },
-  ];
-
-  isFiltersCollapsed = true;
-
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
-
-  filterForm: FormGroup;
-  applyFilters = [];
-
   helper = HelperService;
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
+  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: OrdenarPorFiltroComponent;
+  @ViewChild('sentido', { static: false }) sentidoElement: OrdenarPorFiltroComponent;
 
-  constructor(private facturasCompraService: FacturasCompraService,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              private facturasCompraService: FacturasCompraService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService,
-              private router: Router,
-              private route: ActivatedRoute,
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
-              private loadingOverlayService: LoadingOverlayService) { }
+              private loadingOverlayService: LoadingOverlayService) {
+    super(route, router, sucursalesService);
+  }
 
   ngOnInit() {
-    this.createFilterForm();
-    this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
+    super.ngOnInit();
   }
 
   getTerminosFromQueryParams(params = null) {
@@ -87,8 +74,8 @@ export class FacturasCompraComponent implements OnInit {
       tipoFactura: '',
       numSerie: '',
       numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
+      ordenarPor: '',
+      sentido: '',
     });
 
     const ps = params ? params.params : this.route.snapshot.queryParams;
@@ -136,22 +123,29 @@ export class FacturasCompraComponent implements OnInit {
       terminos.numFactura = Number(ps.numFactura);
     }
 
-    if (ps.ordenarPor) {
-      this.filterForm.get('ordenarPor').setValue(ps.ordenarPor);
-      terminos.ordenarPor = ps.ordenarPor;
-    }
+    let ordenarPorVal = this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '';
+    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
+    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
+    terminos.ordenarPor = ordenarPorVal;
 
-    if (ps.sentido) {
-      this.filterForm.get('sentido').setValue(ps.sentido);
-      terminos.sentido = ps.sentido;
-    }
+    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
+    this.filterForm.get('sentido').setValue(sentidoVal);
+    terminos.sentido = sentidoVal;
 
     return terminos;
   }
 
-  getFacturasFromQueryParams(params = null, clearResults = true) {
-    const terminos = this.getTerminosFromQueryParams(params);
-    this.getFacturas(clearResults, terminos);
+  getItems(terminos) {
+    this.loadingOverlayService.activate();
+    this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((p: Pagination) => {
+        p.content.forEach((e) => this.items.push(e));
+        this.totalElements = p.totalElements;
+        this.totalPages = p.totalPages;
+        this.size = p.size;
+      })
+    ;
   }
 
   createFilterForm() {
@@ -162,48 +156,8 @@ export class FacturasCompraComponent implements OnInit {
       tipoFactura: '',
       numSerie: '',
       numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
-    });
-  }
-
-  getFacturas(clearResults: boolean = false, terminos = null) {
-    terminos = terminos || this.getFormValues();
-    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
-
-    this.page += 1;
-    this.loadingOverlayService.activate();
-    if (clearResults) {
-      this.page = 0;
-      this.facturas = [];
-    }
-    this.getApplyFilters();
-
-    terminos.pagina = this.page;
-    this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.facturas.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
-    ;
-  }
-
-  filter() {
-    const qParams = this.getFormValues();
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: qParams,
-    });
-    this.isFiltersCollapsed = true;
-  }
-
-  reset() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: [],
+      ordenarPor: '',
+      sentido: '',
     });
   }
 
@@ -229,7 +183,7 @@ export class FacturasCompraComponent implements OnInit {
     return ret;
   }
 
-  getApplyFilters() {
+  getAppliedFilters() {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
@@ -272,30 +226,10 @@ export class FacturasCompraComponent implements OnInit {
       if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
-    this.ordenarPorAplicado = this.getTextoOrdenarPor();
-    this.sentidoAplicado = this.getTextoSentido();
-  }
-
-  loadMore() {
-    this.getFacturasFromQueryParams(null, false);
-  }
-
-  getTextoOrdenarPor() {
-    if (this.filterForm && this.filterForm.get('ordenarPor')) {
-      const val = this.filterForm.get('ordenarPor').value;
-      const aux = this.ordenarPorOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
-  }
-
-  getTextoSentido() {
-    if (this.filterForm && this.filterForm.get('sentido')) {
-      const val = this.filterForm.get('sentido').value;
-      const aux = this.sentidoOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
+    setTimeout(() => {
+      this.ordenarPorAplicado = this.ordenarPorElement ? this.ordenarPorElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoElement ? this.sentidoElement.getTexto() : '';
+    }, 500);
   }
 
   getProveedorInfoAsync(id: number): Observable<string> {
