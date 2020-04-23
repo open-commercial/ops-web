@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { FacturaVenta } from '../../models/factura-venta';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
@@ -23,14 +23,15 @@ import { AuthService } from '../../services/auth.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
+import { ListaBaseComponent } from '../lista-base.component';
 
 @Component({
   selector: 'app-facturas-venta',
   templateUrl: './facturas-venta.component.html',
   styleUrls: ['./facturas-venta.component.scss']
 })
-export class FacturasVentaComponent implements OnInit {
-  facturas = [];
+export class FacturasVentaComponent extends ListaBaseComponent implements OnInit {
   rol = Rol;
   tiposDeComprobante = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
@@ -46,69 +47,55 @@ export class FacturasVentaComponent implements OnInit {
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptions = [
-    { val: 'DESC', text: 'Descendente' },
-    { val: 'ASC',  text: 'Ascendente' },
-  ];
-
-  isFiltersCollapsed = true;
-
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
-
-  filterForm: FormGroup;
-  applyFilters = [];
-
-  helper = HelperService;
-
   ordenarPorAplicado = '';
   sentidoAplicado = '';
+  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: OrdenarPorFiltroComponent;
+  @ViewChild('sentido', { static: false }) sentidoElement: OrdenarPorFiltroComponent;
+
+  helper = HelperService;
 
   usuario: Usuario;
 
   allowedRolesToCrear: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
-  hasRolToCrear = false;
+  hasRoleToCrear = false;
 
   allowedRolesToAutorizar: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
-  hasRolToAutorizar = false;
+  hasRoleToAutorizar = false;
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
-  hasRolToDelete = false;
+  hasRoleToDelete = false;
 
   allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
-  hasRolToEnviarPorEmail = false;
+  hasRoleToEnviarPorEmail = false;
 
-  constructor(private facturasService: FacturasService,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService,
-              private router: Router,
-              private route: ActivatedRoute,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
               private authService: AuthService,
               private mensajeService: MensajeService,
-              public loadingOverlayService: LoadingOverlayService) { }
+              public loadingOverlayService: LoadingOverlayService) {
+    super(route, router, sucursalesService);
+  }
 
   ngOnInit() {
-    this.createFilterForm();
+    super.ngOnInit();
     this.loadingOverlayService.activate();
     this.authService.getLoggedInUsuario()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((u: Usuario) => {
         this.usuario = u;
-        this.hasRolToCrear = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToCrear.includes(x)).length > 0;
-        this.hasRolToAutorizar = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToAutorizar.includes(x)).length > 0;
-        this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
-        this.hasRolToEnviarPorEmail = this.usuario &&
-          this.usuario.roles.filter(x => this.allowedRolesToEnviarPorEmail.includes(x)).length > 0;
-      });
-
-    this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
+        this.hasRoleToCrear = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToCrear);
+        this.hasRoleToAutorizar = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToAutorizar);
+        this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToDelete);
+        this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToEnviarPorEmail);
+      })
+    ;
   }
 
   getTerminosFromQueryParams(params = null) {
@@ -117,19 +104,7 @@ export class FacturasVentaComponent implements OnInit {
       pagina: 0,
     };
 
-    this.filterForm.reset({
-      idCliente: '',
-      idUsuario: '',
-      idProducto: '',
-      idViajante: '',
-      rangoFecha: null,
-      tipoFactura: '',
-      nroPedido: '',
-      numSerie: '',
-      numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
-    });
+    this.resetFilterForm();
 
     const ps = params ? params.params : this.route.snapshot.queryParams;
 
@@ -191,22 +166,29 @@ export class FacturasVentaComponent implements OnInit {
       terminos.numFactura = Number(ps.numFactura);
     }
 
-    if (ps.ordenarPor) {
-      this.filterForm.get('ordenarPor').setValue(ps.ordenarPor);
-      terminos.ordenarPor = ps.ordenarPor;
-    }
+    let ordenarPorVal = this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '';
+    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
+    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
+    terminos.ordenarPor = ordenarPorVal;
 
-    if (ps.sentido) {
-      this.filterForm.get('sentido').setValue(ps.sentido);
-      terminos.sentido = ps.sentido;
-    }
+    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
+    this.filterForm.get('sentido').setValue(sentidoVal);
+    terminos.sentido = sentidoVal;
 
     return terminos;
   }
 
-  getFacturasFromQueryParams(params = null, clearResults = true) {
-    const terminos = this.getTerminosFromQueryParams(params);
-    this.getFacturas(clearResults, terminos);
+  getItems(terminos) {
+    this.loadingOverlayService.activate();
+    this.facturasVentaService.buscar(terminos as BusquedaFacturaVentaCriteria)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((p: Pagination) => {
+        p.content.forEach((e) => this.items.push(e));
+        this.totalElements = p.totalElements;
+        this.totalPages = p.totalPages;
+        this.size = p.size;
+      })
+    ;
   }
 
   createFilterForm() {
@@ -220,47 +202,24 @@ export class FacturasVentaComponent implements OnInit {
       nroPedido: '',
       numSerie: '',
       numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
+      ordenarPor: '',
+      sentido: '',
     });
   }
 
-  getFacturas(clearResults: boolean = false, terminos = null) {
-    terminos = terminos || this.getFormValues();
-    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
-    this.page += 1;
-    this.loadingOverlayService.activate();
-    if (clearResults) {
-      this.page = 0;
-      this.facturas = [];
-    }
-    this.getApplyFilters();
-
-    terminos.pagina = this.page;
-    this.facturasVentaService.buscar(terminos as BusquedaFacturaVentaCriteria)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.facturas.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
-    ;
-  }
-
-  filter() {
-    const qParams = this.getFormValues();
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: qParams,
-    });
-    this.isFiltersCollapsed = true;
-  }
-
-  reset() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: [],
+  resetFilterForm() {
+    this.filterForm.reset({
+      idCliente: '',
+      idUsuario: '',
+      idProducto: '',
+      idViajante: '',
+      rangoFecha: null,
+      tipoFactura: '',
+      nroPedido: '',
+      numSerie: '',
+      numFactura: '',
+      ordenarPor: '',
+      sentido: '',
     });
   }
 
@@ -286,7 +245,7 @@ export class FacturasVentaComponent implements OnInit {
     return ret;
   }
 
-  getApplyFilters() {
+  getAppliedFilters() {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
@@ -341,16 +300,14 @@ export class FacturasVentaComponent implements OnInit {
       if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
-    this.ordenarPorAplicado = this.getTextoOrdenarPor();
-    this.sentidoAplicado = this.getTextoSentido();
-  }
-
-  loadMore() {
-    this.getFacturasFromQueryParams(null, false);
+    setTimeout(() => {
+      this.ordenarPorAplicado = this.ordenarPorElement ? this.ordenarPorElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoElement ? this.sentidoElement.getTexto() : '';
+    }, 500);
   }
 
   puedeCrearFactura() {
-    return this.hasRolToCrear;
+    return this.hasRoleToCrear;
   }
 
   crearFactura() {
@@ -367,7 +324,7 @@ export class FacturasVentaComponent implements OnInit {
   }
 
   puedeAutorizarFactura(f: FacturaVenta) {
-    return this.hasRolToAutorizar && !f.cae &&
+    return this.hasRoleToAutorizar && !f.cae &&
       [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C].indexOf(f.tipoComprobante) >= 0;
   }
 
@@ -383,8 +340,8 @@ export class FacturasVentaComponent implements OnInit {
       .subscribe(
         (f: FacturaVenta) => {
           if (f.cae) {
-            const idx: number = this.facturas.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
-            if (idx >= 0) { this.facturas[idx] = f; }
+            const idx: number = this.items.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
+            if (idx >= 0) { this.items[idx] = f; }
             this.mensajeService.msg('La factura fué autorizada correctamente.', MensajeModalType.INFO);
           } else {
             this.mensajeService.msg('La factura NO fué autorizada por AFIP.', MensajeModalType.ERROR);
@@ -396,7 +353,7 @@ export class FacturasVentaComponent implements OnInit {
   }
 
   puedeEliminarFactura(f: FacturaVenta) {
-    return this.hasRolToDelete && !f.cae;
+    return this.hasRoleToDelete && !f.cae;
   }
 
   eliminarFactura(factura: FacturaVenta) {
@@ -414,8 +371,8 @@ export class FacturasVentaComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
-              const idx: number = this.facturas.findIndex((f: FacturaVenta) => f.idFactura === factura.idFactura);
-              if (idx >= 0) { this.facturas.splice(idx, 1); }
+              const idx: number = this.items.findIndex((f: FacturaVenta) => f.idFactura === factura.idFactura);
+              if (idx >= 0) { this.items.splice(idx, 1); }
             },
             err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
           )
@@ -425,7 +382,7 @@ export class FacturasVentaComponent implements OnInit {
   }
 
   puedeEnviarPorEmail() {
-    return this.hasRolToEnviarPorEmail;
+    return this.hasRoleToEnviarPorEmail;
   }
 
   enviarPorEmail(factura: FacturaVenta) {
@@ -448,24 +405,6 @@ export class FacturasVentaComponent implements OnInit {
         ;
       }
     });
-  }
-
-  getTextoOrdenarPor() {
-    if (this.filterForm && this.filterForm.get('ordenarPor')) {
-      const val = this.filterForm.get('ordenarPor').value;
-      const aux = this.ordenarPorOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
-  }
-
-  getTextoSentido() {
-    if (this.filterForm && this.filterForm.get('sentido')) {
-      const val = this.filterForm.get('sentido').value;
-      const aux = this.sentidoOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
   }
 
   getClienteInfoAsync(id: number): Observable<string> {

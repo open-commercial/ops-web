@@ -4,7 +4,7 @@ import { Pedido } from '../../models/pedido';
 import { Pagination } from '../../models/pagination';
 import { EstadoPedido } from '../../models/estado.pedido';
 import { finalize, map } from 'rxjs/operators';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
@@ -23,14 +23,14 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { ProductosService } from '../../services/productos.service';
 import { StorageService } from '../../services/storage.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { ListaBaseComponent } from '../lista-base.component';
 
 @Component({
   selector: 'app-pedidos',
   templateUrl: './pedidos.component.html',
   styleUrls: ['./pedidos.component.scss']
 })
-export class PedidosComponent implements OnInit {
-  pedidos: Pedido[] = [];
+export class PedidosComponent extends ListaBaseComponent implements OnInit {
   estado = EstadoPedido;
   rol = Rol;
   usuario: Usuario;
@@ -41,61 +41,42 @@ export class PedidosComponent implements OnInit {
     { value: EstadoPedido.CERRADO, text: EstadoPedido[EstadoPedido.CERRADO] },
   ];
 
-  isFiltersCollapsed = true;
-
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
-
-  filterForm: FormGroup;
-  applyFilters = [];
-
-  allowedRolesToDelete: Rol[] = [
-    Rol.ADMINISTRADOR,
-    Rol.ENCARGADO,
-    Rol.VENDEDOR,
-  ];
+  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToDelete = false;
 
-  allowedRolesToEdit: Rol[] = [
-    Rol.ADMINISTRADOR,
-    Rol.ENCARGADO,
-    Rol.VENDEDOR,
-  ];
+  allowedRolesToEdit: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToEdit = false;
 
-  constructor(private pedidosService: PedidosService,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              private pedidosService: PedidosService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService,
               private authService: AuthService,
               private mensajeService: MensajeService,
-              private router: Router,
-              private route: ActivatedRoute,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
               private storageService: StorageService,
-              public loadingOverlayService: LoadingOverlayService) { }
+              public loadingOverlayService: LoadingOverlayService) {
+    super(route, router, sucursalesService);
+  }
 
   getEstadoValue(e: EstadoPedido): any {
     return EstadoPedido[e];
   }
 
   ngOnInit() {
-    this.createFilterForm();
+    super.ngOnInit();
     this.loadingOverlayService.activate();
     this.authService.getLoggedInUsuario()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((u: Usuario) => {
         this.usuario = u;
-        this.hasRolToDelete = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToDelete.includes(x)).length > 0;
-        this.hasRolToEdit = this.usuario && this.usuario.roles.filter(x => this.allowedRolesToEdit.includes(x)).length > 0;
+        this.hasRolToDelete = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToDelete);
+        this.hasRolToEdit = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToEdit);
       })
     ;
-
-    this.sucursalesService.sucursal$.subscribe(() => this.getPedidosFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getPedidosFromQueryParams(params));
   }
 
   getTerminosFromQueryParams(params = null) {
@@ -104,15 +85,7 @@ export class PedidosComponent implements OnInit {
       pagina: 0,
     };
 
-    this.filterForm.reset({
-      idCliente: '',
-      idUsuario: '',
-      idProducto: '',
-      idViajante: '',
-      rangoFecha: null,
-      estadoPedido: '',
-      nroPedido: '',
-    });
+    this.resetFilterForm();
 
     const ps = params ? params.params : this.route.snapshot.queryParams;
 
@@ -167,27 +140,12 @@ export class PedidosComponent implements OnInit {
     return terminos;
   }
 
-  getPedidosFromQueryParams(params = null, clearResults = true) {
-    const terminos = this.getTerminosFromQueryParams(params);
-    this.getPedidos(clearResults, terminos);
-  }
-
-  getPedidos(clearResults: boolean = false, terminos = null) {
-    terminos = terminos || this.getFormValues();
-    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
-    this.page += 1;
+  getItems(terminos) {
     this.loadingOverlayService.activate();
-    if (clearResults) {
-      this.page = 0;
-      this.pedidos = [];
-    }
-    this.getApplyFilters();
-
-    terminos.pagina = this.page;
     this.pedidosService.buscar(terminos as BusquedaPedidoCriteria)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.pedidos.push(e));
+        p.content.forEach((e) => this.items.push(e));
         this.totalElements = p.totalElements;
         this.totalPages = p.totalPages;
         this.size = p.size;
@@ -207,19 +165,15 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  filter() {
-    const qParams = this.getFormValues();
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: qParams,
-    });
-    this.isFiltersCollapsed = true;
-  }
-
-  reset() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: [],
+  resetFilterForm() {
+    this.filterForm.reset({
+      idCliente: '',
+      idUsuario: '',
+      idProducto: '',
+      idViajante: '',
+      rangoFecha: null,
+      estadoPedido: '',
+      nroPedido: '',
     });
   }
 
@@ -243,7 +197,7 @@ export class PedidosComponent implements OnInit {
     return ret;
   }
 
-  getApplyFilters() {
+  getAppliedFilters() {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
@@ -284,10 +238,6 @@ export class PedidosComponent implements OnInit {
     }
   }
 
-  loadMore() {
-    this.getPedidosFromQueryParams(null, false);
-  }
-
   verPedido(pedido: Pedido) {
     this.router.navigate(['/pedidos/ver', pedido.idPedido]);
   }
@@ -323,8 +273,8 @@ export class PedidosComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
-              const idx: number = this.pedidos.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
-              if (idx >= 0) { this.pedidos.splice(idx, 1); }
+              const idx: number = this.items.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
+              if (idx >= 0) { this.items.splice(idx, 1); }
             },
             err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
           )

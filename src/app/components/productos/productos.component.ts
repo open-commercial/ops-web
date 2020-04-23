@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { SucursalesService } from '../../services/sucursales.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
@@ -16,24 +16,15 @@ import { Observable } from 'rxjs';
 import { Proveedor } from '../../models/proveedor';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
+import { ListaBaseComponent } from '../lista-base.component';
+import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.scss']
 })
-export class ProductosComponent implements OnInit {
-  productos: Producto[] = [];
-  isFiltersCollapsed = true;
-
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
-
-  filterForm: FormGroup;
-  applyFilters = [];
-
+export class ProductosComponent extends ListaBaseComponent implements OnInit {
   ordenarPorOptions = [
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
@@ -45,32 +36,29 @@ export class ProductosComponent implements OnInit {
     { val: 'fechaAlta', text: 'Fecha Alta' },
   ];
 
-  sentidoOptions = [
-    { val: 'DESC', text: 'Descendente' },
-    { val: 'ASC',  text: 'Ascendente' },
-  ];
-
   ordenarPorAplicado = '';
   sentidoAplicado = '';
+  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: OrdenarPorFiltroComponent;
+  @ViewChild('sentido', { static: false }) sentidoElement: OrdenarPorFiltroComponent;
 
   rubros: Rubro[] = [];
   visibilidades = ['público', 'privado'];
 
-  constructor(private fb: FormBuilder,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              private fb: FormBuilder,
               private rubrosService: RubrosService,
-              private sucursalesService: SucursalesService,
-              private route: ActivatedRoute,
-              private router: Router,
               public loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private productosService: ProductosService,
-              private proveedoresService: ProveedoresService) { }
+              private proveedoresService: ProveedoresService) {
+    super(route, router, sucursalesService);
+  }
 
   ngOnInit() {
+    super.ngOnInit();
     this.getRubros();
-    this.createFilterForm();
-    this.sucursalesService.sucursal$.subscribe(() => this.getProductosFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getProductosFromQueryParams(params));
   }
 
   getRubros() {
@@ -132,9 +120,17 @@ export class ProductosComponent implements OnInit {
     return terminos;
   }
 
-  getProductosFromQueryParams(params = null, clearResults = true) {
-    const terminos = this.getTerminosFromQueryParams(params);
-    this.getProductos(clearResults, terminos);
+  getItems(terminos) {
+    this.loadingOverlayService.activate();
+    this.productosService.buscar(terminos)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((p: Pagination) => {
+        p.content.forEach((e) => this.items.push(e));
+        this.totalElements = p.totalElements;
+        this.totalPages = p.totalPages;
+        this.size = p.size;
+      })
+    ;
   }
 
   createFilterForm() {
@@ -144,8 +140,8 @@ export class ProductosComponent implements OnInit {
       idProveedor: null,
       visibilidad: null,
       oferta: false,
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
+      ordenarPor: '',
+      sentido: '',
     });
   }
 
@@ -156,46 +152,8 @@ export class ProductosComponent implements OnInit {
       idProveedor: null,
       visibilidad: null,
       oferta: false,
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
-    });
-  }
-
-  getProductos(clearResults: boolean = false, terminos = null) {
-    terminos = terminos || this.getFormValues();
-    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
-    this.page += 1;
-    this.loadingOverlayService.activate();
-    if (clearResults) {
-      this.page = 0;
-      this.productos = [];
-    }
-    this.getApplyFilters();
-    terminos.pagina = this.page;
-    this.productosService.buscar(terminos)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.productos.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
-    ;
-  }
-
-  filter() {
-    const qParams = this.getFormValues();
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: qParams,
-    });
-    this.isFiltersCollapsed = true;
-  }
-
-  reset() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: [],
+      ordenarPor: '',
+      sentido: '',
     });
   }
 
@@ -214,7 +172,7 @@ export class ProductosComponent implements OnInit {
     return ret;
   }
 
-  getApplyFilters() {
+  getAppliedFilters() {
     const values = this.filterForm.value;
     this.applyFilters = [];
 
@@ -237,30 +195,11 @@ export class ProductosComponent implements OnInit {
     if (values.oferta) {
       this.applyFilters.push({ label: 'Ofertas', value: 'Sí' });
     }
-    this.ordenarPorAplicado = this.getTextoOrdenarPor();
-    this.sentidoAplicado = this.getTextoSentido();
-  }
 
-  loadMore() {
-    this.getProductosFromQueryParams(null, false);
-  }
-
-  getTextoOrdenarPor() {
-    if (this.filterForm && this.filterForm.get('ordenarPor')) {
-      const val = this.filterForm.get('ordenarPor').value;
-      const aux = this.ordenarPorOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
-  }
-
-  getTextoSentido() {
-    if (this.filterForm && this.filterForm.get('sentido')) {
-      const val = this.filterForm.get('sentido').value;
-      const aux = this.sentidoOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
+    setTimeout(() => {
+      this.ordenarPorAplicado = this.ordenarPorElement ? this.ordenarPorElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoElement ? this.sentidoElement.getTexto() : '';
+    }, 500);
   }
 
   getRubroInfoAsync(id: number): Observable<string> {
