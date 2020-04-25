@@ -14,7 +14,7 @@ export abstract class ListaBaseComponent implements OnInit {
   protected size = 0;
 
   protected filterForm: FormGroup;
-  protected applyFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
+  protected appliedFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,

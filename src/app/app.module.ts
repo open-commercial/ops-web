@@ -94,6 +94,8 @@ import { VerProductoComponent } from './components/ver-producto/ver-producto.com
 import { ProductoComponent } from './components/producto/producto.component';
 import { OrdenarPorFiltroComponent } from './components/ordenar-por-filtro/ordenar-por-filtro.component';
 import { SentidoFiltroComponent } from './components/sentido-filtro/sentido-filtro.component';
+import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
+import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -141,6 +143,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ProductoComponent,
     OrdenarPorFiltroComponent,
     SentidoFiltroComponent,
+    FiltrosFormComponent,
+    FiltrosAplicadosComponent,
   ],
   imports: [
     BrowserModule,

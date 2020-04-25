@@ -247,42 +247,42 @@ export class FacturasVentaComponent extends ListaBaseComponent implements OnInit
 
   getAppliedFilters() {
     const values = this.filterForm.value;
-    this.applyFilters = [];
+    this.appliedFilters = [];
 
     if (values.idCliente) {
-      this.applyFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
+      this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
     }
 
     if (values.idUsuario) {
-      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
+      this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
+      this.appliedFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.idViajante) {
-      this.applyFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
+      this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 
     if (values.tipoFactura) {
-      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
+      this.appliedFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
     }
 
     if (values.nroPedido) {
-      this.applyFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
+      this.appliedFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
     }
 
     if (values.numSerie || values.numFactura) {
@@ -297,7 +297,7 @@ export class FacturasVentaComponent extends ListaBaseComponent implements OnInit
         nf = !isNaN(nf) ? nf : null;
       }
 
-      if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
+      if (ns || nf) { this.appliedFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
     setTimeout(() => {

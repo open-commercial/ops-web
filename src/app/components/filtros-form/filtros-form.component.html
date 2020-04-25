@@ -1,0 +1,16 @@
+<ng-template #noFields>
+  <div class="alert alert-danger">No fields template defined</div>
+</ng-template>
+
+<form (ngSubmit)="filter()" class="app-filtros-form border-bottom pt-0 pb-2 container-fluid" *ngIf="form">
+  <ng-container *ngTemplateOutlet="fieldsTemplate ? (fieldsTemplate) : noFields">
+  </ng-container>
+  <ul class="text-right list-inline mb-0">
+    <li class="list-inline-item">
+      <button type="submit" class="btn btn-primary"><fa-icon [icon]="['fas', 'search']"></fa-icon></button>
+    </li>
+    <li class="list-inline-item">
+      <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+    </li>
+  </ul>
+</form>
