@@ -199,42 +199,42 @@ export class PedidosComponent extends ListaBaseComponent implements OnInit {
 
   getAppliedFilters() {
     const values = this.filterForm.value;
-    this.applyFilters = [];
+    this.appliedFilters = [];
 
     if (values.idCliente) {
-      this.applyFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
+      this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
     }
 
     if (values.idUsuario) {
-      this.applyFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
+      this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
+      this.appliedFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.idViajante) {
-      this.applyFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
+      this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 
     if (values.estadoPedido) {
-      this.applyFilters.push({ label: 'Estado', value: values.estadoPedido });
+      this.appliedFilters.push({ label: 'Estado', value: values.estadoPedido });
     }
 
     if (values.nroPedido) {
-      this.applyFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
+      this.appliedFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
     }
   }
 

@@ -107,15 +107,14 @@ export class ProductosComponent extends ListaBaseComponent implements OnInit {
       terminos.oferta = true;
     }
 
-    if (ps.ordenarPor) {
-      this.filterForm.get('ordenarPor').setValue(ps.ordenarPor);
-      terminos.ordenarPor = ps.ordenarPor;
-    }
+    let ordenarPorVal = this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '';
+    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
+    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
+    terminos.ordenarPor = ordenarPorVal;
 
-    if (ps.sentido) {
-      this.filterForm.get('sentido').setValue(ps.sentido);
-      terminos.sentido = ps.sentido;
-    }
+    const sentidoVal = ps.sentido ? ps.sentido : 'ASC';
+    this.filterForm.get('sentido').setValue(sentidoVal);
+    terminos.sentido = sentidoVal;
 
     return terminos;
   }
@@ -174,26 +173,26 @@ export class ProductosComponent extends ListaBaseComponent implements OnInit {
 
   getAppliedFilters() {
     const values = this.filterForm.value;
-    this.applyFilters = [];
+    this.appliedFilters = [];
 
     if (values.codODes) {
-      this.applyFilters.push({ label: 'Código o descripción', value: values.codODes });
+      this.appliedFilters.push({ label: 'Código o descripción', value: values.codODes });
     }
 
     if (values.idRubro) {
-      this.applyFilters.push({ label: 'Rubro', value: values.idRubro, asyncFn: this.getRubroInfoAsync(values.idRubro) });
+      this.appliedFilters.push({ label: 'Rubro', value: values.idRubro, asyncFn: this.getRubroInfoAsync(values.idRubro) });
     }
 
     if (values.idProveedor) {
-      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
+      this.appliedFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
     }
 
     if (values.visibilidad) {
-      this.applyFilters.push({ label: 'Visibilidad', value: values.visibilidad });
+      this.appliedFilters.push({ label: 'Visibilidad', value: values.visibilidad });
     }
 
     if (values.oferta) {
-      this.applyFilters.push({ label: 'Ofertas', value: 'Sí' });
+      this.appliedFilters.push({ label: 'Ofertas', value: 'Sí' });
     }
 
     setTimeout(() => {

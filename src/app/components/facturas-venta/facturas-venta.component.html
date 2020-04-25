@@ -15,8 +15,8 @@
     </div>
   </div>
   <div id="facturasVentaFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pt-0 pb-2 container-fluid">
-      <div class="row">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
           <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
@@ -55,33 +55,12 @@
           </div>
         </div>
       </div>
-      <ul class="text-right list-inline mb-0">
-        <li class="list-inline-item">
-          <button type="submit" class="btn btn-primary"><fa-icon [icon]="['fas', 'search']"></fa-icon></button>
-        </li>
-        <li class="list-inline-item">
-          <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
-        </li>
-      </ul>
-    </form>
+    </ng-template>
+
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
-  <div class="alert alert-globo">
-    <div *ngIf="applyFilters.length">
-      Filtros aplicados:
-      <ul class="pl-3">
-        <li *ngFor="let f of applyFilters">
-          {{ f.label }}:
-          <app-mensaje-asicronico *ngIf="f.asyncFn" [asyncFn]="f.asyncFn"></app-mensaje-asicronico>
-          <span *ngIf="!f.asyncFn">{{ f.value }}</span>
-        </li>
-      </ul>
-    </div>
-    <em>
-      {{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}
-      <span *ngIf="ordenarPorAplicado"> ordenado{{ totalElements == 1 ? '': 's' }} por {{ ordenarPorAplicado }}</span>
-      <span *ngIf="sentidoAplicado"> con sentido {{ sentidoAplicado }}</span>
-    </em>
-  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="facturas my-2">
     <div *ngFor="let f of items" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
       <div class="d-flex flex-column flex-fill">

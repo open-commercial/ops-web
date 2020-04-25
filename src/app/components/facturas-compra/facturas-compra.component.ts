@@ -185,30 +185,30 @@ export class FacturasCompraComponent extends ListaBaseComponent implements OnIni
 
   getAppliedFilters() {
     const values = this.filterForm.value;
-    this.applyFilters = [];
+    this.appliedFilters = [];
 
     if (values.idProveedor) {
-      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
+      this.appliedFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
+      this.appliedFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 
     if (values.tipoFactura) {
-      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
+      this.appliedFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
     }
 
     if (values.numSerie || values.numFactura) {
@@ -223,7 +223,7 @@ export class FacturasCompraComponent extends ListaBaseComponent implements OnIni
         nf = !isNaN(nf) ? nf : null;
       }
 
-      if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
+      if (ns || nf) { this.appliedFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
     setTimeout(() => {
