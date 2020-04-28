@@ -96,6 +96,7 @@ import { OrdenarPorFiltroComponent } from './components/ordenar-por-filtro/orden
 import { SentidoFiltroComponent } from './components/sentido-filtro/sentido-filtro.component';
 import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
 import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
+import { ListaComponent } from './components/lista/lista.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -145,6 +146,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     SentidoFiltroComponent,
     FiltrosFormComponent,
     FiltrosAplicadosComponent,
+    ListaComponent,
   ],
   imports: [
     BrowserModule,

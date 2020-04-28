@@ -8,12 +8,10 @@ import { FormGroup } from '@angular/forms';
 })
 export class FiltrosFormComponent implements OnInit {
   private pform: FormGroup;
-  // ctx = { form: null };
 
   @Input()
   set form(value: FormGroup) {
     this.pform = value;
-    // this.ctx.form = this.pform;
   }
   get form() { return this.pform; }
 
