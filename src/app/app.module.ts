@@ -93,8 +93,7 @@ import { ProductosHomeComponent } from './components/productos-home/productos-ho
 import { ProductosComponent } from './components/productos/productos.component';
 import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
 import { ProductoComponent } from './components/producto/producto.component';
-import { OrdenarPorFiltroComponent } from './components/ordenar-por-filtro/ordenar-por-filtro.component';
-import { SentidoFiltroComponent } from './components/sentido-filtro/sentido-filtro.component';
+import { FiltroOrdenamientoComponent } from './components/filtro-ordenamiento/filtro-ordenamiento.component';
 import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
 import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
 import { ListaComponent } from './components/lista/lista.component';
@@ -145,8 +144,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ProductosComponent,
     VerProductoComponent,
     ProductoComponent,
-    OrdenarPorFiltroComponent,
-    SentidoFiltroComponent,
+    FiltroOrdenamientoComponent,
     FiltrosFormComponent,
     FiltrosAplicadosComponent,
     ListaComponent,

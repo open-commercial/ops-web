@@ -1,8 +1,0 @@
-<div class="input-group mb-0">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="sentido">Sentido</span>
-  </div>
-  <select [value]="value" class="custom-select" aria-label="Sentido" aria-describedby="sentido" (change)="select($event)">
-    <option *ngFor="let v of values" [value]="v.val">{{ v.text }}</option>
-  </select>
-</div>

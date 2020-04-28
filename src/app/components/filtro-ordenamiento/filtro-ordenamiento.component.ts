@@ -2,18 +2,18 @@ import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'app-ordenar-por-filtro',
-  templateUrl: './ordenar-por-filtro.component.html',
-  styleUrls: ['./ordenar-por-filtro.component.scss'],
+  selector: 'app-filtro-ordenamiento',
+  templateUrl: './filtro-ordenamiento.component.html',
+  styleUrls: ['./filtro-ordenamiento.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => OrdenarPorFiltroComponent),
+      useExisting: forwardRef(() => FiltroOrdenamientoComponent),
       multi: true
     }
   ]
 })
-export class OrdenarPorFiltroComponent implements OnInit, ControlValueAccessor {
+export class FiltroOrdenamientoComponent implements OnInit, ControlValueAccessor {
   value;
   isDisabled = false;
 
@@ -21,6 +21,17 @@ export class OrdenarPorFiltroComponent implements OnInit, ControlValueAccessor {
   @Input()
   set values(values: { val: string, text: string }[]) { this.pValues = values; }
   get values() { return this.pValues; }
+
+  private pLabel = '';
+
+  @Input() set label(value: string) {
+    this.pLabel = value;
+    this.pLabelId = this.label.toLowerCase().replace(' ', '_');
+  }
+  get label(): string { return this.pLabel; }
+
+  private pLabelId = '';
+  get labelId() { return this.pLabelId; }
 
   onChange = (_: any) => { };
   onTouch = () => { };

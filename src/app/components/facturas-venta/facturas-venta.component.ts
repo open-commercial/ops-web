@@ -23,7 +23,7 @@ import { AuthService } from '../../services/auth.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
+import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import { ListadoBaseComponent } from '../listado-base.component';
 
 @Component({
@@ -47,10 +47,15 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     { val: 'total', text: 'Total' },
   ];
 
+  sentidoOptions = [
+    { val: 'ASC', text: 'Ascendente' },
+    { val: 'DESC', text: 'Descendente' },
+  ];
+
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: OrdenarPorFiltroComponent;
-  @ViewChild('sentido', { static: false }) sentidoElement: OrdenarPorFiltroComponent;
+  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentido', { static: false }) sentidoElement: FiltroOrdenamientoComponent;
 
   helper = HelperService;
 
