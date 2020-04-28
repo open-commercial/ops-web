@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 import { Proveedor } from '../../models/proveedor';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
-import { ListaBaseComponent } from '../lista-base.component';
+import { ListadoBaseComponent } from '../listado-base.component';
 import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
 
 @Component({
@@ -24,7 +24,7 @@ import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-fil
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.scss']
 })
-export class ProductosComponent extends ListaBaseComponent implements OnInit {
+export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   ordenarPorOptions = [
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },

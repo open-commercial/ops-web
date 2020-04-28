@@ -46,56 +46,51 @@
         </div>
       </div>
     </ng-template>
-
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="facturas my-2">
-    <div *ngFor="let f of items" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
-      <div class="d-flex flex-column flex-fill">
-        <div class="d-flex flex-row flex-wrap">
-      <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-        <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ f.fecha | date:'dd/MM/yyyy HH:mm' }}
-      </span>
-          <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1">
-        {{ f.tipoComprobante.replace('_', ' ') }}
-      </span>
-          <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-        <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(f.numSerie, f.numFactura ) }}
-      </span>
-          <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="f.numSerieAfip">
-        <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) }}
-      </span>
-          <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="f.cae">
-        CAE: {{ f.cae }} (vto: {{ f.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
-      </span>
-        </div>
-        <div class="px-2 flex-fill">
-          <div class="d-flex flex-row flex-wrap align-items-center">
-            <div class="">
-              <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ f.razonSocialProveedor }}</span></span>
-              <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ f.nombreUsuario }}</span></span>
-              <span class="dato" *ngIf="f.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ f.nombreViajante }}</span></span>
-            </div>
-            <div class="flex-fill">
-              <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ f.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
-            </div>
+    <ng-template #info let-item>
+      <div class="d-flex flex-row flex-wrap">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1">
+          {{ item.tipoComprobante.replace('_', ' ') }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip">
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
+        </span>
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae">
+          CAE: {{ item.cae }} (vto: {{ item.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
+        </span>
+      </div>
+      <div class="px-2 flex-fill">
+        <div class="d-flex flex-row flex-wrap align-items-center">
+          <div class="">
+            <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ item.razonSocialProveedor }}</span></span>
+            <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
+            <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
+          </div>
+          <div class="flex-fill">
+            <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
           </div>
         </div>
       </div>
-      <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
-        <ul class="list-inline mb-0 text-center d-inline-block">
-          <li class="list-inline-item">
-            <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)" placement="left">
-              <fa-icon [icon]="['far', 'eye']"></fa-icon>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center mt-2">
-      <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
-    </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(item)" placement="left">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [items]="items" [page]="page" [totalPages]="totalPages" [infoTemplate]="info" [actionsTemplate]="actions" (loadMoreClick)="loadMore()"></app-lista>
   </div>
 </div>

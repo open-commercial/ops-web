@@ -38,77 +38,72 @@
         </div>
       </div>
     </ng-template>
-
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"></app-filtros-aplicados>
   <div class="pedidos my-2">
-    <div *ngFor="let p of items" class="pedido d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
-      <div class="d-flex flex-column flex-fill">
-        <div class="d-flex flex-row flex-wrap">
+    <ng-template #info let-item>
+      <div class="d-flex flex-row flex-wrap">
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ p.fecha | date:'dd/MM/yyyy HH:mm' }}
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-          <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> {{ p.nroPedido }}
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> {{ item.nroPedido }}
         </span>
-          <span class="badge ml-2 mb-2 px-2 py-1" [class.badge-success]="getEstadoValue(p.estado) === estado.ABIERTO"
-                [class.badge-danger]="getEstadoValue(p.estado) === estado.CERRADO"
-                [class.badge-warning]="getEstadoValue(p.estado) === estado.ACTIVO">
-          {{ p.estado }}
+        <span class="badge ml-2 mb-2 px-2 py-1" [class.badge-success]="getEstadoValue(item.estado) === estado.ABIERTO"
+              [class.badge-danger]="getEstadoValue(item.estado) === estado.CERRADO"
+              [class.badge-warning]="getEstadoValue(item.estado) === estado.ACTIVO">
+          {{ item.estado }}
         </span>
-        </div>
-        <div class="px-2 flex-fill">
-          <div class="d-flex flex-row flex-wrap align-items-center">
-            <div class="">
-              <span class="dato"><span class="column-name">Cliente:&nbsp;</span><span class="column-data">{{ p.cliente.nombreFiscal }}</span></span>
-              <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ p.nombreUsuario }}</span></span>
-              <span class="dato" *ngIf="p.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ p.nombreViajante }}</span></span>
-            </div>
-            <div class="">
-              <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ p.totalEstimado | currency:'ARS':'symbol':'1.0-2' }}</span></span>
-              <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ p.totalActual | currency:'ARS':'symbol':'1.0-2' }}</span></span>
-            </div>
+      </div>
+      <div class="px-2 flex-fill">
+        <div class="d-flex flex-row flex-wrap align-items-center">
+          <div class="">
+            <span class="dato"><span class="column-name">Cliente:&nbsp;</span><span class="column-data">{{ item.cliente.nombreFiscal }}</span></span>
+            <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
+            <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
+          </div>
+          <div class="">
+            <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ item.totalEstimado | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+            <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ item.totalActual | currency:'ARS':'symbol':'1.0-2' }}</span></span>
           </div>
         </div>
       </div>
-      <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
-        <ul class="list-inline mb-0 text-center d-inline-block">
-          <li class="list-inline-item">
-            <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
-               (click)="verPedido(p)">
-              <fa-icon [icon]="['far', 'eye']"></fa-icon>
-            </a>
-          </li>
-          <li class="list-inline-item" *ngIf="puedeEditarPedido(p)">
-            <a class="btn btn-primary fake-cursor" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left"
-               (click)="editarPedido(p)">
-              <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-            </a>
-          </li>
-          <li class="list-inline-item" *ngIf="puedeElimarPedido(p)">
-            <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left"
-               (click)="eliminarPedido(p)">
-              <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-            </a>
-          </li>
-          <li class="list-inline-item" *ngIf="puedeFacturarPedido(p)">
-            <a class="btn btn-primary fake-cursor" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
-               (click)="facturarPedido(p)">
-              <fa-icon [icon]="['fas', 'cash-register']"></fa-icon>
-            </a>
-          </li>
-          <li class="list-inline-item" *ngIf="puedeVerFacturas(p)">
-            <a class="btn btn-primary fake-cursor" ngbPopover="Ver Facturas" triggers="mouseenter:mouseleave" placement="left"
-               (click)="verFacturas(p)">
-              <fa-icon [icon]="['fas', 'link']"></fa-icon>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center mt-2">
-      <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
-    </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
+             (click)="verPedido(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="puedeEditarPedido(item)">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left"
+             (click)="editarPedido(item)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="puedeElimarPedido(item)">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left"
+             (click)="eliminarPedido(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="puedeFacturarPedido(item)">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
+             (click)="facturarPedido(item)">
+            <fa-icon [icon]="['fas', 'cash-register']"></fa-icon>
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="puedeVerFacturas(item)">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Ver Facturas" triggers="mouseenter:mouseleave" placement="left"
+             (click)="verFacturas(item)">
+            <fa-icon [icon]="['fas', 'link']"></fa-icon>
+          </a>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [items]="items" [page]="page" [totalPages]="totalPages" [infoTemplate]="info" [actionsTemplate]="actions" (loadMoreClick)="loadMore()"></app-lista>
   </div>
 </div>

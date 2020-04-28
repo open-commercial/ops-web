@@ -4,7 +4,7 @@ import { SucursalesService } from '../services/sucursales.service';
 import { OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-export abstract class ListaBaseComponent implements OnInit {
+export abstract class ListadoBaseComponent implements OnInit {
   protected items = [];
   protected isFiltersCollapsed = true;
 

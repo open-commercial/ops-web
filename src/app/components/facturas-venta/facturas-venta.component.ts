@@ -24,14 +24,14 @@ import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
-import { ListaBaseComponent } from '../lista-base.component';
+import { ListadoBaseComponent } from '../listado-base.component';
 
 @Component({
   selector: 'app-facturas-venta',
   templateUrl: './facturas-venta.component.html',
   styleUrls: ['./facturas-venta.component.scss']
 })
-export class FacturasVentaComponent extends ListaBaseComponent implements OnInit {
+export class FacturasVentaComponent extends ListadoBaseComponent implements OnInit {
   rol = Rol;
   tiposDeComprobante = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },

@@ -17,14 +17,14 @@ import { Proveedor } from '../../models/proveedor';
 import { FacturaCompra } from '../../models/factura-compra';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
-import { ListaBaseComponent } from '../lista-base.component';
+import { ListadoBaseComponent } from '../listado-base.component';
 
 @Component({
   selector: 'app-facturas-compra',
   templateUrl: './facturas-compra.component.html',
   styleUrls: ['./facturas-compra.component.scss']
 })
-export class FacturasCompraComponent extends ListaBaseComponent implements OnInit {
+export class FacturasCompraComponent extends ListadoBaseComponent implements OnInit {
   tiposFactura = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
