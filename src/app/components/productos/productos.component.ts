@@ -17,7 +17,7 @@ import { Proveedor } from '../../models/proveedor';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 import { ListadoBaseComponent } from '../listado-base.component';
-import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
+import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 
 @Component({
   selector: 'app-productos',
@@ -36,10 +36,15 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     { val: 'fechaAlta', text: 'Fecha Alta' },
   ];
 
+  sentidoOptions = [
+    { val: 'ASC', text: 'Ascendente' },
+    { val: 'DESC', text: 'Descendente' },
+  ];
+
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: OrdenarPorFiltroComponent;
-  @ViewChild('sentido', { static: false }) sentidoElement: OrdenarPorFiltroComponent;
+  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentido', { static: false }) sentidoElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
   visibilidades = ['público', 'privado'];

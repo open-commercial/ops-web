@@ -16,7 +16,7 @@ import { ProductosService } from '../../services/productos.service';
 import { Proveedor } from '../../models/proveedor';
 import { FacturaCompra } from '../../models/factura-compra';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import { OrdenarPorFiltroComponent } from '../ordenar-por-filtro/ordenar-por-filtro.component';
+import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import { ListadoBaseComponent } from '../listado-base.component';
 
 @Component({
@@ -39,12 +39,17 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     { val: 'total', text: 'Total' },
   ];
 
+  sentidoOptions = [
+    { val: 'ASC', text: 'Ascendente' },
+    { val: 'DESC', text: 'Descendente' },
+  ];
+
   helper = HelperService;
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: OrdenarPorFiltroComponent;
-  @ViewChild('sentido', { static: false }) sentidoElement: OrdenarPorFiltroComponent;
+  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentido', { static: false }) sentidoElement: FiltroOrdenamientoComponent;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,

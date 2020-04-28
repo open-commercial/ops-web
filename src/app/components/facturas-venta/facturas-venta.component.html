@@ -50,8 +50,8 @@
             <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
           </div>
           <div class="card card-body bg-light mb-3">
-            <app-ordenar-por-filtro [values]="ordenarPorOptions" formControlName="ordenarPor" #ordernarPor></app-ordenar-por-filtro>
-            <app-sentido-filtro formControlName="sentido" #sentido></app-sentido-filtro>
+            <app-filtro-ordenamiento [values]="ordenarPorOptions" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPor></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento [values]="sentidoOptions" [label]="'Sentido'" formControlName="sentido" #sentido></app-filtro-ordenamiento>
           </div>
         </div>
       </div>
