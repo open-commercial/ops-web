@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
-      { path: 'pedidos', component: PedidosHomeComponent,
+      { path: 'pedidos', component: PedidosHomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
         children: [
           { path: '', component: PedidosComponent },
           { path: 'nuevo', component: PedidoComponent },
