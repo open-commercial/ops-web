@@ -63,16 +63,16 @@
           <span>
             <span class="mr-2 codigo">{{ item.codigo }}</span>
             <span *ngIf="item.oferta" class="badge badge-success">OFERTA {{ item.porcentajeBonificacionOferta }}%</span>
-            <span *ngIf="!item.oferta && estaBonificado(item)" class="badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
+            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
           </span>
           <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
-          <span class="mr-2">Stock: <strong>{{ getCantidad(item) }} {{ item.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(item) }} {{ item.nombreMedida }}</span>
+          <span class="mr-2">Stock: <strong>{{ productosService.getCantidad(item) }} {{ item.nombreMedida }}</strong> - Otra Suc: {{ productosService.getCantOtrasSucursales(item) }} {{ item.nombreMedida }}</span>
           <span class="mr-2" *ngIf="item.bulto > 1">Llevando {{ item.bulto }} o más</span>
           <span class="mr-2">
-            <span class="text-nowrap" *ngIf="!((item.oferta || estaBonificado(item)) && item.bulto == 1)">
-              P.U. <span class="precio" [class.tachado]="(item.oferta || estaBonificado(item)) && item.bulto == 1">{{ item.precioLista | currency:'ARS':'symbol':'1.0-2' }}</span>
+            <span class="text-nowrap" *ngIf="!((item.oferta || productosService.estaBonificado(item)) && item.bulto == 1)">
+              P.U. <span class="precio" [class.tachado]="(item.oferta || productosService.estaBonificado(item)) && item.bulto == 1">{{ item.precioLista | currency:'ARS':'symbol':'1.0-2' }}</span>
             </span>
-            <span class="text-nowrap" *ngIf="item.oferta || estaBonificado(item)">
+            <span class="text-nowrap" *ngIf="item.oferta || productosService.estaBonificado(item)">
               P.U. {{ item.oferta ? "Oferta" : "Bonif."}} <span class="precio">{{ item.precioBonificado | currency:'ARS':'symbol':'1.0-2' }}</span>
             </span>
           </span>

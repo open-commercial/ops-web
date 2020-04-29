@@ -15,7 +15,6 @@ import { ProductosService } from '../../services/productos.service';
 import { Observable } from 'rxjs';
 import { Proveedor } from '../../models/proveedor';
 import { ProveedoresService } from '../../services/proveedores.service';
-import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 import { ListadoBaseComponent } from '../listado-base.component';
 import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 
@@ -56,7 +55,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
               private rubrosService: RubrosService,
               public loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
-              private productosService: ProductosService,
+              public productosService: ProductosService,
               private proveedoresService: ProveedoresService) {
     super(route, router, sucursalesService);
   }
@@ -212,26 +211,6 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   getProveedorInfoAsync(id: number): Observable<string> {
     return this.proveedoresService.getProveedor(id).pipe(map((p: Proveedor) => p.razonSocial));
-  }
-
-  getCantidad(p: Producto) {
-    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
-    );
-    return aux.length ? aux[0].cantidad : 0;
-  }
-
-  getCantOtrasSucursales(p: Producto) {
-    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal !== Number(this.sucursalesService.getIdSucursal())
-    );
-    let cant = 0;
-    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
-    return cant;
-  }
-
-  estaBonificado(p: Producto) {
-    return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
 
   verProducto(producto: Producto) {

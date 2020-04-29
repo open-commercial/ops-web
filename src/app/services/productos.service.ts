@@ -8,6 +8,8 @@ import { Pagination } from '../models/pagination';
 import { BusquedaProductoCriteria } from '../models/criterias/busqueda-producto-criteria';
 import { ProductosParaVerificarStock } from '../models/productos-para-verificar-stock';
 import { ProductoFaltante } from '../models/producto-faltante';
+import { CantidadEnSucursal } from '../models/cantidad-en-sucursal';
+import { SucursalesService } from './sucursales.service';
 
 @Injectable()
 export class ProductosService {
@@ -15,7 +17,8 @@ export class ProductosService {
   url = environment.apiUrl + '/api/v1/productos/';
   urlBusqueda = this.url + 'busqueda/criteria';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private sucursalesService: SucursalesService) {}
 
   buscar(criteria: BusquedaProductoCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
@@ -31,5 +34,24 @@ export class ProductosService {
 
   getDisponibilidadEnStock(ppvs: ProductosParaVerificarStock): Observable<ProductoFaltante[]> {
     return this.http.post<ProductoFaltante[]>(this.url + '/disponibilidad-stock', ppvs);
+  }
+
+  /* Helpers */
+  getCantidad(p: Producto) {
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
+      c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
+    );
+    return aux.length ? aux[0].cantidad : 0;
+  }
+  getCantOtrasSucursales(p: Producto) {
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
+      c => c.idSucursal !== Number(this.sucursalesService.getIdSucursal())
+    );
+    let cant = 0;
+    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
+    return cant;
+  }
+  estaBonificado(p: Producto) {
+    return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
 }

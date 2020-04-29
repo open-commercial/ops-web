@@ -5,7 +5,6 @@ import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { SucursalesService } from '../../services/sucursales.service';
-import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
 
 @Component({
@@ -29,7 +28,7 @@ export class ProductoModalComponent implements OnInit {
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
-              private productosService: ProductosService,
+              public productosService: ProductosService,
               private sucursalesService: SucursalesService) { }
 
   ngOnInit() {}
@@ -81,25 +80,5 @@ export class ProductoModalComponent implements OnInit {
     if (this.productoSeleccionado) {
       this.activeModal.close(this.productoSeleccionado);
     }
-  }
-
-  getCantidad(p: Producto) {
-    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
-    );
-    return aux.length ? aux[0].cantidad : 0;
-  }
-
-  getCantOtrasSucursales(p: Producto) {
-    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal !== Number(this.sucursalesService.getIdSucursal())
-    );
-    let cant = 0;
-    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
-    return cant;
-  }
-
-  estaBonificado(p: Producto) {
-    return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
 }
