@@ -18,10 +18,10 @@
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
-          <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
-          <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
-          <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
-          <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
+          <app-cliente-filtro id="clienteFiltroFV" formControlName="idCliente"></app-cliente-filtro>
+          <app-usuario-filtro id="usuarioFiltroFV" formControlName="idUsuario"></app-usuario-filtro>
+          <app-producto-filtro id="productoFiltroFV" formControlName="idProducto"></app-producto-filtro>
+          <app-usuario-filtro id="viajanteFiltroFV" formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
         </div>
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
