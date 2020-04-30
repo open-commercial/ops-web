@@ -5,9 +5,9 @@
   <div class="alert alert-danger">No actions template defined</div>
 </ng-template>
 
-<div *ngFor="let item of items" class="d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
+<div *ngFor="let item of items; let i=index" class="d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
   <div class="d-flex flex-column flex-fill">
-    <ng-container *ngTemplateOutlet="(infoTemplate ? infoTemplate : noInfo) ; context:{ $implicit: item }"></ng-container>
+    <ng-container *ngTemplateOutlet="(infoTemplate ? infoTemplate : noInfo) ; context:{ $implicit: item, index: i }"></ng-container>
   </div>
   <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2" *ngIf="actionsTemplate">
     <ng-container *ngTemplateOutlet="actionsTemplate ; context: { $implicit: item }"></ng-container>

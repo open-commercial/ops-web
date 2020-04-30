@@ -51,21 +51,21 @@
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="facturas my-2">
-    <ng-template #info let-item id="infoFC">
+    <ng-template #info let-item let-i="index" id="infoFC">
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1">
+        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
           {{ item.tipoComprobante.replace('_', ' ') }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
           <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
           <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
-        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae">
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
           CAE: {{ item.cae }} (vto: {{ item.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
         </span>
       </div>
