@@ -33,7 +33,7 @@ import { ListadoBaseComponent } from '../listado-base.component';
 })
 export class FacturasVentaComponent extends ListadoBaseComponent implements OnInit {
   rol = Rol;
-  tiposDeComprobante = [
+  tiposDeComprobanteFV = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
     { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
@@ -41,21 +41,21 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
-  ordenarPorOptions = [
+  ordenarPorOptionsFV = [
     { val: 'fecha', text: 'Fecha' },
     { val: 'cliente.nombreFiscal', text: 'Cliente' },
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptions = [
+  sentidoOptionsFV = [
     { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
   ];
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentido', { static: false }) sentidoElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorFV', { static: false }) ordenarPorFVElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoFV', { static: false }) sentidoFVElement: FiltroOrdenamientoComponent;
 
   helper = HelperService;
 
@@ -152,7 +152,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     }
 
     if (ps.tipoComprobante) {
-      this.filterForm.get('tipoFactura').setValue(ps.tipoComprobante);
+      this.filterForm.get('tipoComprobante').setValue(ps.tipoComprobante);
       terminos.tipoComprobante = ps.tipoComprobante;
     }
 
@@ -171,7 +171,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       terminos.numFactura = Number(ps.numFactura);
     }
 
-    let ordenarPorVal = this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '';
+    let ordenarPorVal = this.ordenarPorOptionsFV.length ? this.ordenarPorOptionsFV[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;
@@ -203,7 +203,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       idProducto: '',
       idViajante: '',
       rangoFecha: null,
-      tipoFactura: '',
+      tipoComprobante: '',
       nroPedido: '',
       numSerie: '',
       numFactura: '',
@@ -219,7 +219,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       idProducto: '',
       idViajante: '',
       rangoFecha: null,
-      tipoFactura: '',
+      tipoComprobante: '',
       nroPedido: '',
       numSerie: '',
       numFactura: '',
@@ -239,7 +239,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     if (values.idCliente) { ret.idCliente = values.idCliente; }
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
     if (values.idProducto) { ret.idProducto = values.idProducto; }
-    if (values.tipoFactura) { ret.tipoComprobante = values.tipoFactura; }
+    if (values.tipoComprobante) { ret.tipoComprobante = values.tipoComprobante; }
     if (values.idViajante) { ret.idViajante = values.idViajante; }
     if (values.numSerie) { ret.numSerie = values.numSerie; }
     if (values.numFactura) { ret.numFactura = values.numFactura; }
@@ -282,8 +282,8 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       });
     }
 
-    if (values.tipoFactura) {
-      this.appliedFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
+    if (values.tipoComprobante) {
+      this.appliedFilters.push({ label: 'Tipo de Comprobante', value: values.tipoComprobante.replace('_',  ' ') });
     }
 
     if (values.nroPedido) {
@@ -306,8 +306,8 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     }
 
     setTimeout(() => {
-      this.ordenarPorAplicado = this.ordenarPorElement ? this.ordenarPorElement.getTexto() : '';
-      this.sentidoAplicado = this.sentidoElement ? this.sentidoElement.getTexto() : '';
+      this.ordenarPorAplicado = this.ordenarPorFVElement ? this.ordenarPorFVElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoFVElement ? this.sentidoFVElement.getTexto() : '';
     }, 500);
   }
 

@@ -25,7 +25,7 @@ import { ListadoBaseComponent } from '../listado-base.component';
   styleUrls: ['./facturas-compra.component.scss']
 })
 export class FacturasCompraComponent extends ListadoBaseComponent implements OnInit {
-  tiposFactura = [
+  tiposDeComprobantesFC = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
     { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
@@ -33,13 +33,13 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
-  ordenarPorOptions = [
+  ordenarPorOptionsFC = [
     { val: 'fecha', text: 'Fecha' },
     { val: 'proveedor.razonSocial', text: 'Proveedor' },
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptions = [
+  sentidoOptionsFC = [
     { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
   ];
@@ -48,8 +48,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentido', { static: false }) sentidoElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorFC', { static: false }) ordenarPorFCElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoFC', { static: false }) sentidoFCElement: FiltroOrdenamientoComponent;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -76,7 +76,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
       idProveedor: '',
       idProducto: '',
       rangoFecha: null,
-      tipoFactura: '',
+      tipoComprobante: '',
       numSerie: '',
       numFactura: '',
       ordenarPor: '',
@@ -114,7 +114,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     }
 
     if (ps.tipoComprobante) {
-      this.filterForm.get('tipoFactura').setValue(ps.tipoComprobante);
+      this.filterForm.get('tipoComprobante').setValue(ps.tipoComprobante);
       terminos.tipoComprobante = ps.tipoComprobante;
     }
 
@@ -128,7 +128,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
       terminos.numFactura = Number(ps.numFactura);
     }
 
-    let ordenarPorVal = this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '';
+    let ordenarPorVal = this.ordenarPorOptionsFC.length ? this.ordenarPorOptionsFC[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;
@@ -158,7 +158,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
       idProveedor: '',
       idProducto: '',
       rangoFecha: null,
-      tipoFactura: '',
+      tipoComprobante: '',
       numSerie: '',
       numFactura: '',
       ordenarPor: '',
@@ -179,7 +179,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
 
     if (values.idProveedor) { ret.idProveedor = values.idProveedor; }
     if (values.idProducto) { ret.idProducto = values.idProducto; }
-    if (values.tipoFactura) { ret.tipoComprobante = values.tipoFactura; }
+    if (values.tipoComprobante) { ret.tipoComprobante = values.tipoComprobante; }
     if (values.numSerie) { ret.numSerie = values.numSerie; }
     if (values.numFactura) { ret.numFactura = values.numFactura; }
     if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
@@ -212,8 +212,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
       });
     }
 
-    if (values.tipoFactura) {
-      this.appliedFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
+    if (values.tipoComprobante) {
+      this.appliedFilters.push({ label: 'Tipo de Comprobante', value: values.tipoComprobante.replace('_',  ' ') });
     }
 
     if (values.numSerie || values.numFactura) {
@@ -232,8 +232,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     }
 
     setTimeout(() => {
-      this.ordenarPorAplicado = this.ordenarPorElement ? this.ordenarPorElement.getTexto() : '';
-      this.sentidoAplicado = this.sentidoElement ? this.sentidoElement.getTexto() : '';
+      this.ordenarPorAplicado = this.ordenarPorFCElement ? this.ordenarPorFCElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoFCElement ? this.sentidoFCElement.getTexto() : '';
     }, 500);
   }
 

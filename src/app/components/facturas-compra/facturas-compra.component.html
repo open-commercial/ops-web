@@ -17,10 +17,10 @@
           <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
           <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
           <div class="form-group">
-            <label for="tipo_factura">Tipo de Factura</label>
-            <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
+            <label for="tipo_factura">Tipo de Comprobante</label>
+            <select class="form-control" id="tipo_factura" formControlName="tipoComprobante">
               <option></option>
-              <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
+              <option *ngFor="let tdc of tiposDeComprobantesFC" [value]="tdc.val">{{ tdc.text }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -40,8 +40,8 @@
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento [values]="ordenarPorOptions" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPor></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento [values]="sentidoOptions" [label]="'Sentido'" formControlName="sentido" #sentido></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorFC" [values]="ordenarPorOptionsFC" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoOptionsFC" [label]="'Sentido'" formControlName="sentido" #sentidoFC></app-filtro-ordenamiento>
           </div>
         </div>
       </div>

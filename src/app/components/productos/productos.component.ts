@@ -24,7 +24,7 @@ import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-orden
   styleUrls: ['./productos.component.scss']
 })
 export class ProductosComponent extends ListadoBaseComponent implements OnInit {
-  ordenarPorOptions = [
+  ordenarPorOptionsP = [
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
     { val: 'cantidadTotalEnSucursales', text: 'Total Sucursales' },
@@ -35,15 +35,15 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     { val: 'fechaAlta', text: 'Fecha Alta' },
   ];
 
-  sentidoOptions = [
+  sentidoOptionsP = [
     { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
   ];
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPor', { static: false }) ordenarPorElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentido', { static: false }) sentidoElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorP', { static: false }) ordenarPorPElementP: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoP', { static: false }) sentidoPElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
   visibilidades = ['público', 'privado'];
@@ -111,7 +111,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       terminos.oferta = true;
     }
 
-    let ordenarPorVal = this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '';
+    let ordenarPorVal = this.ordenarPorOptionsP.length ? this.ordenarPorOptionsP[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;
@@ -200,8 +200,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     }
 
     setTimeout(() => {
-      this.ordenarPorAplicado = this.ordenarPorElement ? this.ordenarPorElement.getTexto() : '';
-      this.sentidoAplicado = this.sentidoElement ? this.sentidoElement.getTexto() : '';
+      this.ordenarPorAplicado = this.ordenarPorPElementP ? this.ordenarPorPElementP.getTexto() : '';
+      this.sentidoAplicado = this.sentidoPElement ? this.sentidoPElement.getTexto() : '';
     }, 500);
   }
 
