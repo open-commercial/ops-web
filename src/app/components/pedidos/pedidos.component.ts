@@ -140,6 +140,18 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
     return terminos;
   }
 
+  createFilterForm() {
+    this.filterForm = this.fb.group({
+      idCliente: '',
+      idUsuario: '',
+      idProducto: '',
+      idViajante: '',
+      rangoFecha: null,
+      estadoPedido: '',
+      nroPedido: '',
+    });
+  }
+
   getItems(terminos) {
     this.loadingOverlayService.activate();
     this.pedidosService.buscar(terminos as BusquedaPedidoCriteria)
@@ -151,18 +163,6 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
         this.size = p.size;
       })
     ;
-  }
-
-  createFilterForm() {
-    this.filterForm = this.fb.group({
-      idCliente: '',
-      idUsuario: '',
-      idProducto: '',
-      idViajante: '',
-      rangoFecha: null,
-      estadoPedido: '',
-      nroPedido: '',
-    });
   }
 
   resetFilterForm() {
