@@ -5,16 +5,16 @@ import { OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export abstract class ListadoBaseComponent implements OnInit {
-  protected items = [];
-  protected isFiltersCollapsed = true;
+  items = [];
+  isFiltersCollapsed = true;
 
-  protected page = 0;
-  protected totalElements = 0;
-  protected totalPages = 0;
-  protected size = 0;
+  page = 0;
+  totalElements = 0;
+  totalPages = 0;
+  size = 0;
 
-  protected filterForm: FormGroup;
-  protected appliedFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
+  filterForm: FormGroup;
+  appliedFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,

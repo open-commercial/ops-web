@@ -49,7 +49,6 @@ import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { faBoxes  } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -185,41 +184,41 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faBars);
-    library.addIcons(faCircleNotch);
-    library.addIcons(faFileInvoice);
-    library.addIcons(faFilter);
-    library.addIcons(faSearch);
-    library.addIcons(faTrash);
-    library.addIcons(faCalendar);
-    library.addIcons(faHashtag);
-    library.addIcons(faEye);
-    library.addIcons(faPortrait);
-    library.addIcons(faTimes);
-    library.addIcons(faCheck);
-    library.addIcons(faExclamationTriangle);
-    library.addIcons(faCashRegister);
-    library.addIcons(faClipboardList);
-    library.addIcons(faPlus);
-    library.addIcons(faBarcode);
-    library.addIcons(faEdit);
-    library.addIcons(faBoxOpen);
-    library.addIcons(faMinus);
-    library.addIcons(faStore);
-    library.addIcons(faUser);
-    library.addIcons(faSignOutAlt);
-    library.addIcons(faInfoCircle);
-    library.addIcons(faQuestionCircle);
-    library.addIcons(faTimesCircle);
-    library.addIcons(faFileSignature);
-    library.addIcons(faFileDownload);
-    library.addIcons(faChevronLeft);
-    library.addIcons(faIndustry);
-    library.addIcons(faSuitcase);
-    library.addIcons(faBoxes);
-    library.addIcons(faPen);
-    library.addIcons(faEnvelope);
-    library.addIcons(faLink);
-    library.addIcons(faBoxes);
+    library.addIcons(
+      faBars,
+      faCircleNotch,
+      faFileInvoice,
+      faFilter,
+      faSearch,
+      faTrash,
+      faCalendar,
+      faHashtag,
+      faEye,
+      faPortrait,
+      faTimes,
+      faCheck,
+      faExclamationTriangle,
+      faCashRegister,
+      faClipboardList,
+      faPlus,
+      faBarcode,
+      faEdit,
+      faBoxOpen,
+      faMinus,
+      faStore,
+      faUser,
+      faSignOutAlt,
+      faInfoCircle,
+      faQuestionCircle,
+      faTimesCircle,
+      faFileSignature,
+      faFileDownload,
+      faChevronLeft,
+      faIndustry,
+      faSuitcase,
+      faPen,
+      faEnvelope,
+      faLink,
+    );
   }
 }
