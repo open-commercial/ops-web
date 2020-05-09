@@ -1,25 +1,28 @@
 .app-productos {
   padding: 0;
-  .img-container {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    width: 6rem;
-    height: 5rem;
-    img  {
-      object-fit: contain;
-      max-width: 100%;
-      max-height: 100%;
+  .productos {
+    background-color: white;
+    .img-container {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      width: 6rem;
+      height: 5rem;
+      img  {
+        object-fit: contain;
+        max-width: 100%;
+        max-height: 100%;
+      }
     }
-  }
-  .codigo {
-    font-size: 12px;
-  }
-  .precio {
-    font-weight: bold;
-    &.tachado {
-      font-weight: normal;
-      text-decoration: line-through;
+    .codigo {
+      font-size: 12px;
+    }
+    .precio {
+      font-weight: bold;
+      &.tachado {
+        font-weight: normal;
+        text-decoration: line-through;
+      }
     }
   }
 }
