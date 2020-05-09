@@ -46,7 +46,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   @ViewChild('sentidoP', { static: false }) sentidoPElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
-  visibilidades = ['público', 'privado'];
+  visibilidades = ['públicos', 'privados'];
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -102,8 +102,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
     if (this.visibilidades.indexOf(ps.visibilidad) >= 0) {
       this.filterForm.get('visibilidad').setValue(ps.visibilidad);
-      if (ps.visibilidad === 'público') { terminos.publico = true; }
-      if (ps.visibilidad === 'privado') { terminos.publico = false; }
+      if (ps.visibilidad === 'públicos') { terminos.publico = true; }
+      if (ps.visibilidad === 'privados') { terminos.publico = false; }
     }
 
     if (ps.oferta) {
