@@ -180,7 +180,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     this.appliedFilters = [];
 
     if (values.codODes) {
-      this.appliedFilters.push({ label: 'Código o descripción', value: values.codODes });
+      this.appliedFilters.push({ label: 'Código/Descripción', value: values.codODes });
     }
 
     if (values.idRubro) {
