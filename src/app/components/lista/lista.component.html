@@ -5,6 +5,9 @@
   <div class="alert alert-danger">No actions template defined</div>
 </ng-template>
 
+<ngb-pagination [pageSize]="25" [collectionSize]="totalElements" [(page)]="displayPage"
+                [maxSize]="2" [rotate]="false" [boundaryLinks]="false" (pageChange)="cambioDePagina($event)"
+                *ngIf="totalPages > 1" class="d-flex justify-content-end my-2"></ngb-pagination>
 <div *ngFor="let item of items; let i=index" class="d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
   <div class="d-flex flex-column flex-fill">
     <ng-container *ngTemplateOutlet="(infoTemplate ? infoTemplate : noInfo) ; context:{ $implicit: item, index: i }"></ng-container>
@@ -13,6 +16,6 @@
     <ng-container *ngTemplateOutlet="actionsTemplate ; context: { $implicit: item }"></ng-container>
   </div>
 </div>
-<div class="text-center mt-2" *ngIf="(page + 1) < totalPages">
-  <button type="button" class="btn btn-primary" (click)="loadMore()">Mas resultados</button>
-</div>
+<ngb-pagination [pageSize]="25" [collectionSize]="totalElements" [(page)]="displayPage"
+                [maxSize]="2" [rotate]="false" [boundaryLinks]="false" (pageChange)="cambioDePagina($event)"
+                *ngIf="totalPages > 1" class="d-flex justify-content-end my-2"></ngb-pagination>

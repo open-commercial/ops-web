@@ -32,19 +32,15 @@ export abstract class ListadoBaseComponent implements OnInit {
     this.route.queryParamMap.subscribe(params => this.getItemsFromQueryParams(params));
   }
 
-  getItemsFromQueryParams(params = null, clearResults = true) {
+  getItemsFromQueryParams(params = null) {
     const terminos = this.getTerminosFromQueryParams(params);
-    this.fetchItems(clearResults, terminos);
+    this.fetchItems(terminos);
   }
 
-  fetchItems(clearResults: boolean = false, terminos = null) {
+  fetchItems(terminos = null) {
     terminos = terminos || this.getFormValues();
     terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
-    this.page += 1;
-    if (clearResults) {
-      this.page = 0;
-      this.items = [];
-    }
+
     this.getAppliedFilters();
 
     terminos.pagina = this.page;
@@ -53,6 +49,7 @@ export abstract class ListadoBaseComponent implements OnInit {
 
   filter() {
     const qParams = this.getFormValues();
+    qParams.p = this.page + 1;
     this.router.navigate([], { relativeTo: this.route, queryParams: qParams });
     this.isFiltersCollapsed = true;
   }
@@ -61,7 +58,8 @@ export abstract class ListadoBaseComponent implements OnInit {
     this.router.navigate([], { relativeTo: this.route, queryParams: [] });
   }
 
-  loadMore() {
-    this.getItemsFromQueryParams(null, false);
+  loadPage(page) {
+    this.page = page;
+    this.filter();
   }
 }

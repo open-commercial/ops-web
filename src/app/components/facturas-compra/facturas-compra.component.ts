@@ -18,6 +18,8 @@ import { FacturaCompra } from '../../models/factura-compra';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import { ListadoBaseComponent } from '../listado-base.component';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -58,7 +60,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
               private fb: FormBuilder,
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
-              private loadingOverlayService: LoadingOverlayService) {
+              private loadingOverlayService: LoadingOverlayService,
+              private mensajeService: MensajeService) {
     super(route, router, sucursalesService);
   }
 
@@ -84,6 +87,10 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     });
 
     const ps = params ? params.params : this.route.snapshot.queryParams;
+    const p = Number(ps.p);
+
+    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
+    terminos.pagina = this.page;
 
     if (ps.idProveedor && !isNaN(ps.idProveedor)) {
       this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));
@@ -144,12 +151,18 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     this.loadingOverlayService.activate();
     this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.items.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
+      .subscribe(
+        (p: Pagination) => {
+          this.items = p.content;
+          this.totalElements = p.totalElements;
+          this.totalPages = p.totalPages;
+          this.size = p.size;
+        },
+        err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.items = [];
+        }
+      )
     ;
   }
 

@@ -116,6 +116,7 @@
         </li>
       </ul>
     </ng-template>
-    <app-lista [items]="items" [page]="page" [totalPages]="totalPages" [infoTemplate]="info" [actionsTemplate]="actions" (loadMoreClick)="loadMore()"></app-lista>
+    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
   </div>
 </div>

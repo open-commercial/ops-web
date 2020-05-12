@@ -7,28 +7,37 @@ import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@an
 })
 export class ListaComponent implements OnInit {
   private pItems = [];
+  displayPage = 1;
+
   @Input() set items(value: any[]) { this.pItems = value; }
   get items() { return this.pItems; }
 
   private pPage = 0;
-  @Input() set page(value: number) { this.pPage = value; }
+  @Input() set page(value: number) {
+    this.pPage = value;
+    this.displayPage = this.pPage + 1;
+  }
   get page() { return this.pPage; }
 
   private pTotalPages = 0;
   @Input() set totalPages(value: number) { this.pTotalPages = value; }
   get totalPages() { return this.pTotalPages; }
 
+  private pTotalElements = 0;
+  @Input() set totalElements(value: number) { this.pTotalElements = value; }
+  get totalElements() { return this.pTotalElements; }
+
   @Input() infoTemplate: TemplateRef<any>;
   @Input() actionsTemplate: TemplateRef<any>;
 
-  @Output() loadMoreClick = new EventEmitter<void>();
+  @Output() pageChange = new EventEmitter<number>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  loadMore() {
-    this.loadMoreClick.emit();
+  cambioDePagina(dPage) {
+    this.pageChange.emit(dPage - 1);
   }
 }

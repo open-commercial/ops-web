@@ -83,6 +83,10 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
     this.resetFilterForm();
     const ps = params ? params.params : this.route.snapshot.queryParams;
+    const p = Number(ps.p);
+
+    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
+    terminos.pagina = this.page;
 
     if (ps.codODes) {
       this.filterForm.get('codODes').setValue(ps.codODes);
@@ -127,12 +131,18 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.productosService.buscar(terminos)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.items.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
+      .subscribe(
+        (p: Pagination) => {
+          this.items = p.content;
+          this.totalElements = p.totalElements;
+          this.totalPages = p.totalPages;
+          this.size = p.size;
+        },
+        err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.items = [];
+        }
+      )
     ;
   }
 
