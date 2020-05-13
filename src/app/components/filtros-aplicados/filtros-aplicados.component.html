@@ -3,7 +3,7 @@
     Filtros aplicados:
     <ul class="pl-3">
       <li *ngFor="let f of appliedFilters">
-        {{ f.label }}:
+        {{ f.label ? f.label + ':' : '' }}
         <app-mensaje-asicronico *ngIf="f.asyncFn" [asyncFn]="f.asyncFn"></app-mensaje-asicronico>
         <span *ngIf="!f.asyncFn">{{ f.value }}</span>
       </li>

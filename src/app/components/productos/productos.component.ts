@@ -202,11 +202,14 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     }
 
     if (values.visibilidad) {
-      this.appliedFilters.push({ label: 'Visibilidad', value: values.visibilidad });
+      this.appliedFilters.push({
+        label: 'Visibilidad',
+        value: values.visibilidad.length ? (values.visibilidad.charAt(0).toUpperCase() + values.visibilidad.slice(1)) : '',
+      });
     }
 
     if (values.oferta) {
-      this.appliedFilters.push({ label: 'Ofertas', value: 'Sí' });
+      this.appliedFilters.push({ label: '', value: 'Solo Ofertas' });
     }
 
     setTimeout(() => {
