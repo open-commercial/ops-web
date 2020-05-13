@@ -53,13 +53,13 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
               private pedidosService: PedidosService,
               private fb: FormBuilder,
               private authService: AuthService,
-              private mensajeService: MensajeService,
+              protected mensajeService: MensajeService,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
               private storageService: StorageService,
               public loadingOverlayService: LoadingOverlayService) {
-    super(route, router, sucursalesService);
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   getEstadoValue(e: EstadoPedido): any {
@@ -156,23 +156,8 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
     });
   }
 
-  getItems(terminos) {
-    this.loadingOverlayService.activate();
-    this.pedidosService.buscar(terminos as BusquedaPedidoCriteria)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (p: Pagination) => {
-          this.items = p.content;
-          this.totalElements = p.totalElements;
-          this.totalPages = p.totalPages;
-          this.size = p.size;
-        },
-        err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.items = [];
-        }
-      )
-    ;
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.pedidosService.buscar(terminos as BusquedaPedidoCriteria);
   }
 
   resetFilterForm() {

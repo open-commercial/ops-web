@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
-import { finalize, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -19,7 +19,6 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import { ListadoBaseComponent } from '../listado-base.component';
 import { MensajeService } from '../../services/mensaje.service';
-import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -60,9 +59,9 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
               private fb: FormBuilder,
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService) {
-    super(route, router, sucursalesService);
+              protected loadingOverlayService: LoadingOverlayService,
+              protected mensajeService: MensajeService) {
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
@@ -147,23 +146,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     return terminos;
   }
 
-  getItems(terminos) {
-    this.loadingOverlayService.activate();
-    this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (p: Pagination) => {
-          this.items = p.content;
-          this.totalElements = p.totalElements;
-          this.totalPages = p.totalPages;
-          this.size = p.size;
-        },
-        err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.items = [];
-        }
-      )
-    ;
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria);
   }
 
   createFilterForm() {

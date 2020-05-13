@@ -54,10 +54,10 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
               private fb: FormBuilder,
               private rubrosService: RubrosService,
               public loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
+              protected mensajeService: MensajeService,
               public productosService: ProductosService,
               private proveedoresService: ProveedoresService) {
-    super(route, router, sucursalesService);
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
@@ -127,23 +127,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     return terminos;
   }
 
-  getItems(terminos) {
-    this.loadingOverlayService.activate();
-    this.productosService.buscar(terminos)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (p: Pagination) => {
-          this.items = p.content;
-          this.totalElements = p.totalElements;
-          this.totalPages = p.totalPages;
-          this.size = p.size;
-        },
-        err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.items = [];
-        }
-      )
-    ;
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.productosService.buscar(terminos as BusquedaProductoCriteria);
   }
 
   createFilterForm() {

@@ -83,9 +83,9 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
               private authService: AuthService,
-              private mensajeService: MensajeService,
+              protected mensajeService: MensajeService,
               public loadingOverlayService: LoadingOverlayService) {
-    super(route, router, sucursalesService);
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
@@ -187,23 +187,8 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     return terminos;
   }
 
-  getItems(terminos) {
-    this.loadingOverlayService.activate();
-    this.facturasVentaService.buscar(terminos as BusquedaFacturaVentaCriteria)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (p: Pagination) => {
-          this.items = p.content;
-          this.totalElements = p.totalElements;
-          this.totalPages = p.totalPages;
-          this.size = p.size;
-        },
-        err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.items = [];
-        }
-      )
-    ;
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.facturasVentaService.buscar(terminos as BusquedaFacturaVentaCriteria);
   }
 
   createFilterForm() {
