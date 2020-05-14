@@ -74,10 +74,7 @@ export abstract class ListadoBaseComponent implements OnInit {
   }
 
   filter() {
-    const qParams = this.getFormValues();
-    qParams.p = this.page + 1;
-    this.router.navigate([], { relativeTo: this.route, queryParams: qParams });
-    this.isFiltersCollapsed = true;
+    this.loadPage(0);
   }
 
   reset() {
@@ -86,6 +83,9 @@ export abstract class ListadoBaseComponent implements OnInit {
 
   loadPage(page) {
     this.page = page;
-    this.filter();
+    const qParams = this.getFormValues();
+    qParams.p = this.page + 1;
+    this.router.navigate([], { relativeTo: this.route, queryParams: qParams });
+    this.isFiltersCollapsed = true;
   }
 }
