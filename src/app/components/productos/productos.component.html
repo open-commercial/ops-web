@@ -1,0 +1,101 @@
+<div class="app-productos">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos</h1>
+    <div class="text-right m-0">
+      <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="productosFiltersCollapse"
+              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="productosFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="codODes">Código/Descripción</label>
+            <input type="text" class="form-control" id="codODes" formControlName="codODes">
+          </div>
+          <div class="form-group">
+            <label for="idRubro">Rubro</label>
+            <select class="form-control" id="idRubro" formControlName="idRubro">
+              <option></option>
+              <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
+            </select>
+          </div>
+          <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="visibilidad">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="null"> Todos
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill" *ngFor="let v of visibilidades">
+                <input ngbButton type="radio" [value]="v"> {{ v | titlecase }}
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="oferta" formControlName="oferta">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="false"> Todos
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="true"> Solo Ofertas
+              </label>
+            </div>
+          </div>
+          <div class="card card-body bg-light mb-3">
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorP" [values]="ordenarPorOptionsP" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorP></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoP" [values]="sentidoOptionsP" [label]="'Sentido'" formControlName="sentido" #sentidoP></app-filtro-ordenamiento>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <div class="productos my-2">
+    <ng-template #info let-item>
+      <div class="d-flex flex-row flex-fill align-items-center">
+        <div class="img-container px-2 flex-shrink-0 flex-grow-0">
+          <img [src]="item.urlImagen ? item.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
+        </div>
+        <div class="flex-fill d-flex flex-column">
+          <span>
+            <span class="mr-2 codigo">{{ item.codigo }}</span>
+            <span *ngIf="item.oferta" class="badge badge-success">OFERTA {{ item.porcentajeBonificacionOferta }}%</span>
+            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
+          </span>
+          <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
+          <span class="mr-2">Stock: <strong>{{ productosService.getCantidad(item) }} {{ item.nombreMedida }}</strong> - Otra Suc: {{ productosService.getCantOtrasSucursales(item) }} {{ item.nombreMedida }}</span>
+          <span class="mr-2" *ngIf="item.bulto > 1">Llevando {{ item.bulto }} o más</span>
+          <span class="mr-2">
+            <span class="text-nowrap" *ngIf="!((item.oferta || productosService.estaBonificado(item)) && item.bulto == 1)">
+              P.U. <span class="precio" [class.tachado]="(item.oferta || productosService.estaBonificado(item)) && item.bulto == 1">{{ item.precioLista | currency:'ARS':'symbol':'1.0-2' }}</span>
+            </span>
+            <span class="text-nowrap" *ngIf="item.oferta || productosService.estaBonificado(item)">
+              P.U. {{ item.oferta ? "Oferta" : "Bonif."}} <span class="precio">{{ item.precioBonificado | currency:'ARS':'symbol':'1.0-2' }}</span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verProducto(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+  </div>
+</div>

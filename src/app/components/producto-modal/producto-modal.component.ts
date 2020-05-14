@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
 import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { SucursalesService } from '../../services/sucursales.service';
-import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
+import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
 
 @Component({
   selector: 'app-producto-modal',
@@ -18,7 +17,6 @@ export class ProductoModalComponent implements OnInit {
   clearLoading = false;
   loading = false;
   busqueda = '';
-  input$  = new Subject<string>();
 
   productoSeleccionado: Producto = null;
 
@@ -30,7 +28,7 @@ export class ProductoModalComponent implements OnInit {
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
-              private productosService: ProductosService,
+              public productosService: ProductosService,
               private sucursalesService: SucursalesService) { }
 
   ngOnInit() {}
@@ -45,7 +43,12 @@ export class ProductoModalComponent implements OnInit {
       this.loading = true;
     }
 
-    this.productosService.getProductos(this.busqueda, this.page)
+    const criteria: BusquedaProductoCriteria = {
+      codigo: this.busqueda,
+      descripcion: this.busqueda,
+      pagina: this.page,
+    };
+    this.productosService.buscar(criteria)
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -77,25 +80,5 @@ export class ProductoModalComponent implements OnInit {
     if (this.productoSeleccionado) {
       this.activeModal.close(this.productoSeleccionado);
     }
-  }
-
-  getCantidad(p: Producto) {
-    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal === Number(this.sucursalesService.getIdSucursal())
-    );
-    return aux.length ? aux[0].cantidad : 0;
-  }
-
-  getCantOtrasSucursales(p: Producto) {
-    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
-      c => c.idSucursal !== Number(this.sucursalesService.getIdSucursal())
-    );
-    let cant = 0;
-    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
-    return cant;
-  }
-
-  estaBonificado(p: Producto) {
-    return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
 }

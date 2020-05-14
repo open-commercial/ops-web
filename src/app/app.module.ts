@@ -41,11 +41,11 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { faFileSignature } from '@fortawesome/free-solid-svg-icons';
-import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { faIndustry } from '@fortawesome/free-solid-svg-icons';
-import { faSuitcase } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
+import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
+import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
@@ -88,6 +88,14 @@ import { DisponibilidadStockModalComponent } from './components/disponibilidad-s
 import { VerFacturaComponent } from './components/ver-factura/ver-factura.component';
 import { FacturasCompraHomeComponent } from './components/facturas-compra-home/facturas-compra-home.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
+import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
+import { ProductosComponent } from './components/productos/productos.component';
+import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
+import { ProductoComponent } from './components/producto/producto.component';
+import { FiltroOrdenamientoComponent } from './components/filtro-ordenamiento/filtro-ordenamiento.component';
+import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
+import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
+import { ListaComponent } from './components/lista/lista.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -124,11 +132,21 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuarioModalComponent,
     ProveedorModalComponent,
     MensajeAsicronicoComponent,
+    ProductosHomeComponent,
+    ProductosComponent,
     BusquedaProductoComponent,
     DisponibilidadStockModalComponent,
     VerFacturaComponent,
     FacturasCompraHomeComponent,
     LoadingOverlayComponent,
+    ProductosHomeComponent,
+    ProductosComponent,
+    VerProductoComponent,
+    ProductoComponent,
+    FiltroOrdenamientoComponent,
+    FiltrosFormComponent,
+    FiltrosAplicadosComponent,
+    ListaComponent,
   ],
   imports: [
     BrowserModule,
@@ -166,39 +184,41 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faBars);
-    library.addIcons(faCircleNotch);
-    library.addIcons(faFileInvoice);
-    library.addIcons(faFilter);
-    library.addIcons(faSearch);
-    library.addIcons(faTrash);
-    library.addIcons(faCalendar);
-    library.addIcons(faHashtag);
-    library.addIcons(faEye);
-    library.addIcons(faPortrait);
-    library.addIcons(faTimes);
-    library.addIcons(faCheck);
-    library.addIcons(faExclamationTriangle);
-    library.addIcons(faCashRegister);
-    library.addIcons(faClipboardList);
-    library.addIcons(faPlus);
-    library.addIcons(faBarcode);
-    library.addIcons(faEdit);
-    library.addIcons(faBoxOpen);
-    library.addIcons(faMinus);
-    library.addIcons(faStore);
-    library.addIcons(faUser);
-    library.addIcons(faSignOutAlt);
-    library.addIcons(faInfoCircle);
-    library.addIcons(faQuestionCircle);
-    library.addIcons(faTimesCircle);
-    library.addIcons(faFileSignature);
-    library.addIcons(faFileDownload);
-    library.addIcons(faChevronLeft);
-    library.addIcons(faIndustry);
-    library.addIcons(faSuitcase);
-    library.addIcons(faPen);
-    library.addIcons(faEnvelope);
-    library.addIcons(faLink);
+    library.addIcons(
+      faBars,
+      faCircleNotch,
+      faFileInvoice,
+      faFilter,
+      faSearch,
+      faTrash,
+      faCalendar,
+      faHashtag,
+      faEye,
+      faPortrait,
+      faTimes,
+      faCheck,
+      faExclamationTriangle,
+      faCashRegister,
+      faClipboardList,
+      faPlus,
+      faBarcode,
+      faEdit,
+      faBoxOpen,
+      faMinus,
+      faStore,
+      faUser,
+      faSignOutAlt,
+      faInfoCircle,
+      faQuestionCircle,
+      faTimesCircle,
+      faFileSignature,
+      faFileDownload,
+      faChevronLeft,
+      faIndustry,
+      faSuitcase,
+      faPen,
+      faEnvelope,
+      faLink,
+    );
   }
 }

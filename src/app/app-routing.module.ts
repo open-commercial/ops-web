@@ -13,13 +13,17 @@ import { FacturasVentaHomeComponent } from './components/facturas-venta-home/fac
 import { FacturaVentaComponent } from './components/factura-venta/factura-venta.component';
 import { VerFacturaComponent } from './components/ver-factura/ver-factura.component';
 import { FacturasCompraHomeComponent } from './components/facturas-compra-home/facturas-compra-home.component';
+import { ProductosHomeComponent } from './components/productos-home/productos-home.component';
+import { ProductosComponent } from './components/productos/productos.component';
+import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
+import { ProductoComponent } from './components/producto/producto.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
-      { path: 'pedidos', component: PedidosHomeComponent,
+      { path: 'pedidos', component: PedidosHomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
         children: [
           { path: '', component: PedidosComponent },
           { path: 'nuevo', component: PedidoComponent },
@@ -39,6 +43,14 @@ const routes: Routes = [
         children: [
           { path: '', component: FacturasCompraComponent },
           { path: 'ver/:id', component: VerFacturaComponent }
+        ]
+      },
+      { path: 'productos', component: ProductosHomeComponent, runGuardsAndResolvers: 'always',
+        children: [
+          { path: '', component: ProductosComponent },
+          { path: 'nuevo', component: ProductoComponent },
+          { path: 'editar/:id', component: ProductoComponent },
+          { path: 'ver/:id', component: VerProductoComponent }
         ]
       }
     ]

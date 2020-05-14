@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
+import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
@@ -46,7 +46,7 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
     const modalRef = this.modalService.open(ClienteModalComponent, {scrollable: true});
     modalRef.result.then((c: Cliente) => {
       this.setCliente(c);
-    }, (reason) => {});
+    }, () => {});
   }
 
   clearValue() {

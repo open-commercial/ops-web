@@ -14,8 +14,7 @@ export class FacturasCompraService {
 
   constructor(private http: HttpClient) { }
 
-  buscar(criteria: BusquedaFacturaCompraCriteria, page: number = 0): Observable<Pagination> {
-    criteria.pagina = page;
+  buscar(criteria: BusquedaFacturaCompraCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 }

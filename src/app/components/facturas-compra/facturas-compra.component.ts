@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
-import { finalize, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -16,16 +16,17 @@ import { ProductosService } from '../../services/productos.service';
 import { Proveedor } from '../../models/proveedor';
 import { FacturaCompra } from '../../models/factura-compra';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
+import { ListadoBaseComponent } from '../listado-base.component';
+import { MensajeService } from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-facturas-compra',
   templateUrl: './facturas-compra.component.html',
   styleUrls: ['./facturas-compra.component.scss']
 })
-export class FacturasCompraComponent implements OnInit {
-  facturas = [];
-
-  tiposFactura = [
+export class FacturasCompraComponent extends ListadoBaseComponent implements OnInit {
+  tiposDeComprobantesFC = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
     { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
@@ -33,45 +34,38 @@ export class FacturasCompraComponent implements OnInit {
     { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
-  ordenarPorOptions = [
+  ordenarPorOptionsFC = [
     { val: 'fecha', text: 'Fecha' },
     { val: 'proveedor.razonSocial', text: 'Proveedor' },
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptions = [
+  sentidoOptionsFC = [
+    { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
-    { val: 'ASC',  text: 'Ascendente' },
   ];
-
-  isFiltersCollapsed = true;
-
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
-
-  filterForm: FormGroup;
-  applyFilters = [];
 
   helper = HelperService;
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
+  @ViewChild('ordernarPorFC', { static: false }) ordenarPorFCElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoFC', { static: false }) sentidoFCElement: FiltroOrdenamientoComponent;
 
-  constructor(private facturasCompraService: FacturasCompraService,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              private facturasCompraService: FacturasCompraService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService,
-              private router: Router,
-              private route: ActivatedRoute,
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
-              private loadingOverlayService: LoadingOverlayService) { }
+              protected loadingOverlayService: LoadingOverlayService,
+              protected mensajeService: MensajeService) {
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+  }
 
   ngOnInit() {
-    this.createFilterForm();
-    this.sucursalesService.sucursal$.subscribe(() => this.getFacturasFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getFacturasFromQueryParams(params));
+    super.ngOnInit();
   }
 
   getTerminosFromQueryParams(params = null) {
@@ -84,14 +78,18 @@ export class FacturasCompraComponent implements OnInit {
       idProveedor: '',
       idProducto: '',
       rangoFecha: null,
-      tipoFactura: '',
+      tipoComprobante: '',
       numSerie: '',
       numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
+      ordenarPor: '',
+      sentido: '',
     });
 
     const ps = params ? params.params : this.route.snapshot.queryParams;
+    const p = Number(ps.p);
+
+    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
+    terminos.pagina = this.page;
 
     if (ps.idProveedor && !isNaN(ps.idProveedor)) {
       this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));
@@ -122,7 +120,7 @@ export class FacturasCompraComponent implements OnInit {
     }
 
     if (ps.tipoComprobante) {
-      this.filterForm.get('tipoFactura').setValue(ps.tipoComprobante);
+      this.filterForm.get('tipoComprobante').setValue(ps.tipoComprobante);
       terminos.tipoComprobante = ps.tipoComprobante;
     }
 
@@ -136,22 +134,20 @@ export class FacturasCompraComponent implements OnInit {
       terminos.numFactura = Number(ps.numFactura);
     }
 
-    if (ps.ordenarPor) {
-      this.filterForm.get('ordenarPor').setValue(ps.ordenarPor);
-      terminos.ordenarPor = ps.ordenarPor;
-    }
+    let ordenarPorVal = this.ordenarPorOptionsFC.length ? this.ordenarPorOptionsFC[0].val : '';
+    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
+    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
+    terminos.ordenarPor = ordenarPorVal;
 
-    if (ps.sentido) {
-      this.filterForm.get('sentido').setValue(ps.sentido);
-      terminos.sentido = ps.sentido;
-    }
+    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
+    this.filterForm.get('sentido').setValue(sentidoVal);
+    terminos.sentido = sentidoVal;
 
     return terminos;
   }
 
-  getFacturasFromQueryParams(params = null, clearResults = true) {
-    const terminos = this.getTerminosFromQueryParams(params);
-    this.getFacturas(clearResults, terminos);
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.facturasCompraService.buscar(terminos as BusquedaFacturaCompraCriteria);
   }
 
   createFilterForm() {
@@ -159,49 +155,11 @@ export class FacturasCompraComponent implements OnInit {
       idProveedor: '',
       idProducto: '',
       rangoFecha: null,
-      tipoFactura: '',
+      tipoComprobante: '',
       numSerie: '',
       numFactura: '',
-      ordenarPor: this.ordenarPorOptions.length ? this.ordenarPorOptions[0].val : '',
-      sentido: this.sentidoOptions.length ? this.sentidoOptions[0].val : '',
-    });
-  }
-
-  getFacturas(clearResults: boolean = false, terminos = null) {
-    terminos = terminos || this.getFormValues();
-    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
-
-    this.page += 1;
-    this.loadingOverlayService.activate();
-    if (clearResults) {
-      this.page = 0;
-      this.facturas = [];
-    }
-    this.getApplyFilters();
-    this.facturasCompraService.buscar(terminos, this.page)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.facturas.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
-    ;
-  }
-
-  filter() {
-    const qParams = this.getFormValues();
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: qParams,
-    });
-    this.isFiltersCollapsed = true;
-  }
-
-  reset() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: [],
+      ordenarPor: '',
+      sentido: '',
     });
   }
 
@@ -218,7 +176,7 @@ export class FacturasCompraComponent implements OnInit {
 
     if (values.idProveedor) { ret.idProveedor = values.idProveedor; }
     if (values.idProducto) { ret.idProducto = values.idProducto; }
-    if (values.tipoFactura) { ret.tipoComprobante = values.tipoFactura; }
+    if (values.tipoComprobante) { ret.tipoComprobante = values.tipoComprobante; }
     if (values.numSerie) { ret.numSerie = values.numSerie; }
     if (values.numFactura) { ret.numFactura = values.numFactura; }
     if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
@@ -227,32 +185,32 @@ export class FacturasCompraComponent implements OnInit {
     return ret;
   }
 
-  getApplyFilters() {
+  getAppliedFilters() {
     const values = this.filterForm.value;
-    this.applyFilters = [];
+    this.appliedFilters = [];
 
     if (values.idProveedor) {
-      this.applyFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedoresInfoAsync(values.idProveedor) });
+      this.appliedFilters.push({ label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) });
     }
 
     if (values.idProducto) {
-      this.applyFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
+      this.appliedFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
       });
     }
 
     if (values.rangoFecha && values.rangoFecha.hasta) {
-      this.applyFilters.push({
+      this.appliedFilters.push({
         label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
       });
     }
 
-    if (values.tipoFactura) {
-      this.applyFilters.push({ label: 'Tipo de Factura', value: values.tipoFactura.replace('_',  ' ') });
+    if (values.tipoComprobante) {
+      this.appliedFilters.push({ label: 'Tipo de Comprobante', value: values.tipoComprobante.replace('_',  ' ') });
     }
 
     if (values.numSerie || values.numFactura) {
@@ -267,36 +225,16 @@ export class FacturasCompraComponent implements OnInit {
         nf = !isNaN(nf) ? nf : null;
       }
 
-      if (ns || nf) { this.applyFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
+      if (ns || nf) { this.appliedFilters.push({ label: 'Nº Factura', value: this.helper.formatNumFactura(ns, nf) }); }
     }
 
-    this.ordenarPorAplicado = this.getTextoOrdenarPor();
-    this.sentidoAplicado = this.getTextoSentido();
+    setTimeout(() => {
+      this.ordenarPorAplicado = this.ordenarPorFCElement ? this.ordenarPorFCElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoFCElement ? this.sentidoFCElement.getTexto() : '';
+    }, 500);
   }
 
-  loadMore() {
-    this.getFacturasFromQueryParams(null, false);
-  }
-
-  getTextoOrdenarPor() {
-    if (this.filterForm && this.filterForm.get('ordenarPor')) {
-      const val = this.filterForm.get('ordenarPor').value;
-      const aux = this.ordenarPorOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
-  }
-
-  getTextoSentido() {
-    if (this.filterForm && this.filterForm.get('sentido')) {
-      const val = this.filterForm.get('sentido').value;
-      const aux = this.sentidoOptions.filter(e => e.val === val);
-      return aux.length ? aux[0].text : '';
-    }
-    return '';
-  }
-
-  getProveedoresInfoAsync(id: number): Observable<string> {
+  getProveedorInfoAsync(id: number): Observable<string> {
     return this.proveedoresService.getProveedor(id).pipe(map((p: Proveedor) => p.razonSocial));
   }
 

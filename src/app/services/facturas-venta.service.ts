@@ -22,8 +22,7 @@ export class FacturasVentaService {
   constructor(private http: HttpClient,
               private sucursalesService: SucursalesService) { }
 
-  buscar(criteria: BusquedaFacturaVentaCriteria, page: number = 0): Observable<Pagination> {
-    criteria.pagina = page;
+  buscar(criteria: BusquedaFacturaVentaCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 

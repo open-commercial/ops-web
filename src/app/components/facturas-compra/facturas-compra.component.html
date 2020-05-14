@@ -11,16 +11,16 @@
     </div>
   </div>
   <div id="facturasCompraFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
-    <form [formGroup]="filterForm" (ngSubmit)="filter()" class="border-bottom pt-0 pb-2 container-fluid">
-      <div class="row">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
           <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
           <div class="form-group">
-            <label for="tipo_factura">Tipo de Factura</label>
-            <select class="form-control" id="tipo_factura" formControlName="tipoFactura">
+            <label for="tipo_factura">Tipo de Comprobante</label>
+            <select class="form-control" id="tipo_factura" formControlName="tipoComprobante">
               <option></option>
-              <option *ngFor="let tf of tiposFactura" [value]="tf.val">{{ tf.text }}</option>
+              <option *ngFor="let tdc of tiposDeComprobantesFC" [value]="tdc.val">{{ tdc.text }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -40,99 +40,58 @@
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="ordenar-por">Ordenar Por</span>
-              </div>
-              <select class="custom-select" aria-label="Ordernar por" aria-describedby="ordenar-por" formControlName="ordenarPor">
-                <option *ngFor="let opo of ordenarPorOptions" value="{{ opo.val }}">{{ opo.text }}</option>
-              </select>
-            </div>
-            <div class="input-group mb-0">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="sentido">Sentido</span>
-              </div>
-              <select class="custom-select" aria-label="Ordernar por" aria-describedby="sentido" formControlName="sentido">
-                <option *ngFor="let so of sentidoOptions" value="{{ so.val }}">{{ so.text }}</option>
-              </select>
-            </div>
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorFC" [values]="ordenarPorOptionsFC" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoOptionsFC" [label]="'Sentido'" formControlName="sentido" #sentidoFC></app-filtro-ordenamiento>
           </div>
         </div>
       </div>
-      <ul class="text-right list-inline mb-0">
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <div class="facturas my-2">
+    <ng-template #info let-item let-i="index" id="infoFC">
+      <div class="d-flex flex-row flex-wrap">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
+          {{ item.tipoComprobante.replace('_', ' ') }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
+        </span>
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
+          CAE: {{ item.cae }} (vto: {{ item.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
+        </span>
+      </div>
+      <div class="px-2 flex-fill">
+        <div class="d-flex flex-row flex-wrap align-items-center">
+          <div class="">
+            <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ item.razonSocialProveedor }}</span></span>
+            <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
+            <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
+          </div>
+          <div class="flex-fill">
+            <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item id="actionsFC">
+      <ul class="list-inline mb-0 text-center d-inline-block">
         <li class="list-inline-item">
-          <button type="submit" class="btn btn-primary"><fa-icon [icon]="['fas', 'search']"></fa-icon></button>
-        </li>
-        <li class="list-inline-item">
-          <button type="button" class="btn btn-outline-secondary" (click)="reset()"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(item)" placement="left">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
         </li>
       </ul>
-    </form>
-  </div>
-  <div>
-    <div class="alert alert-globo">
-      <div *ngIf="applyFilters.length">
-        Filtros aplicados:
-        <ul class="pl-3">
-          <li *ngFor="let f of applyFilters">
-            {{ f.label }}:
-            <app-mensaje-asicronico *ngIf="f.asyncFn" [asyncFn]="f.asyncFn"></app-mensaje-asicronico>
-            <span *ngIf="!f.asyncFn">{{ f.value }}</span>
-          </li>
-        </ul>
-      </div>
-      <em>
-        {{ totalElements }} resultado{{ totalElements == 1 ? '': 's' }}
-        <span *ngIf="ordenarPorAplicado"> ordenado{{ totalElements == 1 ? '': 's' }} por {{ ordenarPorAplicado }}</span>
-        <span *ngIf="sentidoAplicado"> con sentido {{ sentidoAplicado }}</span>
-      </em>
-    </div>
-    <div class="facturas my-2">
-      <div *ngFor="let f of facturas" class="factura d-flex flex-column flex-sm-row align-items-sm-center border-bottom border-top py-2">
-        <div class="d-flex flex-column flex-fill">
-          <div class="d-flex flex-row flex-wrap">
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ f.fecha | date:'dd/MM/yyyy HH:mm' }}
-        </span>
-            <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1">
-          {{ f.tipoComprobante.replace('_', ' ') }}
-        </span>
-            <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(f.numSerie, f.numFactura ) }}
-        </span>
-            <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="f.numSerieAfip">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) }}
-        </span>
-            <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="f.cae">
-          CAE: {{ f.cae }} (vto: {{ f.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
-        </span>
-          </div>
-          <div class="px-2 flex-fill">
-            <div class="d-flex flex-row flex-wrap align-items-center">
-              <div class="">
-                <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ f.razonSocialProveedor }}</span></span>
-                <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ f.nombreUsuario }}</span></span>
-                <span class="dato" *ngIf="f.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ f.nombreViajante }}</span></span>
-              </div>
-              <div class="flex-fill">
-                <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ f.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="text-right flex-fill flex-shrink-0 flex-grow-0 px-2">
-          <ul class="list-inline mb-0 text-center d-inline-block">
-            <li class="list-inline-item">
-              <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" (click)="verFactura(f)" placement="left">
-                <fa-icon [icon]="['far', 'eye']"></fa-icon>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="text-center mt-2">
-        <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="(page + 1) < totalPages">Mas resultados</button>
-      </div>
-    </div>
+    </ng-template>
+    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
   </div>
 </div>

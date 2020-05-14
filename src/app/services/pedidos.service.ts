@@ -4,7 +4,6 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Pedido } from '../models/pedido';
 import { Pagination } from '../models/pagination';
-import { SucursalesService } from './sucursales.service';
 import { NuevoRenglonPedido } from '../models/nuevo-renglon-pedido';
 import { RenglonPedido } from '../models/renglon-pedido';
 import { NuevosResultadosComprobante } from '../models/nuevos-resultados-comprobante';
@@ -18,15 +17,9 @@ export class PedidosService {
   url = environment.apiUrl + '/api/v1/pedidos';
   urlBusqueda = this.url + '/busqueda/criteria';
 
-  static createBusquedaCriteriaObject(terminos: any = {}, page = 0): BusquedaPedidoCriteria {
-    terminos.pagina = page;
-    return terminos;
-  }
-
   constructor(private http: HttpClient) { }
 
-  buscar(terminos: any = {}, pagina: number = 0): Observable<Pagination> {
-    const criteria = PedidosService.createBusquedaCriteriaObject(terminos, pagina);
+  buscar(criteria: BusquedaPedidoCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
