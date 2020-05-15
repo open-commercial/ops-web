@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Usuario } from '../../models/usuario';
 import { AuthService } from '../../services/auth.service';
 import { SucursalesService } from '../../services/sucursales.service';
@@ -12,6 +12,10 @@ import { combineLatest } from 'rxjs';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
+  private pSideNavOpened = false;
+  @Input() set sindeNavOpened(value: boolean) { this.pSideNavOpened = value; }
+  get sideNavOpened(): boolean { return this.pSideNavOpened; }
+
   @Output() menuButtonClick = new EventEmitter<void>();
 
   isCollapsed = true;

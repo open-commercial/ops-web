@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
   <span class="navbar-brand">
     <button type="button" class="btn btn-link d-lg-none fake-cursor mr-1" (click)="menuBtnClick()">
-      <fa-icon [icon]="['fas', 'bars']" size="lg"></fa-icon>
+      <fa-icon [icon]="['fas', (sideNavOpened ? 'times' : 'bars')]" size="lg"></fa-icon>
     </button>
     <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1588301552/assets/logo-globo-200x200px.png'" alt="">
   </span>
