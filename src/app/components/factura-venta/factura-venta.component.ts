@@ -20,8 +20,6 @@ import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { SucursalesService } from '../../services/sucursales.service';
 import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
 import { Resultados } from '../../models/resultados';
-import { Transportista } from '../../models/transportista';
-import { TransportistasService } from '../../services/transportistas.service';
 import { FormaDePago } from '../../models/forma-de-pago';
 import { FormasDePagoService } from '../../services/formas-de-pago.service';
 import { combineLatest, Observable } from 'rxjs';
@@ -73,7 +71,6 @@ export class FacturaVentaComponent implements OnInit {
   resultados: Resultados;
   recalculandoRenglones = false;
 
-  transportistas: Transportista[] = [];
   formasDePago: FormaDePago[] = [];
   formaDePagoPredeterminada: FormaDePago;
 
@@ -86,8 +83,6 @@ export class FacturaVentaComponent implements OnInit {
   @ViewChild('checkAllToggler', {static: false}) checkAllToggler: ElementRef;
   checkingAll = false;
   checkingRenglon = false;
-
-  verificandoDisponibilidadStock = false;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -102,7 +97,6 @@ export class FacturaVentaComponent implements OnInit {
               private cuentasCorrienteService: CuentasCorrienteService,
               private mensajeService: MensajeService,
               private sucursalesService: SucursalesService,
-              private transportistasService: TransportistasService,
               private formasDePagoService: FormasDePagoService,
               private storageService: StorageService,
               private productosService: ProductosService,
@@ -121,7 +115,6 @@ export class FacturaVentaComponent implements OnInit {
 
   inicializar() {
     const obs: Observable<any>[] = [
-      this.transportistasService.getTransportistas(),
       this.formasDePagoService.getFormaDePagoPredeterminada(),
       this.formasDePagoService.getFormasDePago(),
       this.clientesService.existeClientePredetermiando()
@@ -131,11 +124,10 @@ export class FacturaVentaComponent implements OnInit {
     combineLatest(obs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (data: [Transportista[], FormaDePago, FormaDePago[], boolean]) => {
-          this.transportistas = data[0];
-          this.formaDePagoPredeterminada = data[1];
-          this.formasDePago = data[2];
-          if (data[3]) {
+        (data: [FormaDePago, FormaDePago[], boolean]) => {
+          this.formaDePagoPredeterminada = data[0];
+          this.formasDePago = data[1];
+          if (data[2]) {
             this.loadingOverlayService.activate();
             this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))

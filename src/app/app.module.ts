@@ -96,6 +96,8 @@ import { FiltroOrdenamientoComponent } from './components/filtro-ordenamiento/fi
 import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
 import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
 import { ListaComponent } from './components/lista/lista.component';
+import { TransportistaComponent } from './components/transportista/transportista.component';
+import { PagosComponent } from './components/pagos/pagos.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -147,6 +149,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     FiltrosFormComponent,
     FiltrosAplicadosComponent,
     ListaComponent,
+    TransportistaComponent,
+    PagosComponent,
   ],
   imports: [
     BrowserModule,

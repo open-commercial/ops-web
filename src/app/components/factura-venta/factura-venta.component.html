@@ -181,13 +181,7 @@
                  [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
         <ng-template ngbPanelContent>
           <div *ngIf="!saving">
-            <div class="form-group">
-              <label for="transportista">Transporte</label>
-              <select class="form-control" id="transportista" formControlName="idTransportista">
-                <option value=""></option>
-                <option *ngFor="let t of transportistas" [value]="t.idTransportista">{{ t.nombre }}</option>
-              </select>
-            </div>
+            <app-transportista formControlName="idTransportista"></app-transportista>
             <label for="formas-de-pago">Pagos</label>
             <a class="btn btn-primary fake-cursor ml-2" (click)="agregarFormDePago()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
             <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago" *ngIf="this.form && this.form.get('formasPago') && this.form.get('formasPago').value.length">
