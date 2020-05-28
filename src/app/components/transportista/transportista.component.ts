@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { TransportistasService } from '../../services/transportistas.service';
 import { Transportista } from '../../models/transportista';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -17,6 +17,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class TransportistaComponent implements OnInit, ControlValueAccessor {
   transportistas: Transportista[] = [];
+
+  @Output() objectChange = new EventEmitter<Transportista>();
 
   value;
   isDisabled: boolean;
@@ -37,6 +39,19 @@ export class TransportistaComponent implements OnInit, ControlValueAccessor {
     this.value = $event.target.value;
     this.onTouch();
     this.onChange(this.value);
+    this.emitObject();
+  }
+
+  emitObject() {
+    let object: Transportista = null;
+    if (this.value) {
+      const id = Number(this.value);
+      if (!isNaN(id)) {
+        const i = this.transportistas.findIndex((t: Transportista) => t.idTransportista === id);
+        object = i >= 0 ? this.transportistas[i] : null;
+      }
+    }
+    this.objectChange.emit(object);
   }
 
   registerOnChange(fn: any): void {
@@ -53,5 +68,6 @@ export class TransportistaComponent implements OnInit, ControlValueAccessor {
 
   writeValue(obj: any): void {
     this.value = obj;
+    setTimeout(() => this.emitObject(), 500);
   }
 }

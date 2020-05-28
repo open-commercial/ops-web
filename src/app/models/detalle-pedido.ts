@@ -8,6 +8,8 @@ export interface DetallePedido {
   idCliente: number;
   tipoDeEnvio: TipoDeEnvio;
   renglones: Array<NuevoRenglonPedido>;
+  idsFormaDePago: Array<number>;
+  montos: Array<number>;
   recargoPorcentaje: number;
   descuentoPorcentaje: number;
 }

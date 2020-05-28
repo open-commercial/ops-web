@@ -1,5 +1,10 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormaDePago } from '../../models/forma-de-pago';
+import { FormasDePagoService } from '../../services/formas-de-pago.service';
+import { combineLatest } from 'rxjs';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { MensajeService } from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-pagos',
@@ -14,21 +19,72 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class PagosComponent implements OnInit, ControlValueAccessor {
+  formasDePago: FormaDePago[] = [];
+  formaDePagoPredeterminada: FormaDePago;
 
-  constructor() { }
+  value = [];
+  isDisabled: boolean;
+  onChange = (_: any) => { };
+  onTouch = () => { };
+
+  constructor(private formasDePagoService: FormasDePagoService,
+              private mensajeService: MensajeService) { }
 
   ngOnInit() {
+    combineLatest([
+      this.formasDePagoService.getFormaDePagoPredeterminada(),
+      this.formasDePagoService.getFormasDePago()
+    ]).subscribe((data: [FormaDePago, FormaDePago[]]) => {
+      this.formaDePagoPredeterminada = data[0];
+      this.formasDePago = data[1];
+    });
+  }
+
+  agregarPago() {
+    this.value.push({
+      idFormaDePago: this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null,
+      monto: 0.0,
+    });
+    this.onTouch();
+    this.onChange(this.value);
+  }
+
+  quitarPago(i) {
+    const msg = '¿Desea quitar este pago?';
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) { this.value.splice(i, 1); }
+    });
+    this.onTouch();
+    this.onChange(this.value);
+  }
+
+  onFormaPagoChange(i, $event) {
+    const v = Number($event.target.value);
+    this.value[i].idFormaDePago = isNaN(v) ? null : v;
+    this.onTouch();
+    this.onChange(this.value);
+  }
+
+  onMontoChange(i, $event) {
+    const v = Number($event.target.value);
+    this.value[i].monto = isNaN(v) ? 0.0 : v;
+    this.onTouch();
+    this.onChange(this.value);
   }
 
   registerOnChange(fn: any): void {
+    this.onChange = fn;
   }
 
   registerOnTouched(fn: any): void {
+    this.onTouch = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
   }
 
   writeValue(obj: any): void {
+    this.value = Array.isArray(obj) ? obj : [];
   }
 }

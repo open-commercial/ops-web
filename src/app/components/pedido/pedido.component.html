@@ -46,6 +46,9 @@
                           &nbsp;<strong>{{ rp.get('renglonPedido').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
                         </span>
                       </div>
+                      <div *ngIf="rp.get('renglonPedido').value.errorDisponibilidad" class="disponibilidad-error">
+                        {{ rp.get('renglonPedido').value.errorDisponibilidad }}
+                      </div>
                     </td>
                     <td>
                       <ul class="list-unstyled text-center mb-0">
@@ -140,6 +143,12 @@
           <div  *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO">
             <app-ubicacion-envio-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
           </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="pago" title="Pago"
+                [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length) || !(form && (form.get('sucursal').value || form.get('opcionEnvioUbicacion').value))">
+        <ng-template ngbPanelContent>
+          <app-pagos formControlName="pagos"></app-pagos>
           <div class="text-right mb-0 mt-2" *ngIf="!saving">
             <div *ngIf="!totalSuperaCompraMinima()"><em>(El total no supera el monto de compra mínima para el cliente)</em></div>
             <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled() || !totalSuperaCompraMinima()">
@@ -150,4 +159,5 @@
       </ngb-panel>
     </ngb-accordion>
   </form>
+  {{form.value.renglones | json}}
 </div>

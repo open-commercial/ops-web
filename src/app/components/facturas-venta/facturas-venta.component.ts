@@ -95,7 +95,6 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((u: Usuario) => {
         this.usuario = u;
-        this.hasRoleToCrear = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToCrear);
         this.hasRoleToAutorizar = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToAutorizar);
         this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToDelete);
         this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToEnviarPorEmail);
@@ -304,19 +303,6 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       this.ordenarPorAplicado = this.ordenarPorFVElement ? this.ordenarPorFVElement.getTexto() : '';
       this.sentidoAplicado = this.sentidoFVElement ? this.sentidoFVElement.getTexto() : '';
     }, 500);
-  }
-
-  puedeCrearFactura() {
-    return this.hasRoleToCrear;
-  }
-
-  crearFactura() {
-    if (!this.puedeCrearFactura()) {
-      this.mensajeService.msg('No posee permiso para crear una factura.');
-      return;
-    }
-
-    this.router.navigate(['/facturas-venta/nueva']);
   }
 
   verFactura(factura: FacturaVenta) {

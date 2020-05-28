@@ -31,6 +31,8 @@ import { MensajeService } from '../../services/mensaje.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
+import { ProductoFaltante } from '../../models/producto-faltante';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -59,8 +61,6 @@ export class PedidoComponent implements OnInit {
   cccPredeterminado: CuentaCorrienteCliente = null;
 
   loadingResultados = false;
-
-  calculandoRenglones = false;
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
 
@@ -226,6 +226,7 @@ export class PedidoComponent implements OnInit {
       sucursal: null,
       opcionEnvioUbicacion: null,
       resultados: null,
+      pagos: [],
     });
   }
 
@@ -298,6 +299,7 @@ export class PedidoComponent implements OnInit {
         opcionEnvio: null,
         sucursal: null,
         opcionEnvioUbicacion: null,
+        pagos: [],
       };
     if (this.datosParaEdicion.pedido) {
       if (data.idPedido !== this.datosParaEdicion.pedido.idPedido) {
@@ -327,6 +329,9 @@ export class PedidoComponent implements OnInit {
 
     this.form.get('opcionEnvio').setValue(data.opcionEnvio ? data.opcionEnvio : null);
     this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion ? data.opcionEnvioUbicacion : null);
+    this.form.get('pagos').setValue(
+      data.pagos && Array.isArray(data.pagos) && data.pagos.length ? data.pagos : []
+    );
 
     if (data.sucursal) {
         const idx = this.sucursales.findIndex((s: Sucursal) => s.idSucursal === data.sucursal.idSucursal);
@@ -346,26 +351,92 @@ export class PedidoComponent implements OnInit {
 
   submit() {
     if (this.form.valid) {
-      const np: DetallePedido = this.getNuevoPedido();
+      const formValue = this.form.value;
+
+      const ppvs: ProductosParaVerificarStock = {
+        idSucursal: this.sucursalesService.getIdSucursal(),
+        idProducto: formValue.renglonesPedido.map(e => e.renglonPedido.idProductoItem),
+        cantidad: formValue.renglonesPedido.map(e => e.renglonPedido.cantidad),
+      };
+
       this.loadingOverlayService.activate();
-      this.saving = true;
-      this.pedidosService.guardarPedido(np)
-        .pipe(finalize(() => {
-          this.saving = false;
-          this.loadingOverlayService.deactivate();
-        }))
-        .subscribe(
-          () => {
-            this.reset();
-            const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
-            this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
-              this.router.navigate(['/pedidos']);
-            });
-          },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+      this.productosService.getDisponibilidadEnStock(ppvs)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe((pfs: ProductoFaltante[]) => {
+            if (!pfs.length) {
+            if (this.puedeRealizarCompra()) {
+              this.doSubmit();
+            }
+          } else {
+            this.agregarErroresDisponibilidad(pfs);
+            this.accordion.expand('productos');
+            this.mensajeService.msg(
+              'Uno o mas productos no poseen stock disponible. Por favor, verifique la sección Productos.',
+              MensajeModalType.ERROR
+            );
+          }
+        })
       ;
     }
+  }
+
+  doSubmit() {
+    const np: DetallePedido = this.getNuevoPedido();
+    this.loadingOverlayService.activate();
+    this.saving = true;
+    this.pedidosService.guardarPedido(np)
+      .pipe(finalize(() => {
+        this.saving = false;
+        this.loadingOverlayService.deactivate();
+      }))
+      .subscribe(
+        () => {
+          this.reset();
+          const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
+          this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
+            this.router.navigate(['/pedidos']);
+          });
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
+  }
+
+  agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
+    pfs.forEach((pf: ProductoFaltante) => {
+      const control = this.searchRPInRenglones(pf.idProducto);
+      if (control) {
+        const v: RenglonPedido = control.get('renglonPedido').value;
+        v.errorDisponibilidad = 'La cantidad solicitada (' +
+          pf.cantidadSolicitada + ') supera la cantidad disponible (' + pf.cantidadDisponible + ')';
+        control.get('renglonPedido').setValue(v);
+      }
+    });
+  }
+
+  puedeRealizarCompra() {
+    const ccc: CuentaCorrienteCliente = this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value : null;
+    const resultados: Resultados = this.form.get('resultados') ? this.form.get('resultados').value : null;
+    let pagos = this.form.get('pagos') ? this.form.get('pagos').value : [];
+    pagos = Array.isArray(pagos) && pagos.length ? pagos : [];
+
+    const montoTotal = resultados && resultados.total ? resultados.total : 0;
+    const montoTotalPagos = pagos.reduce((sum, v) => sum + v.monto, 0);
+
+    if (!ccc || !ccc.cliente) {
+      this.mensajeService.msg('No se pudo determinar el cliente', MensajeModalType.ERROR);
+      return false;
+    }
+    if (!ccc.cliente.puedeComprarAPlazo) {
+      if (montoTotal > montoTotalPagos) {
+        this.mensajeService.msg(
+          'El monto total del pedido supera al monto total de pagos (El cliente no puede realizar compras a plazo).',
+          MensajeModalType.ERROR
+        );
+        return false;
+      }
+    }
+    return true;
   }
 
   submitButtonEnabled() {
@@ -414,6 +485,8 @@ export class PedidoComponent implements OnInit {
           cantidad: r.renglonPedido.cantidad,
         };
       }),
+      idsFormaDePago: this.form.get('pagos').value.map((e) => Number(e.idFormaDePago)),
+      montos: this.form.get('pagos').value.map((e) => e.monto),
       recargoPorcentaje: resultados && resultados.recargoPorcentaje ? resultados.recargoPorcentaje : 0,
       descuentoPorcentaje: resultados && resultados.descuentoPorcentaje ? resultados.descuentoPorcentaje : 0,
     };
@@ -470,6 +543,7 @@ export class PedidoComponent implements OnInit {
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
     modalRef.componentInstance.loadProducto(idProducto);
+    modalRef.componentInstance.verificarStock = true;
     modalRef.result.then((cant: number) => {
       const nrp: NuevoRenglonPedido = {
         idProductoItem: idProducto,

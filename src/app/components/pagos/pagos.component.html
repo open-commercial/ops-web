@@ -1,1 +1,50 @@
-<p>pagos works!</p>
+<fieldset>
+  <legend class="h5">
+    Pagos
+    <button type="button" class="btn btn-primary ml-2" [disabled]="isDisabled" (click)="agregarPago()">
+      <fa-icon [icon]="['fas', 'plus']" [size]="'lg'" aria-hidden="true"></fa-icon>
+      <span class="sr-only">Agregar Pago</span>
+    </button>
+  </legend>
+  <table class="table table-bordered table-sm">
+    <caption class="sr-only">Pagos</caption>
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Forma de Pago</th>
+      <th scope="col">Monto ($)</th>
+      <th scope="col"><div class="sr-only">Acción</div></th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngIf="value">
+      <tr *ngFor="let v of value; let i=index">
+        <td class="align-middle text-center">{{ i + 1 }}</td>
+        <td class="align-middle">
+          <div class="form-group m-0">
+            <label [for]="'forma-de-pago_' + i" class="sr-only">Forma de pago</label>
+            <select class="form-control" [id]="'forma-de-pago_' + i" [disabled]="isDisabled" (change)="onFormaPagoChange(i, $event)">
+              <option value=""></option>
+              <option *ngFor="let fdp of formasDePago" [value]="fdp.idFormaDePago" [selected]="v.idFormaDePago == fdp.idFormaDePago">
+                {{ fdp.nombre }}
+              </option>
+            </select>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="form-group m-0">
+            <label [for]="'monto_' + i" class="sr-only">Monto</label>
+            <input class="form-control text-right" type="number" [value]="v.monto" min="0" [id]="'monto_' + i" [disabled]="isDisabled" (change)="onMontoChange(i, $event)">
+          </div>
+        </td>
+        <td class="align-middle text-center">
+          <button type="button" class="btn btn-primary" (click)="quitarPago(i)" [disabled]="isDisabled">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+</fieldset>
+
