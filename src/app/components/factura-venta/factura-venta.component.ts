@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
 import { HelperService } from '../../services/helper.service';
 import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { formatNumber, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
@@ -21,12 +21,9 @@ import { Resultados } from '../../models/resultados';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageService } from '../../services/storage.service';
 import { ProductosService } from '../../services/productos.service';
-import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
-import { DisponibilidadStockModalComponent } from '../disponibilidad-stock-modal/disponibilidad-stock-modal.component';
 import { PedidosService } from '../../services/pedidos.service';
 import { EstadoPedido } from '../../models/estado.pedido';
 import { Pedido } from '../../models/pedido';
-import { ProductoFaltante } from '../../models/producto-faltante';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
 import { Transportista } from '../../models/transportista';
@@ -359,13 +356,6 @@ export class FacturaVentaComponent implements OnInit {
     setTimeout(() => this.calcularResultados(), 500);
   }
 
-  getTotalFactura() {
-    // Formateo el total de la factura de la misma forma que se muestra que en la vista pero para le locale en-US
-    // (con punto decimal) y quito el separador de mil (coma para ese locale)
-    if (!this.resultados) { return 0; }
-    return parseFloat(formatNumber(this.resultados.total, 'en-US', '1.0-2').replace(',', ''));
-  }
-
   calcularResultados() {
     const dp = this.form.get('descuento').value;
     const rp = this.form.get('recargo').value;
@@ -400,47 +390,6 @@ export class FacturaVentaComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      const formValue = this.form.value;
-
-      const ppvs: ProductosParaVerificarStock = {
-        idSucursal: this.sucursalesService.getIdSucursal(),
-        idProducto: formValue.renglones.map(e => e.renglon.idProductoItem),
-        cantidad: formValue.renglones.map(e => e.renglon.cantidad),
-      };
-      this.loadingOverlayService.activate();
-      this.productosService.getDisponibilidadEnStock(ppvs)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe((pfs: ProductoFaltante[]) => {
-            if (!pfs.length) {
-              this.doSubmit();
-            } else {
-              const modalRef = this.modalService.open(DisponibilidadStockModalComponent, { size: 'lg', scrollable: true });
-              modalRef.componentInstance.data = pfs;
-            }
-          }
-        )
-      ;
-    }
-  }
-
-  doSubmit() {
-    const total = this.getTotalFactura();
-    const montoTotalPagos = this.form.value.pagos.reduce((sum, v) => sum + v.monto, 0);
-    let montoWarning = '';
-
-    if (montoTotalPagos > total) {
-      montoWarning = 'Los montos ingresados superan el total a pagar. ¿Desea continuar?';
-    }
-
-    if (montoTotalPagos < total) {
-      montoWarning = 'Los montos ingresados no cubren el total a pagar. ¿Desea continuar?';
-    }
-
-    if (montoWarning) {
-      this.mensajeService.msg(montoWarning, MensajeModalType.ALERT).then((result) => {
-        if (result) { this.guardarFactura(); }
-      });
-    } else {
       this.guardarFactura();
     }
   }

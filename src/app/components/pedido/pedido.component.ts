@@ -407,8 +407,8 @@ export class PedidoComponent implements OnInit {
       const control = this.searchRPInRenglones(pf.idProducto);
       if (control) {
         const v: RenglonPedido = control.get('renglonPedido').value;
-        v.errorDisponibilidad = 'La cantidad solicitada (' +
-          pf.cantidadSolicitada + ') supera la cantidad disponible (' + pf.cantidadDisponible + ')';
+        v.errorDisponibilidad = 'Solicitado (' + pf.cantidadSolicitada + ' ' + v.medidaItem + ')'
+          + ' Disponible (' + pf.cantidadDisponible + ' ' + v.medidaItem + ')';
         control.get('renglonPedido').setValue(v);
       }
     });
@@ -430,7 +430,7 @@ export class PedidoComponent implements OnInit {
     if (!ccc.cliente.puedeComprarAPlazo) {
       if (montoTotal > montoTotalPagos) {
         this.mensajeService.msg(
-          'El monto total del pedido supera al monto total de pagos (El cliente no puede realizar compras a plazo).',
+          'No puede realizar compra a plazo (Debe ingresar pagos que sean igual o mayor al monto total)',
           MensajeModalType.ERROR
         );
         return false;

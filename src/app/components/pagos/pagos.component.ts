@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FormaDePago } from '../../models/forma-de-pago';
 import { FormasDePagoService } from '../../services/formas-de-pago.service';
@@ -22,6 +22,10 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   formasDePago: FormaDePago[] = [];
   formaDePagoPredeterminada: FormaDePago;
 
+  private pTotalAPagar = 0;
+  @Input() set totalAPagar(value: number) { this.pTotalAPagar = value; }
+  get totalAPagar() { return this.pTotalAPagar; }
+
   value = [];
   isDisabled: boolean;
   onChange = (_: any) => { };
@@ -41,9 +45,10 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   }
 
   agregarPago() {
+    const m = this.value.length ? 0.0 : this.totalAPagar;
     this.value.push({
       idFormaDePago: this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null,
-      monto: 0.0,
+      monto: m,
     });
     this.onTouch();
     this.onChange(this.value);
