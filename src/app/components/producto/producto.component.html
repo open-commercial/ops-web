@@ -8,4 +8,84 @@
       <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> {{ title }}
     </h1>
   </div>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
+    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="general" (panelChange)="panelBeforeChange($event)">
+      <ngb-panel id="general" title="General">
+        <ng-template ngbPanelContent>
+          <div class="form-group">
+            <label for="codigo">Código</label>
+            <input type="text" class="form-control" id="codigo" formControlName="codigo">
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <input type="text" class="form-control" id="descripcion" required formControlName="descripcion"
+                   [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.descripcion.errors">
+              <div *ngIf="f.descripcion.errors.required">Requerido</div>
+            </div>
+          </div>
+          <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
+          <div class="custom-error-message" *ngIf="submitted && f.idProveedor.errors">
+            <div *ngIf="f.idProveedor.errors.required">Requerido</div>
+          </div>
+          <div class="form-group">
+            <label for="medida">Medida</label>
+            <select class="form-control" id="medida" formControlName="idMedida"
+                    [ngClass]="{ 'is-invalid': submitted && f.idMedida.errors }">
+              <option *ngFor="let m of medidas" [value]="m.idMedida">{{ m.nombre }}</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.idMedida.errors">
+              <div *ngIf="f.idMedida.errors.required">Requerido</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="rubro">Rubro</label>
+            <select class="form-control" id="rubro" formControlName="idRubro"
+                    [ngClass]="{ 'is-invalid': submitted && f.idRubro.errors }">
+              <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.idRubro.errors">
+              <div *ngIf="f.idRubro.errors.required">Requerido</div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="propiedades" title="Propiedades">
+        <ng-template ngbPanelContent>
+          <div class="form-group">
+            <label for="precioCosto">Precio de Costo</label>
+            <input type="number" class="form-control" id="precioCosto" required formControlName="precioCosto"
+                   [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.precioCosto.errors">
+              <div *ngIf="f.precioCosto.errors.required">Requerido</div>
+              <div *ngIf="f.precioCosto.errors.min">Mínimo {{ f.precioCosto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="gananciaPorcentaje">Ganancia (%)</label>
+            <div class="input-group mb-0">
+              <input type="number" class="form-control" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
+                     [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }">
+              <div class="input-group-append">
+                <span class="input-group-text">{{ 0 | currency:'ARS':'symbol':'1.0-2' }}</span>
+              </div>
+            </div>
+            <div class="custom-error-message" *ngIf="submitted && f.gananciaPorcentaje.errors">
+              <div *ngIf="f.gananciaPorcentaje.errors.required">Requerido</div>
+              <div *ngIf="f.gananciaPorcentaje.errors.min">Mínimo {{ f.gananciaPorcentaje.errors.min.min | number:'1.0-2' }} %</div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="imagen" title="Imágen">
+        <ng-template ngbPanelContent>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+    <div class="text-right my-2">
+      <button type="submit" class="btn btn-primary">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
+    </div>
+  </form>
 </div>
