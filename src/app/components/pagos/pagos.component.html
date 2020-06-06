@@ -1,11 +1,11 @@
-<fieldset class="app-pagos">
-  <legend class="h5">
-    Pagos
+<div class="app-pagos">
+  <div class="mb-2">
+    <strong>Pagos</strong>
     <button type="button" class="btn btn-primary ml-2" [disabled]="isDisabled" (click)="agregarPago()">
-      <fa-icon [icon]="['fas', 'plus']" [size]="'lg'" aria-hidden="true"></fa-icon>
+      <fa-icon [icon]="['fas', 'plus']" aria-hidden="true"></fa-icon>
       <span class="sr-only">Agregar Pago</span>
     </button>
-  </legend>
+  </div>
   <table class="table table-bordered table-sm">
     <caption class="sr-only">Pagos</caption>
     <thead>
@@ -46,5 +46,5 @@
     </ng-container>
     </tbody>
   </table>
-</fieldset>
+</div>
 

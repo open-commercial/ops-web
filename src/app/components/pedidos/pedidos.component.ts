@@ -259,7 +259,7 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
       return;
     }
 
-    const msg = `Está seguro que desea eliminar el pedido # ${pedido.nroPedido}?`;
+    const msg = `¿Está seguro que desea eliminar el pedido # ${pedido.nroPedido}?`;
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {

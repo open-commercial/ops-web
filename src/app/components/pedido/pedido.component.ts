@@ -392,7 +392,7 @@ export class PedidoComponent implements OnInit {
       .subscribe(
         () => {
           this.reset();
-          const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
+          const msg = np.idPedido ? 'Pedido actualizado correctamente!' : 'Pedido enviado correctamente!';
           this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
             this.router.navigate(['/pedidos']);
           });
@@ -437,21 +437,6 @@ export class PedidoComponent implements OnInit {
       }
     }
     return true;
-  }
-
-  submitButtonEnabled() {
-    const opcionEnvio = this.form.get('opcionEnvio').value;
-    const sucursal = this.form.get('sucursal').value;
-    const opcionEnvioUbicacion = this.form.get('opcionEnvioUbicacion').value;
-
-    return this.form.get('ccc').value && this.form.get('renglonesPedido').value.length &&
-      (
-        (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL && sucursal) ||
-        (opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO &&
-          (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION && this.clienteHasUbicacionFacturacion()) ||
-          (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
-        )
-      );
   }
 
   getNuevoPedido() {
@@ -709,13 +694,31 @@ export class PedidoComponent implements OnInit {
     return ret;
   }
 
-  getMontoCompraMinima() {
-    const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
-    return ccc.cliente.montoCompraMinima;
-  }
-
   volverAlListado() {
     this.location.back();
+  }
+
+  isProductosPanelEnabled() {
+    return this.form.get('ccc') && this.form.get('ccc').value;
+  }
+
+  isEnvioPanelEnabled() {
+    return this.isProductosPanelEnabled() && this.form.get('renglonesPedido') &&
+      Array.isArray(this.form.get('renglonesPedido').value) && this.form.get('renglonesPedido').value.length;
+  }
+
+  isPagosPanelEnabled() {
+    const opcionEnvio = this.form.get('opcionEnvio') ? this.form.get('opcionEnvio').value : null;
+    const sucursal = this.form.get('sucursal') ? this.form.get('sucursal').value : null;
+    const opcionEnvioUbicacion = this.form.get('sucursal') ? this.form.get('opcionEnvioUbicacion').value : null;
+
+    return this.isEnvioPanelEnabled() && (
+      (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL && sucursal) ||
+      (opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO &&
+        (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION && this.clienteHasUbicacionFacturacion()) ||
+        (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
+      )
+    );
   }
 }
 

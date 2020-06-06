@@ -5,6 +5,7 @@ import { FormasDePagoService } from '../../services/formas-de-pago.service';
 import { combineLatest } from 'rxjs';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { MensajeService } from '../../services/mensaje.service';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'app-pagos',
@@ -45,7 +46,7 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   }
 
   agregarPago() {
-    const m = this.value.length ? 0.0 : this.totalAPagar;
+    const m = this.value.length ? 0.0 : formatNumber(this.totalAPagar, 'en', '1.0-2');
     this.value.push({
       idFormaDePago: this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null,
       monto: m,

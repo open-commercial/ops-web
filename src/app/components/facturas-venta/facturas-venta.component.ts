@@ -348,7 +348,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       return;
     }
 
-    const msg = `Está seguro que desea eliminar la factura #${this.helper.formatNumFactura(factura.numSerie, factura.numFactura)}?`;
+    const msg = `¿Está seguro que desea eliminar la factura #${this.helper.formatNumFactura(factura.numSerie, factura.numFactura)}?`;
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
@@ -377,7 +377,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       return;
     }
 
-    const msg = 'Está seguro que desea enviar un email con la factura al Cliente?';
+    const msg = '¿Está seguro que desea enviar un email con la factura al Cliente?';
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {

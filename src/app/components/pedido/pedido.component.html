@@ -15,7 +15,7 @@
           <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="cccReadOnly" (select)="handleSelectCcc($event)"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!(form && form.get('ccc').value)">
+      <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!isProductosPanelEnabled()">
         <ng-template ngbPanelContent>
           <div formArrayName="renglonesPedido">
             <app-busqueda-producto (seleccion)="selectProducto($event)"
@@ -110,10 +110,9 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="envio" [title]="'Envio' + getEnvioLabel()"
-                 [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length)">
+      <ngb-panel id="envio" [title]="'Envio' + getEnvioLabel()" [disabled]="!isEnvioPanelEnabled()">
         <ng-template ngbPanelContent>
-          <label for="opcionEnvio">Seleccione el tipo de Envío:</label>&nbsp;
+          <label for="opcionEnvio">Seleccione el tipo de envío:</label>&nbsp;
           <div class="btn-group btn-group-toggle" id="opcionEnvio" ngbRadioGroup name="radioBasic" formControlName="opcionEnvio">
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
               <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length">
@@ -121,7 +120,7 @@
             </label>
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
               <input ngbButton type="radio" [value]="oe.ENVIO_A_DOMICILIO">
-              Envío a Domicilio
+              Envío a domicilio
             </label>
           </div>
           <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
@@ -137,21 +136,24 @@
               <option [value]="oeu.USAR_UBICACION_ENVIO">Usar ubicación de envío</option>
             </select>
           </div>
-          <div *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_FACTURACION">
+          <div *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO && form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_FACTURACION">
             <app-ubicacion-facturacion-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-facturacion-component>
           </div>
-          <div  *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO &&  form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO">
+          <div  *ngIf="form && form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO && form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO">
             <app-ubicacion-envio-component class="flex-fill" [cliente]="form.get('ccc').value.cliente" (updated)="updatedCliente($event)"></app-ubicacion-envio-component>
+          </div>
+          <div class="custom-error-message" *ngIf="(form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_FACTURACION && !clienteHasUbicacionFacturacion()) || (form.get('opcionEnvioUbicacion').value === oeu.USAR_UBICACION_ENVIO && !clienteHasUbicacionEnvio())">
+            Debe ingresar una ubicación
           </div>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="pago" [title]="'Pago' + (form && form.get('resultados').value ? ': ' + (form.get('resultados').value.total| currency:'ARS':'symbol':'1.0-2') : '')"
-                [disabled]="!(form && form.get('ccc').value) || !(form && form.get('renglonesPedido').value.length) || !(form && (form.get('sucursal').value || form.get('opcionEnvioUbicacion').value))">
+                [disabled]="!isPagosPanelEnabled()">
         <ng-template ngbPanelContent>
           <app-pagos formControlName="pagos" [totalAPagar]="form && form.get('resultados') ? form.get('resultados').value.total : 0"></app-pagos>
           <div class="text-right mb-0 mt-2" *ngIf="!saving">
             <div *ngIf="!totalSuperaCompraMinima()"><em>(El total no supera el monto de compra mínima para el cliente)</em></div>
-            <button type="submit" class="btn btn-primary" [disabled]="saving || !submitButtonEnabled() || !totalSuperaCompraMinima()">
+            <button type="submit" class="btn btn-primary" [disabled]="saving || !isPagosPanelEnabled() || !totalSuperaCompraMinima()">
               <fa-icon [icon]="['fas', 'check']"></fa-icon> Enviar Pedido
             </button>
           </div>

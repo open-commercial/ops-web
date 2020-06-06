@@ -398,20 +398,12 @@ export class FacturaVentaComponent implements OnInit {
     const formValue = this.form.value;
     const nfv: NuevaFacturaVenta = {
       idSucursal: this.sucursalesService.getIdSucursal(),
-      idPedido: formValue.idPedido,
       idCliente: formValue.ccc.cliente.idCliente,
       idTransportista: formValue.idTransportista ? Number(formValue.idTransportista) : null,
       fechaVencimiento: null,
       tipoDeComprobante: formValue.tipoDeComprobante,
       observaciones: formValue.observaciones,
-      renglones: formValue.renglones.map(e => {
-        const nrf: NuevoRenglonFactura = {
-          cantidad: e.renglon.cantidad,
-          idProducto: e.renglon.idProductoItem,
-          bonificacion: null,
-        };
-        return nrf;
-      }),
+      renglonMarcado: formValue.renglones.map(e => e.checked),
       idsFormaDePago: formValue.pagos.map((e) => Number(e.idFormaDePago)),
       montos: formValue.pagos.map((e) => e.monto),
       indices: formValue.renglones.map((e, i) => e.checked ? i : undefined).filter(x => x !== undefined),
@@ -421,7 +413,7 @@ export class FacturaVentaComponent implements OnInit {
 
     this.saving = true;
     this.loadingOverlayService.activate();
-    this.facturasVentaService.guardarFacturaVenta(nfv)
+    this.facturasVentaService.guardarFacturaVenta(nfv, formValue.idPedido)
       .pipe(finalize(() => {
         this.saving = false;
         this.loadingOverlayService.deactivate();
