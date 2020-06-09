@@ -264,7 +264,7 @@ export class PedidoComponent implements OnInit {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
         this.form.get('opcionEnvioUbicacion').setValue(null);
         if (!this.form.get('sucursal').value && this.sucursales.length) {
-          const aux = this.sucursales.filter((s: Sucursal) => s.idSucursal == this.sucursalesService.getIdSucursal());
+          const aux = this.sucursales.filter((s: Sucursal) => s.idSucursal === this.sucursalesService.getIdSucursal());
           this.form.get('sucursal').setValue(aux.length ?  aux[0] : this.sucursales[0]);
         }
       }
@@ -646,7 +646,7 @@ export class PedidoComponent implements OnInit {
   }
 
   compareFn(suc1: Sucursal, suc2: Sucursal) {
-    return suc1.idSucursal === suc2.idSucursal;
+    return suc1 && suc2 && suc1.idSucursal === suc2.idSucursal;
   }
 }
 
