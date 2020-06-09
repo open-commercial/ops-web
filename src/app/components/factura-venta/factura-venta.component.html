@@ -5,7 +5,7 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta {{ pedido ? '(Pedido # ' + pedido.nroPedido + ')' : '' }}
+      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta {{ pedido ? '(Pedido #' + pedido.nroPedido + ')' : '' }}
     </h1>
   </div>
   <div *ngIf="loading || verificandoPedido" class="text-center">
