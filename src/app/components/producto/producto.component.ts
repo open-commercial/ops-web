@@ -7,7 +7,7 @@ import { Producto } from '../../models/producto';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { MedidaService } from '../../services/medida.service';
 import { RubrosService } from '../../services/rubros.service';
 import { Medida } from '../../models/medida';
@@ -23,6 +23,7 @@ export class ProductoComponent implements OnInit {
   title = '';
   medidas: Medida[] = [];
   rubros: Rubro[] = [];
+  ivas = [0, 10.5, 21];
 
   producto: Producto;
   form: FormGroup;
@@ -89,8 +90,10 @@ export class ProductoComponent implements OnInit {
       idProveedor: [null, Validators.required],
       idMedida: [null, Validators.required],
       idRubro: [null, Validators.required],
-      precioCosto: [0, [Validators.required, Validators.min(1)]],
-      gananciaPorcentaje: [0, [Validators.required, Validators.min(10)]]
+      precioCosto: [0, [Validators.required, Validators.min(0)]],
+      gananciaPorcentaje: [0, [Validators.required, Validators.min(0)]],
+      precioVentaPublico: [0, [Validators.required, Validators.min(0)]],
+      ivaPorcentaje: [0, Validators.required],
     });
   }
 

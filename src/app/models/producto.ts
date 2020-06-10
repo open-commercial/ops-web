@@ -34,31 +34,3 @@ export interface Producto {
   eliminado: boolean;
   urlImagen: string;
 }
-
-/*
-private String codigo;
-private String descripcion;
-private Map<Long,BigDecimal> cantidadEnSucursal;
-private boolean hayStock;
-private BigDecimal cantMinima;
-private BigDecimal bulto;
-private BigDecimal precioCosto;
-private BigDecimal gananciaPorcentaje;
-private BigDecimal gananciaNeto;
-private BigDecimal precioVentaPublico;
-private BigDecimal ivaPorcentaje;
-private BigDecimal ivaNeto;
-private boolean oferta;
-private byte[] imagen;
-private BigDecimal porcentajeBonificacionOferta;
-private BigDecimal porcentajeBonificacionPrecio;
-private BigDecimal precioBonificado;
-private BigDecimal precioLista;
-private boolean ilimitado;
-private boolean publico;
-private LocalDateTime fechaUltimaModificacion;
-private String estanteria;
-private String estante;
-private String nota;
-private LocalDate fechaVencimiento;
- */
