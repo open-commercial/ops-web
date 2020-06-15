@@ -23,6 +23,11 @@ export class HelperService {
     return moment({ year: dateObj.year, month: dateObj.month - 1, day: dateObj.day }).unix();
   }
 
+  static getDateFromNgbDate(dateObj: NgbDate): Date {
+    if (!dateObj) { return null; }
+    return new Date(HelperService.getUnixDateFromNgbDate(dateObj) * 1000);
+  }
+
   static getFormattedDateFromNgbDate(dateObj: NgbDate): string {
     if (!dateObj) { return ''; }
     return [dateObj.day, dateObj.month, dateObj.year ].join('/');

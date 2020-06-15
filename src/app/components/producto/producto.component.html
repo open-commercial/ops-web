@@ -9,7 +9,7 @@
     </h1>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
-    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="general" (panelChange)="panelBeforeChange($event)">
+    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="general" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="general" title="General">
         <ng-template ngbPanelContent>
           <div class="form-group">
@@ -48,37 +48,190 @@
               <div *ngIf="f.idRubro.errors.required">Requerido</div>
             </div>
           </div>
+          <fieldset>
+            <legend class="h4 border-bottom mb-3">Valores y porcentajes</legend>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="precioCosto">Precio de Costo ($)</label>
+                  <input type="number" class="form-control text-right" id="precioCosto" required formControlName="precioCosto"
+                         [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }">
+                  <div class="invalid-feedback" *ngIf="submitted && f.precioCosto.errors">
+                    <div *ngIf="f.precioCosto.errors.required">Requerido</div>
+                    <div *ngIf="f.precioCosto.errors.min">Mínimo {{ f.precioCosto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="gananciaPorcentaje">Ganancia (%)</label>
+                  <div class="input-group mb-0">
+                    <input type="number" class="form-control text-right" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
+                           [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }">
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ 0 | currency:'ARS':'symbol':'1.0-2' }}</span>
+                    </div>
+                  </div>
+                  <div class="custom-error-message" *ngIf="submitted && f.gananciaPorcentaje.errors">
+                    <div *ngIf="f.gananciaPorcentaje.errors.required">Requerido</div>
+                    <div *ngIf="f.gananciaPorcentaje.errors.min">Mínimo {{ f.gananciaPorcentaje.errors.min.min | number:'1.0-2' }} %</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="precioVentaPublico">Precio Venta Público ($)</label>
+                  <input type="number" class="form-control text-right" id="precioVentaPublico" required formControlName="precioVentaPublico"
+                         [ngClass]="{ 'is-invalid': submitted && f.precioVentaPublico.errors }">
+                  <div class="invalid-feedback" *ngIf="submitted && f.precioVentaPublico.errors">
+                    <div *ngIf="f.precioVentaPublico.errors.required">Requerido</div>
+                    <div *ngIf="f.precioVentaPublico.errors.min">Mínimo {{ f.precioVentaPublico.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="gananciaPorcentaje">I.V.A. (%)</label>
+                  <div class="input-group mb-0">
+                    <select type="number" class="form-control" id="ivaPorcentaje" required formControlName="ivaPorcentaje"
+                            [ngClass]="{ 'is-invalid': submitted && f.ivaPorcentaje.errors }">
+                      <option *ngFor="let i of ivas" [value]="i">{{ i | number:'1.0-2' }}</option>
+                    </select>
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ 0 | currency:'ARS':'symbol':'1.0-2' }}</span>
+                    </div>
+                  </div>
+                  <div class="custom-error-message" *ngIf="submitted && f.ivaPorcentaje.errors">
+                    <div *ngIf="f.ivaPorcentaje.errors.required">Requerido</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="precioLista">Precio de Lista ($)</label>
+                  <input type="number" class="form-control text-right" id="precioLista" required formControlName="precioLista"
+                         [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }">
+                  <div class="invalid-feedback" *ngIf="submitted && f.precioLista.errors">
+                    <div *ngIf="f.precioLista.errors.required">Requerido</div>
+                    <div *ngIf="f.precioLista.errors.min">Mínimo {{ f.precioLista.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="porcentajeBonificacionPrecio">Precio Bonif. (%)</label>
+                      <input type="number" class="form-control text-right" id="porcentajeBonificacionPrecio" required formControlName="porcentajeBonificacionPrecio"
+                             [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionPrecio.errors }">
+                      <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionPrecio.errors">
+                        <div *ngIf="f.porcentajeBonificacionPrecio.errors.required">Requerido</div>
+                        <div *ngIf="f.porcentajeBonificacionPrecio.errors.min">Mínimo {{ f.porcentajeBonificacionPrecio.errors.min.min  | number:'1.0-2' }} %</div>
+                        <div *ngIf="f.porcentajeBonificacionPrecio.errors.max">Máximo {{ f.porcentajeBonificacionPrecio.errors.max.max  | number:'1.0-2' }} %</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="precioBonificado">Precio Bonif. ($)</label>
+                      <input type="number" class="form-control text-right" id="precioBonificado" required formControlName="precioBonificado"
+                             [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }">
+                      <div class="invalid-feedback" *ngIf="submitted && f.precioBonificado.errors">
+                        <div *ngIf="f.precioBonificado.errors.required">Requerido</div>
+                        <div *ngIf="f.precioBonificado.errors.min">Mínimo {{ f.precioBonificado.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="oferta">
+                      <label class="form-check-label" for="oferta">
+                        Oferta (%)
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <input type="number" class="form-control" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
+                           [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }">
+                    <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionOferta.errors">
+                      <div *ngIf="f.porcentajeBonificacionOferta.errors.required">Requerido</div>
+                      <div *ngIf="f.porcentajeBonificacionOferta.errors.min">Mínimo {{ f.porcentajeBonificacionOferta.errors.min.min  | number:'1.0-2' }} %</div>
+                      <div *ngIf="f.porcentajeBonificacionOferta.errors.max">Máximo {{ f.porcentajeBonificacionOferta.errors.max.max  | number:'1.0-2' }} %</div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <input type="number" class="form-control" id="precioOferta" required formControlName="precioOferta"
+                           [ngClass]="{ 'is-invalid': submitted && f.precioOferta.errors }">
+                    <div class="invalid-feedback" *ngIf="submitted && f.precioOferta.errors">
+                      <div *ngIf="f.precioOferta.errors.required">Requerido</div>
+                      <div *ngIf="f.precioOferta.errors.min">Mínimo {{ f.precioOferta.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset formArrayName="cantidadEnSucursal">
+            <legend class="h4 border-bottom mb-3">Cantidad en Sucursales</legend>
+            <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
+              <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('sucursal').value.nombre }}</span>
+                </div>
+                <input type="number" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
+                       [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
+              </div>
+              <div class="custom-error-message text-right" *ngIf="submitted && ces.get('cantidad').errors">
+                <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
+                <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
+              </div>
+            </div>
+          </fieldset>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="propiedades" title="Propiedades">
         <ng-template ngbPanelContent>
           <div class="form-group">
-            <label for="precioCosto">Precio de Costo</label>
-            <input type="number" class="form-control" id="precioCosto" required formControlName="precioCosto"
-                   [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }">
-            <div class="invalid-feedback" *ngIf="submitted && f.precioCosto.errors">
-              <div *ngIf="f.precioCosto.errors.required">Requerido</div>
-              <div *ngIf="f.precioCosto.errors.min">Mínimo {{ f.precioCosto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+            <label for="visibilidad">Visibilidad</label>
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="publico">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="true"> Público
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="false"> Privado
+              </label>
             </div>
           </div>
           <div class="form-group">
-            <label for="gananciaPorcentaje">Ganancia (%)</label>
-            <div class="input-group mb-0">
-              <input type="number" class="form-control" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
-                     [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }">
+            <label for="fechaVencimiento">Fecha de vencimiento</label>
+            <div class="input-group">
+              <input class="form-control" readonly id="fechaVencimiento" formControlName="fechaVencimiento"
+                     [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
+                     [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
               <div class="input-group-append">
-                <span class="input-group-text">{{ 0 | currency:'ARS':'symbol':'1.0-2' }}</span>
+                <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
+                  <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                </button>
+                <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+                  <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+                </button>
               </div>
             </div>
-            <div class="custom-error-message" *ngIf="submitted && f.gananciaPorcentaje.errors">
-              <div *ngIf="f.gananciaPorcentaje.errors.required">Requerido</div>
-              <div *ngIf="f.gananciaPorcentaje.errors.min">Mínimo {{ f.gananciaPorcentaje.errors.min.min | number:'1.0-2' }} %</div>
-            </div>
+          </div>
+          <div class="form-group">
+            <label for="estanteria">Estantería</label>
+            <input type="text" class="form-control" id="estanteria" formControlName="estanteria">
+          </div>
+          <div class="form-group">
+            <label for="estante">Estante</label>
+            <input type="text" class="form-control" id="estante" formControlName="estante">
+          </div>
+          <div class="form-group">
+            <label for="nota">Nota</label>
+            <textarea class="form-control" id="nota" formControlName="nota" rows="5"></textarea>
           </div>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="imagen" title="Imágen">
         <ng-template ngbPanelContent>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="imagenFile" accept="image/*" lang="es" (change)="imageChange($event)">
+            <label class="custom-file-label" for="imagenFile" #imageFileLabel>Seleccionar Archivo</label>
+          </div>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
