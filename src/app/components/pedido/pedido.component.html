@@ -125,8 +125,10 @@
           </div>
           <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
             <label for="sucursal" class="sr-only">Sucursal</label>
-            <select class="form-control" id="sucursal" formControlName="sucursal">
-              <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">{{ getSucursalLabel(sucursal) }}</option>
+            <select class="form-control" id="sucursal" formControlName="sucursal" [compareWith]="compareFn">
+              <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
+                {{ getSucursalLabel(sucursal) }}
+              </option>
             </select>
           </div>
           <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value  === oe.ENVIO_A_DOMICILIO">

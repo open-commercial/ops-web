@@ -265,7 +265,8 @@ export class PedidoComponent implements OnInit {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
         this.form.get('opcionEnvioUbicacion').setValue(null);
         if (!this.form.get('sucursal').value && this.sucursales.length) {
-          this.form.get('sucursal').setValue(this.sucursales[0]);
+          const aux = this.sucursales.filter((s: Sucursal) => s.idSucursal === this.sucursalesService.getIdSucursal());
+          this.form.get('sucursal').setValue(aux.length ?  aux[0] : this.sucursales[0]);
         }
       }
       if (oe === OpcionEnvio.ENVIO_A_DOMICILIO) {
@@ -719,6 +720,10 @@ export class PedidoComponent implements OnInit {
         (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
       )
     );
+  }
+
+  compareFn(suc1: Sucursal, suc2: Sucursal) {
+    return suc1 && suc2 && suc1.idSucursal === suc2.idSucursal;
   }
 }
 

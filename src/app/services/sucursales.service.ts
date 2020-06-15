@@ -19,7 +19,8 @@ export class SucursalesService {
               private storageService: StorageService) { }
 
   getIdSucursal() {
-    return this.storageService.getItem('idSucursal');
+    const idSuc = Number(this.storageService.getItem('idSucursal'));
+    return isNaN(idSuc) ? null : idSuc;
   }
 
   setIdSucursal(idSucursal: string) {

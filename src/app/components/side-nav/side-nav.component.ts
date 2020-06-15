@@ -11,6 +11,7 @@ import { Rol } from '../../models/rol';
 export class SideNavComponent implements OnInit {
   usuario: Usuario;
   tieneRolAdminOEncargado = false;
+  tieneRolVendedor = false;
 
   @Output() menuOptionClick = new EventEmitter<void>();
 
@@ -21,6 +22,7 @@ export class SideNavComponent implements OnInit {
       .subscribe((u: Usuario) => {
         this.usuario = u;
         this.tieneRolAdminOEncargado = this.usuarioTieneRol(Rol.ADMINISTRADOR) || this.usuarioTieneRol(Rol.ENCARGADO);
+        this.tieneRolVendedor = this.usuarioTieneRol(Rol.VENDEDOR);
       })
     ;
   }
