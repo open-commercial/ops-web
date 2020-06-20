@@ -17,6 +17,11 @@ import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
 import { NuevoProducto } from '../../models/nuevo-producto';
 import { HelperService } from '../../services/helper.service';
+import Big from 'big.js';
+import { CalculosPrecio } from '../../models/calculos-precio';
+import { formatNumber } from '@angular/common';
+
+Big.DP = 15;
 
 @Component({
   selector: 'app-producto',
@@ -34,8 +39,10 @@ export class ProductoComponent implements OnInit {
   form: FormGroup;
   submitted = false;
 
+  calculosPrecio = new CalculosPrecio();
+
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
-  @ViewChild('imageFileLabel', {static: false}) imageFileLabel: ElementRef;
+  imageDataUrl = '';
 
   constructor(accordionConfig: NgbAccordionConfig,
               private route: ActivatedRoute,
@@ -108,8 +115,8 @@ export class ProductoComponent implements OnInit {
       porcentajeBonificacionPrecio: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       precioBonificado: [0, [Validators.required, Validators.min(0)]],
       oferta: false,
-      porcentajeBonificacionOferta: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
-      precioOferta: [0, [Validators.required, Validators.min(0)]],
+      porcentajeBonificacionOferta: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0), Validators.max(100)]],
+      precioOferta: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0)]],
       cantidadEnSucursal: this.fb.array([]),
       bulto: [1, [Validators.required, Validators.min(1)]],
       publico: false,
@@ -142,7 +149,6 @@ export class ProductoComponent implements OnInit {
 
   submit() {
     this.submitted = true;
-    console.log('form valid?: ' + this.form.valid);
     if (this.form.valid) {
       // submits the form
       this.submitProductoNuevo();
@@ -165,12 +171,18 @@ export class ProductoComponent implements OnInit {
 
   getProductoModel(): NuevoProducto {
     const formValues = this.form.value;
-    console.log(formValues);
+
+    const auxCes = {};
+    if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
+      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.sucursal.idSucursal] = ces.cantidad);
+    }
 
     return {
+      imagen: formValues.imagen,
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
-      cantidadEnSucursal: { 1: 10, 5: 10 },
+      // cantidadEnSucursal: { 1: 10, 5: 10 },
+      cantidadEnSucursal: auxCes,
       hayStock: true,
       cantMinima: 0,
       bulto: formValues.bulto,
@@ -181,7 +193,6 @@ export class ProductoComponent implements OnInit {
       ivaPorcentaje: formValues.ivaPorcentaje,
       ivaNeto: 0,
       oferta: formValues.oferta,
-      imagen: formValues.imagen,
       porcentajeBonificacionOferta: formValues.porcentajeBonificacionOferta,
       porcentajeBonificacionPrecio: formValues.porcentajeBonificacionPrecio,
       precioBonificado: formValues.precioBonificado,
@@ -212,15 +223,85 @@ export class ProductoComponent implements OnInit {
 
   imageChange($event) {
     const file = $event.target.files[0];
-    const reader = new FileReader();
+    const readerBuffer = new FileReader();
+    const readerDataUrl = new FileReader();
 
-    this.imageFileLabel.nativeElement.innerText = file.name;
-
-    reader.addEventListener('load', () => {
-      const arr = new Uint8Array(reader.result as ArrayBuffer);
+    readerBuffer.addEventListener('load', () => {
+      const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
       this.form.get('imagen').setValue(Array.from(arr));
     });
 
-    reader.readAsArrayBuffer(file);
+    readerDataUrl.addEventListener('load', () => {
+      this.imageDataUrl = readerDataUrl.result as string;
+    });
+
+    readerBuffer.readAsArrayBuffer(file);
+    readerDataUrl.readAsDataURL(file);
+  }
+
+  clearFile(file) {
+    file.value = '';
+    this.imageDataUrl = '';
+    this.form.get('imagen').setValue(null);
+  }
+
+  refreshPreciosEnFormulario() {
+    this.form.get('precioCosto').setValue(this.formatBigForDisplay(this.calculosPrecio.precioCosto));
+    this.form.get('gananciaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.gananciaPorcentaje));
+    this.form.get('precioVentaPublico').setValue(this.formatBigForDisplay(this.calculosPrecio.precioVentaPublico));
+    this.form.get('precioLista').setValue(this.formatBigForDisplay(this.calculosPrecio.precioLista));
+    this.form.get('porcentajeBonificacionPrecio').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionPrecio));
+    this.form.get('precioBonificado').setValue(this.formatBigForDisplay(this.calculosPrecio.precioBonificado));
+
+    const oferta = this.form.get('oferta').value;
+    this.form.get('porcentajeBonificacionOferta').setValue(
+      oferta ? this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionOferta) : (new Big(0)).toFixed()
+    );
+    this.form.get('precioOferta').setValue(
+      oferta ? this.formatBigForDisplay(this.calculosPrecio.precioOferta) : (new Big(0)).toFixed()
+    );
+  }
+
+  formatBigForDisplay(n: Big) {
+    return formatNumber(parseFloat(n.toFixed(2)), 'en-US', '1.0-2');
+  }
+
+  precioCostoChange($event) {
+    const v = $event.target.value;
+    const pc = parseFloat(v);
+    this.calculosPrecio.precioCosto = isNaN(pc) ? new Big(0) : new Big(v);
+    this.refreshPreciosEnFormulario();
+  }
+
+  gananciaPorcentajeChange($event) {
+    const v = $event.target.value;
+    const gp = parseFloat(v);
+    this.calculosPrecio.gananciaPorcentaje = isNaN(gp) ? new Big(0) : new Big(v);
+    this.refreshPreciosEnFormulario();
+  }
+
+  ivaPorcentajeChange($event) {
+    const v = $event.target.value;
+    const ip = parseFloat(v);
+    this.calculosPrecio.ivaPorcentaje = isNaN(ip) ? new Big(0) : new Big(ip);
+    this.refreshPreciosEnFormulario();
+  }
+
+  porcentajeBonificacionPrecioChange($event) {
+    const v = $event.target.value;
+    const pbp = parseFloat(v);
+    this.calculosPrecio.porcentajeBonificacionPrecio = isNaN(pbp) ? new Big(0) : new Big(pbp);
+    this.refreshPreciosEnFormulario();
+  }
+
+  ofertaChange() {
+    const oferta = this.form.get('oferta').value;
+    if (oferta) {
+      this.form.get('porcentajeBonificacionOferta').enable();
+      this.form.get('precioOferta').enable();
+    } else {
+      this.form.get('porcentajeBonificacionOferta').disable();
+      this.form.get('precioOferta').disable();
+    }
   }
 }
