@@ -48,15 +48,15 @@
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon>{{ item.nroPedido }}
+          #{{ item.nroPedido }}
         </span>
-        <span class="badge badge-pill ml-2 mb-2 px-2 py-1"
+        <span class="badge ml-2 mb-2 px-2 py-1"
               [ngClass]="getEstadoValue(item.estado) === estado.ABIERTO ? 'badge-light border border-dark' : ''"
               [class.badge-success]="getEstadoValue(item.estado) === estado.CERRADO"
               [class.badge-danger]="getEstadoValue(item.estado) === estado.CANCELADO">
           {{ item.estado }}
         </span>
-        <span class="badge badge-pill badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.fechaVencimiento">
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.fechaVencimiento">
           Venc.: {{ item.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}
         </span>
       </div>
