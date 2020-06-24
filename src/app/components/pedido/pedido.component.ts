@@ -204,7 +204,10 @@ export class PedidoComponent implements OnInit {
             }
           );
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.router.navigate(['/pedidos']);
+        }
       )
     ;
   }
