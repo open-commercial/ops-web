@@ -22,7 +22,7 @@ import { ProductosService } from '../../services/productos.service';
 import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
-import { StorageService } from '../../services/storage.service';
+import { StorageKeys, StorageService } from '../../services/storage.service';
 import { Usuario } from '../../models/usuario';
 import { Rol } from '../../models/rol';
 import { Pedido } from '../../models/pedido';
@@ -43,13 +43,19 @@ enum OpcionEnvioUbicacion {
   USAR_UBICACION_FACTURACION= 'USAR_UBICACION_FACTURACION',
 }
 
+enum Action {
+  NUEVO = 'NUEVO',
+  EDITAR = 'EDITAR',
+  CLONAR = 'CLONAR',
+}
+
 @Component({
   selector: 'app-pedido',
   templateUrl: './pedido.component.html',
   styleUrls: ['./pedido.component.scss'],
 })
 export class PedidoComponent implements OnInit {
-  title = '';
+  title = 'Nuevo Pedido';
   form: FormGroup;
 
   oe = OpcionEnvio;
@@ -66,7 +72,9 @@ export class PedidoComponent implements OnInit {
 
   usuario: Usuario = null;
 
-  datosParaEdicion = {
+  action = Action.NUEVO;
+
+  datosParaEditarOClonar = {
     pedido: null,
     ccc: null,
     renglones: [],
@@ -76,7 +84,7 @@ export class PedidoComponent implements OnInit {
   };
 
   cccReadOnly = false;
-  localStorageKey = 'nuevoPedido';
+  localStorageKey = StorageKeys.NUEVO_PEDIDO;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -111,13 +119,12 @@ export class PedidoComponent implements OnInit {
       )
     ;
 
-    if (this.route.snapshot.paramMap.has('id')) {
-      this.title = 'Editar Pedido';
-      this.localStorageKey = 'editarPedido';
-      this.cccReadOnly = true;
-      const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.getDatosParaEditar(id);
-    } else {
+    this.init();
+  }
+
+  init() {
+    this.action = this.guessAction();
+    if (this.action === Action.NUEVO) {
       this.title = 'Nuevo Pedido';
       this.loadingOverlayService.activate();
       this.authService.getLoggedInUsuario()
@@ -130,35 +137,66 @@ export class PedidoComponent implements OnInit {
           err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         )
       ;
+    } else {
+      if (this.action === Action.EDITAR) {
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.title = 'Editar Pedido';
+        this.localStorageKey = StorageKeys.EDITAR_PEDIDO;
+        this.cccReadOnly = true;
+        this.getDatosParaEditarOClonar(id);
+      }
+
+      if (this.action === Action.CLONAR) {
+        const idToClone = Number(this.route.snapshot.queryParamMap.get('idToClone'));
+        // this.title = 'Nuevo Pedido *';
+        this.localStorageKey = StorageKeys.NUEVO_PEDIDO;
+        this.getDatosParaEditarOClonar(idToClone);
+      }
     }
   }
 
-  getDatosParaEditar(idPedido: number) {
+  guessAction() {
+    const url = this.route.snapshot.url;
+    if (url.length) {
+      const path = url[0].path;
+      if (path === 'nuevo') {
+        const hasIdToClone = !!this.route.snapshot.queryParamMap.get('idToClone');
+        return hasIdToClone ? Action.CLONAR : Action.NUEVO;
+      } else if (path === 'editar') {
+        return Action.EDITAR;
+      }
+    }
+    throw new Error('No es un path de url permitido');
+  }
+
+  getDatosParaEditarOClonar(idPedido: number) {
     this.loadingOverlayService.activate();
     this.pedidosService.getPedido(idPedido)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (p: Pedido) => {
-          this.datosParaEdicion.pedido = p;
-          this.title += ' #' + p.nroPedido;
+          this.datosParaEditarOClonar.pedido = p;
+          if (this.action === Action.EDITAR) {
+            this.title += ' #' + p.nroPedido;
+          }
           this.loadingOverlayService.activate();
           combineLatest([
             this.cuentasCorrienteService.getCuentaCorriente(p.cliente.idCliente),
-            this.pedidosService.getRenglonesDePedido(p.idPedido)
+            this.pedidosService.getRenglonesDePedido(p.idPedido, this.action === Action.CLONAR)
           ])
             .pipe(finalize(() => this.loadingOverlayService.deactivate()))
             .subscribe(
             (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
-              this.datosParaEdicion.ccc = v[0];
-              this.datosParaEdicion.renglones = v[1].map(e => ({ renglonPedido : e }));
-              this.datosParaEdicion.sucursal = null;
+              this.datosParaEditarOClonar.ccc = v[0];
+              this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido : e }));
+              this.datosParaEditarOClonar.sucursal = null;
               if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
-                this.datosParaEdicion.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
-                this.datosParaEdicion.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
+                this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
+                this.datosParaEditarOClonar.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
               } else {
-                this.datosParaEdicion.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
+                this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
                 if (p.tipoDeEnvio) {
-                  this.datosParaEdicion.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
+                  this.datosParaEditarOClonar.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
                     OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
                 }
               }
@@ -232,12 +270,14 @@ export class PedidoComponent implements OnInit {
 
   inicializarForm() {
     this.form.get('ccc').valueChanges
-      .subscribe(() => this.updateRenglones());
+      .subscribe(() => this.updateRenglones())
+    ;
 
     this.form.get('renglonesPedido').valueChanges
       .subscribe(() => {
         if (!this.loadingResultados) { this.calcularResultados(); }
-      });
+      })
+    ;
 
     this.form.get('descuento').valueChanges
       .pipe(debounceTime(700))
@@ -248,7 +288,8 @@ export class PedidoComponent implements OnInit {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      });
+      })
+    ;
 
     this.form.get('recargo').valueChanges
       .pipe(debounceTime(700))
@@ -259,7 +300,8 @@ export class PedidoComponent implements OnInit {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      });
+      })
+    ;
 
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
@@ -302,24 +344,29 @@ export class PedidoComponent implements OnInit {
         opcionEnvioUbicacion: null,
         pagos: [],
       };
-    if (this.datosParaEdicion.pedido) {
-      if (data.idPedido !== this.datosParaEdicion.pedido.idPedido) {
-        data.idPedido = this.datosParaEdicion.pedido.idPedido;
-        data.ccc = this.datosParaEdicion.ccc;
-        data.renglonesPedido = this.datosParaEdicion.renglones;
-        data.observaciones = this.datosParaEdicion.pedido.observaciones;
-        data.descuento = this.datosParaEdicion.pedido.descuentoPorcentaje;
-        data.recargo = this.datosParaEdicion.pedido.recargoPorcentaje;
-        data.opcionEnvio = this.datosParaEdicion.opcionEnvio;
-        data.opcionEnvioUbicacion = this.datosParaEdicion.opcionEnvioUbicacion;
-        data.sucursal = this.datosParaEdicion.sucursal;
+    if (this.datosParaEditarOClonar.pedido) {
+      if (data.idPedido !== this.datosParaEditarOClonar.pedido.idPedido) {
+        data.idPedido = this.datosParaEditarOClonar.pedido.idPedido;
+        data.ccc = this.datosParaEditarOClonar.ccc;
+        data.renglonesPedido = this.datosParaEditarOClonar.renglones;
+        data.observaciones = this.datosParaEditarOClonar.pedido.observaciones;
+        data.descuento = this.datosParaEditarOClonar.pedido.descuentoPorcentaje;
+        data.recargo = this.datosParaEditarOClonar.pedido.recargoPorcentaje;
+        data.opcionEnvio = this.datosParaEditarOClonar.opcionEnvio;
+        data.opcionEnvioUbicacion = this.datosParaEditarOClonar.opcionEnvioUbicacion;
+        data.sucursal = this.datosParaEditarOClonar.sucursal;
       }
     }
     return data;
   }
 
   loadForm(data) {
-    this.form.get('idPedido').setValue(data.idPedido ? data.idPedido : null);
+    if (this.action === Action.NUEVO || this.action === Action.CLONAR) {
+      this.form.get('idPedido').setValue(null);
+    } else {
+      this.form.get('idPedido').setValue(data.idPedido);
+    }
+
     this.form.get('ccc').setValue(data.ccc ? data.ccc : this.cccPredeterminado);
     data.renglonesPedido.forEach(d => {
       this.renglonesPedido.push(this.createRenglonPedidoForm(d.renglonPedido));

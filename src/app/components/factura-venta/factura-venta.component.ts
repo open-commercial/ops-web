@@ -19,7 +19,7 @@ import { SucursalesService } from '../../services/sucursales.service';
 import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
 import { Resultados } from '../../models/resultados';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
-import { StorageService } from '../../services/storage.service';
+import { StorageKeys, StorageService } from '../../services/storage.service';
 import { ProductosService } from '../../services/productos.service';
 import { PedidosService } from '../../services/pedidos.service';
 import { EstadoPedido } from '../../models/estado.pedido';
@@ -42,7 +42,7 @@ export class FacturaVentaComponent implements OnInit {
 
   helper = HelperService;
 
-  localStorageKey = 'facturarPedido';
+  localStorageKey = StorageKeys.FACTURAR_PEDIDO;
   tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
 
   tiposDeComprobanteLabels = [
@@ -107,7 +107,7 @@ export class FacturaVentaComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(
           (p: Pedido) => {
-            if ([EstadoPedido.ACTIVO, EstadoPedido.ABIERTO].indexOf(p.estado) >= 0) {
+            if ([EstadoPedido.ABIERTO].indexOf(p.estado) >= 0) {
               this.pedido = p;
               this.checkAndLoadDataForForm();
             } else {
@@ -132,7 +132,7 @@ export class FacturaVentaComponent implements OnInit {
 
   checkAndLoadDataForForm() {
     if (this.pedido) {
-      this.localStorageKey = 'facturarPedido';
+      this.localStorageKey = StorageKeys.FACTURAR_PEDIDO;
       let data = this.storageService.getItem(this.localStorageKey);
       if (!data || !data.idPedido || data.idPedido !== this.pedido.idPedido) {
         data = this.getDefaultEmptyDataForForm();

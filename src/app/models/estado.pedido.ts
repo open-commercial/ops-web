@@ -1,5 +1,5 @@
 export enum EstadoPedido {
     ABIERTO = 'ABIERTO',
-    ACTIVO = 'ACTIVO',
+    CANCELADO = 'CANCELADO',
     CERRADO = 'CERRADO',
 }

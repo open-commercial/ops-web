@@ -44,11 +44,11 @@ export class PedidosService {
     return this.http[method]<Pedido>(this.url, np);
   }
 
-  eliminarPedido(idPedido: number): Observable<void> {
-    return this.http.delete<void>(this.url + `/${idPedido}`);
+  cancelarPedido(idPedido: number): Observable<void> {
+    return this.http.put<void>(this.url + `/${idPedido}`, {});
   }
 
-  getRenglonesDePedido(idPedido: number): Observable<RenglonPedido[]> {
-    return this.http.get<RenglonPedido[]>(this.url + `/${idPedido}/renglones`);
+  getRenglonesDePedido(idPedido: number, clonar: boolean = false): Observable<RenglonPedido[]> {
+    return this.http.get<RenglonPedido[]>(this.url + `/${idPedido}/renglones` + (clonar ? '?clonar=true' : ''));
   }
 }

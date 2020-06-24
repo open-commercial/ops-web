@@ -6,6 +6,7 @@ export interface Pedido {
   idPedido: number;
   nroPedido: number;
   fecha: Date;
+  fechaVencimiento: Date;
   observaciones: string;
   idSucursal: number;
   nombreSucursal: string;

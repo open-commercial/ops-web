@@ -21,7 +21,7 @@ import { Producto } from '../../models/producto';
 import { ClientesService } from '../../services/clientes.service';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ProductosService } from '../../services/productos.service';
-import { StorageService } from '../../services/storage.service';
+import { StorageKeys, StorageService } from '../../services/storage.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { ListadoBaseComponent } from '../listado-base.component';
 
@@ -37,7 +37,7 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
 
   estados = [
     { value: EstadoPedido.ABIERTO, text: EstadoPedido[EstadoPedido.ABIERTO] },
-    { value: EstadoPedido.ACTIVO, text: EstadoPedido[EstadoPedido.ACTIVO] },
+    { value: EstadoPedido.CANCELADO, text: EstadoPedido[EstadoPedido.CANCELADO] },
     { value: EstadoPedido.CERRADO, text: EstadoPedido[EstadoPedido.CERRADO] },
   ];
 
@@ -246,30 +246,31 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   puedeFacturarPedido(p: Pedido) {
-    return this.hasRolToEdit && (p.estado === EstadoPedido.ABIERTO || p.estado === EstadoPedido.ACTIVO);
+    return this.hasRolToEdit && (p.estado === EstadoPedido.ABIERTO);
   }
 
   puedeVerFacturas(p: Pedido) {
-    return [EstadoPedido.ACTIVO, EstadoPedido.CERRADO].indexOf(p.estado) >= 0;
+    return [EstadoPedido.CERRADO].indexOf(p.estado) >= 0;
   }
 
-  eliminarPedido(pedido: Pedido) {
+  cancelarPedido(pedido: Pedido) {
     if (!this.puedeElimarPedido(pedido)) {
-      this.mensajeService.msg('No posee permiso para eliminar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
       return;
     }
 
-    const msg = `¿Está seguro que desea eliminar el pedido #${pedido.nroPedido}?`;
+    const msg = `¿Está seguro que desea cancelar el pedido #${pedido.nroPedido}?`;
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
-        this.pedidosService.eliminarPedido(pedido.idPedido)
+        this.pedidosService.cancelarPedido(pedido.idPedido)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
-              const idx: number = this.items.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
-              if (idx >= 0) { this.items.splice(idx, 1); }
+              /*const idx: number = this.items.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
+              if (idx >= 0) { this.items.splice(idx, 1); }*/
+              location.reload();
             },
             err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
           )
@@ -287,12 +288,16 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
     this.router.navigate(['/pedidos/editar', pedido.idPedido]);
   }
 
+  clonarPedido(pedido: Pedido) {
+    this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: pedido.idPedido }});
+  }
+
   facturarPedido(pedido: Pedido) {
     if (!this.puedeFacturarPedido(pedido)) {
       this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
       return;
     }
-    this.storageService.removeItem('facturarPedido');
+    this.storageService.removeItem(StorageKeys.FACTURAR_PEDIDO);
     this.router.navigate(['/facturas-venta/de-pedido', pedido.idPedido]);
   }
 

@@ -60,10 +60,10 @@
           {{ item.tipoComprobante.replace('_', ' ') }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon>INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
+          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon>AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
         <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
           CAE: {{ item.cae }} (vto: {{ item.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
