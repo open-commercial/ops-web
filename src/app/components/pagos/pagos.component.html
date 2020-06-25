@@ -6,6 +6,9 @@
       <span class="sr-only">Agregar Pago</span>
     </button>
   </div>
+  <span class="badge badge-light border" [ngClass]="saldoCCC >= 0 ? 'border-success text-success': 'border-danger text-danger'">
+    Saldo de Cuenta Corriente del Cliente: {{ saldoCCC | currency: 'ARS':'symbol':'1.0-2' }}
+  </span>
   <table class="table table-bordered table-sm">
     <caption class="sr-only">Pagos</caption>
     <thead>

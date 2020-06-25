@@ -152,7 +152,10 @@
       <ngb-panel id="pago" [title]="'Pago' + (form && form.get('resultados').value ? ': ' + (form.get('resultados').value.total| currency:'ARS':'symbol':'1.0-2') : '')"
                 [disabled]="!isPagosPanelEnabled()">
         <ng-template ngbPanelContent>
-          <app-pagos formControlName="pagos" [totalAPagar]="form && form.get('resultados') ? form.get('resultados').value.total : 0"></app-pagos>
+          <app-pagos formControlName="pagos"
+                     [totalAPagar]="form && form.get('resultados') ? form.get('resultados').value.total : 0"
+                     [saldoCCC]="form && form.get('ccc') && form.get('ccc').value ? form.get('ccc').value.saldo : 0"
+          ></app-pagos>
           <div class="text-right mb-0 mt-2" *ngIf="!saving">
             <div *ngIf="!totalSuperaCompraMinima()"><em>(El total no supera el monto de compra mínima para el cliente)</em></div>
             <button type="submit" class="btn btn-primary" [disabled]="saving || !isPagosPanelEnabled() || !totalSuperaCompraMinima()">

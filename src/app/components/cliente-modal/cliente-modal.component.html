@@ -31,8 +31,15 @@
             <span *ngIf="c.ubicacionEnvio">
               Ubi. envio: {{ helper.formatUbicacion(c.ubicacionEnvio) }}
             </span>
-            <span *ngIf="c.montoCompraMinima">
-              Compra mínima: {{ c.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
+            <span class="flex flex-column">
+              <span class="badge mr-2" [ngClass]="c.puedeComprarAPlazo?'badge-success':'badge-danger'">
+                Puede comprar a plazo
+                <fa-icon [icon]="['fas', 'check']" *ngIf="c.puedeComprarAPlazo"></fa-icon>
+                <fa-icon [icon]="['fas', 'times']" *ngIf="!c.puedeComprarAPlazo"></fa-icon>
+              </span>
+              <span class="badge badge-success" *ngIf="c.montoCompraMinima">
+                Compra mínima: {{ c.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
+              </span>
             </span>
           </span>
         </label>

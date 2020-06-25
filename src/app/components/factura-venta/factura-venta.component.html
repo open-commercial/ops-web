@@ -173,7 +173,10 @@
                  [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
         <ng-template ngbPanelContent>
           <div *ngIf="!saving">
-            <app-pagos formControlName="pagos" [totalAPagar]="resultados && resultados.total ? resultados.total : 0"></app-pagos>
+            <app-pagos formControlName="pagos"
+                       [totalAPagar]="resultados && resultados.total ? resultados.total : 0"
+                       [saldoCCC]="form && form.get('ccc') && form.get('ccc').value ? form.get('ccc').value.saldo : 0"
+            ></app-pagos>
             <div class="alert alert-success" *ngIf="esComprobanteDivido()">
               ATENCION: Este comprobante será dividido.
             </div>

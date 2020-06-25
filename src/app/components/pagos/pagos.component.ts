@@ -27,6 +27,10 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   @Input() set totalAPagar(value: number) { this.pTotalAPagar = value; }
   get totalAPagar() { return this.pTotalAPagar; }
 
+  private pSaldoCCC = 0;
+  @Input() set saldoCCC(value: number) { this.pSaldoCCC = value; }
+  get saldoCCC() { return this.pSaldoCCC; }
+
   value = [];
   isDisabled: boolean;
   onChange = (_: any) => { };
@@ -46,11 +50,19 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   }
 
   agregarPago() {
-    const m = this.value.length ? 0.0 : formatNumber(this.totalAPagar, 'en', '1.0-2');
+    let m = 0;
+    if (!this.value.length) {
+      if (this.pSaldoCCC <= 0) {
+        m = this.pTotalAPagar;
+      } else {
+        m = this.pSaldoCCC >= this.pTotalAPagar ? 0 : (this.pTotalAPagar - this.pSaldoCCC);
+      }
+    }
     this.value.push({
       idFormaDePago: this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null,
-      monto: m,
+      monto: Number(formatNumber(m, 'en', '1.0-2').replace(',', '')),
     });
+
     this.onTouch();
     this.onChange(this.value);
   }
