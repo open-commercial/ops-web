@@ -18,8 +18,7 @@ export interface Pedido {
   recargoNeto: number;
   descuentoPorcentaje: number;
   descuentoNeto: number;
-  totalEstimado: number;
-  totalActual: number;
+  total: number;
   estado: EstadoPedido;
   cantidadArticulos: number;
   detalleEnvio: string;
