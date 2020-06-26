@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductosService } from '../../services/productos.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
@@ -277,6 +277,13 @@ export class ProductoComponent implements OnInit {
     const v = $event.target.value;
     const gp = parseFloat(v);
     this.calculosPrecio.gananciaPorcentaje = isNaN(gp) ? new Big(0) : new Big(v);
+    this.refreshPreciosEnFormulario();
+  }
+
+  precioVentaPublicoChange($event) {
+    const v = $event.target.value;
+    const pvp = parseFloat(v);
+    this.calculosPrecio.precioVentaPublico = isNaN(pvp) ? new Big(0) : new Big(v);
     this.refreshPreciosEnFormulario();
   }
 

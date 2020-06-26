@@ -37,6 +37,9 @@ export class CalculosPrecio {
     this.calcularPrecioOferta();
   }
   get gananciaPorcentaje(): Big { return this.pGananciaPorcentaje; }
+  protected calcularGananciaPorcentaje() {
+    this.pGananciaPorcentaje = this.pPrecioVentaPublico.minus(this.pPrecioCosto).div(this.pPrecioCosto).times(100);
+  }
 
   set gananciaNeto(value: Big) { this.pGananciaNeto = value; }
   get gananciaNeto(): Big { return this.pGananciaNeto; }
@@ -44,7 +47,15 @@ export class CalculosPrecio {
     this.pGananciaNeto = this.pGananciaPorcentaje.times(this.pPrecioCosto).div(100);
   }
 
-  set precioVentaPublico(value: Big) { this.pPrecioVentaPublico = value; }
+  set precioVentaPublico(value: Big) {
+    this.pPrecioVentaPublico = value;
+    this.calcularGananciaPorcentaje();
+    this.calcularGananciaNeto();
+    this.calcularIvaNeto();
+    this.calcularPrecioLista();
+    this.calcularPrecioBonificado();
+    this.calcularPrecioOferta();
+  }
   get precioVentaPublico(): Big { return this.pPrecioVentaPublico; }
   protected calcularPrecioVentaPublico() {
     this.pPrecioVentaPublico = this.pPrecioCosto.add(this.pPrecioCosto.times(this.gananciaPorcentaje.div(100)));
