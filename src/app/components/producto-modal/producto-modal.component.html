@@ -29,7 +29,7 @@
                 <span *ngIf="!p.oferta && productosService.estaBonificado(p)" class="badge badge-success">BONIF. {{ p.porcentajeBonificacionPrecio }}%</span>
               </span>
               <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
-              <span class="mr-2">Stock: <strong>{{ productosService.getCantidad(p) }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ productosService.getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
+              <span class="mr-2">Stock: <strong>{{ getCantidades(p).sucActual }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantidades(p).sucOtras }} {{ p.nombreMedida }}</span>
               <span class="mr-2" *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más</span>
               <span class="mr-2">
                 <span class="text-nowrap" *ngIf="!((p.oferta || productosService.estaBonificado(p)) && p.bulto == 1)">

@@ -3,8 +3,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FormaDePago } from '../../models/forma-de-pago';
 import { FormasDePagoService } from '../../services/formas-de-pago.service';
 import { combineLatest } from 'rxjs';
-import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { MensajeService } from '../../services/mensaje.service';
 import { formatNumber } from '@angular/common';
 
 @Component({
@@ -36,8 +34,7 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   onChange = (_: any) => { };
   onTouch = () => { };
 
-  constructor(private formasDePagoService: FormasDePagoService,
-              private mensajeService: MensajeService) { }
+  constructor(private formasDePagoService: FormasDePagoService) { }
 
   ngOnInit() {
     combineLatest([
@@ -53,7 +50,7 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
     let m = 0;
     if (!this.value.length) {
       if (this.pSaldoCCC <= 0) {
-        m = this.pTotalAPagar;
+        m = -1 * this.saldoCCC + this.pTotalAPagar;
       } else {
         m = this.pSaldoCCC >= this.pTotalAPagar ? 0 : (this.pTotalAPagar - this.pSaldoCCC);
       }
@@ -68,10 +65,7 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
   }
 
   quitarPago(i) {
-    const msg = '¿Desea quitar este pago?';
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) { this.value.splice(i, 1); }
-    });
+    this.value.splice(i, 1);
     this.onTouch();
     this.onChange(this.value);
   }

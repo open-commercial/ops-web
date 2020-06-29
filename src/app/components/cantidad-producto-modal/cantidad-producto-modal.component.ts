@@ -5,7 +5,6 @@ import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { ProductosService } from '../../services/productos.service';
 import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
-import { SucursalesService } from '../../services/sucursales.service';
 import { ProductoFaltante } from '../../models/producto-faltante';
 
 @Component({
@@ -30,8 +29,7 @@ export class CantidadProductoModalComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal,
-              private productosService: ProductosService,
-              private sucursalesService: SucursalesService) { }
+              private productosService: ProductosService) { }
 
   ngOnInit() {
     this.createForm();
@@ -60,7 +58,7 @@ export class CantidadProductoModalComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       const ppvs: ProductosParaVerificarStock = {
-        idSucursal: this.sucursalesService.getIdSucursal(),
+        idSucursal: null,
         idProducto: [this.producto.idProducto],
         cantidad: [this.form.value.cantidad],
       };

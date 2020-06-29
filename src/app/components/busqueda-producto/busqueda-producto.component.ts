@@ -5,6 +5,7 @@ import { ProductoModalComponent } from '../producto-modal/producto-modal.compone
 import { Producto } from '../../models/producto';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from '../../services/productos.service';
+import { RenglonPedido } from '../../models/renglon-pedido';
 
 @Component({
   selector: 'app-busqueda-producto',
@@ -17,9 +18,17 @@ export class BusquedaProductoComponent implements OnInit {
   message: string;
   messageType = 'success';
 
+  modalRef;
+
   @Input()
   set directInputId(id: string) { this.pDirectInputId = id; }
   get directInputId(): string { return this.pDirectInputId; }
+
+  private pRenglonesPedido: RenglonPedido[] = [];
+  @Input() set renglonesPedido(value: RenglonPedido[]) {
+    this.pRenglonesPedido = value;
+  }
+  get renglonesPedido(): RenglonPedido[] { return this.pRenglonesPedido; }
 
   @Output() seleccion = new EventEmitter<Producto>();
   @Output() directInputSeleccion = new EventEmitter<Producto>();
@@ -48,8 +57,9 @@ export class BusquedaProductoComponent implements OnInit {
 
   showProductoModal($event) {
     $event.preventDefault();
-    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
-    modalRef.result.then((p: Producto) => {
+    this.modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
+    this.modalRef.componentInstance.renglonesPedido = this.pRenglonesPedido;
+    this.modalRef.result.then((p: Producto) => {
         this.seleccion.emit(p);
     }, () => {});
   }

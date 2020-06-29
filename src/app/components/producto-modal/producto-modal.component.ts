@@ -4,8 +4,13 @@ import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
-import { SucursalesService } from '../../services/sucursales.service';
 import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
+import { RenglonPedido } from '../../models/renglon-pedido';
+
+interface Cantidades {
+  sucActual: number;
+  sucOtras: number;
+}
 
 @Component({
   selector: 'app-producto-modal',
@@ -25,11 +30,12 @@ export class ProductoModalComponent implements OnInit {
   totalPages = 0;
   size = 0;
 
+  renglonesPedido: RenglonPedido[] = [];
+
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
-              public productosService: ProductosService,
-              private sucursalesService: SucursalesService) { }
+              public productosService: ProductosService) { }
 
   ngOnInit() {}
 
@@ -80,5 +86,28 @@ export class ProductoModalComponent implements OnInit {
     if (this.productoSeleccionado) {
       this.activeModal.close(this.productoSeleccionado);
     }
+  }
+
+  getCantidades(p: Producto): Cantidades {
+    const cantSucActual = this.productosService.getCantidad(p);
+    const cantOtrasSucursales = this.productosService.getCantOtrasSucursales(p);
+    const cants: Cantidades = { sucActual: cantSucActual, sucOtras: cantOtrasSucursales };
+
+    if (this.renglonesPedido.length) {
+
+      const aux = this.renglonesPedido.filter(r => r.idProductoItem === p.idProducto);
+      const rp = aux.length ? aux[0] : null;
+
+      if (rp) {
+        const left = cantSucActual - rp.cantidad;
+        if (left >= 0) {
+          cants.sucActual = left;
+        } else {
+          cants.sucOtras = cants.sucOtras + left; // es menor que 0 por eso se suma
+        }
+      }
+    }
+
+    return cants;
   }
 }
