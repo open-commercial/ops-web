@@ -294,10 +294,26 @@ export class ProductoComponent implements OnInit {
     this.refreshPreciosEnFormulario();
   }
 
+  precioListaChange($event) {
+    const v = $event.target.value;
+    const pl = parseFloat(v);
+    this.calculosPrecio.precioLista = isNaN(pl) ? new Big(0) : new Big(pl);
+    this.refreshPreciosEnFormulario();
+  }
+
   porcentajeBonificacionPrecioChange($event) {
     const v = $event.target.value;
     const pbp = parseFloat(v);
     this.calculosPrecio.porcentajeBonificacionPrecio = isNaN(pbp) ? new Big(0) : new Big(pbp);
+    this.refreshPreciosEnFormulario();
+  }
+
+  precioBonificadoChange($event) {
+    const v = $event.target.value;
+    const pb = parseFloat(v);
+    // this.calculosPrecio.precioBonificado = isNaN(pb) ? new Big(0) : new Big(pb);
+    const name = 'precioBonificado';
+    this.calculosPrecio[name] = isNaN(pb) ? new Big(0) : new Big(pb);
     this.refreshPreciosEnFormulario();
   }
 

@@ -131,7 +131,7 @@
               <div class="form-group">
                 <label for="precioLista">Precio de Lista ($)</label>
                 <input type="number" class="form-control text-right" id="precioLista" required formControlName="precioLista"
-                       [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }">
+                       [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }" (focusout)="precioListaChange($event)" (keyup.enter)="precioListaChange($event)">
                 <div class="invalid-feedback" *ngIf="submitted && f.precioLista.errors">
                   <div *ngIf="f.precioLista.errors.required">Requerido</div>
                   <div *ngIf="f.precioLista.errors.min">Mínimo {{ f.precioLista.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -154,7 +154,7 @@
                   <div class="form-group">
                     <label for="precioBonificado">Precio Bonif. ($)</label>
                     <input type="number" class="form-control text-right" id="precioBonificado" required formControlName="precioBonificado"
-                           [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }">
+                           [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }" (focusout)="precioBonificadoChange($event)" (keyup.enter)="precioBonificadoChange($event)">
                     <div class="invalid-feedback" *ngIf="submitted && f.precioBonificado.errors">
                       <div *ngIf="f.precioBonificado.errors.required">Requerido</div>
                       <div *ngIf="f.precioBonificado.errors.min">Mínimo {{ f.precioBonificado.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>

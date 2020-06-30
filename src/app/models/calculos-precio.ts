@@ -58,7 +58,10 @@ export class CalculosPrecio {
   }
   get precioVentaPublico(): Big { return this.pPrecioVentaPublico; }
   protected calcularPrecioVentaPublico() {
-    this.pPrecioVentaPublico = this.pPrecioCosto.add(this.pPrecioCosto.times(this.gananciaPorcentaje.div(100)));
+    this.pPrecioVentaPublico = this.pPrecioCosto.add(this.pPrecioCosto.times(this.pGananciaPorcentaje.div(100)));
+  }
+  protected calcularPrecioVentaPublico2() {
+    this.pPrecioVentaPublico = this.pPrecioLista.div((this.pIvaPorcentaje.div(100)).plus(1));
   }
 
   set ivaPorcentaje(value: Big) {
@@ -75,7 +78,15 @@ export class CalculosPrecio {
     this.pIvaNeto = this.pIvaPorcentaje.times(this.pPrecioVentaPublico).div(100);
   }
 
-  set precioLista(value: Big) { this.pPrecioLista = value; }
+  set precioLista(value: Big) {
+    this.pPrecioLista = value;
+    this.calcularPrecioVentaPublico2();
+    this.calcularGananciaPorcentaje();
+    this.calcularGananciaNeto();
+    this.calcularIvaNeto();
+    this.calcularPrecioBonificado();
+    this.calcularPrecioOferta();
+  }
   get precioLista(): Big { return this.pPrecioLista; }
   protected calcularPrecioLista() {
     this.pPrecioLista = this.pPrecioVentaPublico.add(this.pIvaNeto);
@@ -86,8 +97,14 @@ export class CalculosPrecio {
     this.calcularPrecioBonificado();
   }
   get porcentajeBonificacionPrecio(): Big { return this.pPorcentajeBonificacionPrecio; }
+  protected calcularporcentajeBonificacionPrecio() {
+    this.pPorcentajeBonificacionPrecio = (new Big(100)).times((new Big(1)).minus(this.pPrecioBonificado.div(this.pPrecioLista)));
+  }
 
-  set precioBonificado(value: Big) { this.pPrecioBonificado = value; }
+  set precioBonificado(value: Big) {
+    this.pPrecioBonificado = value;
+    this.calcularporcentajeBonificacionPrecio();
+  }
   get precioBonificado(): Big { return this.pPrecioBonificado; }
   protected calcularPrecioBonificado() {
     this.pPrecioBonificado = this.pPrecioLista.minus(this.pPorcentajeBonificacionPrecio.times(this.pPrecioLista).div(100));
