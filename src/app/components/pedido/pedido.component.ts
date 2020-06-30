@@ -406,6 +406,7 @@ export class PedidoComponent implements OnInit {
 
       const ppvs: ProductosParaVerificarStock = {
         idSucursal: null,
+        idPedido: formValue.idPedido,
         idProducto: formValue.renglonesPedido.map(e => e.renglonPedido.idProductoItem),
         cantidad: formValue.renglonesPedido.map(e => e.renglonPedido.cantidad),
       };
@@ -578,6 +579,7 @@ export class PedidoComponent implements OnInit {
   showCantidadModal(idProducto: number, cantidadPrevia = 1) {
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.cantidad = cantidadPrevia;
+    modalRef.componentInstance.idPedido = this.form.get('idPedido').value;
     modalRef.componentInstance.loadProducto(idProducto);
     modalRef.componentInstance.verificarStock = true;
     modalRef.result.then((cant: number) => {

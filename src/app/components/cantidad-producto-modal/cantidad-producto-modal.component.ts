@@ -24,6 +24,7 @@ export class CantidadProductoModalComponent implements OnInit {
   verificandoDisponibilidadStock = false;
   hayStockDisponible = false;
   stockDisponible = 0;
+  idPedido = null;
 
   @ViewChild('cantidadInput', { static: false }) cantidadInput: ElementRef;
 
@@ -59,6 +60,7 @@ export class CantidadProductoModalComponent implements OnInit {
     if (this.form.valid) {
       const ppvs: ProductosParaVerificarStock = {
         idSucursal: null,
+        idPedido: this.idPedido,
         idProducto: [this.producto.idProducto],
         cantidad: [this.form.value.cantidad],
       };
