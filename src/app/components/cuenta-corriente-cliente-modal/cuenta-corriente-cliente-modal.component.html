@@ -35,7 +35,7 @@
               <span class="badge mr-2" [ngClass]="ccc.cliente.puedeComprarAPlazo?'badge-success':'badge-danger'">
                 <fa-icon [icon]="['fas', 'check']" *ngIf="ccc.cliente.puedeComprarAPlazo"></fa-icon>
                 <fa-icon [icon]="['fas', 'times']" *ngIf="!ccc.cliente.puedeComprarAPlazo"></fa-icon>
-                {{ ccc.cliente.puedeComprarAPlazo ? '' : 'No' }} Puede comprar a plazo
+                {{ ccc.cliente.puedeComprarAPlazo ? 'P' : 'No p' }} uede comprar a plazo
               </span>
               <span class="badge badge-info" *ngIf="ccc.cliente.montoCompraMinima">
                 Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}

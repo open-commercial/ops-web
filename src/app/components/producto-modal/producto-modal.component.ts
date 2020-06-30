@@ -100,9 +100,8 @@ export class ProductoModalComponent implements OnInit {
 
       if (rp) {
         const left = cantSucActual - rp.cantidad;
-        if (left >= 0) {
-          cants.sucActual = left;
-        } else {
+        cants.sucActual = left < 0 ? 0 : left;
+        if (left < 0) {
           cants.sucOtras = cants.sucOtras + left; // es menor que 0 por eso se suma
         }
       }
