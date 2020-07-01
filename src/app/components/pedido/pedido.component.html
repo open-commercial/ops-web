@@ -18,8 +18,7 @@
       <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!isProductosPanelEnabled()">
         <ng-template ngbPanelContent>
           <div formArrayName="renglonesPedido">
-            <app-busqueda-producto [renglonesPedido]="getRenglonesPedidoData()" (seleccion)="selectProducto($event)"
-                                   (directInputSeleccion)="directInputSeleccionProducto($event)"></app-busqueda-producto>
+            <app-busqueda-producto (seleccion)="selectProducto($event)" (directInputSeleccion)="directInputSeleccionProducto($event)"></app-busqueda-producto>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">
                 <caption class="sr-only">Productos del Pedido</caption>

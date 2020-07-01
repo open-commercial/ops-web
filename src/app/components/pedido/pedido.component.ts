@@ -776,9 +776,5 @@ export class PedidoComponent implements OnInit {
   compareFn(suc1: Sucursal, suc2: Sucursal) {
     return suc1 && suc2 && suc1.idSucursal === suc2.idSucursal;
   }
-
-  getRenglonesPedidoData() {
-    return this.renglonesPedido.value.map(rpv => rpv.renglonPedido);
-  }
 }
 
