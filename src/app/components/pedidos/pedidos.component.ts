@@ -284,11 +284,12 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
       this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
       return;
     }
-
+    this.storageService.removeItem(StorageKeys.EDITAR_PEDIDO);
     this.router.navigate(['/pedidos/editar', pedido.idPedido]);
   }
 
   clonarPedido(pedido: Pedido) {
+    this.storageService.removeItem(StorageKeys.NUEVO_PEDIDO);
     this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: pedido.idPedido }});
   }
 

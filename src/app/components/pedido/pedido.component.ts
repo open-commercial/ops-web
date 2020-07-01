@@ -148,7 +148,6 @@ export class PedidoComponent implements OnInit {
 
       if (this.action === Action.CLONAR) {
         const idToClone = Number(this.route.snapshot.queryParamMap.get('idToClone'));
-        // this.title = 'Nuevo Pedido *';
         this.localStorageKey = StorageKeys.NUEVO_PEDIDO;
         this.getDatosParaEditarOClonar(idToClone);
       }
