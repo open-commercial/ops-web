@@ -263,59 +263,64 @@ export class ProductoComponent implements OnInit {
   }
 
   formatBigForDisplay(n: Big) {
-    return formatNumber(parseFloat(n.toFixed(2)), 'en-US', '1.0-2');
+    return formatNumber(parseFloat(n.toFixed(2)), 'en-US', '1.0-2').replace(',', '');
   }
 
-  precioCostoChange($event) {
+  calculosFieldChange(fieldName: string, $event) {
     const v = $event.target.value;
-    const pc = parseFloat(v);
-    this.calculosPrecio.precioCosto = isNaN(pc) ? new Big(0) : new Big(v);
+    const value = parseFloat(v);
+    this.calculosPrecio[fieldName] = isNaN(value) ? new Big(0) : new Big(v);
     this.refreshPreciosEnFormulario();
   }
 
-  gananciaPorcentajeChange($event) {
-    const v = $event.target.value;
-    const gp = parseFloat(v);
-    this.calculosPrecio.gananciaPorcentaje = isNaN(gp) ? new Big(0) : new Big(v);
-    this.refreshPreciosEnFormulario();
-  }
+  // precioCostoChange($event) {
+  //   const v = $event.target.value;
+  //   const pc = parseFloat(v);
+  //   this.calculosPrecio.precioCosto = isNaN(pc) ? new Big(0) : new Big(v);
+  //   this.refreshPreciosEnFormulario();
+  // }
 
-  precioVentaPublicoChange($event) {
-    const v = $event.target.value;
-    const pvp = parseFloat(v);
-    this.calculosPrecio.precioVentaPublico = isNaN(pvp) ? new Big(0) : new Big(v);
-    this.refreshPreciosEnFormulario();
-  }
+  // gananciaPorcentajeChange($event) {
+  //   const v = $event.target.value;
+  //   const gp = parseFloat(v);
+  //   this.calculosPrecio.gananciaPorcentaje = isNaN(gp) ? new Big(0) : new Big(v);
+  //   this.refreshPreciosEnFormulario();
+  // }
 
-  ivaPorcentajeChange($event) {
-    const v = $event.target.value;
-    const ip = parseFloat(v);
-    this.calculosPrecio.ivaPorcentaje = isNaN(ip) ? new Big(0) : new Big(ip);
-    this.refreshPreciosEnFormulario();
-  }
+  // precioVentaPublicoChange($event) {
+  //   const v = $event.target.value;
+  //   const pvp = parseFloat(v);
+  //   this.calculosPrecio.precioVentaPublico = isNaN(pvp) ? new Big(0) : new Big(v);
+  //   this.refreshPreciosEnFormulario();
+  // }
 
-  precioListaChange($event) {
-    const v = $event.target.value;
-    const pl = parseFloat(v);
-    this.calculosPrecio.precioLista = isNaN(pl) ? new Big(0) : new Big(pl);
-    this.refreshPreciosEnFormulario();
-  }
+  // ivaPorcentajeChange($event) {
+  //   const v = $event.target.value;
+  //   const ip = parseFloat(v);
+  //   this.calculosPrecio.ivaPorcentaje = isNaN(ip) ? new Big(0) : new Big(v);
+  //   this.refreshPreciosEnFormulario();
+  // }
 
-  porcentajeBonificacionPrecioChange($event) {
-    const v = $event.target.value;
-    const pbp = parseFloat(v);
-    this.calculosPrecio.porcentajeBonificacionPrecio = isNaN(pbp) ? new Big(0) : new Big(pbp);
-    this.refreshPreciosEnFormulario();
-  }
+  // precioListaChange($event) {
+  //   const v = $event.target.value;
+  //   const pl = parseFloat(v);
+  //   this.calculosPrecio.precioLista = isNaN(pl) ? new Big(0) : new Big(v);
+  //   this.refreshPreciosEnFormulario();
+  // }
 
-  precioBonificadoChange($event) {
-    const v = $event.target.value;
-    const pb = parseFloat(v);
-    // this.calculosPrecio.precioBonificado = isNaN(pb) ? new Big(0) : new Big(pb);
-    const name = 'precioBonificado';
-    this.calculosPrecio[name] = isNaN(pb) ? new Big(0) : new Big(pb);
-    this.refreshPreciosEnFormulario();
-  }
+  // porcentajeBonificacionPrecioChange($event) {
+  //   const v = $event.target.value;
+  //   const pbp = parseFloat(v);
+  //   this.calculosPrecio.porcentajeBonificacionPrecio = isNaN(pbp) ? new Big(0) : new Big(v);
+  //   this.refreshPreciosEnFormulario();
+  // }
+
+  // precioBonificadoChange($event) {
+  //   const v = $event.target.value;
+  //   const pb = parseFloat(v);
+  //   this.calculosPrecio.precioBonificado = isNaN(pb) ? new Big(0) : new Big(pb);
+  //   this.refreshPreciosEnFormulario();
+  // }
 
   ofertaChange() {
     const oferta = this.form.get('oferta').value;
@@ -326,5 +331,12 @@ export class ProductoComponent implements OnInit {
       this.form.get('porcentajeBonificacionOferta').disable();
       this.form.get('precioOferta').disable();
     }
+  }
+
+  porcentajeBonificacionOfertaChange($event) {
+    const v = $event.target.value;
+    const pbo = parseFloat(v);
+    this.calculosPrecio.porcentajeBonificacionOferta = isNaN(pbo) ? new Big(0) : new Big(pbo);
+    this.refreshPreciosEnFormulario();
   }
 }

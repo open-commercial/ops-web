@@ -84,7 +84,9 @@
               <div class="form-group">
                 <label for="precioCosto">Precio de Costo ($)</label>
                 <input type="number" class="form-control text-right" id="precioCosto" required formControlName="precioCosto"
-                       [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }" (focusout)="precioCostoChange($event)" (keyup.enter)="precioCostoChange($event)">
+                       [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }"
+                       (focusout)="calculosFieldChange('precioCosto', $event)"
+                       (keyup.enter)="calculosFieldChange('precioCosto', $event)">
                 <div class="invalid-feedback" *ngIf="submitted && f.precioCosto.errors">
                   <div *ngIf="f.precioCosto.errors.required">Requerido</div>
                   <div *ngIf="f.precioCosto.errors.min">Mínimo {{ f.precioCosto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -94,7 +96,9 @@
                 <label for="gananciaPorcentaje">Ganancia (%)</label>
                 <div class="input-group mb-0">
                   <input type="number" class="form-control text-right" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
-                         [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }" (focusout)="gananciaPorcentajeChange($event)" (keyup.enter)="gananciaPorcentajeChange($event)">
+                         [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }"
+                         (focusout)="calculosFieldChange('gananciaPorcentaje', $event)"
+                         (keyup.enter)="calculosFieldChange('gananciaPorcentaje', $event)">
                   <div class="input-group-append">
                     <span class="input-group-text">$ {{ formatBigForDisplay(calculosPrecio.gananciaNeto) }}</span>
                   </div>
@@ -107,7 +111,9 @@
               <div class="form-group">
                 <label for="precioVentaPublico">Precio Venta Público ($)</label>
                 <input type="number" class="form-control text-right" id="precioVentaPublico" required formControlName="precioVentaPublico"
-                       [ngClass]="{ 'is-invalid': submitted && f.precioVentaPublico.errors }" (focusout)="precioVentaPublicoChange($event)" (keyup.enter)="precioVentaPublicoChange($event)">
+                       [ngClass]="{ 'is-invalid': submitted && f.precioVentaPublico.errors }"
+                       (focusout)="calculosFieldChange('precioVentaPublico', $event)"
+                       (keyup.enter)="calculosFieldChange('precioVentaPublico', $event)">
                 <div class="invalid-feedback" *ngIf="submitted && f.precioVentaPublico.errors">
                   <div *ngIf="f.precioVentaPublico.errors.required">Requerido</div>
                   <div *ngIf="f.precioVentaPublico.errors.min">Mínimo {{ f.precioVentaPublico.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -117,8 +123,9 @@
                 <label for="ivaPorcentaje">I.V.A. (%)</label>
                 <div class="input-group mb-0">
                   <select type="number" class="form-control" id="ivaPorcentaje" required formControlName="ivaPorcentaje"
-                          [ngClass]="{ 'is-invalid': submitted && f.ivaPorcentaje.errors }" (change)="ivaPorcentajeChange($event)">
-                    <option *ngFor="let i of ivas" [value]="i">{{ i | number:'1.0-2' }}</option>
+                          [ngClass]="{ 'is-invalid': submitted && f.ivaPorcentaje.errors }"
+                          (change)="calculosFieldChange('ivaPorcentaje', $event)">
+                    <option *ngFor="let i of ivas" [value]="i">{{ i }}</option>
                   </select>
                   <div class="input-group-append">
                     <span class="input-group-text">$ {{ formatBigForDisplay(calculosPrecio.ivaNeto) }}</span>
@@ -131,7 +138,9 @@
               <div class="form-group">
                 <label for="precioLista">Precio de Lista ($)</label>
                 <input type="number" class="form-control text-right" id="precioLista" required formControlName="precioLista"
-                       [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }" (focusout)="precioListaChange($event)" (keyup.enter)="precioListaChange($event)">
+                       [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }"
+                       (focusout)="calculosFieldChange('precioLista', $event)"
+                       (keyup.enter)="calculosFieldChange('precioLista', $event)">
                 <div class="invalid-feedback" *ngIf="submitted && f.precioLista.errors">
                   <div *ngIf="f.precioLista.errors.required">Requerido</div>
                   <div *ngIf="f.precioLista.errors.min">Mínimo {{ f.precioLista.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -142,7 +151,9 @@
                   <div class="form-group">
                     <label for="porcentajeBonificacionPrecio">Precio Bonif. (%)</label>
                     <input type="number" class="form-control text-right" id="porcentajeBonificacionPrecio" required formControlName="porcentajeBonificacionPrecio"
-                           [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionPrecio.errors }" (focusout)="porcentajeBonificacionPrecioChange($event)" (keyup.enter)="porcentajeBonificacionPrecioChange($event)">
+                           [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionPrecio.errors }"
+                           (focusout)="calculosFieldChange('porcentajeBonificacionPrecio', $event)"
+                           (keyup.enter)="calculosFieldChange('porcentajeBonificacionPrecio', $event)">
                     <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionPrecio.errors">
                       <div *ngIf="f.porcentajeBonificacionPrecio.errors.required">Requerido</div>
                       <div *ngIf="f.porcentajeBonificacionPrecio.errors.min">Mínimo {{ f.porcentajeBonificacionPrecio.errors.min.min  | number:'1.0-2' }} %</div>
@@ -154,7 +165,9 @@
                   <div class="form-group">
                     <label for="precioBonificado">Precio Bonif. ($)</label>
                     <input type="number" class="form-control text-right" id="precioBonificado" required formControlName="precioBonificado"
-                           [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }" (focusout)="precioBonificadoChange($event)" (keyup.enter)="precioBonificadoChange($event)">
+                           [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }"
+                           (focusout)="calculosFieldChange('precioBonificado', $event)"
+                           (keyup.enter)="calculosFieldChange('precioBonificado', $event)">
                     <div class="invalid-feedback" *ngIf="submitted && f.precioBonificado.errors">
                       <div *ngIf="f.precioBonificado.errors.required">Requerido</div>
                       <div *ngIf="f.precioBonificado.errors.min">Mínimo {{ f.precioBonificado.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -172,7 +185,7 @@
                 <div class="col-6 col-md-3">
                   <label for="porcentajeBonificacionOferta" class="sr-only"></label>
                   <input type="number" class="form-control" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
-                         [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }">
+                         [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }" (focusout)="porcentajeBonificacionOfertaChange($event)" (keyup.enter)="porcentajeBonificacionOfertaChange($event)">
                   <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionOferta.errors">
                     <div *ngIf="f.porcentajeBonificacionOferta.errors.required">Requerido</div>
                     <div *ngIf="f.porcentajeBonificacionOferta.errors.min">Mínimo {{ f.porcentajeBonificacionOferta.errors.min.min  | number:'1.0-2' }} %</div>
