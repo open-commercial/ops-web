@@ -41,7 +41,7 @@ export class UbicacionEnvioComponent implements OnInit {
   showUbicacionModal() {
     const modalRef = this.modalService.open(UbicacionModalComponent, { size: 'lg' });
     modalRef.componentInstance.ubicacion = this.ubicacion;
-    modalRef.componentInstance.title = 'Ubicación de Envio';
+    modalRef.componentInstance.title = 'Ubicación de envio';
     modalRef.result.then((u: Ubicacion) => {
       this.updating = true;
       this.cliente.ubicacionEnvio = u;
@@ -54,7 +54,7 @@ export class UbicacionEnvioComponent implements OnInit {
           },
           err => { this.updating = false; alert(err.error); }
         );
-    }, (reason) => {});
+    }, () => {});
   }
 
   getUbicacionStr() {

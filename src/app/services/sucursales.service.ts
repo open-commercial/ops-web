@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { Sucursal } from '../models/sucursal';
 import { environment } from '../../environments/environment';
 import { HelperService } from './helper.service';
-import { StorageService } from './storage.service';
+import { StorageKeys, StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class SucursalesService {
   }
 
   setIdSucursal(idSucursal: string) {
-    this.storageService.setItem('idSucursal', idSucursal);
+    this.storageService.setItem(StorageKeys.ID_SUCURSAL, idSucursal);
   }
 
   seleccionarSucursal(s: Sucursal) {

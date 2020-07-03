@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
-import { StorageService } from './services/storage.service';
+import { StorageKeys, StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent {
   checkAppVersion() {
     if (environment.appVersion !== this.storageService.getItem('appVersion')) {
       this.storageService.clear();
-      this.storageService.setItem('appVersion', environment.appVersion);
+      this.storageService.setItem(StorageKeys.APP_VERSION, environment.appVersion);
     }
   }
 }

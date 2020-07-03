@@ -5,7 +5,6 @@ import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { ProductosService } from '../../services/productos.service';
 import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
-import { SucursalesService } from '../../services/sucursales.service';
 import { ProductoFaltante } from '../../models/producto-faltante';
 
 @Component({
@@ -22,16 +21,21 @@ export class CantidadProductoModalComponent implements OnInit {
   submitted = false;
   loading = false;
   verificarStock = false;
+  stockVerificado = false;
   verificandoDisponibilidadStock = false;
   hayStockDisponible = false;
   stockDisponible = 0;
+  idPedido = null;
+
+  addCantidad = false;
+  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
+  cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
   @ViewChild('cantidadInput', { static: false }) cantidadInput: ElementRef;
 
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal,
-              private productosService: ProductosService,
-              private sucursalesService: SucursalesService) { }
+              private productosService: ProductosService) { }
 
   ngOnInit() {
     this.createForm();
@@ -43,7 +47,7 @@ export class CantidadProductoModalComponent implements OnInit {
       .pipe(finalize(() => this.productoLoading = false))
       .subscribe((p: Producto) => {
          this.producto = p;
-         setTimeout(() => this.cantidadInput.nativeElement.focus(), 500);
+         setTimeout(() => this.cantidadInput.nativeElement.select(), 500);
       })
     ;
   }
@@ -52,6 +56,7 @@ export class CantidadProductoModalComponent implements OnInit {
     this.form = this.fb.group({
       cantidad: [this.cantidad, [Validators.required, Validators.min(1)]]
     });
+    this.form.get('cantidad').valueChanges.subscribe(() => this.stockVerificado = false);
   }
 
   get f() { return this.form.controls; }
@@ -59,10 +64,16 @@ export class CantidadProductoModalComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
+      const cantidad = this.addCantidad
+        ? (this.cantidadesActualesPedido[this.producto.idProducto] || 0) + this.form.value.cantidad
+        : this.form.value.cantidad
+      ;
+
       const ppvs: ProductosParaVerificarStock = {
-        idSucursal: this.sucursalesService.getIdSucursal(),
+        idSucursal: null,
+        idPedido: this.idPedido,
         idProducto: [this.producto.idProducto],
-        cantidad: [this.form.value.cantidad],
+        cantidad: [cantidad],
       };
 
       if (this.verificarStock) {
@@ -72,8 +83,17 @@ export class CantidadProductoModalComponent implements OnInit {
           .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
           .subscribe((pfs: ProductoFaltante[]) => {
             const cant = this.form.get('cantidad').value;
+            this.stockVerificado = true;
             this.hayStockDisponible = !pfs.length;
-            this.stockDisponible = pfs.length ? pfs[0].cantidadDisponible : 0;
+            this.stockDisponible = 0;
+            if (pfs.length) {
+              const aux = this.addCantidad
+                ? pfs[0].cantidadDisponible
+                : (this.cantidadesInicialesPedido[this.producto.idProducto] || 0) + pfs[0].cantidadDisponible
+              ;
+              this.stockDisponible = aux > 0 ? aux : 0;
+            }
+
             if (!pfs.length) {
               this.activeModal.close(cant);
             }

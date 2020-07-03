@@ -23,4 +23,5 @@ export interface Cliente {
   montoCompraMinima: number;
   detalleUbicacionDeFacturacion: string;
   detalleUbicacionDeEnvio: string;
+  puedeComprarAPlazo: boolean;
 }

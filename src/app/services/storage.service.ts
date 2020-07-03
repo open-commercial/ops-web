@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import * as SecureLS from 'secure-ls';
 
+export enum StorageKeys {
+  ID_SUCURSAL = 'idSucursal',
+  APP_VERSION = 'appVersion',
+  TOKEN = 'token',
+  NUEVO_PEDIDO = 'nuevoPedido',
+  EDITAR_PEDIDO = 'editarPedido',
+  FACTURAR_PEDIDO = 'facturarPedido'
+}
+
 @Injectable({
   providedIn: 'root'
 })

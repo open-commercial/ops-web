@@ -34,7 +34,6 @@ const routes: Routes = [
       { path: 'facturas-venta', component: FacturasVentaHomeComponent,
         children: [
           { path: '', component: FacturasVentaComponent },
-          { path: 'nueva', component: FacturaVentaComponent },
           { path: 'de-pedido/:id', component: FacturaVentaComponent },
           { path: 'ver/:id', component: VerFacturaComponent },
         ]

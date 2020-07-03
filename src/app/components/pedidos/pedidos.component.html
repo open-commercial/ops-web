@@ -44,28 +44,31 @@
   <div class="pedidos my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">
+        <span class="badge ml-2 mb-2 px-2 py-1"
+              [ngClass]="getEstadoValue(item.estado) === estado.ABIERTO ? 'badge-light border border-dark' : ''"
+              [class.badge-success]="getEstadoValue(item.estado) === estado.CERRADO"
+              [class.badge-danger]="getEstadoValue(item.estado) === estado.CANCELADO">
+          {{ item.estado }}
+        </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> {{ item.nroPedido }}
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.fechaVencimiento">
+          Venc.: {{ item.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge ml-2 mb-2 px-2 py-1" [class.badge-success]="getEstadoValue(item.estado) === estado.ABIERTO"
-              [class.badge-danger]="getEstadoValue(item.estado) === estado.CERRADO"
-              [class.badge-warning]="getEstadoValue(item.estado) === estado.ACTIVO">
-          {{ item.estado }}
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1">
+          #{{ item.nroPedido }}
         </span>
       </div>
       <div class="px-2 flex-fill">
         <div class="d-flex flex-row flex-wrap align-items-center">
-          <div class="">
+          <div>
             <span class="dato"><span class="column-name">Cliente:&nbsp;</span><span class="column-data">{{ item.cliente.nombreFiscal }}</span></span>
             <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
             <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
           </div>
-          <div class="">
-            <span class="dato text-nowrap"><span class="column-name">Total Estimado:&nbsp;</span><span class="column-data total">{{ item.totalEstimado | currency:'ARS':'symbol':'1.0-2' }}</span></span>
-            <span class="dato text-nowrap"><span class="column-name">Total Actual:&nbsp;</span><span class="column-data total">{{ item.totalActual | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+          <div>
+            <span class="dato text-nowrap"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
           </div>
         </div>
       </div>
@@ -84,10 +87,16 @@
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </a>
         </li>
+        <li class="list-inline-item">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Clonar" triggers="mouseenter:mouseleave" placement="left"
+             (click)="clonarPedido(item)">
+            <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+          </a>
+        </li>
         <li class="list-inline-item" *ngIf="puedeElimarPedido(item)">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left"
-             (click)="eliminarPedido(item)">
-            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          <a class="btn btn-primary fake-cursor" ngbPopover="Cancelar" triggers="mouseenter:mouseleave" placement="left"
+             (click)="cancelarPedido(item)">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
           </a>
         </li>
         <li class="list-inline-item" *ngIf="puedeFacturarPedido(item)">

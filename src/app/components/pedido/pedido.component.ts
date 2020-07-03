@@ -22,7 +22,7 @@ import { ProductosService } from '../../services/productos.service';
 import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
-import { StorageService } from '../../services/storage.service';
+import { StorageKeys, StorageService } from '../../services/storage.service';
 import { Usuario } from '../../models/usuario';
 import { Rol } from '../../models/rol';
 import { Pedido } from '../../models/pedido';
@@ -31,6 +31,8 @@ import { MensajeService } from '../../services/mensaje.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
+import { ProductoFaltante } from '../../models/producto-faltante';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -41,13 +43,19 @@ enum OpcionEnvioUbicacion {
   USAR_UBICACION_FACTURACION= 'USAR_UBICACION_FACTURACION',
 }
 
+enum Action {
+  NUEVO = 'NUEVO',
+  EDITAR = 'EDITAR',
+  CLONAR = 'CLONAR',
+}
+
 @Component({
   selector: 'app-pedido',
   templateUrl: './pedido.component.html',
   styleUrls: ['./pedido.component.scss'],
 })
 export class PedidoComponent implements OnInit {
-  title = '';
+  title = 'Nuevo Pedido';
   form: FormGroup;
 
   oe = OpcionEnvio;
@@ -60,13 +68,13 @@ export class PedidoComponent implements OnInit {
 
   loadingResultados = false;
 
-  calculandoRenglones = false;
-
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
 
   usuario: Usuario = null;
 
-  datosParaEdicion = {
+  action = Action.NUEVO;
+
+  datosParaEditarOClonar = {
     pedido: null,
     ccc: null,
     renglones: [],
@@ -76,7 +84,10 @@ export class PedidoComponent implements OnInit {
   };
 
   cccReadOnly = false;
-  localStorageKey = 'nuevoPedido';
+  localStorageKey = StorageKeys.NUEVO_PEDIDO;
+
+  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
+  cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -111,13 +122,12 @@ export class PedidoComponent implements OnInit {
       )
     ;
 
-    if (this.route.snapshot.paramMap.has('id')) {
-      this.title = 'Editar Pedido';
-      this.localStorageKey = 'editarPedido';
-      this.cccReadOnly = true;
-      const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.getDatosParaEditar(id);
-    } else {
+    this.init();
+  }
+
+  init() {
+    this.action = this.guessAction();
+    if (this.action === Action.NUEVO) {
       this.title = 'Nuevo Pedido';
       this.loadingOverlayService.activate();
       this.authService.getLoggedInUsuario()
@@ -130,35 +140,68 @@ export class PedidoComponent implements OnInit {
           err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         )
       ;
+    } else {
+      if (this.action === Action.EDITAR) {
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.title = 'Editar Pedido';
+        this.localStorageKey = StorageKeys.EDITAR_PEDIDO;
+        this.cccReadOnly = true;
+        this.getDatosParaEditarOClonar(id);
+      }
+
+      if (this.action === Action.CLONAR) {
+        const idToClone = Number(this.route.snapshot.queryParamMap.get('idToClone'));
+        this.localStorageKey = StorageKeys.NUEVO_PEDIDO;
+        this.getDatosParaEditarOClonar(idToClone);
+      }
     }
   }
 
-  getDatosParaEditar(idPedido: number) {
+  guessAction() {
+    const url = this.route.snapshot.url;
+    if (url.length) {
+      const path = url[0].path;
+      if (path === 'nuevo') {
+        const hasIdToClone = !!this.route.snapshot.queryParamMap.get('idToClone');
+        return hasIdToClone ? Action.CLONAR : Action.NUEVO;
+      } else if (path === 'editar') {
+        return Action.EDITAR;
+      }
+    }
+    throw new Error('No es un path de url permitido');
+  }
+
+  getDatosParaEditarOClonar(idPedido: number) {
     this.loadingOverlayService.activate();
     this.pedidosService.getPedido(idPedido)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (p: Pedido) => {
-          this.datosParaEdicion.pedido = p;
-          this.title += ' #' + p.nroPedido;
+          this.datosParaEditarOClonar.pedido = p;
+          if (this.action === Action.EDITAR) {
+            this.title += ' #' + p.nroPedido;
+          }
           this.loadingOverlayService.activate();
           combineLatest([
             this.cuentasCorrienteService.getCuentaCorriente(p.cliente.idCliente),
-            this.pedidosService.getRenglonesDePedido(p.idPedido)
+            this.pedidosService.getRenglonesDePedido(p.idPedido, this.action === Action.CLONAR)
           ])
             .pipe(finalize(() => this.loadingOverlayService.deactivate()))
             .subscribe(
             (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
-              this.datosParaEdicion.ccc = v[0];
-              this.datosParaEdicion.renglones = v[1].map(e => ({ renglonPedido : e }));
-              this.datosParaEdicion.sucursal = null;
+              this.datosParaEditarOClonar.ccc = v[0];
+              this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido : e }));
+              if (this.action === Action.EDITAR) {
+                v[1].forEach(e => this.cantidadesInicialesPedido[e.idProductoItem] = e.cantidad);
+              }
+              this.datosParaEditarOClonar.sucursal = null;
               if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
-                this.datosParaEdicion.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
-                this.datosParaEdicion.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
+                this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
+                this.datosParaEditarOClonar.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
               } else {
-                this.datosParaEdicion.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
+                this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
                 if (p.tipoDeEnvio) {
-                  this.datosParaEdicion.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
+                  this.datosParaEditarOClonar.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
                     OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
                 }
               }
@@ -166,7 +209,10 @@ export class PedidoComponent implements OnInit {
             }
           );
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.router.navigate(['/pedidos']);
+        }
       )
     ;
   }
@@ -226,17 +272,24 @@ export class PedidoComponent implements OnInit {
       sucursal: null,
       opcionEnvioUbicacion: null,
       resultados: null,
+      pagos: [],
     });
   }
 
   inicializarForm() {
     this.form.get('ccc').valueChanges
-      .subscribe(() => this.updateRenglones());
+      .subscribe(() => this.updateRenglones())
+    ;
 
     this.form.get('renglonesPedido').valueChanges
-      .subscribe(() => {
+      .subscribe((renglones) => {
+        this.cantidadesActualesPedido = {};
+        renglones.forEach((r: { renglonPedido: RenglonPedido }) => {
+          this.cantidadesActualesPedido[r.renglonPedido.idProductoItem] = r.renglonPedido.cantidad;
+        });
         if (!this.loadingResultados) { this.calcularResultados(); }
-      });
+      })
+    ;
 
     this.form.get('descuento').valueChanges
       .pipe(debounceTime(700))
@@ -247,7 +300,8 @@ export class PedidoComponent implements OnInit {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      });
+      })
+    ;
 
     this.form.get('recargo').valueChanges
       .pipe(debounceTime(700))
@@ -258,7 +312,8 @@ export class PedidoComponent implements OnInit {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      });
+      })
+    ;
 
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
@@ -299,25 +354,31 @@ export class PedidoComponent implements OnInit {
         opcionEnvio: null,
         sucursal: null,
         opcionEnvioUbicacion: null,
+        pagos: [],
       };
-    if (this.datosParaEdicion.pedido) {
-      if (data.idPedido !== this.datosParaEdicion.pedido.idPedido) {
-        data.idPedido = this.datosParaEdicion.pedido.idPedido;
-        data.ccc = this.datosParaEdicion.ccc;
-        data.renglonesPedido = this.datosParaEdicion.renglones;
-        data.observaciones = this.datosParaEdicion.pedido.observaciones;
-        data.descuento = this.datosParaEdicion.pedido.descuentoPorcentaje;
-        data.recargo = this.datosParaEdicion.pedido.recargoPorcentaje;
-        data.opcionEnvio = this.datosParaEdicion.opcionEnvio;
-        data.opcionEnvioUbicacion = this.datosParaEdicion.opcionEnvioUbicacion;
-        data.sucursal = this.datosParaEdicion.sucursal;
+    if (this.datosParaEditarOClonar.pedido) {
+      if (data.idPedido !== this.datosParaEditarOClonar.pedido.idPedido) {
+        data.idPedido = this.datosParaEditarOClonar.pedido.idPedido;
+        data.ccc = this.datosParaEditarOClonar.ccc;
+        data.renglonesPedido = this.datosParaEditarOClonar.renglones;
+        data.observaciones = this.datosParaEditarOClonar.pedido.observaciones;
+        data.descuento = this.datosParaEditarOClonar.pedido.descuentoPorcentaje;
+        data.recargo = this.datosParaEditarOClonar.pedido.recargoPorcentaje;
+        data.opcionEnvio = this.datosParaEditarOClonar.opcionEnvio;
+        data.opcionEnvioUbicacion = this.datosParaEditarOClonar.opcionEnvioUbicacion;
+        data.sucursal = this.datosParaEditarOClonar.sucursal;
       }
     }
     return data;
   }
 
   loadForm(data) {
-    this.form.get('idPedido').setValue(data.idPedido ? data.idPedido : null);
+    if (this.action === Action.NUEVO || this.action === Action.CLONAR) {
+      this.form.get('idPedido').setValue(null);
+    } else {
+      this.form.get('idPedido').setValue(data.idPedido);
+    }
+
     this.form.get('ccc').setValue(data.ccc ? data.ccc : this.cccPredeterminado);
     data.renglonesPedido.forEach(d => {
       this.renglonesPedido.push(this.createRenglonPedidoForm(d.renglonPedido));
@@ -328,6 +389,9 @@ export class PedidoComponent implements OnInit {
 
     this.form.get('opcionEnvio').setValue(data.opcionEnvio ? data.opcionEnvio : null);
     this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion ? data.opcionEnvioUbicacion : null);
+    this.form.get('pagos').setValue(
+      data.pagos && Array.isArray(data.pagos) && data.pagos.length ? data.pagos : []
+    );
 
     if (data.sucursal) {
         const idx = this.sucursales.findIndex((s: Sucursal) => s.idSucursal === data.sucursal.idSucursal);
@@ -347,41 +411,93 @@ export class PedidoComponent implements OnInit {
 
   submit() {
     if (this.form.valid) {
-      const np: DetallePedido = this.getNuevoPedido();
+      const formValue = this.form.value;
+
+      const ppvs: ProductosParaVerificarStock = {
+        idSucursal: null,
+        idPedido: formValue.idPedido,
+        idProducto: formValue.renglonesPedido.map(e => e.renglonPedido.idProductoItem),
+        cantidad: formValue.renglonesPedido.map(e => e.renglonPedido.cantidad),
+      };
+
       this.loadingOverlayService.activate();
-      this.saving = true;
-      this.pedidosService.guardarPedido(np)
-        .pipe(finalize(() => {
-          this.saving = false;
-          this.loadingOverlayService.deactivate();
-        }))
-        .subscribe(
-          () => {
-            this.reset();
-            const msg = np.idPedido ? 'Pedido actualizado correctamente' : 'Pedido enviado correctamente.';
-            this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
-              this.router.navigate(['/pedidos']);
-            });
-          },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+      this.productosService.getDisponibilidadEnStock(ppvs)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe((pfs: ProductoFaltante[]) => {
+            if (!pfs.length) {
+            if (this.puedeRealizarCompra()) {
+              this.doSubmit();
+            }
+          } else {
+            this.agregarErroresDisponibilidad(pfs);
+            this.accordion.expand('productos');
+            this.mensajeService.msg(
+              'Uno o mas productos no poseen stock disponible. Por favor, verifique la sección Productos.',
+              MensajeModalType.ERROR
+            );
+          }
+        })
       ;
     }
   }
 
-  submitButtonEnabled() {
-    const opcionEnvio = this.form.get('opcionEnvio').value;
-    const sucursal = this.form.get('sucursal').value;
-    const opcionEnvioUbicacion = this.form.get('opcionEnvioUbicacion').value;
+  doSubmit() {
+    const np: DetallePedido = this.getNuevoPedido();
+    this.loadingOverlayService.activate();
+    this.saving = true;
+    this.pedidosService.guardarPedido(np)
+      .pipe(finalize(() => {
+        this.saving = false;
+        this.loadingOverlayService.deactivate();
+      }))
+      .subscribe(
+        () => {
+          this.reset();
+          const msg = np.idPedido ? 'Pedido actualizado correctamente!' : 'Pedido enviado correctamente!';
+          this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
+            this.router.navigate(['/pedidos']);
+          });
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
+  }
 
-    return this.form.get('ccc').value && this.form.get('renglonesPedido').value.length &&
-      (
-        (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL && sucursal) ||
-        (opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO &&
-          (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION && this.clienteHasUbicacionFacturacion()) ||
-          (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
-        )
-      );
+  agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
+    pfs.forEach((pf: ProductoFaltante) => {
+      const control = this.searchRPInRenglones(pf.idProducto);
+      if (control) {
+        const v: RenglonPedido = control.get('renglonPedido').value;
+        v.errorDisponibilidad = 'Solicitado (' + pf.cantidadSolicitada + ' ' + v.medidaItem + ')'
+          + ' Disponible (' + pf.cantidadDisponible + ' ' + v.medidaItem + ')';
+        control.get('renglonPedido').setValue(v);
+      }
+    });
+  }
+
+  puedeRealizarCompra() {
+    const ccc: CuentaCorrienteCliente = this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value : null;
+    const resultados: Resultados = this.form.get('resultados') ? this.form.get('resultados').value : null;
+    let pagos = this.form.get('pagos') ? this.form.get('pagos').value : [];
+    pagos = Array.isArray(pagos) && pagos.length ? pagos : [];
+
+    const montoTotal = resultados && resultados.total ? resultados.total : 0;
+    const montoTotalPagos = pagos.reduce((sum, v) => sum + v.monto, 0);
+
+    if (!ccc || !ccc.cliente) {
+      this.mensajeService.msg('No se pudo determinar el cliente', MensajeModalType.ERROR);
+      return false;
+    }
+    if (!ccc.cliente.puedeComprarAPlazo) {
+      if (montoTotal > montoTotalPagos) {
+        this.mensajeService.msg(
+          'No puede realizar compra a plazo (Debe ingresar pagos que sean igual o mayor al monto total)',
+          MensajeModalType.ERROR
+        );
+        return false;
+      }
+    }
+    return true;
   }
 
   getNuevoPedido() {
@@ -415,6 +531,8 @@ export class PedidoComponent implements OnInit {
           cantidad: r.renglonPedido.cantidad,
         };
       }),
+      idsFormaDePago: this.form.get('pagos').value.map((e) => Number(e.idFormaDePago)),
+      montos: this.form.get('pagos').value.map((e) => e.monto),
       recargoPorcentaje: resultados && resultados.recargoPorcentaje ? resultados.recargoPorcentaje : 0,
       descuentoPorcentaje: resultados && resultados.descuentoPorcentaje ? resultados.descuentoPorcentaje : 0,
     };
@@ -462,19 +580,25 @@ export class PedidoComponent implements OnInit {
   }
 
   selectProducto(p: Producto) {
-    const control = this.searchRPInRenglones(p.idProducto);
-    const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
-    this.showCantidadModal(p.idProducto, cPrevia);
+    this.showCantidadModal(p.idProducto, true);
   }
 
-  showCantidadModal(idProducto: number, cantidadPrevia = 1) {
+  showCantidadModal(idProducto: number, addCantidad = false) {
+    const control = this.searchRPInRenglones(idProducto);
+    const cPrevia = control ? control.get('renglonPedido').value.cantidad : 0;
+
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
-    modalRef.componentInstance.cantidad = cantidadPrevia;
+    modalRef.componentInstance.addCantidad = addCantidad;
+    modalRef.componentInstance.cantidadesInicialesPedido = this.cantidadesInicialesPedido;
+    modalRef.componentInstance.cantidadesActualesPedido = this.cantidadesActualesPedido;
+    modalRef.componentInstance.cantidad = addCantidad ? 1 : cPrevia;
+    modalRef.componentInstance.idPedido = this.form.get('idPedido').value;
     modalRef.componentInstance.loadProducto(idProducto);
+    modalRef.componentInstance.verificarStock = true;
     modalRef.result.then((cant: number) => {
       const nrp: NuevoRenglonPedido = {
         idProductoItem: idProducto,
-        cantidad: cant,
+        cantidad: addCantidad ? cPrevia + cant : cant,
       };
       this.addRenglonPedido(nrp);
     }, () => {});
@@ -485,12 +609,33 @@ export class PedidoComponent implements OnInit {
     let cant = 1;
     if (rp) { cant = rp.get('renglonPedido').value.cantidad + 1; }
 
-    const nrp: NuevoRenglonPedido = {
-      idProductoItem: p.idProducto,
-      cantidad: cant,
+    const ppvs: ProductosParaVerificarStock = {
+      idSucursal: null,
+      idPedido: this.form.get('idPedido').value,
+      idProducto: [p.idProducto],
+      cantidad: [cant],
     };
 
-    this.addRenglonPedido(nrp);
+    this.loadingOverlayService.activate();
+    this.productosService.getDisponibilidadEnStock(ppvs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((pfs: ProductoFaltante[]) => {
+        if (!pfs.length) {
+          console.log('llega');
+          const nrp: NuevoRenglonPedido = {
+            idProductoItem: p.idProducto,
+            cantidad: cant,
+          };
+
+          this.addRenglonPedido(nrp);
+        } else {
+          this.mensajeService.msg(
+            'No se puede solicitar mas stock para dicho producto. Por favor, verifique la sección Productos.',
+            MensajeModalType.ERROR
+          );
+        }
+      })
+    ;
   }
 
   addRenglonPedido(nrp: NuevoRenglonPedido) {
@@ -508,7 +653,7 @@ export class PedidoComponent implements OnInit {
   editarRenglon(rpControl: AbstractControl) {
     if (rpControl) {
       const rp: RenglonPedido = rpControl.get('renglonPedido').value;
-      this.showCantidadModal(rp.idProductoItem, rp.cantidad);
+      this.showCantidadModal(rp.idProductoItem);
     }
   }
 
@@ -636,13 +781,31 @@ export class PedidoComponent implements OnInit {
     return ret;
   }
 
-  getMontoCompraMinima() {
-    const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
-    return ccc.cliente.montoCompraMinima;
-  }
-
   volverAlListado() {
     this.location.back();
+  }
+
+  isProductosPanelEnabled() {
+    return this.form.get('ccc') && this.form.get('ccc').value;
+  }
+
+  isEnvioPanelEnabled() {
+    return this.isProductosPanelEnabled() && this.form.get('renglonesPedido') &&
+      Array.isArray(this.form.get('renglonesPedido').value) && this.form.get('renglonesPedido').value.length;
+  }
+
+  isPagosPanelEnabled() {
+    const opcionEnvio = this.form.get('opcionEnvio') ? this.form.get('opcionEnvio').value : null;
+    const sucursal = this.form.get('sucursal') ? this.form.get('sucursal').value : null;
+    const opcionEnvioUbicacion = this.form.get('sucursal') ? this.form.get('opcionEnvioUbicacion').value : null;
+
+    return this.isEnvioPanelEnabled() && (
+      (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL && sucursal) ||
+      (opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO &&
+        (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION && this.clienteHasUbicacionFacturacion()) ||
+        (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
+      )
+    );
   }
 
   compareFn(suc1: Sucursal, suc2: Sucursal) {

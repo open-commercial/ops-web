@@ -1,12 +1,12 @@
 <div class="modal-body p-2">
-  <div class="d-flex flex-row align-items-center ">
-    <div class="p-2">
-      <fa-icon [icon]="['fas', 'exclamation-triangle']" [size]="'2x'"></fa-icon>
+  <div class="d-flex flex-row align-items-center">
+    <div class="img-container d-flex align-items-center flex-grow-0 flex-shrink-0">
+      <img [src]="rp.urlImagenItem ? rp.urlImagenItem : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
     </div>
     <div class="flex-fill">
       <span class="codigo">{{ rp.codigoItem }}</span><br>
       <strong class="description">{{ rp.descripcionItem }}</strong><br>
-      Desea quitar este producto del pedido?
+      ¿Desea quitar este producto del pedido?
     </div>
   </div>
 </div>

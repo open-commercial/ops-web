@@ -4,38 +4,29 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
 import { HelperService } from '../../services/helper.service';
 import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { formatNumber, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ClientesService } from '../../services/clientes.service';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
-import { Producto } from '../../models/producto';
 import { RenglonFactura } from '../../models/renglon-factura';
-import { CantidadProductoModalComponent } from '../cantidad-producto-modal/cantidad-producto-modal.component';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { NuevoRenglonFactura } from '../../models/nuevo-renglon-factura';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { SucursalesService } from '../../services/sucursales.service';
 import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
 import { Resultados } from '../../models/resultados';
-import { Transportista } from '../../models/transportista';
-import { TransportistasService } from '../../services/transportistas.service';
-import { FormaDePago } from '../../models/forma-de-pago';
-import { FormasDePagoService } from '../../services/formas-de-pago.service';
-import { combineLatest, Observable } from 'rxjs';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
-import { StorageService } from '../../services/storage.service';
+import { StorageKeys, StorageService } from '../../services/storage.service';
 import { ProductosService } from '../../services/productos.service';
-import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
-import { DisponibilidadStockModalComponent } from '../disponibilidad-stock-modal/disponibilidad-stock-modal.component';
 import { PedidosService } from '../../services/pedidos.service';
 import { EstadoPedido } from '../../models/estado.pedido';
 import { Pedido } from '../../models/pedido';
-import { ProductoFaltante } from '../../models/producto-faltante';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
+import { Transportista } from '../../models/transportista';
 
 
 @Component({
@@ -51,14 +42,7 @@ export class FacturaVentaComponent implements OnInit {
 
   helper = HelperService;
 
-  localStorageKey = 'nuevaFactura';
-
-  cccPredeterminado: CuentaCorrienteCliente = null;
-  cccPredeterminadoLoading = false;
-  cccReadOnly = false;
-
-  cccLoading = false;
-
+  localStorageKey = StorageKeys.FACTURAR_PEDIDO;
   tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
 
   tiposDeComprobanteLabels = [
@@ -73,21 +57,17 @@ export class FacturaVentaComponent implements OnInit {
   resultados: Resultados;
   recalculandoRenglones = false;
 
-  transportistas: Transportista[] = [];
-  formasDePago: FormaDePago[] = [];
-  formaDePagoPredeterminada: FormaDePago;
-
   verificandoPedido = false;
   pedido: Pedido = null;
 
   saving = false;
 
+  transportistaSeleccionado: Transportista = null;
+
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
   @ViewChild('checkAllToggler', {static: false}) checkAllToggler: ElementRef;
   checkingAll = false;
   checkingRenglon = false;
-
-  verificandoDisponibilidadStock = false;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -102,8 +82,6 @@ export class FacturaVentaComponent implements OnInit {
               private cuentasCorrienteService: CuentasCorrienteService,
               private mensajeService: MensajeService,
               private sucursalesService: SucursalesService,
-              private transportistasService: TransportistasService,
-              private formasDePagoService: FormasDePagoService,
               private storageService: StorageService,
               private productosService: ProductosService,
               private pedidosService: PedidosService,
@@ -115,43 +93,8 @@ export class FacturaVentaComponent implements OnInit {
 
   ngOnInit() {
     this.createFrom();
-    this.inicializar();
+    this.verificarPedido();
     this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes());
-  }
-
-  inicializar() {
-    const obs: Observable<any>[] = [
-      this.transportistasService.getTransportistas(),
-      this.formasDePagoService.getFormaDePagoPredeterminada(),
-      this.formasDePagoService.getFormasDePago(),
-      this.clientesService.existeClientePredetermiando()
-    ];
-
-    this.loadingOverlayService.activate();
-    combineLatest(obs)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (data: [Transportista[], FormaDePago, FormaDePago[], boolean]) => {
-          this.transportistas = data[0];
-          this.formaDePagoPredeterminada = data[1];
-          this.formasDePago = data[2];
-          if (data[3]) {
-            this.loadingOverlayService.activate();
-            this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
-              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe(
-                (ccc: CuentaCorrienteCliente) => {
-                  this.cccPredeterminado = ccc;
-                  this.verificarPedido();
-                },
-                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-              )
-            ;
-          }
-        },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
-    ;
   }
 
   verificarPedido() {
@@ -164,49 +107,62 @@ export class FacturaVentaComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(
           (p: Pedido) => {
-            if ([EstadoPedido.ACTIVO, EstadoPedido.ABIERTO].indexOf(p.estado) >= 0) {
+            if ([EstadoPedido.ABIERTO].indexOf(p.estado) >= 0) {
               this.pedido = p;
               this.checkAndLoadDataForForm();
             } else {
               this.mensajeService.msg(`Estado de pedido Inválido (${p.estado})`, MensajeModalType.ERROR)
-                .then(() => this.router.navigate(['/pedidos']));
+                .then(() => this.router.navigate(['/pedidos']))
+              ;
             }
           },
-          e => this.mensajeService.msg(e.error, MensajeModalType.ERROR)
+          e => {
+            this.mensajeService.msg(e.error, MensajeModalType.ERROR)
+              .then(() => this.router.navigate(['/pedidos']))
+            ;
+          }
         )
       ;
     } else {
-      this.checkAndLoadDataForForm();
+      this.mensajeService.msg('No es un pedido válido', MensajeModalType.ERROR)
+        .then(() => this.router.navigate(['/pedidos']))
+      ;
     }
   }
 
   checkAndLoadDataForForm() {
     if (this.pedido) {
-      this.localStorageKey = 'facturarPedido';
+      this.localStorageKey = StorageKeys.FACTURAR_PEDIDO;
       let data = this.storageService.getItem(this.localStorageKey);
-      this.cccReadOnly = true;
       if (!data || !data.idPedido || data.idPedido !== this.pedido.idPedido) {
         data = this.getDefaultEmptyDataForForm();
         data.idPedido = this.pedido.idPedido;
         data.descuento = this.pedido.descuentoPorcentaje;
         data.recargo = this.pedido.recargoPorcentaje;
-        if (this.cccPredeterminado && this.cccPredeterminado.cliente.idCliente === this.pedido.cliente.idCliente) {
-          data.ccc = this.cccPredeterminado;
-          this.storageService.setItem(this.localStorageKey, data);
-        } else {
-          this.loadingOverlayService.activate();
-          this.cuentasCorrienteService.getCuentaCorriente(this.pedido.cliente.idCliente)
-            .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-            .subscribe((ccc: CuentaCorrienteCliente) => {
+        this.loadingOverlayService.activate();
+        this.cuentasCorrienteService.getCuentaCorriente(this.pedido.cliente.idCliente)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            (ccc: CuentaCorrienteCliente) => {
               data.ccc = ccc;
               this.storageService.setItem(this.localStorageKey, data);
               this.ininicializarForm();
-            });
-          return;
-        }
+            },
+            err => {
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                .then(() => this.router.navigate(['/pedidos']))
+              ;
+            }
+          )
+        ;
+      } else {
+        this.ininicializarForm();
       }
+    } else {
+      this.mensajeService.msg('No se ha especificado un pedido', MensajeModalType.ERROR)
+        .then(() => this.router.navigate(['/pedidos']))
+      ;
     }
-    this.ininicializarForm();
   }
 
   getDefaultEmptyDataForForm() {
@@ -218,7 +174,7 @@ export class FacturaVentaComponent implements OnInit {
       descuento: 0,
       recargo: 0,
       idTransportista: null,
-      formasPago: [],
+      pagos: [],
       idPedido: null,
     };
   }
@@ -242,7 +198,7 @@ export class FacturaVentaComponent implements OnInit {
       descuento: [0, Validators.min(0)],
       recargo: [0, Validators.min(0)],
       idTransportista: null,
-      formasPago: this.fb.array([]),
+      pagos: [],
       idPedido: null,
     });
   }
@@ -281,14 +237,12 @@ export class FacturaVentaComponent implements OnInit {
       })
     ;
 
-    this.form.valueChanges.subscribe(v => {
-      this.storageService.setItem(this.localStorageKey, v);
-    });
+    this.form.valueChanges.subscribe(v => this.storageService.setItem(this.localStorageKey, v));
   }
 
   loadForm() {
     const data = this.storageService.getItem(this.localStorageKey);
-    this.form.get('ccc').setValue(data && data.ccc ? data.ccc : this.cccPredeterminado);
+    this.form.get('ccc').setValue(data && data.ccc ? data.ccc : null);
 
     if (!data) { return; }
 
@@ -302,10 +256,7 @@ export class FacturaVentaComponent implements OnInit {
     this.form.get('recargo').setValue(data.recargo ? data.recargo : 0);
     this.form.get('idTransportista').setValue(data.idTransportista ? Number(data.idTransportista) : null);
     this.form.get('idPedido').setValue(data.idPedido ? Number(data.idPedido) : null);
-
-    if (data.formasPago && data.formasPago.length) {
-      data.formasPago.forEach(d => this.formasPago.push(this.createFormaPago(d.idFormaDePago, d.monto)));
-    }
+    this.form.get('pagos').setValue(data.pagos && data.pagos.length ? data.pagos : []);
   }
 
   get f() { return this.form.controls; }
@@ -359,34 +310,6 @@ export class FacturaVentaComponent implements OnInit {
     }
   }
 
-  editarRenglon(rpControl: AbstractControl) {
-    if (rpControl) {
-      const rf: RenglonFactura = rpControl.get('renglon').value;
-      this.showCantidadModal(rf.idProductoItem, rf.cantidad);
-    }
-  }
-
-  eliminarRenglon(index: number) {
-    const rf: RenglonFactura = this.renglones.at(index).get('renglon').value;
-    const msg = `¿Desea quitar de la factura al producto #${rf.codigoItem} - ${rf.descripcionItem}?`;
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) {
-        this.renglones.removeAt(index);
-        this.calcularResultados();
-      }
-    });
-  }
-
-  addRenglonFactura(nrf: NuevoRenglonFactura) {
-    const tipoDeComprobante = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value ?
-      this.form.get('tipoDeComprobante').value : null;
-    if (!tipoDeComprobante) { return; }
-    this.loadingOverlayService.activate();
-    this.facturasVentaService.calcularRenglones([nrf], tipoDeComprobante)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((data: RenglonFactura[]) => { this.handleRenglon(data[0]); this.calcularResultados(); });
-  }
-
   searchRFInRenglones(idProducto): AbstractControl {
     const controls = this.renglones.controls;
     const aux = controls.filter(c => {
@@ -433,39 +356,6 @@ export class FacturaVentaComponent implements OnInit {
     setTimeout(() => this.calcularResultados(), 500);
   }
 
-  get formasPago() {
-    return this.form.get('formasPago') as FormArray;
-  }
-
-  agregarFormDePago() {
-    this.formasPago.push(this.createFormaPago());
-  }
-
-  createFormaPago(idFormaPago = null, m: number = 0) {
-    const monto = this.formasPago.length ? m : this.getTotalFactura();
-    return this.fb.group({
-      idFormaDePago: [
-        idFormaPago ? idFormaPago : (this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null),
-        Validators.required
-      ],
-      monto: [monto, [Validators.required, Validators.min(1)]]
-    });
-  }
-
-  getTotalFactura() {
-    // Formateo el total de la factura de la misma forma que se muestra que en la vista pero para le locale en-US
-    // (con punto decimal) y quito el separador de mil (coma para ese locale)
-    if (!this.resultados) { return 0; }
-    return parseFloat(formatNumber(this.resultados.total, 'en-US', '1.0-2').replace(',', ''));
-  }
-
-  quitarFormaPago(index: number) {
-    const msg = '¿Desea quitar la forma de pago?';
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) { this.formasPago.removeAt(index); }
-    });
-  }
-
   calcularResultados() {
     const dp = this.form.get('descuento').value;
     const rp = this.form.get('recargo').value;
@@ -500,47 +390,6 @@ export class FacturaVentaComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      const formValue = this.form.value;
-
-      const ppvs: ProductosParaVerificarStock = {
-        idSucursal: this.sucursalesService.getIdSucursal(),
-        idProducto: formValue.renglones.map(e => e.renglon.idProductoItem),
-        cantidad: formValue.renglones.map(e => e.renglon.cantidad),
-      };
-      this.loadingOverlayService.activate();
-      this.productosService.getDisponibilidadEnStock(ppvs)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe((pfs: ProductoFaltante[]) => {
-            if (!pfs.length) {
-              this.doSubmit();
-            } else {
-              const modalRef = this.modalService.open(DisponibilidadStockModalComponent, { size: 'lg', scrollable: true });
-              modalRef.componentInstance.data = pfs;
-            }
-          }
-        )
-      ;
-    }
-  }
-
-  doSubmit() {
-    const total = this.getTotalFactura();
-    const totalEnFormasPago = this.form.value.formasPago.reduce((sum, v) => sum + v.monto, 0);
-    let montoWarning = '';
-
-    if (totalEnFormasPago > total) {
-      montoWarning = 'Los montos ingresados superan el total a pagar. ¿Desea continuar?';
-    }
-
-    if (totalEnFormasPago < total) {
-      montoWarning = 'Los montos ingresados no cubren el total a pagar. ¿Desea continuar?';
-    }
-
-    if (montoWarning) {
-      this.mensajeService.msg(montoWarning, MensajeModalType.ALERT).then((result) => {
-        if (result) { this.guardarFactura(); }
-      });
-    } else {
       this.guardarFactura();
     }
   }
@@ -549,22 +398,14 @@ export class FacturaVentaComponent implements OnInit {
     const formValue = this.form.value;
     const nfv: NuevaFacturaVenta = {
       idSucursal: this.sucursalesService.getIdSucursal(),
-      idPedido: formValue.idPedido,
       idCliente: formValue.ccc.cliente.idCliente,
       idTransportista: formValue.idTransportista ? Number(formValue.idTransportista) : null,
       fechaVencimiento: null,
       tipoDeComprobante: formValue.tipoDeComprobante,
       observaciones: formValue.observaciones,
-      renglones: formValue.renglones.map(e => {
-        const nrf: NuevoRenglonFactura = {
-          cantidad: e.renglon.cantidad,
-          idProducto: e.renglon.idProductoItem,
-          bonificacion: null,
-        };
-        return nrf;
-      }),
-      idsFormaDePago: formValue.formasPago.map((e) => Number(e.idFormaDePago)),
-      montos: formValue.formasPago.map((e) => e.monto),
+      renglonMarcado: formValue.renglones.map(e => e.checked),
+      idsFormaDePago: formValue.pagos.map((e) => Number(e.idFormaDePago)),
+      montos: formValue.pagos.map((e) => e.monto),
       indices: formValue.renglones.map((e, i) => e.checked ? i : undefined).filter(x => x !== undefined),
       recargoPorcentaje: formValue.recargo,
       descuentoPorcentaje: formValue.descuento,
@@ -572,7 +413,7 @@ export class FacturaVentaComponent implements OnInit {
 
     this.saving = true;
     this.loadingOverlayService.activate();
-    this.facturasVentaService.guardarFacturaVenta(nfv)
+    this.facturasVentaService.guardarFacturaVenta(nfv, formValue.idPedido)
       .pipe(finalize(() => {
         this.saving = false;
         this.loadingOverlayService.deactivate();
@@ -598,41 +439,6 @@ export class FacturaVentaComponent implements OnInit {
 
   handleSelectCcc(ccc: CuentaCorrienteCliente) {
     this.form.get('ccc').setValue(ccc);
-  }
-
-  selectProducto(p: Producto) {
-    const control = this.searchRFInRenglones(p.idProducto);
-    const cPrevia = control ? control.get('renglon').value.cantidad : 1;
-    this.showCantidadModal(p.idProducto, cPrevia);
-  }
-
-  showCantidadModal(idProductoItem: number, cantidadPrevia = 1) {
-    const modalRef = this.modalService.open(CantidadProductoModalComponent);
-    modalRef.componentInstance.cantidad = cantidadPrevia;
-    modalRef.componentInstance.verificarStock = true;
-    modalRef.componentInstance.loadProducto(idProductoItem);
-    modalRef.result.then((cant: number) => {
-      const nrf: NuevoRenglonFactura = {
-        cantidad: cant,
-        idProducto: idProductoItem,
-        bonificacion: null,
-      };
-      this.addRenglonFactura(nrf);
-    }, () => {});
-  }
-
-  directInputSeleccionProducto(p: Producto) {
-    const rf = this.searchRFInRenglones(p.idProducto);
-    let cant = 1;
-    if (rf) { cant = rf.get('renglon').value.cantidad + 1; }
-
-    const nrf: NuevoRenglonFactura = {
-      cantidad: cant,
-      idProducto: p.idProducto,
-      bonificacion: null,
-    };
-
-    this.addRenglonFactura(nrf);
   }
 
   volverAlListado() {
@@ -670,5 +476,9 @@ export class FacturaVentaComponent implements OnInit {
     }
     const formValue = this.form.value;
     return formValue.renglones.map((e, i) => e.checked ? i : undefined).filter(x => x !== undefined).length > 0;
+  }
+
+  transportistaChange(t: Transportista) {
+    this.transportistaSeleccionado = t;
   }
 }

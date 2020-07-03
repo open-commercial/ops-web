@@ -5,12 +5,9 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthService } from './services/auth.service';
-import { UsuariosService } from './services/usuarios.service';
 import { LoginComponent } from './components/login/login.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
-import { AuthGuard } from './guards/auth.guard';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
 
@@ -22,7 +19,6 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-regular-svg-icons';
 import { faPortrait } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -49,6 +45,7 @@ import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -56,10 +53,8 @@ import { registerLocaleData } from '@angular/common';
 import localeEsAR from '@angular/common/locales/es-AR';
 import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 import { ClienteFiltroComponent } from './components/cliente-filtro/cliente-filtro.component';
-import { ClientesService } from './services/clientes.service';
 import { UsuarioFiltroComponent } from './components/usuario-filtro/usuario-filtro.component';
 import { ProductoFiltroComponent } from './components/producto-filtro/producto-filtro.component';
-import { ProductosService } from './services/productos.service';
 import { RangoFechaFiltroComponent } from './components/rango-fecha-filtro/rango-fecha-filtro.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
@@ -96,6 +91,8 @@ import { FiltroOrdenamientoComponent } from './components/filtro-ordenamiento/fi
 import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
 import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
 import { ListaComponent } from './components/lista/lista.component';
+import { TransportistaComponent } from './components/transportista/transportista.component';
+import { PagosComponent } from './components/pagos/pagos.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -147,6 +144,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     FiltrosFormComponent,
     FiltrosAplicadosComponent,
     ListaComponent,
+    TransportistaComponent,
+    PagosComponent,
   ],
   imports: [
     BrowserModule,
@@ -162,11 +161,6 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
   providers: [
     { provide: LOCALE_ID, useValue: 'es-AR' },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    AuthService,
-    AuthGuard,
-    UsuariosService,
-    ClientesService,
-    ProductosService,
   ],
   entryComponents: [
     ProductoModalComponent,
@@ -192,7 +186,6 @@ export class AppModule {
       faSearch,
       faTrash,
       faCalendar,
-      faHashtag,
       faEye,
       faPortrait,
       faTimes,
@@ -219,6 +212,7 @@ export class AppModule {
       faPen,
       faEnvelope,
       faLink,
+      faCopy
     );
   }
 }

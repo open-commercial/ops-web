@@ -1,35 +1,31 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { throwError, Observable, Subject } from 'rxjs';
+import { throwError, Observable } from 'rxjs';
 import { map, catchError, finalize } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario';
 import { UsuariosService } from './usuarios.service';
-import { StorageService } from './storage.service';
+import { StorageKeys, StorageService } from './storage.service';
 import { LoadingOverlayService } from './loading-overlay.service';
 import { Rol } from '../models/rol';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
 
   urlLogin = environment.apiUrl + '/api/v1/login';
   urlLogout = environment.apiUrl + '/api/v1/logout';
   urlPasswordRecovery = environment.apiUrl + '/api/v1/password-recovery';
   jwtHelper = new JwtHelperService();
-  private nombreUsuarioLoggedInSubject = new Subject<string>();
-  nombreUsuarioLoggedIn$ = this.nombreUsuarioLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient,
               private router: Router,
               private usuariosService: UsuariosService,
               private storageService: StorageService,
               private loadingOverlayService: LoadingOverlayService) {}
-
-  setNombreUsuarioLoggedIn(nombre: string) {
-    this.nombreUsuarioLoggedInSubject.next(nombre);
-  }
 
   login(user: string, pass: string) {
     const credential = { username: user, password: pass, aplicacion: environment.appName };
@@ -55,7 +51,7 @@ export class AuthService {
     this.http.put(this.urlLogout, null)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(() => {
-        const keysToRemove = ['token', 'idUsuario'];
+        const keysToRemove = [StorageKeys.TOKEN];
         keysToRemove.forEach(v => this.storageService.removeItem(v));
         this.router.navigate(['']);
       })
@@ -91,7 +87,7 @@ export class AuthService {
   }
 
   setAuthenticationInfo(token: string) {
-    this.storageService.setItem('token', token);
+    this.storageService.setItem(StorageKeys.TOKEN, token);
   }
 
   userHasAnyOfTheseRoles(u: Usuario, roles: Rol[]): boolean {

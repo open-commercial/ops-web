@@ -11,7 +11,9 @@ import { ProductoFaltante } from '../models/producto-faltante';
 import { CantidadEnSucursal } from '../models/cantidad-en-sucursal';
 import { SucursalesService } from './sucursales.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductosService {
 
   url = environment.apiUrl + '/api/v1/productos/';
