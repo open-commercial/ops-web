@@ -12,13 +12,21 @@ import { ProductosService } from '../../services/productos.service';
   styleUrls: ['./busqueda-producto.component.scss']
 })
 export class BusquedaProductoComponent implements OnInit {
-  private pDirectInputId = 'codigoProducto';
   private messages = new Subject<string>();
   message: string;
   messageType = 'success';
 
-  modalRef;
+  private pCantidadesInicialesPedido: { [idProducto: number]: number } = {};
+  @Input()
+  set cantidadesInicialesPedido(value: { [idProducto: number]: number }) { this.pCantidadesInicialesPedido = value; }
+  get cantidadesInicialesPedido() { return this.pCantidadesInicialesPedido; }
 
+  private pCantidadesActualesPedido: { [idProducto: number]: number } = {};
+  @Input()
+  set cantidadesActualesPedido(value: { [idProducto: number]: number }) { this.pCantidadesActualesPedido = value; }
+  get cantidadesActualesPedido() { return this.pCantidadesActualesPedido; }
+
+  private pDirectInputId = 'codigoProducto';
   @Input()
   set directInputId(id: string) { this.pDirectInputId = id; }
   get directInputId(): string { return this.pDirectInputId; }
@@ -50,8 +58,10 @@ export class BusquedaProductoComponent implements OnInit {
 
   showProductoModal($event) {
     $event.preventDefault();
-    this.modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
-    this.modalRef.result.then((p: Producto) => {
+    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
+    modalRef.componentInstance.cantidadesInicialesPedido = this.pCantidadesInicialesPedido;
+    modalRef.componentInstance.cantidadesActualesPedido = this.pCantidadesActualesPedido;
+    modalRef.result.then((p: Producto) => {
         this.seleccion.emit(p);
     }, () => {});
   }

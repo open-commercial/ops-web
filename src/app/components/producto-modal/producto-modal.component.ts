@@ -24,6 +24,9 @@ export class ProductoModalComponent implements OnInit {
   totalPages = 0;
   size = 0;
 
+  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
+  cantidadesActualesPedido: { [idProducto: number]: number } = {};
+
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
@@ -78,5 +81,27 @@ export class ProductoModalComponent implements OnInit {
     if (this.productoSeleccionado) {
       this.activeModal.close(this.productoSeleccionado);
     }
+  }
+
+  getCantidad(p: Producto) {
+    const c = this.productosService.getCantidad(p);
+    const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
+    const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
+
+    const res = c - (ca - ci);
+
+    return res > 0 ? res : 0;
+  }
+
+  getCantOtrasSucursales(p: Producto) {
+    const c = this.productosService.getCantidad(p);
+    const cos = this.productosService.getCantOtrasSucursales(p);
+    const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
+    const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
+
+    let left = c - (ca - ci);
+    left = left >= 0 ? 0 : left * -1;
+
+    return cos - left;
   }
 }

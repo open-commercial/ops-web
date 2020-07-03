@@ -13,7 +13,7 @@
     </div>
     <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading && !productoLoading">
       <div class="form-group mb-0">
-        <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad para este producto:</label>
+        <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad que desea {{ addCantidad ? 'agregar' : 'modificar' }}:</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
@@ -33,8 +33,8 @@
         <div *ngIf="f.cantidad.errors.required">Requerido</div>
         <div *ngIf="f.cantidad.errors.min">Mínimo: {{ f.cantidad.errors.min.min }}</div>
       </div>
-      <div class="custom-error-message" *ngIf="submitted && !verificandoDisponibilidadStock && !hayStockDisponible">
-        Cantidad no disponible (disponibles: {{ stockDisponible }})
+      <div class="custom-error-message" *ngIf="submitted && stockVerificado && !verificandoDisponibilidadStock && !hayStockDisponible">
+        Cantidad no disponible (disponibles para {{ addCantidad ? 'agregar' : 'modificar' }}: {{ stockDisponible }})
       </div>
     </form>
   </div>

@@ -86,6 +86,9 @@ export class PedidoComponent implements OnInit {
   cccReadOnly = false;
   localStorageKey = StorageKeys.NUEVO_PEDIDO;
 
+  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
+  cantidadesActualesPedido: { [idProducto: number]: number } = {};
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -188,6 +191,9 @@ export class PedidoComponent implements OnInit {
             (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
               this.datosParaEditarOClonar.ccc = v[0];
               this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido : e }));
+              if (this.action === Action.EDITAR) {
+                v[1].forEach(e => this.cantidadesInicialesPedido[e.idProductoItem] = e.cantidad);
+              }
               this.datosParaEditarOClonar.sucursal = null;
               if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
                 this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
@@ -276,7 +282,11 @@ export class PedidoComponent implements OnInit {
     ;
 
     this.form.get('renglonesPedido').valueChanges
-      .subscribe(() => {
+      .subscribe((renglones) => {
+        this.cantidadesActualesPedido = {};
+        renglones.forEach((r: { renglonPedido: RenglonPedido }) => {
+          this.cantidadesActualesPedido[r.renglonPedido.idProductoItem] = r.renglonPedido.cantidad;
+        });
         if (!this.loadingResultados) { this.calcularResultados(); }
       })
     ;
@@ -570,21 +580,25 @@ export class PedidoComponent implements OnInit {
   }
 
   selectProducto(p: Producto) {
-    const control = this.searchRPInRenglones(p.idProducto);
-    const cPrevia = control ? control.get('renglonPedido').value.cantidad : 1;
-    this.showCantidadModal(p.idProducto, cPrevia);
+    this.showCantidadModal(p.idProducto, true);
   }
 
-  showCantidadModal(idProducto: number, cantidadPrevia = 1) {
+  showCantidadModal(idProducto: number, addCantidad = false) {
+    const control = this.searchRPInRenglones(idProducto);
+    const cPrevia = control ? control.get('renglonPedido').value.cantidad : 0;
+
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
-    modalRef.componentInstance.cantidad = cantidadPrevia;
+    modalRef.componentInstance.addCantidad = addCantidad;
+    modalRef.componentInstance.cantidadesInicialesPedido = this.cantidadesInicialesPedido;
+    modalRef.componentInstance.cantidadesActualesPedido = this.cantidadesActualesPedido;
+    modalRef.componentInstance.cantidad = addCantidad ? 1 : cPrevia;
     modalRef.componentInstance.idPedido = this.form.get('idPedido').value;
     modalRef.componentInstance.loadProducto(idProducto);
     modalRef.componentInstance.verificarStock = true;
     modalRef.result.then((cant: number) => {
       const nrp: NuevoRenglonPedido = {
         idProductoItem: idProducto,
-        cantidad: cant,
+        cantidad: addCantidad ? cPrevia + cant : cant,
       };
       this.addRenglonPedido(nrp);
     }, () => {});
@@ -595,12 +609,33 @@ export class PedidoComponent implements OnInit {
     let cant = 1;
     if (rp) { cant = rp.get('renglonPedido').value.cantidad + 1; }
 
-    const nrp: NuevoRenglonPedido = {
-      idProductoItem: p.idProducto,
-      cantidad: cant,
+    const ppvs: ProductosParaVerificarStock = {
+      idSucursal: null,
+      idPedido: this.form.get('idPedido').value,
+      idProducto: [p.idProducto],
+      cantidad: [cant],
     };
 
-    this.addRenglonPedido(nrp);
+    this.loadingOverlayService.activate();
+    this.productosService.getDisponibilidadEnStock(ppvs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((pfs: ProductoFaltante[]) => {
+        if (!pfs.length) {
+          console.log('llega');
+          const nrp: NuevoRenglonPedido = {
+            idProductoItem: p.idProducto,
+            cantidad: cant,
+          };
+
+          this.addRenglonPedido(nrp);
+        } else {
+          this.mensajeService.msg(
+            'No se puede solicitar mas stock para dicho producto. Por favor, verifique la sección Productos.',
+            MensajeModalType.ERROR
+          );
+        }
+      })
+    ;
   }
 
   addRenglonPedido(nrp: NuevoRenglonPedido) {
@@ -618,7 +653,7 @@ export class PedidoComponent implements OnInit {
   editarRenglon(rpControl: AbstractControl) {
     if (rpControl) {
       const rp: RenglonPedido = rpControl.get('renglonPedido').value;
-      this.showCantidadModal(rp.idProductoItem, rp.cantidad);
+      this.showCantidadModal(rp.idProductoItem);
     }
   }
 
