@@ -253,6 +253,11 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
     return [EstadoPedido.CERRADO].indexOf(p.estado) >= 0;
   }
 
+  crearPedido() {
+    this.storageService.removeItem(StorageKeys.NUEVO_PEDIDO);
+    this.router.navigate(['/pedidos/nuevo']);
+  }
+
   cancelarPedido(pedido: Pedido) {
     if (!this.puedeElimarPedido(pedido)) {
       this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
@@ -268,8 +273,6 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
-              /*const idx: number = this.items.findIndex((p: Pedido) => p.idPedido === pedido.idPedido);
-              if (idx >= 0) { this.items.splice(idx, 1); }*/
               location.reload();
             },
             err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),

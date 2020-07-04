@@ -86,10 +86,14 @@ export class CantidadProductoModalComponent implements OnInit {
             this.stockVerificado = true;
             this.hayStockDisponible = !pfs.length;
             this.stockDisponible = 0;
+
+            const cantInicial = this.cantidadesInicialesPedido[this.producto.idProducto] || 0;
+            const cantActual = this.cantidadesActualesPedido[this.producto.idProducto] || 0;
+
             if (pfs.length) {
               const aux = this.addCantidad
-                ? pfs[0].cantidadDisponible
-                : (this.cantidadesInicialesPedido[this.producto.idProducto] || 0) + pfs[0].cantidadDisponible
+                ? Math.abs(cantActual - cantInicial - pfs[0].cantidadDisponible)
+                : (cantInicial) + pfs[0].cantidadDisponible
               ;
               this.stockDisponible = aux > 0 ? aux : 0;
             }

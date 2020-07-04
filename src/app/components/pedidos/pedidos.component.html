@@ -2,7 +2,8 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" routerLink="/pedidos/nuevo" ngbPopover="Nuevo Pedido" triggers="mouseenter:mouseleave" placement="left">
+      <button class="btn btn-primary fake-cursor" ngbPopover="Nuevo Pedido" triggers="mouseenter:mouseleave" placement="left"
+              (click)="crearPedido()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"

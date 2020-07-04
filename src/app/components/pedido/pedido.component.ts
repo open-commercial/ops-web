@@ -489,9 +489,9 @@ export class PedidoComponent implements OnInit {
       return false;
     }
     if (!ccc.cliente.puedeComprarAPlazo) {
-      if (montoTotal > montoTotalPagos) {
+      if ((ccc.saldo + montoTotalPagos) < montoTotal ) {
         this.mensajeService.msg(
-          'No puede realizar compra a plazo (Debe ingresar pagos que sean igual o mayor al monto total)',
+          'No puede comprar a plazo (Debe ingresar pagos que cubran el total de la deuda)',
           MensajeModalType.ERROR
         );
         return false;
@@ -621,7 +621,6 @@ export class PedidoComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((pfs: ProductoFaltante[]) => {
         if (!pfs.length) {
-          console.log('llega');
           const nrp: NuevoRenglonPedido = {
             idProductoItem: p.idProducto,
             cantidad: cant,
