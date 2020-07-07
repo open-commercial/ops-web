@@ -13,4 +13,5 @@ export interface RenglonPedido {
   subTotal: number;
   importeAnterior: number;
   importe: number;
+  errorDisponibilidad?: string;
 }

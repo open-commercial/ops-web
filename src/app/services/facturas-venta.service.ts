@@ -40,8 +40,8 @@ export class FacturasVentaService {
     return this.http.get(`${this.url}/${idFactura}/reporte`, {responseType: 'blob'});
   }
 
-  guardarFacturaVenta(nfv: NuevaFacturaVenta): Observable<FacturaVenta[]> {
-    return this.http.post<FacturaVenta[]>(this.url, nfv);
+  guardarFacturaVenta(nfv: NuevaFacturaVenta, idPedido: number): Observable<FacturaVenta[]> {
+    return this.http.post<FacturaVenta[]>(`${this.url}/pedidos/${idPedido}`, nfv);
   }
 
   getReglonesDePedido(idPedido: number, tipoDeComprobante: TipoDeComprobante): Observable<RenglonFactura[]> {

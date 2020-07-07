@@ -14,7 +14,7 @@
         <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos
       </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="tieneRolAdminOEncargado || tieneRolVendedor">
       <a class="nav-link" routerLink="/facturas-venta" routerLinkActive="active" (click)="optionClick()">
         <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas
       </a>

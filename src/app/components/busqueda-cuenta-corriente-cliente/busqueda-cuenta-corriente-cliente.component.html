@@ -18,7 +18,7 @@
         Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
       </span>
       <span>
-        Saldo: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.0-2'}}</span>
+        Saldo CC: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.0-2'}}</span>
       </span>
     </div>
     <div *ngIf="!ccc">

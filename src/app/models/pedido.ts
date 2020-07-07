@@ -6,6 +6,7 @@ export interface Pedido {
   idPedido: number;
   nroPedido: number;
   fecha: Date;
+  fechaVencimiento: Date;
   observaciones: string;
   idSucursal: number;
   nombreSucursal: string;
@@ -17,8 +18,7 @@ export interface Pedido {
   recargoNeto: number;
   descuentoPorcentaje: number;
   descuentoNeto: number;
-  totalEstimado: number;
-  totalActual: number;
+  total: number;
   estado: EstadoPedido;
   cantidadArticulos: number;
   detalleEnvio: string;

@@ -2,10 +2,6 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary" (click)="crearFactura()" ngbPopover="Nueva Factura" triggers="mouseenter:mouseleave" placement="left"
-              *ngIf="puedeCrearFactura()">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
@@ -70,10 +66,10 @@
           {{ item.tipoComprobante.replace('_', ' ') }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFV_{{ i }}">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
+          #INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfip_{{ i }}">
-          <fa-icon [icon]="['fas', 'hashtag']"></fa-icon> AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
+          #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
         <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="cae_{{ i }}">
           CAE: {{ item.cae }} (vto: {{ item.vencimientoCae | date:'dd/MM/yyyy' }})

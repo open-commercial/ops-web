@@ -1,8 +1,8 @@
-<div class="p-2 border border-secondary rounded mb-2">
+<div class="p-2 border border-secondary rounded mb-2" [class.border-danger]="!ubicacion">
   <div class="d-flex flex-row align-items-center">
     <div class="flex-fill d-flex flex-row flex-wrap align-items-center">
       <div class="flex-fill">
-        <em *ngIf="!ubicacion && !updating">(Sin ubicación)</em>
+        <em *ngIf="!ubicacion && !updating" class="text-danger">(Sin ubicación)</em>
         <div *ngIf="ubicacion && !updating">
           {{ getUbicacionStr() }}
         </div>

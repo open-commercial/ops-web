@@ -12,7 +12,9 @@ import { CantidadEnSucursal } from '../models/cantidad-en-sucursal';
 import { SucursalesService } from './sucursales.service';
 import { NuevoProducto } from '../models/nuevo-producto';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductosService {
 
   url = environment.apiUrl + '/api/v1/productos/';

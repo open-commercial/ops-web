@@ -1,22 +1,22 @@
 <div class="app-factura-venta my-3">
-  <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2" *ngIf="!(cccPredeterminadoLoading || loading || verificandoPedido || cccLoading)">
+  <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2" *ngIf="!(loading || verificandoPedido)">
     <h1 class="h3 pr-2 mb-0 flex-fill">
       <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta {{ pedido ? 'de Pedido Nº ' + pedido.nroPedido : '' }}
+      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Nueva Factura Venta {{ pedido ? '(Pedido #' + pedido.nroPedido + ')' : '' }}
     </h1>
   </div>
-  <div *ngIf="cccPredeterminadoLoading || loading || verificandoPedido || cccLoading" class="text-center">
+  <div *ngIf="loading || verificandoPedido" class="text-center">
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
-  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form && !cccPredeterminadoLoading && !loading && !verificandoPedido && !cccLoading">
-    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form && !loading && !verificandoPedido">
+    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
         <ng-template ngbPanelContent>
-          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="cccReadOnly" (select)="handleSelectCcc($event)"
-                                                 *ngIf="!cccPredeterminadoLoading && !loading && !verificandoPedido && !cccLoading"></app-busqueda-cuenta-corriente-cliente>
+          <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="true" (select)="handleSelectCcc($event)"
+                                                 *ngIf="!loading && !verificandoPedido"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="tipoDeComprobante" [title]="'Tipo de Comprobante: ' + getTipoComprobanteLabel()" [disabled]="!form.get('ccc').value">
@@ -36,8 +36,6 @@
       <ngb-panel id="productos" [title]="'Productos' + ' (' + (form.get('renglones') ? form.get('renglones').value.length : 0) + ')'"
                  [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value">
         <ng-template ngbPanelContent>
-          <app-busqueda-producto (seleccion)="selectProducto($event)"
-                                 (directInputSeleccion)="directInputSeleccionProducto($event)"></app-busqueda-producto>
           <div class="table-responsive" formArrayName="renglones">
             <table class="table table-bordered table-sm mb-0">
               <caption class="sr-only">Productos de la Factura de Venta</caption>
@@ -50,7 +48,6 @@
                   </div>
                 </th>
                 <th class="w-100 align-middle" scope="col">Descripción</th>
-                <th scope="col">Acciones</th>
               </tr>
               </thead>
               <tbody>
@@ -76,16 +73,6 @@
                         &nbsp;<strong>{{ rf.get('renglon').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
                       </span>
                     </div>
-                  </td>
-                  <td>
-                    <ul class="list-unstyled text-center mb-0">
-                      <li class="mb-2">
-                        <button type="button" [disabled]="recalculandoRenglones || loadingResultados" class="btn btn-primary fake-cursor" (click)="editarRenglon(rf)"><fa-icon [icon]="['fas', 'pen']"></fa-icon></button>
-                      </li>
-                      <li>
-                        <button type="button" [disabled]="recalculandoRenglones || loadingResultados" class="btn btn-primary fake-cursor" (click)="eliminarRenglon(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></button>
-                      </li>
-                    </ul>
                   </td>
                 </tr>
               </ng-template>
@@ -177,67 +164,21 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="cerrarVenta" [title]="'Cerrar Venta' + (this.resultados && this.resultados.total > 0 ? ': ' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') :'')"
+      <ngb-panel id="transportista" [title]="'Transportista' + (transportistaSeleccionado ? ': ' + transportistaSeleccionado.nombre : '')">
+        <ng-template ngbPanelContent>
+          <app-transportista formControlName="idTransportista" (objectChange)="transportistaChange($event)"></app-transportista>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="pago" [title]="'Pago' + (this.resultados && this.resultados.total > 0 ? ': ' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') :'')"
                  [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
         <ng-template ngbPanelContent>
           <div *ngIf="!saving">
-            <div class="form-group">
-              <label for="transportista">Transporte</label>
-              <select class="form-control" id="transportista" formControlName="idTransportista">
-                <option value=""></option>
-                <option *ngFor="let t of transportistas" [value]="t.idTransportista">{{ t.nombre }}</option>
-              </select>
-            </div>
-            <label for="formas-de-pago">Pagos</label>
-            <a class="btn btn-primary fake-cursor ml-2" (click)="agregarFormDePago()"><fa-icon [icon]="['fas', 'plus']"></fa-icon></a>
-            <div class="table-responsive" formArrayName="formasPago" id="formas-de-pago" *ngIf="this.form && this.form.get('formasPago') && this.form.get('formasPago').value.length">
-              <table class="table table-bordered table-sm mt-2">
-                <caption class="sr-only">Productos de la Factura de Venta</caption>
-                <thead>
-                <tr>
-                  <th class="align-middle text-center" scope="col">#</th>
-                  <th class="align-middle w-50" scope="col">Forma de Pago</th>
-                  <th class="align-middle text-right w-50" scope="col">Monto ($)</th>
-                  <th class="align-middle text-center" scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <ng-template ngFor let-fp [ngForOf]="formasPago.controls" let-i="index">
-                  <tr [formGroupName]="i">
-                    <td class="align-middle text-center">{{ i + 1 }}</td>
-                    <td class="align-middle">
-                      <div class="form-group m-0">
-                        <label [for]="'forma-de-pago_' + i" class="sr-only">Forma de pago</label>
-                        <select class="form-control" formControlName="idFormaDePago" [id]="'forma-de-pago_' + i"
-                                [ngClass]="{ 'is-invalid': submitted && fp.get('idFormaDePago').errors }">
-                          <option *ngFor="let fdp of formasDePago" [value]="fdp.idFormaDePago">{{ fdp.nombre }}</option>
-                        </select>
-                        <div class="invalid-feedback" *ngIf="submitted && fp.get('idFormaDePago').errors">
-                          <div *ngIf="fp.get('idFormaDePago').errors.required">Requerido</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="align-middle">
-                      <div class="form-group m-0">
-                        <label [for]="'monto_' + i" class="sr-only">Monto</label>
-                        <input class="form-control text-right" type="number" min="0" formControlName="monto" [id]="'monto_' + i"
-                               [ngClass]="{ 'is-invalid': submitted && fp.get('monto').errors }">
-                        <div class="invalid-feedback" *ngIf="submitted && fp.get('monto').errors">
-                          <div *ngIf="fp.get('monto').errors.required">Requerido</div>
-                          <div *ngIf="fp.get('monto').errors.min">Monto mínimo {{ fp.get('monto').errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="align-middle text-center">
-                      <a class="btn btn-primary" (click)="quitarFormaPago(i)"><fa-icon [icon]="['fas', 'trash']"></fa-icon></a>
-                    </td>
-                  </tr>
-                </ng-template>
-                </tbody>
-              </table>
-              <div class="alert alert-success" *ngIf="esComprobanteDivido()">
-                ATENCION: Este comprobante será dividido.
-              </div>
+            <app-pagos formControlName="pagos"
+                       [totalAPagar]="resultados && resultados.total ? resultados.total : 0"
+                       [saldoCCC]="form && form.get('ccc') && form.get('ccc').value ? form.get('ccc').value.saldo : 0"
+            ></app-pagos>
+            <div class="alert alert-success" *ngIf="esComprobanteDivido()">
+              ATENCION: Este comprobante será dividido.
             </div>
             <div class="text-right">
               <button class="btn btn-primary" type="submit" [disabled]="!form.valid">

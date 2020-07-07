@@ -7,7 +7,9 @@ import { Pagination } from '../models/pagination';
 import { Rol } from '../models/rol';
 import { BusquedaUsuarioCriteria } from '../models/criterias/busqueda-usuario-criteria';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UsuariosService {
 
   url = environment.apiUrl + '/api/v1/usuarios';
