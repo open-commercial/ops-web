@@ -20,6 +20,7 @@ import { HelperService } from '../../services/helper.service';
 import Big from 'big.js';
 import { CalculosPrecio } from '../../models/calculos-precio';
 import { formatNumber } from '@angular/common';
+import { StorageKeys, StorageService } from '../../services/storage.service';
 
 Big.DP = 15;
 
@@ -44,6 +45,8 @@ export class ProductoComponent implements OnInit {
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
   imageDataUrl = '';
 
+  localStorageKey = StorageKeys.PRODUCTO_NUEVO;
+
   constructor(accordionConfig: NgbAccordionConfig,
               private route: ActivatedRoute,
               private router: Router,
@@ -53,7 +56,8 @@ export class ProductoComponent implements OnInit {
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private fb: FormBuilder,
-              private sucursalesService: SucursalesService) {
+              private sucursalesService: SucursalesService,
+              private storageService: StorageService) {
     accordionConfig.type = 'dark';
   }
 
@@ -68,6 +72,7 @@ export class ProductoComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(
           (p: Producto) => {
+            this.localStorageKey = StorageKeys.PRODUCTO_EDITAR;
             this.producto = p;
             this.title = 'Producto ' + this.producto.codigo;
           },
@@ -102,6 +107,7 @@ export class ProductoComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
+      idProducto: null,
       codigo: '',
       descripcion: ['', Validators.required],
       idProveedor: [null, Validators.required],
@@ -126,8 +132,35 @@ export class ProductoComponent implements OnInit {
       nota: null,
       imagen: null,
     });
+  }
 
-    // this.form.valueChanges.subscribe((value) => console.log(value));
+  initializeForm() {
+    this.form.get('idProducto').setValue(this.producto.idProducto);
+    this.form.get('codigo').setValue(this.producto.codigo);
+    this.form.get('descripcion').setValue(this.producto.descripcion);
+    this.form.get('idProveedor').setValue(this.producto.idProveedor);
+  //  this.form.get('idMedida').setValue(this.producto);
+  //     this.form.get('idRubro').setValue(this.producto);
+  //     this.form.get('precioCosto').setValue(this.producto);
+  //     this.form.get('gananciaPorcentaje').setValue(this.producto);
+  //     this.form.get('precioVentaPublico').setValue(this.producto);
+  //     this.form.get('ivaPorcentaje').setValue(this.producto);
+  //     this.form.get('precioLista').setValue(this.producto);
+  //     this.form.get('porcentajeBonificacionPrecio').setValue(this.producto);
+  //     this.form.get('precioBonificado').setValue(this.producto);
+  //     this.form.get('oferta').setValue(this.producto);
+  //     this.form.get('porcentajeBonificacionOferta').setValue(this.producto);
+  //     this.form.get('precioOferta').setValue(this.producto);
+  //     this.form.get('cantidadEnSucursal').setValue(this.producto);
+  //     this.form.get('bulto').setValue(this.producto);
+  //     this.form.get('publico').setValue(this.producto);
+  //     this.form.get('fechaVencimiento').setValue(this.producto);
+  //     this.form.get('estanteria').setValue(this.producto);
+  //     this.form.get('estante').setValue(this.producto);
+  //     this.form.get('nota').setValue(this.producto);
+  //     this.form.get('imagen').setValue(this.producto);
+
+    this.form.valueChanges.subscribe((value) => this.storageService.setItem(this.localStorageKey, value));
   }
 
   get cantidadEnSucursal() {
@@ -273,55 +306,6 @@ export class ProductoComponent implements OnInit {
     this.refreshPreciosEnFormulario();
   }
 
-  // precioCostoChange($event) {
-  //   const v = $event.target.value;
-  //   const pc = parseFloat(v);
-  //   this.calculosPrecio.precioCosto = isNaN(pc) ? new Big(0) : new Big(v);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
-  // gananciaPorcentajeChange($event) {
-  //   const v = $event.target.value;
-  //   const gp = parseFloat(v);
-  //   this.calculosPrecio.gananciaPorcentaje = isNaN(gp) ? new Big(0) : new Big(v);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
-  // precioVentaPublicoChange($event) {
-  //   const v = $event.target.value;
-  //   const pvp = parseFloat(v);
-  //   this.calculosPrecio.precioVentaPublico = isNaN(pvp) ? new Big(0) : new Big(v);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
-  // ivaPorcentajeChange($event) {
-  //   const v = $event.target.value;
-  //   const ip = parseFloat(v);
-  //   this.calculosPrecio.ivaPorcentaje = isNaN(ip) ? new Big(0) : new Big(v);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
-  // precioListaChange($event) {
-  //   const v = $event.target.value;
-  //   const pl = parseFloat(v);
-  //   this.calculosPrecio.precioLista = isNaN(pl) ? new Big(0) : new Big(v);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
-  // porcentajeBonificacionPrecioChange($event) {
-  //   const v = $event.target.value;
-  //   const pbp = parseFloat(v);
-  //   this.calculosPrecio.porcentajeBonificacionPrecio = isNaN(pbp) ? new Big(0) : new Big(v);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
-  // precioBonificadoChange($event) {
-  //   const v = $event.target.value;
-  //   const pb = parseFloat(v);
-  //   this.calculosPrecio.precioBonificado = isNaN(pb) ? new Big(0) : new Big(pb);
-  //   this.refreshPreciosEnFormulario();
-  // }
-
   ofertaChange() {
     const oferta = this.form.get('oferta').value;
     if (oferta) {
@@ -331,12 +315,5 @@ export class ProductoComponent implements OnInit {
       this.form.get('porcentajeBonificacionOferta').disable();
       this.form.get('precioOferta').disable();
     }
-  }
-
-  porcentajeBonificacionOfertaChange($event) {
-    const v = $event.target.value;
-    const pbo = parseFloat(v);
-    this.calculosPrecio.porcentajeBonificacionOferta = isNaN(pbo) ? new Big(0) : new Big(pbo);
-    this.refreshPreciosEnFormulario();
   }
 }

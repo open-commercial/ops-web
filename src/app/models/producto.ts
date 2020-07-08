@@ -27,6 +27,7 @@ export interface Producto {
   fechaUltimaModificacion: Date;
   estanteria: string;
   estante: string;
+  idProveedor: number;
   razonSocialProveedor: string;
   nota: string;
   fechaAlta: Date;

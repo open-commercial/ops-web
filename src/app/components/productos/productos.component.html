@@ -96,6 +96,11 @@
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
         </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProducto(item)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
       </ul>
     </ng-template>
     <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"

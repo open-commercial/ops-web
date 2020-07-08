@@ -213,7 +213,7 @@ export class AppModule {
       faPen,
       faEnvelope,
       faLink,
-      faFolderOpen
+      faFolderOpen,
       faCopy
     );
   }

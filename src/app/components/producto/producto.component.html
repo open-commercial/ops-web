@@ -185,7 +185,9 @@
                 <div class="col-6 col-md-3">
                   <label for="porcentajeBonificacionOferta" class="sr-only"></label>
                   <input type="number" class="form-control" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
-                         [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }" (focusout)="porcentajeBonificacionOfertaChange($event)" (keyup.enter)="porcentajeBonificacionOfertaChange($event)">
+                         [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }"
+                         (focusout)="calculosFieldChange('porcentajeBonificacionOferta', $event)"
+                         (keyup.enter)="calculosFieldChange('porcentajeBonificacionOferta', $event)">
                   <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionOferta.errors">
                     <div *ngIf="f.porcentajeBonificacionOferta.errors.required">Requerido</div>
                     <div *ngIf="f.porcentajeBonificacionOferta.errors.min">Mínimo {{ f.porcentajeBonificacionOferta.errors.min.min  | number:'1.0-2' }} %</div>

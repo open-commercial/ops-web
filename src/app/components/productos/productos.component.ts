@@ -214,4 +214,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   verProducto(producto: Producto) {
     this.router.navigate(['/productos/ver', producto.idProducto]);
   }
+
+  editarProducto(producto: Producto) {
+    this.router.navigate(['/productos/editar', producto.idProducto]);
+  }
 }
