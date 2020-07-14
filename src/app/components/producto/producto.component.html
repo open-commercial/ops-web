@@ -5,19 +5,20 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> {{ title }}
+      <fa-icon [icon]="['fas', 'box-open']"></fa-icon> {{ title }}
     </h1>
   </div>
-  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
+  <form [formGroup]="form" class="mt-2" *ngIf="form">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="general" (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="general" title="General">
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6 col-lg-4">
-              <label for="imagen">Imágen</label>
+              <label class="sr-only" for="imagen">Imágen</label>
               <div class="d-flex flex-column h-100">
                 <div class="mb-2 border rounded preview">
-                  <img [src]="imageDataUrl ? imageDataUrl : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="Imagen del producto">
+                  <img [src]="imageDataUrl ? imageDataUrl : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'"
+                       alt="Imagen del producto">
                 </div>
                 <input type="file" class="d-none" accept="image/*" id="imagen" lang="es" (change)="imageChange($event)" #imageFile>
                 <div class="text-center">
@@ -77,7 +78,7 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="precios" title="Precios y cantidades">
+      <ngb-panel id="precios" title="Precios">
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-lg-6">
@@ -146,6 +147,8 @@
                   <div *ngIf="f.precioLista.errors.min">Mínimo {{ f.precioLista.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
                 </div>
               </div>
+            </div>
+            <div class="col-lg-6">
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
@@ -175,16 +178,17 @@
                   </div>
                 </div>
               </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta" (change)="ofertaChange()">
+                <label class="form-check-label" for="oferta">Oferta (%)</label>
+              </div>
+              <div class="custom-error-message" *ngIf="form.get('oferta').value && !hasImagen()">
+                Un producto en oferta debe poseer una imágen.
+              </div>
               <div class="row mb-3">
-                <div class="col-md-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta" (change)="ofertaChange()">
-                    <label class="form-check-label" for="oferta">Oferta (%)</label>
-                  </div>
-                </div>
-                <div class="col-6 col-md-3">
+                <div class="col-6">
                   <label for="porcentajeBonificacionOferta" class="sr-only"></label>
-                  <input type="number" class="form-control" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
+                  <input type="number" class="form-control text-right" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
                          [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }"
                          (focusout)="calculosFieldChange('porcentajeBonificacionOferta', $event)"
                          (keyup.enter)="calculosFieldChange('porcentajeBonificacionOferta', $event)">
@@ -196,8 +200,10 @@
                 </div>
                 <div class="col-6">
                   <label for="precioOferta" class="sr-only"></label>
-                  <input type="number" class="form-control" id="precioOferta" required formControlName="precioOferta"
-                         [ngClass]="{ 'is-invalid': submitted && f.precioOferta.errors }">
+                  <input type="number" class="form-control text-right" id="precioOferta" required formControlName="precioOferta"
+                         [ngClass]="{ 'is-invalid': submitted && f.precioOferta.errors }"
+                         (focusout)="calculosFieldChange('precioOferta', $event)"
+                         (keyup.enter)="calculosFieldChange('precioOferta', $event)">
                   <div class="invalid-feedback" *ngIf="submitted && f.precioOferta.errors">
                     <div *ngIf="f.precioOferta.errors.required">Requerido</div>
                     <div *ngIf="f.precioOferta.errors.min">Mínimo {{ f.precioOferta.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
@@ -205,35 +211,36 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-6">
-              <fieldset>
-                <legend class="h5">Cantidad en sucursales</legend>
-                <div formArrayName="cantidadEnSucursal">
-                  <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
-                    <div class="input-group mb-0">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('sucursal').value.nombre }}</span>
-                      </div>
-                      <input type="number" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
-                             [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
-                    </div>
-                    <div class="custom-error-message text-right" *ngIf="submitted && ces.get('cantidad').errors">
-                      <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
-                      <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
-                    </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="cantidades" title="Cantidades">
+        <ng-template ngbPanelContent>
+          <fieldset>
+            <legend class="h5">Cantidad en sucursales</legend>
+            <div formArrayName="cantidadEnSucursal">
+              <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
+                <div class="input-group mb-0">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
                   </div>
+                  <input type="number" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
+                         [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
                 </div>
-              </fieldset>
-              <div class="form-group">
-                <label for="bulto">Venta x cantidad</label>
-                <input type="number" class="form-control text-right" id="bulto" required formControlName="bulto"
-                       [ngClass]="{ 'is-invalid': submitted && f.bulto.errors }">
-                <div class="invalid-feedback" *ngIf="submitted && f.bulto.errors">
-                  <div *ngIf="f.bulto.errors.required">Requerido</div>
-                  <div *ngIf="f.bulto.errors.min">Mínimo {{ f.bulto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                <div class="custom-error-message text-right" *ngIf="submitted && ces.get('cantidad').errors">
+                  <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
+                  <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
                 </div>
               </div>
-              <!--{{ calculosPrecio | json }}-->
+            </div>
+          </fieldset>
+          <div class="form-group">
+            <label for="bulto">Venta x cantidad</label>
+            <input type="number" class="form-control text-right" id="bulto" required formControlName="bulto"
+                   [ngClass]="{ 'is-invalid': submitted && f.bulto.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.bulto.errors">
+              <div *ngIf="f.bulto.errors.required">Requerido</div>
+              <div *ngIf="f.bulto.errors.min">Mínimo {{ f.bulto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
             </div>
           </div>
         </ng-template>
@@ -253,6 +260,8 @@
                   </label>
                 </div>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="fechaVencimiento">Fecha de vencimiento</label>
                 <div class="input-group">
@@ -270,16 +279,10 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="estanteria">Estantería</label>
-                <input type="text" class="form-control" id="estanteria" formControlName="estanteria">
-              </div>
-              <div class="form-group">
-                <label for="estante">Estante</label>
-                <input type="text" class="form-control" id="estante" formControlName="estante">
-              </div>
-            </div>
+          </div>
+          <div class="row mb-3" *ngIf="producto">
+            <div class="col-md-6">Última Modificación: {{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</div>
+            <div class="col-md-6">Fecha de Alta: {{ producto.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</div>
           </div>
           <div class="form-group">
             <label for="nota">Nota</label>
@@ -289,7 +292,7 @@
       </ngb-panel>
     </ngb-accordion>
     <div class="text-right my-2">
-      <button type="submit" class="btn btn-primary">
+      <button type="button" class="btn btn-primary" (click)="submit()">
         <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
       </button>
     </div>

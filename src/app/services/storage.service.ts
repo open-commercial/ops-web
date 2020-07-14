@@ -8,8 +8,6 @@ export enum StorageKeys {
   PEDIDO_NUEVO = 'nuevoPedido',
   PEDIDO_EDITAR = 'editarPedido',
   PEDIDO_FACTURAR = 'facturarPedido',
-  PRODUCTO_NUEVO = 'nuevoProducto',
-  PRODUCTO_EDITAR = 'editarProducto',
 }
 
 @Injectable({

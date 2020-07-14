@@ -7,7 +7,7 @@ import { Producto } from '../../models/producto';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { MedidaService } from '../../services/medida.service';
 import { RubrosService } from '../../services/rubros.service';
 import { Medida } from '../../models/medida';
@@ -19,8 +19,9 @@ import { NuevoProducto } from '../../models/nuevo-producto';
 import { HelperService } from '../../services/helper.service';
 import Big from 'big.js';
 import { CalculosPrecio } from '../../models/calculos-precio';
-import { formatNumber } from '@angular/common';
-import { StorageKeys, StorageService } from '../../services/storage.service';
+import { formatNumber, Location } from '@angular/common';
+import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
+import * as moment from 'moment';
 
 Big.DP = 15;
 
@@ -45,7 +46,8 @@ export class ProductoComponent implements OnInit {
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
   imageDataUrl = '';
 
-  localStorageKey = StorageKeys.PRODUCTO_NUEVO;
+  // esta variable solo es relevante en la edición
+  borrarImagen = false;
 
   constructor(accordionConfig: NgbAccordionConfig,
               private route: ActivatedRoute,
@@ -57,51 +59,48 @@ export class ProductoComponent implements OnInit {
               private mensajeService: MensajeService,
               private fb: FormBuilder,
               private sucursalesService: SucursalesService,
-              private storageService: StorageService) {
+              private location: Location) {
     accordionConfig.type = 'dark';
   }
 
   ngOnInit() {
     this.createForm();
-    this.getRecursosRelacionados();
-
-    if (this.route.snapshot.paramMap.has('id')) {
-      const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.loadingOverlayService.activate();
-      this.productosService.getProducto(id)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (p: Producto) => {
-            this.localStorageKey = StorageKeys.PRODUCTO_EDITAR;
-            this.producto = p;
-            this.title = 'Producto ' + this.producto.codigo;
-          },
-          err => {
-            this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            this.volverAlListado();
-          }
-        )
-      ;
-    } else {
-      this.title = 'Nuevo Producto';
-    }
-  }
-
-  getRecursosRelacionados() {
-    const obvs = [
+    const obvs: Observable<any>[] = [
       this.medidaService.getMedidas(),
       this.rubrosService.getRubros(),
       this.sucursalesService.getSucursales(),
     ];
+
+    if (this.route.snapshot.paramMap.has('id')) {
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+      obvs.push(this.productosService.getProducto(id));
+    }
+
     this.loadingOverlayService.activate();
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((recursos: [Medida[], Rubro[], Sucursal[]]) => {
-        this.medidas = recursos[0];
-        this.rubros = recursos[1];
-        this.sucursales = recursos[2];
-        this.agregarCantidadesDeSucursal();
-      })
+      .subscribe(
+        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
+          this.medidas = recursos[0];
+          this.rubros = recursos[1];
+          this.sucursales = recursos[2];
+          if (recursos[3]) {
+            this.producto = recursos[3];
+            this.title = this.producto.descripcion;
+            this.calculosPrecio = CalculosPrecio.getInstance(this.producto);
+            if (this.producto.urlImagen) {
+              this.imageDataUrl = this.producto.urlImagen;
+            }
+          } else {
+            this.title = 'Nuevo Producto';
+          }
+          this.initializeForm();
+        },
+        err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.router.navigate(['/productos']);
+        }
+      )
     ;
   }
 
@@ -127,55 +126,49 @@ export class ProductoComponent implements OnInit {
       bulto: [1, [Validators.required, Validators.min(1)]],
       publico: false,
       fechaVencimiento: null,
-      estanteria: null,
-      estante: null,
       nota: null,
       imagen: null,
     });
   }
 
   initializeForm() {
-    this.form.get('idProducto').setValue(this.producto.idProducto);
-    this.form.get('codigo').setValue(this.producto.codigo);
-    this.form.get('descripcion').setValue(this.producto.descripcion);
-    this.form.get('idProveedor').setValue(this.producto.idProveedor);
-  //  this.form.get('idMedida').setValue(this.producto);
-  //     this.form.get('idRubro').setValue(this.producto);
-  //     this.form.get('precioCosto').setValue(this.producto);
-  //     this.form.get('gananciaPorcentaje').setValue(this.producto);
-  //     this.form.get('precioVentaPublico').setValue(this.producto);
-  //     this.form.get('ivaPorcentaje').setValue(this.producto);
-  //     this.form.get('precioLista').setValue(this.producto);
-  //     this.form.get('porcentajeBonificacionPrecio').setValue(this.producto);
-  //     this.form.get('precioBonificado').setValue(this.producto);
-  //     this.form.get('oferta').setValue(this.producto);
-  //     this.form.get('porcentajeBonificacionOferta').setValue(this.producto);
-  //     this.form.get('precioOferta').setValue(this.producto);
-  //     this.form.get('cantidadEnSucursal').setValue(this.producto);
-  //     this.form.get('bulto').setValue(this.producto);
-  //     this.form.get('publico').setValue(this.producto);
-  //     this.form.get('fechaVencimiento').setValue(this.producto);
-  //     this.form.get('estanteria').setValue(this.producto);
-  //     this.form.get('estante').setValue(this.producto);
-  //     this.form.get('nota').setValue(this.producto);
-  //     this.form.get('imagen').setValue(this.producto);
+    if (this.producto) {
+      this.form.get('idProducto').setValue(this.producto.idProducto);
+      this.form.get('codigo').setValue(this.producto.codigo);
+      this.form.get('descripcion').setValue(this.producto.descripcion);
+      this.form.get('idProveedor').setValue(this.producto.idProveedor);
+      this.form.get('idMedida').setValue(this.producto.idMedida);
+      this.form.get('idRubro').setValue(this.producto.idRubro);
 
-    this.form.valueChanges.subscribe((value) => this.storageService.setItem(this.localStorageKey, value));
+      this.producto.cantidadEnSucursales.forEach(
+        ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
+      );
+      this.form.get('bulto').setValue(this.producto.bulto);
+      this.form.get('publico').setValue(this.producto.publico);
+
+      if (this.producto.fechaVencimiento) {
+        const fv = moment(this.producto.fechaVencimiento);
+        this.form.get('fechaVencimiento').setValue({ year: fv.year(), month: fv.month() + 1, day: fv.date()});
+      }
+
+      this.form.get('nota').setValue(this.producto.nota);
+    } else {
+      this.sucursales.forEach((s: Sucursal) => this.addCantidadEnSucursal(s.idSucursal, s.nombre));
+    }
+
+    this.refreshPreciosEnFormulario();
   }
 
   get cantidadEnSucursal() {
     return this.form.get('cantidadEnSucursal') as FormArray;
   }
 
-  addCantidadEnSucursal(sucursal: Sucursal, cantidad: number = 0) {
+  addCantidadEnSucursal(idSucursal: number, nombreSucursal: string, cantidad: number = 0) {
     this.cantidadEnSucursal.push(this.fb.group({
-      sucursal: [sucursal, Validators.required],
+      idSucursal: [idSucursal, Validators.required],
+      nombreSucursal: [nombreSucursal, Validators.required],
       cantidad: [cantidad, [Validators.required, Validators.min(0)]],
     }));
-  }
-
-  agregarCantidadesDeSucursal() {
-    this.sucursales.forEach((s: Sucursal) => this.addCantidadEnSucursal(s));
   }
 
   get f() { return this.form.controls; }
@@ -183,60 +176,127 @@ export class ProductoComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      // submits the form
-      this.submitProductoNuevo();
+      if (this.form.get('oferta').value && !this.hasImagen()) {
+        this.mensajeService.msg('Un producto en oferta debe poseer una imágen.', MensajeModalType.INFO);
+      } else {
+        if (this.producto) {
+          this.submitProductoEditado();
+        } else {
+          this.submitProductoNuevo();
+        }
+      }
     }
   }
 
   submitProductoNuevo() {
-    const np = this.getProductoModel();
+    const np = this.getNuevoProductoModel();
     const idMedida = this.form.get('idMedida').value;
     const idRubro = this.form.get('idRubro').value;
     const idProveedor = this.form.get('idProveedor').value;
     this.loadingOverlayService.activate();
     this.productosService.crearProducto(np, idMedida, idRubro, idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(() => {
-        console.log('guardado correctamente.');
-      })
+      .subscribe(
+        () => {
+          this.mensajeService.msg('Producto creado correctamente', MensajeModalType.INFO);
+          this.location.back();
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
     ;
   }
 
-  getProductoModel(): NuevoProducto {
+  submitProductoEditado() {
+    const p = this.getProductoModel();
+    const idMedida = this.form.get('idMedida').value;
+    const idRubro = this.form.get('idRubro').value;
+    const idProveedor = this.form.get('idProveedor').value;
+    this.loadingOverlayService.activate();
+    this.productosService.actualizarProducto(p, idMedida, idRubro, idProveedor)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        () => {
+          this.mensajeService.msg('Producto actualizado correctamente', MensajeModalType.INFO);
+          this.location.back();
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      );
+  }
+
+  /**
+   * Para el alta
+   */
+  getNuevoProductoModel(): NuevoProducto {
     const formValues = this.form.value;
 
     const auxCes = {};
     if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
-      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.sucursal.idSucursal] = ces.cantidad);
+      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.idSucursal] = ces.cantidad);
     }
 
     return {
-      imagen: formValues.imagen,
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
-      // cantidadEnSucursal: { 1: 10, 5: 10 },
       cantidadEnSucursal: auxCes,
-      hayStock: true,
-      cantMinima: 0,
       bulto: formValues.bulto,
-      precioCosto: formValues.precioCosto,
-      gananciaPorcentaje: formValues.gananciaPorcentaje,
-      gananciaNeto: 0,
-      precioVentaPublico: formValues.precioVentaPublico,
-      ivaPorcentaje: formValues.ivaPorcentaje,
-      ivaNeto: 0,
+      precioCosto: this.calculosPrecio.precioCosto.toString(),
+      gananciaPorcentaje: this.calculosPrecio.gananciaPorcentaje.toString(),
+      gananciaNeto: this.calculosPrecio.gananciaNeto.toString(),
+      precioVentaPublico: this.calculosPrecio.precioVentaPublico.toString(),
+      ivaPorcentaje: this.calculosPrecio.ivaPorcentaje.toString(),
+      ivaNeto: this.calculosPrecio.ivaNeto.toString(),
       oferta: formValues.oferta,
-      porcentajeBonificacionOferta: formValues.porcentajeBonificacionOferta,
-      porcentajeBonificacionPrecio: formValues.porcentajeBonificacionPrecio,
-      precioBonificado: formValues.precioBonificado,
-      precioLista: formValues.precioLista,
-      ilimitado: false,
+      porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
+      porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
+      precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      precioLista: this.calculosPrecio.precioLista.toString(),
       publico: formValues.publico,
-      fechaUltimaModificacion: null,
-      estanteria: formValues.estanteria,
-      estante: formValues.estante,
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
+      imagen: formValues.imagen,
+    };
+  }
+
+  /**
+   * Para la edicion
+   */
+  getProductoModel(): Producto {
+    const formValues = this.form.value;
+
+    const auxCes: CantidadEnSucursal[] = [];
+    if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
+      formValues.cantidadEnSucursal.forEach(ces => {
+        const aux = this.producto.cantidadEnSucursales.filter((v: CantidadEnSucursal) => v.idSucursal === ces.idSucursal);
+        if (aux.length) {
+          const nCes = aux[0];
+          nCes.cantidad = ces.cantidad;
+          auxCes.push(nCes);
+        }
+      });
+    }
+
+    return {
+      idProducto: formValues.idProducto,
+      codigo: formValues.codigo,
+      descripcion: formValues.descripcion,
+      cantidadEnSucursales: auxCes,
+      bulto: formValues.bulto,
+      precioCosto: this.calculosPrecio.precioCosto.toString(),
+      gananciaPorcentaje: this.calculosPrecio.gananciaPorcentaje.toString(),
+      gananciaNeto: this.calculosPrecio.gananciaNeto.toString(),
+      precioVentaPublico: this.calculosPrecio.precioVentaPublico.toString(),
+      ivaPorcentaje: this.calculosPrecio.ivaPorcentaje.toString(),
+      ivaNeto: this.calculosPrecio.ivaNeto.toString(),
+      precioLista: this.calculosPrecio.precioLista.toString(),
+      publico: formValues.publico,
+      oferta: formValues.oferta,
+      porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
+      porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
+      precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      nota: formValues.nota,
+      fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
+      urlImagen: this.borrarImagen && !this.imageDataUrl ? null : this.producto.urlImagen,
+      imagen: formValues.imagen,
     };
   }
 
@@ -251,7 +311,7 @@ export class ProductoComponent implements OnInit {
   }
 
   volverAlListado() {
-    this.router.navigate(['/productos']);
+    this.location.back();
   }
 
   imageChange($event) {
@@ -260,6 +320,7 @@ export class ProductoComponent implements OnInit {
     const readerDataUrl = new FileReader();
 
     readerBuffer.addEventListener('load', () => {
+      this.borrarImagen = false;
       const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
       this.form.get('imagen').setValue(Array.from(arr));
     });
@@ -273,8 +334,9 @@ export class ProductoComponent implements OnInit {
   }
 
   clearFile(file) {
-    file.value = '';
+    file.value = null;
     this.imageDataUrl = '';
+    this.borrarImagen = true;
     this.form.get('imagen').setValue(null);
   }
 
@@ -282,17 +344,13 @@ export class ProductoComponent implements OnInit {
     this.form.get('precioCosto').setValue(this.formatBigForDisplay(this.calculosPrecio.precioCosto));
     this.form.get('gananciaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.gananciaPorcentaje));
     this.form.get('precioVentaPublico').setValue(this.formatBigForDisplay(this.calculosPrecio.precioVentaPublico));
+    this.form.get('ivaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.ivaPorcentaje));
     this.form.get('precioLista').setValue(this.formatBigForDisplay(this.calculosPrecio.precioLista));
     this.form.get('porcentajeBonificacionPrecio').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionPrecio));
     this.form.get('precioBonificado').setValue(this.formatBigForDisplay(this.calculosPrecio.precioBonificado));
 
-    const oferta = this.form.get('oferta').value;
-    this.form.get('porcentajeBonificacionOferta').setValue(
-      oferta ? this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionOferta) : (new Big(0)).toFixed()
-    );
-    this.form.get('precioOferta').setValue(
-      oferta ? this.formatBigForDisplay(this.calculosPrecio.precioOferta) : (new Big(0)).toFixed()
-    );
+    this.form.get('porcentajeBonificacionOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionOferta));
+    this.form.get('precioOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.precioOferta));
   }
 
   formatBigForDisplay(n: Big) {
@@ -315,5 +373,9 @@ export class ProductoComponent implements OnInit {
       this.form.get('porcentajeBonificacionOferta').disable();
       this.form.get('precioOferta').disable();
     }
+  }
+
+  hasImagen() {
+    return !!(!this.borrarImagen && this.imageDataUrl);
   }
 }

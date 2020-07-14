@@ -14,7 +14,23 @@ export class CalculosPrecio {
   private pPorcentajeBonificacionOferta = new Big(0);
   private pPrecioOferta = new Big(0);
 
-  constructor() { }
+  /**
+   * Crea una instancia de esta clase.
+   * Copia a la instancia las propiedades de initialState cuyos nombres
+   * coincidan con los nombres de la propiedad de la instacia creada.
+   */
+  static getInstance(initialState: {[key: string]: any} = {}): CalculosPrecio {
+    const instance = new CalculosPrecio();
+    Object.keys(initialState).forEach((k) => {
+      const ownKey = 'p' + k.charAt(0).toUpperCase() + k.slice(1);
+      if (initialState.hasOwnProperty(k) && instance.hasOwnProperty(ownKey)) {
+        instance[ownKey] = new Big(initialState[k]);
+      }
+    });
+    return instance;
+  }
+
+  constructor() {}
 
   set precioCosto(value: Big) {
     this.pPrecioCosto = value;
@@ -95,6 +111,7 @@ export class CalculosPrecio {
   set porcentajeBonificacionPrecio(value: Big) {
     this.pPorcentajeBonificacionPrecio = value;
     this.calcularPrecioBonificado();
+    this.calcularPrecioOferta();
   }
   get porcentajeBonificacionPrecio(): Big { return this.pPorcentajeBonificacionPrecio; }
   protected calcularporcentajeBonificacionPrecio() {
@@ -115,8 +132,14 @@ export class CalculosPrecio {
     this.calcularPrecioOferta();
   }
   get porcentajeBonificacionOferta(): Big { return this.pPorcentajeBonificacionOferta; }
+  protected calcularporcentajeBonificacionOferta() {
+    this.pPorcentajeBonificacionOferta = (new Big(100)).times((new Big(1)).minus(this.pPrecioOferta.div(this.pPrecioLista)));
+  }
 
-  set precioOferta(value: Big) { this.pPrecioOferta = value; }
+  set precioOferta(value: Big) {
+    this.pPrecioOferta = value;
+    this.calcularporcentajeBonificacionOferta();
+  }
   get precioOferta(): Big { return this.pPrecioOferta; }
   protected calcularPrecioOferta() {
     this.pPrecioOferta = this.pPrecioLista.minus(this.pPorcentajeBonificacionOferta.times(this.pPrecioLista).div(100));

@@ -44,6 +44,11 @@ export class ProductosService {
     return this.http.post<Producto>(this.url + `?${qs}`, np);
   }
 
+  actualizarProducto(p: Producto, idMedida: number, idRubro: number, idProveedor: number): Observable<void> {
+    const qs = HelperService.getQueryString({ idMedida, idRubro, idProveedor });
+    return this.http.put<void>(this.url + `?${qs}`, p);
+  }
+
   /* Helpers */
   getCantidad(p: Producto) {
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
