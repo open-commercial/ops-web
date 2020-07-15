@@ -30,14 +30,12 @@
               </span>
               <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
               <span class="mr-2">Stock: <strong>{{ getCantidad(p) }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
-              <span class="mr-2" *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más</span>
-              <span class="mr-2">
-                <span class="text-nowrap" *ngIf="!((p.oferta || productosService.estaBonificado(p)) && p.bulto == 1)">
-                  P.U. <span class="precio" [class.tachado]="(p.oferta || productosService.estaBonificado(p)) && p.bulto == 1">{{ p.precioLista | currency:'ARS':'symbol':'1.0-2' }}</span>
-                </span>
-                <span class="text-nowrap" *ngIf="p.oferta || productosService.estaBonificado(p)">
-                  P.U. {{ p.oferta ? "Oferta" : "Bonif."}} <span class="precio">{{ p.precioBonificado | currency:'ARS':'symbol':'1.0-2' }}</span>
-                </span>
+              <div *ngIf="p.porcentajeBonificacionOferta || p.porcentajeBonificacionPrecio">
+                <span *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más&nbsp;</span>
+                <span class="precio bonificado">$ {{ p.precioBonificado | number:'1.0-2':'es-AR' }}</span>
+              </div>
+              <span class="precio" [class.tachado]="!(p.bulto > 1) && (p.porcentajeBonificacionOferta || p.porcentajeBonificacionPrecio)">
+                $ {{p.precioLista | number:'1.0-2':'es-AR'}}
               </span>
             </span>
           </span>

@@ -78,6 +78,7 @@ export class BusquedaProductoComponent implements OnInit {
         (p: Producto) => {
           if (p) {
             this.directInputSeleccion.emit(p);
+            this.codigo = '';
           } else {
             this.showMessage(`No existe producto con codigo: "${this.codigo}"`, 'danger');
           }
