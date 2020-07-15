@@ -15,6 +15,7 @@ export class BusquedaProductoComponent implements OnInit {
   private messages = new Subject<string>();
   message: string;
   messageType = 'success';
+  codigo = '';
 
   private pCantidadesInicialesPedido: { [idProducto: number]: number } = {};
   @Input()
@@ -66,21 +67,19 @@ export class BusquedaProductoComponent implements OnInit {
     }, () => {});
   }
 
-  ingresarProductoDirecto($event) {
-    const codigo = $event.target.value.trim();
-    $event.preventDefault();
-
-    if (!codigo) { return null; }
+  ingresarProductoDirecto() {
+    this.codigo = this.codigo.trim();
+    if (!this.codigo) { return; }
 
     this.loadingProducto = true;
-    this.productosService.getProductoPorCodigo(codigo)
+    this.productosService.getProductoPorCodigo(this.codigo)
       .pipe(finalize(() => this.loadingProducto = false))
       .subscribe(
         (p: Producto) => {
           if (p) {
             this.directInputSeleccion.emit(p);
           } else {
-            this.showMessage(`No existe producto con codigo: "${codigo}"`, 'danger');
+            this.showMessage(`No existe producto con codigo: "${this.codigo}"`, 'danger');
           }
         },
         err => {
