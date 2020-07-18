@@ -3,14 +3,14 @@
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos</h1>
     <div class="text-right m-0">
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
-              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="productosFiltersCollapse"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="traspasosFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
-  <div id="productosFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+  <div id="traspasosFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
