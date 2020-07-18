@@ -47,6 +47,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -94,6 +95,9 @@ import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtro
 import { ListaComponent } from './components/lista/lista.component';
 import { TransportistaComponent } from './components/transportista/transportista.component';
 import { PagosComponent } from './components/pagos/pagos.component';
+import { TraspasosComponent } from './components/traspasos/traspasos.component';
+import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-home.component';
+import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -147,6 +151,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ListaComponent,
     TransportistaComponent,
     PagosComponent,
+    TraspasosComponent,
+    TraspasosHomeComponent,
+    VerTraspasoComponent,
   ],
   imports: [
     BrowserModule,
@@ -215,6 +222,7 @@ export class AppModule {
       faLink,
       faCopy,
       faArrowAltCircleDown,
+      faExchangeAlt,
     );
   }
 }
