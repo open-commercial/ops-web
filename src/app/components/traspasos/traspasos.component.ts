@@ -199,4 +199,12 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
   verTraspaso(traspaso: Traspaso) {
     this.router.navigate(['/traspasos/ver', traspaso.idTraspaso]);
   }
+
+  crearTraspaso() {
+    this.router.navigate(['/traspasos/nuevo']);
+  }
+
+  eliminarTraspaso(traspaso: Traspaso) {
+    console.log('Not implemented yet');
+  }
 }

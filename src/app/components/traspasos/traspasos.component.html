@@ -2,6 +2,10 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos</h1>
     <div class="text-right m-0">
+      <button class="btn btn-primary fake-cursor" ngbPopover="Nuevo Traspaso" triggers="mouseenter:mouseleave" placement="left"
+              (click)="crearTraspaso()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="traspasosFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
@@ -65,6 +69,12 @@
           <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verTraspaso(item)">
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
+        </li>
+        <li class="list-inline-item">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Cancelar" triggers="mouseenter:mouseleave" placement="left"
+             (click)="eliminarTraspaso(item)">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          </a>
         </li>
       </ul>
     </ng-template>

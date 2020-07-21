@@ -98,6 +98,7 @@ import { PagosComponent } from './components/pagos/pagos.component';
 import { TraspasosComponent } from './components/traspasos/traspasos.component';
 import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-home.component';
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
+import { TraspasoComponent } from './components/traspaso/traspaso.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -154,6 +155,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     TraspasosComponent,
     TraspasosHomeComponent,
     VerTraspasoComponent,
+    TraspasoComponent,
   ],
   imports: [
     BrowserModule,
