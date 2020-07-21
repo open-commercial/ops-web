@@ -1,17 +1,18 @@
 <div class="app-busqueda-producto">
-  <label [for]="directInputId">
-    Ingrese un código de producto o haga click en <fa-icon [icon]="['fas', 'search']"></fa-icon> para buscar uno
-  </label>
+  <label [for]="directInputId" class="sr-only">Ingrese un código de producto o haga click en lupa para buscar uno</label>
   <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text" id="codigo-addon">
-          <fa-icon [icon]="['fas', 'barcode']" *ngIf="!loadingProducto"></fa-icon>
-          <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
+          <fa-icon [icon]="['fas', 'barcode']"></fa-icon>
         </span>
     </div>
     <input autocomplete="off" [id]="directInputId" placeholder="Código de producto..." type="text" aria-describedby="codigo-addon"
-           class="form-control" (keyup.enter)="ingresarProductoDirecto($event)" [readOnly]="loadingProducto">
+           class="form-control" (keyup.enter)="ingresarProductoDirecto()" [readOnly]="loadingProducto" [(ngModel)]="codigo">
     <div class="input-group-append">
+      <button class="btn btn-primary spacer-derecho" type="button" (click)="ingresarProductoDirecto()">
+        <fa-icon [icon]="['fas', 'arrow-alt-circle-down']" *ngIf="!loadingProducto"></fa-icon>
+        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
+      </button>
       <button class="btn btn-primary" type="button" (click)="showProductoModal($event)">
         <fa-icon [icon]="['fas', 'search']" *ngIf="!loadingProducto"></fa-icon>
         <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
