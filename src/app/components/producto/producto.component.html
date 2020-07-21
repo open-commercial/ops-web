@@ -24,12 +24,14 @@
                 <div class="text-center">
                   <ul class="list-inline">
                     <li class="list-inline-item">
-                      <button type="button" class="btn btn-outline-secondary" (click)="imageFile.click()">
+                      <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Buscar Imagen" triggers="mouseenter:mouseleave"
+                              (click)="imageFile.click()">
                         <fa-icon [icon]="['fas', 'folder-open']"></fa-icon>
                       </button>
                     </li>
                     <li class="list-inline-item">
-                      <button type="button" class="btn btn-outline-secondary" (click)="clearFile(imageFile)">
+                      <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Quitar Imagen" triggers="mouseenter:mouseleave"
+                              (click)="clearFile(imageFile)">
                         <fa-icon [icon]="['fas', 'trash']"></fa-icon>
                       </button>
                     </li>
@@ -51,7 +53,7 @@
                 </div>
               </div>
               <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
-              <div class="custom-error-message" *ngIf="submitted && f.idProveedor.errors">
+              <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProveedor.errors">
                 <div *ngIf="f.idProveedor.errors.required">Requerido</div>
               </div>
               <div class="form-group">
@@ -78,13 +80,13 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="precios" title="Precios">
+      <ngb-panel id="precios" title="Precios" [disabled]="!isPreciosPanelEnabled()">
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-lg-6">
               <div class="form-group">
                 <label for="precioCosto">Precio de Costo ($)</label>
-                <input type="number" class="form-control text-right" id="precioCosto" required formControlName="precioCosto"
+                <input type="number" min="0" class="form-control text-right" id="precioCosto" required formControlName="precioCosto"
                        [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }"
                        (focusout)="calculosFieldChange('precioCosto', $event)"
                        (keyup.enter)="calculosFieldChange('precioCosto', $event)">
@@ -96,7 +98,7 @@
               <div class="form-group">
                 <label for="gananciaPorcentaje">Ganancia (%)</label>
                 <div class="input-group mb-0">
-                  <input type="number" class="form-control text-right" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
+                  <input type="number" min="0" class="form-control text-right" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
                          [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }"
                          (focusout)="calculosFieldChange('gananciaPorcentaje', $event)"
                          (keyup.enter)="calculosFieldChange('gananciaPorcentaje', $event)">
@@ -111,7 +113,7 @@
               </div>
               <div class="form-group">
                 <label for="precioVentaPublico">Precio Venta Público ($)</label>
-                <input type="number" class="form-control text-right" id="precioVentaPublico" required formControlName="precioVentaPublico"
+                <input type="number" min="0" class="form-control text-right" id="precioVentaPublico" required formControlName="precioVentaPublico"
                        [ngClass]="{ 'is-invalid': submitted && f.precioVentaPublico.errors }"
                        (focusout)="calculosFieldChange('precioVentaPublico', $event)"
                        (keyup.enter)="calculosFieldChange('precioVentaPublico', $event)">
@@ -123,7 +125,7 @@
               <div class="form-group">
                 <label for="ivaPorcentaje">I.V.A. (%)</label>
                 <div class="input-group mb-0">
-                  <select type="number" class="form-control" id="ivaPorcentaje" required formControlName="ivaPorcentaje"
+                  <select class="form-control" id="ivaPorcentaje" required formControlName="ivaPorcentaje"
                           [ngClass]="{ 'is-invalid': submitted && f.ivaPorcentaje.errors }"
                           (change)="calculosFieldChange('ivaPorcentaje', $event)">
                     <option *ngFor="let i of ivas" [value]="i">{{ i }}</option>
@@ -138,7 +140,7 @@
               </div>
               <div class="form-group">
                 <label for="precioLista">Precio de Lista ($)</label>
-                <input type="number" class="form-control text-right" id="precioLista" required formControlName="precioLista"
+                <input type="number" min="0" class="form-control text-right" id="precioLista" required formControlName="precioLista"
                        [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }"
                        (focusout)="calculosFieldChange('precioLista', $event)"
                        (keyup.enter)="calculosFieldChange('precioLista', $event)">
@@ -152,8 +154,8 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="porcentajeBonificacionPrecio">Precio Bonif. (%)</label>
-                    <input type="number" class="form-control text-right" id="porcentajeBonificacionPrecio" required formControlName="porcentajeBonificacionPrecio"
+                    <label for="porcentajeBonificacionPrecio">Porcentaje Bonif. (%)</label>
+                    <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionPrecio" required formControlName="porcentajeBonificacionPrecio"
                            [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionPrecio.errors }"
                            (focusout)="calculosFieldChange('porcentajeBonificacionPrecio', $event)"
                            (keyup.enter)="calculosFieldChange('porcentajeBonificacionPrecio', $event)">
@@ -167,7 +169,7 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="precioBonificado">Precio Bonif. ($)</label>
-                    <input type="number" class="form-control text-right" id="precioBonificado" required formControlName="precioBonificado"
+                    <input type="number" min="0" class="form-control text-right" id="precioBonificado" required formControlName="precioBonificado"
                            [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }"
                            (focusout)="calculosFieldChange('precioBonificado', $event)"
                            (keyup.enter)="calculosFieldChange('precioBonificado', $event)">
@@ -180,15 +182,15 @@
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta" (change)="ofertaChange()">
-                <label class="form-check-label" for="oferta">Oferta (%)</label>
+                <label class="form-check-label" for="oferta">Oferta</label>
               </div>
               <div class="custom-error-message" *ngIf="form.get('oferta').value && !hasImagen()">
                 Un producto en oferta debe poseer una imágen.
               </div>
               <div class="row mb-3">
                 <div class="col-6">
-                  <label for="porcentajeBonificacionOferta" class="sr-only"></label>
-                  <input type="number" class="form-control text-right" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
+                  <label for="porcentajeBonificacionOferta">Porcentaje (%)</label>
+                  <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
                          [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }"
                          (focusout)="calculosFieldChange('porcentajeBonificacionOferta', $event)"
                          (keyup.enter)="calculosFieldChange('porcentajeBonificacionOferta', $event)">
@@ -199,8 +201,8 @@
                   </div>
                 </div>
                 <div class="col-6">
-                  <label for="precioOferta" class="sr-only"></label>
-                  <input type="number" class="form-control text-right" id="precioOferta" required formControlName="precioOferta"
+                  <label for="precioOferta">Precio ($)</label>
+                  <input type="number" min="0" class="form-control text-right" id="precioOferta" required formControlName="precioOferta"
                          [ngClass]="{ 'is-invalid': submitted && f.precioOferta.errors }"
                          (focusout)="calculosFieldChange('precioOferta', $event)"
                          (keyup.enter)="calculosFieldChange('precioOferta', $event)">
@@ -214,7 +216,7 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="cantidades" title="Cantidades">
+      <ngb-panel id="cantidades" title="Cantidades" [disabled]="!isCantidadesPanelEnabled()">
         <ng-template ngbPanelContent>
           <fieldset>
             <legend class="h5">Cantidad en sucursales</legend>
@@ -224,10 +226,10 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
                   </div>
-                  <input type="number" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
+                  <input type="number" min="0" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
                          [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
                 </div>
-                <div class="custom-error-message text-right" *ngIf="submitted && ces.get('cantidad').errors">
+                <div class="custom-error-message" *ngIf="submitted && ces.get('cantidad').errors">
                   <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
                   <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
                 </div>
@@ -236,7 +238,7 @@
           </fieldset>
           <div class="form-group">
             <label for="bulto">Venta x cantidad</label>
-            <input type="number" class="form-control text-right" id="bulto" required formControlName="bulto"
+            <input type="number" min="1" class="form-control text-right" id="bulto" required formControlName="bulto"
                    [ngClass]="{ 'is-invalid': submitted && f.bulto.errors }">
             <div class="invalid-feedback" *ngIf="submitted && f.bulto.errors">
               <div *ngIf="f.bulto.errors.required">Requerido</div>
@@ -245,7 +247,7 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="propiedades" title="Propiedades">
+      <ngb-panel id="propiedades" title="Propiedades" [disabled]="!isPropiedadesPanelEnabled()">
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6">
@@ -281,20 +283,20 @@
             </div>
           </div>
           <div class="row mb-3" *ngIf="producto">
-            <div class="col-md-6">Última Modificación: {{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</div>
+            <div class="col-md-6 mb-2">Última Modificación: {{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</div>
             <div class="col-md-6">Fecha de Alta: {{ producto.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</div>
           </div>
           <div class="form-group">
             <label for="nota">Nota</label>
             <textarea class="form-control" id="nota" formControlName="nota" rows="5"></textarea>
           </div>
+          <div class="text-right my-2">
+            <button type="button" class="btn btn-primary" (click)="submit()">
+              <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+            </button>
+          </div>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
-    <div class="text-right my-2">
-      <button type="button" class="btn btn-primary" (click)="submit()">
-        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
-      </button>
-    </div>
   </form>
 </div>

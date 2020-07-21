@@ -54,7 +54,10 @@ export class CalculosPrecio {
   }
   get gananciaPorcentaje(): Big { return this.pGananciaPorcentaje; }
   protected calcularGananciaPorcentaje() {
-    this.pGananciaPorcentaje = this.pPrecioVentaPublico.minus(this.pPrecioCosto).div(this.pPrecioCosto).times(100);
+    this.pGananciaPorcentaje = this.pPrecioCosto.eq(0)
+      ? new Big(0)
+      : this.pPrecioVentaPublico.minus(this.pPrecioCosto).div(this.pPrecioCosto).times(100)
+    ;
   }
 
   set gananciaNeto(value: Big) { this.pGananciaNeto = value; }

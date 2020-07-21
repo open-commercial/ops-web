@@ -39,7 +39,7 @@ export class ProductoComponent implements OnInit {
 
   producto: Producto;
   form: FormGroup;
-  submitted = false;
+  submitted = true;
 
   calculosPrecio = new CalculosPrecio();
 
@@ -377,5 +377,35 @@ export class ProductoComponent implements OnInit {
 
   hasImagen() {
     return !!(!this.borrarImagen && this.imageDataUrl);
+  }
+
+  isPreciosPanelEnabled(): boolean {
+    return this.form &&
+      this.form.get('descripcion').valid &&
+      this.form.get('idProveedor').valid &&
+      this.form.get('idMedida').valid &&
+      this.form.get('idRubro').valid;
+  }
+
+  isCantidadesPanelEnabled(): boolean {
+    const oferta = this.form.get('oferta').value;
+
+    return this.isPreciosPanelEnabled() &&
+      this.form.get('precioCosto').valid &&
+      this.form.get('gananciaPorcentaje').valid &&
+      this.form.get('precioVentaPublico').valid &&
+      this.form.get('ivaPorcentaje').valid &&
+      this.form.get('precioLista').valid &&
+      this.form.get('porcentajeBonificacionPrecio').valid &&
+      this.form.get('precioBonificado').valid &&
+      (!oferta || this.form.get('porcentajeBonificacionOferta').valid) &&
+      (!oferta || this.form.get('precioOferta').valid)
+    ;
+  }
+
+  isPropiedadesPanelEnabled(): boolean {
+    return this.isPreciosPanelEnabled() && this.isCantidadesPanelEnabled() &&
+      this.form.get('cantidadEnSucursal').valid &&
+      this.form.get('bulto').valid;
   }
 }
