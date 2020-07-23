@@ -39,7 +39,7 @@ export class ProductoComponent implements OnInit {
 
   producto: Producto;
   form: FormGroup;
-  submitted = true;
+  submitted = false;
 
   calculosPrecio = new CalculosPrecio();
 
@@ -307,6 +307,16 @@ export class ProductoComponent implements OnInit {
     }
     if (this.accordion.activeIds.indexOf($event.panelId) >= 0) {
       $event.preventDefault();
+      return;
+    }
+    if (
+      ($event.panelId === 'precios' && !this.mustPreciosPanelBeOpened()) ||
+      ($event.panelId === 'cantidades' && !this.mustCantidadesPanelBeOpened()) ||
+      ($event.panelId === 'propiedades' && !this.mustPropiedadesPanelBeOpened())
+    ) {
+        this.submitted = true;
+        $event.preventDefault();
+        return;
     }
   }
 
@@ -379,7 +389,7 @@ export class ProductoComponent implements OnInit {
     return !!(!this.borrarImagen && this.imageDataUrl);
   }
 
-  isPreciosPanelEnabled(): boolean {
+  mustPreciosPanelBeOpened(): boolean {
     return this.form &&
       this.form.get('descripcion').valid &&
       this.form.get('idProveedor').valid &&
@@ -387,10 +397,10 @@ export class ProductoComponent implements OnInit {
       this.form.get('idRubro').valid;
   }
 
-  isCantidadesPanelEnabled(): boolean {
+  mustCantidadesPanelBeOpened(): boolean {
     const oferta = this.form.get('oferta').value;
 
-    return this.isPreciosPanelEnabled() &&
+    return this.mustPreciosPanelBeOpened() &&
       this.form.get('precioCosto').valid &&
       this.form.get('gananciaPorcentaje').valid &&
       this.form.get('precioVentaPublico').valid &&
@@ -403,8 +413,8 @@ export class ProductoComponent implements OnInit {
     ;
   }
 
-  isPropiedadesPanelEnabled(): boolean {
-    return this.isPreciosPanelEnabled() && this.isCantidadesPanelEnabled() &&
+  mustPropiedadesPanelBeOpened(): boolean {
+    return this.mustPreciosPanelBeOpened() && this.mustCantidadesPanelBeOpened() &&
       this.form.get('cantidadEnSucursal').valid &&
       this.form.get('bulto').valid;
   }

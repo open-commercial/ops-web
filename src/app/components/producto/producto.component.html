@@ -80,7 +80,7 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="precios" title="Precios" [disabled]="!isPreciosPanelEnabled()">
+      <ngb-panel id="precios" title="Precios">
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-lg-6">
@@ -216,7 +216,7 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="cantidades" title="Cantidades" [disabled]="!isCantidadesPanelEnabled()">
+      <ngb-panel id="cantidades" title="Cantidades">
         <ng-template ngbPanelContent>
           <fieldset>
             <legend class="h5">Cantidad en sucursales</legend>
@@ -247,7 +247,7 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="propiedades" title="Propiedades" [disabled]="!isPropiedadesPanelEnabled()">
+      <ngb-panel id="propiedades" title="Propiedades">
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6">
@@ -290,13 +290,13 @@
             <label for="nota">Nota</label>
             <textarea class="form-control" id="nota" formControlName="nota" rows="5"></textarea>
           </div>
-          <div class="text-right my-2">
-            <button type="button" class="btn btn-primary" (click)="submit()">
-              <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
-            </button>
-          </div>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
+    <div class="text-right my-2">
+      <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!form.valid">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
+    </div>
   </form>
 </div>
