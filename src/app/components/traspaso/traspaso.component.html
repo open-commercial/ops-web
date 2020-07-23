@@ -8,4 +8,53 @@
       <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Nuevo Traspaso
     </h1>
   </div>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="container-fluid mt-2" *ngIf="form">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group my-3">
+          <label for="idSucursalOrigen">Sucursal Origen</label>
+          <select class="form-control" id="idSucursalOrigen" required formControlName="idSucursalOrigen"
+                  [ngClass]="{ 'is-invalid': submitted && f.idSucursalOrigen.errors }">
+            <option *ngFor="let s of sucursales" [value]="s.idSucursal">{{ sucursalesService.getSucursalLabel(s) }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="submitted && f.idSucursalOrigen.errors">
+            <div *ngIf="f.idSucursalOrigen.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group my-3">
+          <label for="idSucursalDestino">Sucursal Destino</label>
+          <select class="form-control" id="idSucursalDestino" formControlName="idSucursalDestino"
+                  [ngClass]="{ 'is-invalid': submitted && f.idSucursalDestino.errors }">
+            <option *ngFor="let s of sucursales" [value]="s.idSucursal">{{ sucursalesService.getSucursalLabel(s) }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="submitted && f.idSucursalDestino.errors">
+            <div *ngIf="f.idSucursalDestino.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <fieldset class="mb-3" formArrayName="idProductoConCantidad">
+      <legend class="border-bottom py-2">
+        Cantidades de Productos
+        <button type="button" class="btn btn-primary" (click)="addIdProductoConCantidad()">
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        </button>
+      </legend>
+      <div class="row border-bottom" *ngFor="let pc of idProductoConCantidad.controls; index as i" [formGroupName]="i.toString()">
+        <div class="col-md-6">
+          
+        </div>
+        <div class="col-md-6">
+
+        </div>
+      </div>
+    </fieldset>
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary">
+        <fa-icon [icon]="['fas', 'check']" [size]="'lg'"></fa-icon> Guardar
+      </button>
+    </div>
+  </form>
 </div>

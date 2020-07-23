@@ -131,7 +131,7 @@
             <label for="sucursal" class="sr-only">Sucursal</label>
             <select class="form-control" id="sucursal" formControlName="sucursal" [compareWith]="compareFn">
               <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
-                {{ getSucursalLabel(sucursal) }}
+                {{ sucursalesService.getSucursalLabel(sucursal) }}
               </option>
             </select>
           </div>
