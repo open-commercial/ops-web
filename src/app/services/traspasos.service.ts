@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { Traspaso } from '../models/traspaso';
 import { RenglonTraspaso } from '../models/renglon-traspaso';
+import { NuevoTraspaso } from '../models/nuevo-traspaso';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,13 @@ export class TraspasosService {
 
   getRenglonesDeTraspaso(idTraspaso: number): Observable<RenglonTraspaso[]> {
     return this.http.get<RenglonTraspaso[]>(this.url + `/${idTraspaso}/renglones`);
+  }
+
+  guardarTraspaso(nt: NuevoTraspaso): Observable<Traspaso> {
+    return this.http.post<Traspaso>(this.url, nt);
+  }
+
+  eliminarTraspaso(idTraspaso: number): Observable<void> {
+    return this.http.delete<void>(this.url + `/${idTraspaso}`);
   }
 }

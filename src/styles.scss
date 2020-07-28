@@ -128,6 +128,11 @@ a.fake-cursor {
   color: $danger;
 }
 
+.error-message-fix {
+  margin-top: -12px;
+  margin-bottom: 12px;
+}
+
 ul.pagination {
   margin-bottom: 0;
 }

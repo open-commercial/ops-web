@@ -12,10 +12,11 @@ import { TraspasosService } from '../../services/traspasos.service';
 import { BusquedaTraspasoCriteria } from '../../models/criterias/busqueda-traspaso.criteria';
 import * as moment from 'moment';
 import { HelperService } from '../../services/helper.service';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { Usuario } from '../../models/usuario';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Traspaso } from '../../models/traspaso';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-traspasos',
@@ -105,7 +106,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;
 
-    const sentidoVal = ps.sentido ? ps.sentido : 'ASC';
+    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
     this.filterForm.get('sentido').setValue(sentidoVal);
     terminos.sentido = sentidoVal;
 
@@ -205,6 +206,19 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   eliminarTraspaso(traspaso: Traspaso) {
-    console.log('Not implemented yet');
+    const msg = `¿Está seguro que desea eliminar el traspaso #${traspaso.nroTraspaso}?`;
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.traspasosService.eliminarTraspaso(traspaso.idTraspaso)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            () => location.reload(),
+            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
+          )
+        ;
+      }
+    }, () => {});
   }
 }

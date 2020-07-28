@@ -51,7 +51,7 @@
         <span class="badge badge-secondary ml-2 mb-2 px-2 py-1">
           #{{ item.nroTraspaso }}
         </span>
-        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1">
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.nroPedido">
           #Pedido: {{ item.nroPedido }}
         </span>
       </div>
@@ -63,17 +63,17 @@
         </div>
       </div>
     </ng-template>
-    <ng-template #actions let-item>
+    <ng-template #actions let-item let-index>
       <ul class="list-inline mb-0 text-center d-inline-block">
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verTraspaso(item)">
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Cancelar" triggers="mouseenter:mouseleave" placement="left"
+        <li class="list-inline-item" *ngIf="!item.nroPedido">
+          <a class="btn btn-primary fake-cursor" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left"
              (click)="eliminarTraspaso(item)">
-            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </a>
         </li>
       </ul>
