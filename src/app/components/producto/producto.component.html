@@ -180,16 +180,18 @@
                   </div>
                 </div>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta" (change)="ofertaChange()">
-                <label class="form-check-label" for="oferta">Oferta</label>
-              </div>
-              <div class="custom-error-message" *ngIf="form.get('oferta').value && !hasImagen()">
-                Un producto en oferta debe poseer una imágen.
+              <div class="d-flex flex-row flex-wrap align-items-center">
+                <div class="form-check mr-2">
+                  <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta" (change)="ofertaChange()">
+                  <label class="form-check-label" for="oferta">Oferta</label>
+                </div>
+                <div class="custom-error-message m-0" *ngIf="form.get('oferta').value && !hasImagen()">
+                  Para ser Oferta, debe tener imagen.
+                </div>
               </div>
               <div class="row mb-3">
                 <div class="col-6">
-                  <label for="porcentajeBonificacionOferta">Porcentaje (%)</label>
+                  <label for="porcentajeBonificacionOferta">Porcentaje Oferta (%)</label>
                   <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
                          [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }"
                          (focusout)="calculosFieldChange('porcentajeBonificacionOferta', $event)"
@@ -201,7 +203,7 @@
                   </div>
                 </div>
                 <div class="col-6">
-                  <label for="precioOferta">Precio ($)</label>
+                  <label for="precioOferta">Precio Oferta ($)</label>
                   <input type="number" min="0" class="form-control text-right" id="precioOferta" required formControlName="precioOferta"
                          [ngClass]="{ 'is-invalid': submitted && f.precioOferta.errors }"
                          (focusout)="calculosFieldChange('precioOferta', $event)"
@@ -218,26 +220,24 @@
       </ngb-panel>
       <ngb-panel id="cantidades" title="Cantidades">
         <ng-template ngbPanelContent>
-          <fieldset>
-            <legend class="h5">Cantidad en sucursales</legend>
-            <div formArrayName="cantidadEnSucursal">
-              <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
-                <div class="input-group mb-0">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
-                  </div>
-                  <input type="number" min="0" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
-                         [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
+          <label>Cantidad en sucursales</label>
+          <div formArrayName="cantidadEnSucursal">
+            <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
+              <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
                 </div>
-                <div class="custom-error-message" *ngIf="submitted && ces.get('cantidad').errors">
-                  <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
-                  <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
-                </div>
+                <input type="number" min="0" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
+                       [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
+              </div>
+              <div class="custom-error-message" *ngIf="submitted && ces.get('cantidad').errors">
+                <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
+                <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
               </div>
             </div>
-          </fieldset>
+          </div>
           <div class="form-group">
-            <label for="bulto">Venta x cantidad</label>
+            <label for="bulto">Venta por cantidad</label>
             <input type="number" min="1" class="form-control text-right" id="bulto" required formControlName="bulto"
                    [ngClass]="{ 'is-invalid': submitted && f.bulto.errors }">
             <div class="invalid-feedback" *ngIf="submitted && f.bulto.errors">
@@ -288,7 +288,10 @@
           </div>
           <div class="form-group">
             <label for="nota">Nota</label>
-            <textarea class="form-control" id="nota" formControlName="nota" rows="5"></textarea>
+            <textarea class="form-control" maxlength="250" id="nota" formControlName="nota" rows="5" [ngClass]="{ 'is-invalid': submitted && f.nota.errors }"></textarea>
+            <div class="invalid-feedback" *ngIf="submitted && f.nota.errors">
+              <div *ngIf="f.nota.errors.maxlength">Máximo {{ f.nota.errors.maxlength.requiredLength }} caracteres</div>
+            </div>
           </div>
         </ng-template>
       </ngb-panel>

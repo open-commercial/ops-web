@@ -126,7 +126,7 @@ export class ProductoComponent implements OnInit {
       bulto: [1, [Validators.required, Validators.min(1)]],
       publico: false,
       fechaVencimiento: null,
-      nota: null,
+      nota: [null, Validators.maxLength(250)],
       imagen: null,
     });
   }
@@ -310,6 +310,7 @@ export class ProductoComponent implements OnInit {
       return;
     }
     if (
+      ($event.panelId === 'general' && !this.mustGeneralPanelBeOpened()) ||
       ($event.panelId === 'precios' && !this.mustPreciosPanelBeOpened()) ||
       ($event.panelId === 'cantidades' && !this.mustCantidadesPanelBeOpened()) ||
       ($event.panelId === 'propiedades' && !this.mustPropiedadesPanelBeOpened())
@@ -387,6 +388,12 @@ export class ProductoComponent implements OnInit {
 
   hasImagen() {
     return !!(!this.borrarImagen && this.imageDataUrl);
+  }
+
+  mustGeneralPanelBeOpened(): boolean {
+    return this.mustPreciosPanelBeOpened() &&
+      this.mustCantidadesPanelBeOpened() &&
+      this.mustPropiedadesPanelBeOpened();
   }
 
   mustPreciosPanelBeOpened(): boolean {
