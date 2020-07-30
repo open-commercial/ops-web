@@ -25,7 +25,7 @@ export interface Producto {
   oferta: boolean;
   porcentajeBonificacionOferta: number|string;
   porcentajeBonificacionPrecio: number|string;
-  precioBonificado: number|string;
+  precioBonificado?: number|string;
   fechaUltimaModificacion?: Date;
   idProveedor?: number;
   razonSocialProveedor?: string;

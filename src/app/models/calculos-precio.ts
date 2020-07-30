@@ -15,18 +15,21 @@ export class CalculosPrecio {
   private pPrecioOferta = new Big(0);
 
   /**
-   * Crea una instancia de esta clase.
-   * Copia a la instancia las propiedades de initialState cuyos nombres
-   * coincidan con los nombres de la propiedad de la instacia creada.
+   * Crea una instancia de esta clase a partir de un estado inicial.
    */
   static getInstance(initialState: {[key: string]: any} = {}): CalculosPrecio {
     const instance = new CalculosPrecio();
-    Object.keys(initialState).forEach((k) => {
-      const ownKey = 'p' + k.charAt(0).toUpperCase() + k.slice(1);
-      if (initialState.hasOwnProperty(k) && instance.hasOwnProperty(ownKey)) {
-        instance[ownKey] = new Big(initialState[k]);
-      }
-    });
+    instance.pPrecioCosto = new Big(initialState.precioCosto);
+    instance.pGananciaPorcentaje = new Big(initialState.gananciaPorcentaje);
+    instance.pGananciaNeto = new Big(initialState.gananciaNeto);
+    instance.pPrecioVentaPublico = new Big(initialState.precioVentaPublico);
+    instance.pIvaPorcentaje = new Big(initialState.ivaPorcentaje);
+    instance.pIvaNeto = new Big(initialState.ivaNeto);
+    instance.pPrecioLista = new Big(initialState.precioLista);
+    instance.pPorcentajeBonificacionPrecio = new Big(initialState.porcentajeBonificacionPrecio);
+    instance.pPorcentajeBonificacionOferta = new Big(initialState.porcentajeBonificacionOferta);
+    instance.calcularPrecioBonificado();
+    instance.calcularPrecioOferta();
     return instance;
   }
 
@@ -147,5 +150,4 @@ export class CalculosPrecio {
   protected calcularPrecioOferta() {
     this.pPrecioOferta = this.pPrecioLista.minus(this.pPorcentajeBonificacionOferta.times(this.pPrecioLista).div(100));
   }
-
 }

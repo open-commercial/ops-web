@@ -88,6 +88,7 @@ export class ProductoComponent implements OnInit {
             this.producto = recursos[3];
             this.title = this.producto.descripcion;
             this.calculosPrecio = CalculosPrecio.getInstance(this.producto);
+            // console.log(this.calculosPrecio.precioBonificado);
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
             }
@@ -129,6 +130,16 @@ export class ProductoComponent implements OnInit {
       nota: [null, Validators.maxLength(250)],
       imagen: null,
     });
+
+    this.form.get('oferta').valueChanges.subscribe(value => {
+      if (value) {
+        this.form.get('porcentajeBonificacionOferta').enable();
+        this.form.get('precioOferta').enable();
+      } else {
+        this.form.get('porcentajeBonificacionOferta').disable();
+        this.form.get('precioOferta').disable();
+      }
+    });
   }
 
   initializeForm() {
@@ -139,7 +150,7 @@ export class ProductoComponent implements OnInit {
       this.form.get('idProveedor').setValue(this.producto.idProveedor);
       this.form.get('idMedida').setValue(this.producto.idMedida);
       this.form.get('idRubro').setValue(this.producto.idRubro);
-
+      this.form.get('oferta').setValue(this.producto.oferta);
       this.producto.cantidadEnSucursales.forEach(
         ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
       );
@@ -177,7 +188,7 @@ export class ProductoComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       if (this.form.get('oferta').value && !this.hasImagen()) {
-        this.mensajeService.msg('Un producto en oferta debe poseer una imágen.', MensajeModalType.INFO);
+        this.mensajeService.msg('Para ser Oferta, debe tener imagen.', MensajeModalType.INFO);
       } else {
         if (this.producto) {
           this.submitProductoEditado();
@@ -248,7 +259,7 @@ export class ProductoComponent implements OnInit {
       oferta: formValues.oferta,
       porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
       porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
-      precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      // precioBonificado: this.calculosPrecio.precioBonificado.toString(),
       precioLista: this.calculosPrecio.precioLista.toString(),
       publico: formValues.publico,
       nota: formValues.nota,
@@ -292,7 +303,7 @@ export class ProductoComponent implements OnInit {
       oferta: formValues.oferta,
       porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
       porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
-      precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      // precioBonificado: this.calculosPrecio.precioBonificado.toString(),
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
       urlImagen: this.borrarImagen && !this.imageDataUrl ? null : this.producto.urlImagen,
@@ -301,6 +312,8 @@ export class ProductoComponent implements OnInit {
   }
 
   panelBeforeChange($event) {
+    const activeId = this.accordion.activeIds[0];
+
     if (this.loadingOverlayService.isActive()) {
       $event.preventDefault();
       return;
@@ -309,15 +322,16 @@ export class ProductoComponent implements OnInit {
       $event.preventDefault();
       return;
     }
+
     if (
-      ($event.panelId === 'general' && !this.mustGeneralPanelBeOpened()) ||
-      ($event.panelId === 'precios' && !this.mustPreciosPanelBeOpened()) ||
-      ($event.panelId === 'cantidades' && !this.mustCantidadesPanelBeOpened()) ||
-      ($event.panelId === 'propiedades' && !this.mustPropiedadesPanelBeOpened())
+      (activeId === 'general' && !this.isGeneralPanelValid()) ||
+      (activeId === 'precios' && !this.isPreciosPanelValid()) ||
+      (activeId === 'cantidades' && !this.isCantidadesPanelValid()) ||
+      (activeId === 'propiedades' && !this.isPropiedadesPanelValid())
     ) {
-        this.submitted = true;
-        $event.preventDefault();
-        return;
+      this.submitted = true;
+      $event.preventDefault();
+      return;
     }
   }
 
@@ -359,7 +373,7 @@ export class ProductoComponent implements OnInit {
     this.form.get('precioLista').setValue(this.formatBigForDisplay(this.calculosPrecio.precioLista));
     this.form.get('porcentajeBonificacionPrecio').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionPrecio));
     this.form.get('precioBonificado').setValue(this.formatBigForDisplay(this.calculosPrecio.precioBonificado));
-
+    // this.form.get('oferta').setValue(this.producto.oferta);
     this.form.get('porcentajeBonificacionOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionOferta));
     this.form.get('precioOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.precioOferta));
   }
@@ -375,28 +389,11 @@ export class ProductoComponent implements OnInit {
     this.refreshPreciosEnFormulario();
   }
 
-  ofertaChange() {
-    const oferta = this.form.get('oferta').value;
-    if (oferta) {
-      this.form.get('porcentajeBonificacionOferta').enable();
-      this.form.get('precioOferta').enable();
-    } else {
-      this.form.get('porcentajeBonificacionOferta').disable();
-      this.form.get('precioOferta').disable();
-    }
-  }
-
   hasImagen() {
     return !!(!this.borrarImagen && this.imageDataUrl);
   }
 
-  mustGeneralPanelBeOpened(): boolean {
-    return this.mustPreciosPanelBeOpened() &&
-      this.mustCantidadesPanelBeOpened() &&
-      this.mustPropiedadesPanelBeOpened();
-  }
-
-  mustPreciosPanelBeOpened(): boolean {
+  isGeneralPanelValid(): boolean {
     return this.form &&
       this.form.get('descripcion').valid &&
       this.form.get('idProveedor').valid &&
@@ -404,11 +401,10 @@ export class ProductoComponent implements OnInit {
       this.form.get('idRubro').valid;
   }
 
-  mustCantidadesPanelBeOpened(): boolean {
+  isPreciosPanelValid(): boolean {
     const oferta = this.form.get('oferta').value;
 
-    return this.mustPreciosPanelBeOpened() &&
-      this.form.get('precioCosto').valid &&
+    return this.form.get('precioCosto').valid &&
       this.form.get('gananciaPorcentaje').valid &&
       this.form.get('precioVentaPublico').valid &&
       this.form.get('ivaPorcentaje').valid &&
@@ -420,9 +416,12 @@ export class ProductoComponent implements OnInit {
     ;
   }
 
-  mustPropiedadesPanelBeOpened(): boolean {
-    return this.mustPreciosPanelBeOpened() && this.mustCantidadesPanelBeOpened() &&
-      this.form.get('cantidadEnSucursal').valid &&
+  isCantidadesPanelValid(): boolean {
+    return this.form.get('cantidadEnSucursal').valid &&
       this.form.get('bulto').valid;
+  }
+
+  isPropiedadesPanelValid(): boolean {
+    return this.form.get('nota').valid;
   }
 }

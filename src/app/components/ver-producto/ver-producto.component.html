@@ -47,6 +47,7 @@
       <tr><th scope="row">Rubro</th><td>{{ producto.nombreRubro }}</td></tr>
       <tr><th scope="row">Fecha última modificación</th><td>{{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</td></tr>
       <tr><th scope="row">Proveedor</th><td>{{ producto.razonSocialProveedor }}</td></tr>
+      <tr><th scope="row">Visibilidad</th><td>{{ producto.publico ? 'público' : 'privado' }}</td></tr>
       <tr><th scope="row">Fecha de Alta</th><td>{{ producto.fechaAlta | date:'dd/MM/yyyy' }}</td></tr>
       <tr><th scope="row">Fecha de Vencimiento</th><td>{{ producto.fechaVencimiento | date:'dd/MM/yyyy' }}</td></tr>
       <tr><th scope="row">Nota</th><td>{{ producto.nota }}</td></tr>

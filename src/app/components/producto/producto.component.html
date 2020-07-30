@@ -1,11 +1,12 @@
 <div class="app-producto my-3">
-  <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
-    <h1 class="h3 pr-2 mb-0 flex-fill">
-      <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+  <div class="row">
+    <h1 class="h3 col-md-10 text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'box-open']"></fa-icon> {{ title }}
+      <fa-icon [icon]="['fas', 'box-open']"></fa-icon>
+      {{ producto ? producto.descripcion : 'Nuevo producto' }}
     </h1>
   </div>
   <form [formGroup]="form" class="mt-2" *ngIf="form">
@@ -182,7 +183,7 @@
               </div>
               <div class="d-flex flex-row flex-wrap align-items-center">
                 <div class="form-check mr-2">
-                  <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta" (change)="ofertaChange()">
+                  <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta">
                   <label class="form-check-label" for="oferta">Oferta</label>
                 </div>
                 <div class="custom-error-message m-0" *ngIf="form.get('oferta').value && !hasImagen()">

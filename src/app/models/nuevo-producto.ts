@@ -14,7 +14,7 @@ export interface NuevoProducto {
   oferta: boolean;
   porcentajeBonificacionOferta: number|string;
   porcentajeBonificacionPrecio: number|string;
-  precioBonificado: number|string;
+  // precioBonificado: number|string;
   precioLista: number|string;
   ilimitado?: boolean;
   publico: boolean;
