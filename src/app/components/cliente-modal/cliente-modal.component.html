@@ -1,7 +1,7 @@
 <div class="modal-body d-flex flex-column p-2">
   <div class="input-group">
     <label class="sr-only" for="cmC">Buscar Cliente</label>
-    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="search" class="form-control" id="cmC" placeholder="Buscar Cliente..."
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" type="search" class="form-control" id="cmC" placeholder="Buscar Cliente..."
            (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
     <div class="input-group-append">
       <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
@@ -17,31 +17,7 @@
       <div *ngFor="let c of clientes; let f = first;" [class.border-top]="f" class="cliente form-check border-bottom p-2" [class.selected]="c && clienteSeleccionado && c.idCliente === clienteSeleccionado.idCliente">
         <input class="form-check-input" type="radio" name="c" id="c_{{ c.idCliente }}" [value]="c.idCliente" (focus)="select(c)">
         <label class="form-check-label d-block" for="c_{{ c.idCliente }}">
-          <span class="d-flex flex-column">
-            <span class="mr-2">
-              <span class="numero">#{{ c.nroCliente }}</span>
-            </span>
-            <span>
-              <div *ngIf="c.idFiscal">CUIT ó DNI: {{ c.idFiscal }}</div>
-              <strong>{{ c.nombreFiscal }}</strong><em *ngIf="c.nombreFantasia"> - {{ c.nombreFantasia }}</em>
-            </span>
-            <span *ngIf="c.ubicacionFacturacion">
-              Ubi. facturación: {{ helper.formatUbicacion(c.ubicacionFacturacion) }}
-            </span>
-            <span *ngIf="c.ubicacionEnvio">
-              Ubi. envio: {{ helper.formatUbicacion(c.ubicacionEnvio) }}
-            </span>
-            <span class="flex flex-column">
-              <span class="badge mr-2" [ngClass]="c.puedeComprarAPlazo?'badge-success':'badge-danger'">
-                Puede comprar a plazo
-                <fa-icon [icon]="['fas', 'check']" *ngIf="c.puedeComprarAPlazo"></fa-icon>
-                <fa-icon [icon]="['fas', 'times']" *ngIf="!c.puedeComprarAPlazo"></fa-icon>
-              </span>
-              <span class="badge badge-success" *ngIf="c.montoCompraMinima">
-                Compra mínima: {{ c.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
-              </span>
-            </span>
-          </span>
+          <app-cliente-info [cliente]="c"></app-cliente-info>
         </label>
       </div>
     </div>

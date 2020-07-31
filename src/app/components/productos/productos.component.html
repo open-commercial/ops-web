@@ -101,6 +101,11 @@
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
+        <li class="list-inline-item" *ngIf="puedeEliminarProducto()">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProducto(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
       </ul>
     </ng-template>
     <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"

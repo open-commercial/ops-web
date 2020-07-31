@@ -49,6 +49,11 @@ export class ProductosService {
     return this.http.put<void>(this.url + `?${qs}`, p);
   }
 
+  eliminarProductos(ids: number[]): Observable<void> {
+    const qs = 'idProducto=' + ids.join(',');
+    return this.http.delete<void>(this.url + `?${qs}`);
+  }
+
   /* Helpers */
   getCantidad(p: Producto) {
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(

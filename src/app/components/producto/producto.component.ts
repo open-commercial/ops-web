@@ -188,7 +188,7 @@ export class ProductoComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       if (this.form.get('oferta').value && !this.hasImagen()) {
-        this.mensajeService.msg('Para ser Oferta, debe tener imagen.', MensajeModalType.INFO);
+        this.mensajeService.msg('Para ser Oferta, debe tener imagen', MensajeModalType.INFO);
       } else {
         if (this.producto) {
           this.submitProductoEditado();

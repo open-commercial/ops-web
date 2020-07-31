@@ -96,6 +96,7 @@ import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtro
 import { ListaComponent } from './components/lista/lista.component';
 import { TransportistaComponent } from './components/transportista/transportista.component';
 import { PagosComponent } from './components/pagos/pagos.component';
+import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -149,6 +150,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ListaComponent,
     TransportistaComponent,
     PagosComponent,
+    ClienteInfoComponent,
   ],
   imports: [
     BrowserModule,
