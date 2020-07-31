@@ -245,10 +245,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
         this.productosService.eliminarProductos([producto.idProducto])
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
-            () => {
-              const idx: number = this.items.findIndex((p: Producto) => p.idProducto === producto.idProducto);
-              if (idx >= 0) { this.items.splice(idx, 1); }
-            },
+            () => location.reload(),
             err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
           )
         ;

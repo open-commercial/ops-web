@@ -356,10 +356,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
         this.facturasService.eliminarFactura(factura.idFactura)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
-            () => {
-              const idx: number = this.items.findIndex((f: FacturaVenta) => f.idFactura === factura.idFactura);
-              if (idx >= 0) { this.items.splice(idx, 1); }
-            },
+            () => location.reload(),
             err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
           )
         ;
