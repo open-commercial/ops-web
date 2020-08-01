@@ -1,7 +1,7 @@
 <div class="modal-body d-flex flex-column p-2">
   <div class="input-group">
     <label class="sr-only" for="cccmCcc">Buscar Cliente</label>
-    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" ngbAutofocus type="search" class="form-control" id="cccmCcc" placeholder="Buscar Cliente..."
+    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" type="search" class="form-control" id="cccmCcc" placeholder="Buscar Cliente..."
            (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
     <div class="input-group-append">
       <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
@@ -17,31 +17,7 @@
       <div *ngFor="let ccc of cccs; let f = first;" [class.border-top]="f" class="ccc form-check border-bottom p-2" [class.selected]="ccc && cccSeleccionado && ccc.idCuentaCorriente === cccSeleccionado.idCuentaCorriente">
         <input class="form-check-input" type="radio" name="ccc" id="ccc_{{ ccc.idCuentaCorriente }}" [value]="ccc.idCuentaCorriente" (focus)="select(ccc)">
         <label class="form-check-label d-block" for="ccc_{{ ccc.idCuentaCorriente }}">
-          <span class="d-flex flex-column">
-            <span class="mr-2">
-              <span class="numero">#{{ ccc.cliente.nroCliente }}</span>
-            </span>
-            <span>
-              <div *ngIf="ccc.cliente.idFiscal">CUIT ó DNI: {{ ccc.cliente.idFiscal }}</div>
-              <strong>{{ ccc.cliente.nombreFiscal }}</strong><em *ngIf="ccc.cliente.nombreFantasia"> - {{ ccc.cliente.nombreFantasia }}</em>
-            </span>
-            <span *ngIf="ccc.cliente.ubicacionFacturacion">
-              Ubi. facturación: {{ helper.formatUbicacion(ccc.cliente.ubicacionFacturacion) }}
-            </span>
-            <span *ngIf="ccc.cliente.ubicacionEnvio">
-              Ubi. envio: {{ helper.formatUbicacion(ccc.cliente.ubicacionEnvio) }}
-            </span>
-            <span class="flex flex-column">
-              <span class="badge mr-2" [ngClass]="ccc.cliente.puedeComprarAPlazo?'badge-success':'badge-danger'">
-                <fa-icon [icon]="['fas', 'check']" *ngIf="ccc.cliente.puedeComprarAPlazo"></fa-icon>
-                <fa-icon [icon]="['fas', 'times']" *ngIf="!ccc.cliente.puedeComprarAPlazo"></fa-icon>
-                {{ ccc.cliente.puedeComprarAPlazo ? 'P' : 'No p' }}uede comprar a plazo
-              </span>
-              <span class="badge badge-info" *ngIf="ccc.cliente.montoCompraMinima">
-                Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
-              </span>
-            </span>
-          </span>
+          <app-cliente-info [cliente]="ccc.cliente"></app-cliente-info>
         </label>
       </div>
     </div>

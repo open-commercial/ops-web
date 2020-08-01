@@ -21,7 +21,7 @@
           <span class="d-flex flex-row align-items-center">
             <span class="flex-fill d-flex flex-column p-2 info">
               <span class="mr-2 numero">#{{ p.nroProveedor }}</span>
-              <span class="mr-2">CUIT {{ p.idFiscal }}</span>
+              <span class="mr-2" *ngIf="p.idFiscal">CUIT {{ p.idFiscal }}</span>
               <span class="mr-2"><strong>{{ p.razonSocial }}</strong></span>
             </span>
           </span>

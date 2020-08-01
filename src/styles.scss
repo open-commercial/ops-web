@@ -4,6 +4,11 @@ $theme-colors: (
   "primary": $primary-color
 );
 
+$custom-file-text: (
+  en: "Browse",
+  es: "Elegir"
+);
+
 @import "~bootstrap/scss/bootstrap";
 @import "~@ng-select/ng-select/scss/default.theme";
 

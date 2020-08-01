@@ -20,6 +20,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-regular-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { faPortrait } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +46,7 @@ import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -94,6 +96,7 @@ import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtro
 import { ListaComponent } from './components/lista/lista.component';
 import { TransportistaComponent } from './components/transportista/transportista.component';
 import { PagosComponent } from './components/pagos/pagos.component';
+import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -147,6 +150,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ListaComponent,
     TransportistaComponent,
     PagosComponent,
+    ClienteInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -188,6 +192,7 @@ export class AppModule {
       faTrash,
       faCalendar,
       faEye,
+      faEyeSlash,
       faPortrait,
       faTimes,
       faCheck,
@@ -213,6 +218,7 @@ export class AppModule {
       faPen,
       faEnvelope,
       faLink,
+      faFolderOpen,
       faCopy,
       faArrowAltCircleDown,
     );
