@@ -40,43 +40,33 @@
     <fieldset class="mb-3">
       <legend class="border-bottom py-2 mb-0">
         Productos
-        <button type="button" class="btn btn-primary" (click)="addIdProductoConCantidad()">
-          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-        </button>
+        <app-busqueda-producto
+          (seleccion)="selectProducto($event)"
+          (directInputSeleccion)="directInputSeleccionProducto($event)"
+          [cantidadesActualesPedido]="cantidadesActualesPedido"
+        ></app-busqueda-producto>
       </legend>
-      <div class="custom-error-message" *ngIf="submitted && f.idProductoConCantidad.errors">
-        <div *ngIf="f.idProductoConCantidad.errors.required">Se requiere especificar el traspaso de al menos un (1) producto.</div>
-        <div *ngIf="f.idProductoConCantidad.errors.nonUniqueIdProducto">Se duplicaron productos.</div>
+      <div class="custom-error-message" *ngIf="submitted && f.productos.errors">
+        <div *ngIf="f.productos.errors.required">Se requiere especificar el traspaso de al menos un (1) producto.</div>
       </div>
-      <div  formArrayName="idProductoConCantidad">
-        <div class="d-flex flex-row align-items-center border-bottom pt-2 pb-0" *ngFor="let pc of idProductoConCantidad.controls; index as i" [formGroupName]="i.toString()">
+      <div  formArrayName="productos">
+        <div class="d-flex flex-row align-items-center border-bottom py-2" *ngFor="let p of productos.controls; index as i" [formGroupName]="i.toString()">
           <div class="row flex-fill">
-            <div class="col-md-6">
-              <app-producto-filtro #producto formControlName="idProducto"></app-producto-filtro>
-              <div class="custom-error-message error-message-fix" *ngIf="submitted && pc.get('idProducto').errors">
-                <div *ngIf="pc.get('idProducto').errors.required">Requerido</div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label [for]="'cantidad_' + i">Cantidad</label>
-                <input class="form-control" type="number" min="1" [id]="'cantidad_' + i" required formControlName="cantidad"
-                       [ngClass]="{ 'is-invalid': submitted && pc.get('cantidad').errors }">
-                <div class="invalid-feedback" *ngIf="submitted && pc.get('cantidad').errors">
-                  <div *ngIf="pc.get('cantidad').errors.required">Requerido</div>
-                  <div *ngIf="pc.get('cantidad').errors.min">Mínimo {{ pc.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
-                  <!--<div *ngIf="pc.get('cantidad').errors.insuficiente">
-                    La cantidad ingresada ({{ pc.get('cantidad').errors.insuficiente.cantATraspasar }})
-                    supera a la cantidad en la sucursal ({{ pc.get('cantidad').errors.insuficiente.cantEnSucursal }})
-                  </div>-->
-                </div>
-              </div>
-            </div>
           </div>
           <div class="text-right pl-2">
-            <button type="button" class="btn btn-primary" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" (click)="removeIdProductoConCantidad(i)">
-              <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-            </button>
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left" (click)="editarCantidad(i)">
+                  <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+                </button>
+              </li>
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" (click)="removeProductoForm(i)">
+                  <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                </button>
+              </li>
+            </ul>
+
           </div>
         </div>
       </div>
