@@ -1,11 +1,306 @@
 <div class="app-producto my-3">
-  <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
-    <h1 class="h3 pr-2 mb-0 flex-fill">
-      <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+  <div class="row">
+    <h1 class="h3 col-md-10 text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> {{ title }}
+      <fa-icon [icon]="['fas', 'box-open']"></fa-icon>
+      {{ producto ? producto.descripcion : 'Nuevo producto' }}
     </h1>
   </div>
+  <form [formGroup]="form" class="mt-2" *ngIf="form">
+    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="general" (panelChange)="panelBeforeChange($event)">
+      <ngb-panel id="general" title="General">
+        <ng-template ngbPanelContent>
+          <div class="row">
+            <div class="col-md-6 col-lg-4">
+              <label class="sr-only" for="imagen">Imágen</label>
+              <div class="d-flex flex-column h-100">
+                <div class="mb-2 border rounded preview">
+                  <img [src]="imageDataUrl ? imageDataUrl : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'"
+                       alt="Imagen del producto">
+                </div>
+                <input type="file" class="d-none" accept="image/*" id="imagen" lang="es" (change)="imageChange($event)" #imageFile>
+                <div class="text-center">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Buscar Imagen" triggers="mouseenter:mouseleave"
+                              (click)="imageFile.click()">
+                        <fa-icon [icon]="['fas', 'folder-open']"></fa-icon>
+                      </button>
+                    </li>
+                    <li class="list-inline-item">
+                      <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Quitar Imagen" triggers="mouseenter:mouseleave"
+                              (click)="clearFile(imageFile)">
+                        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-8">
+              <div class="form-group">
+                <label for="codigo">Código</label>
+                <input type="text" class="form-control" id="codigo" formControlName="codigo">
+              </div>
+              <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" class="form-control" id="descripcion" required formControlName="descripcion"
+                       [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }">
+                <div class="invalid-feedback" *ngIf="submitted && f.descripcion.errors">
+                  <div *ngIf="f.descripcion.errors.required">Requerido</div>
+                </div>
+              </div>
+              <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
+              <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProveedor.errors">
+                <div *ngIf="f.idProveedor.errors.required">Requerido</div>
+              </div>
+              <div class="form-group">
+                <label for="medida">Medida</label>
+                <select class="form-control" id="medida" formControlName="idMedida"
+                        [ngClass]="{ 'is-invalid': submitted && f.idMedida.errors }">
+                  <option *ngFor="let m of medidas" [value]="m.idMedida">{{ m.nombre }}</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="submitted && f.idMedida.errors">
+                  <div *ngIf="f.idMedida.errors.required">Requerido</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="rubro">Rubro</label>
+                <select class="form-control" id="rubro" formControlName="idRubro"
+                        [ngClass]="{ 'is-invalid': submitted && f.idRubro.errors }">
+                  <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="submitted && f.idRubro.errors">
+                  <div *ngIf="f.idRubro.errors.required">Requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="precios" title="Precios">
+        <ng-template ngbPanelContent>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="precioCosto">Precio de Costo ($)</label>
+                <input type="number" min="0" class="form-control text-right" id="precioCosto" required formControlName="precioCosto"
+                       [ngClass]="{ 'is-invalid': submitted && f.precioCosto.errors }"
+                       (focusout)="calculosFieldChange('precioCosto', $event)"
+                       (keyup.enter)="calculosFieldChange('precioCosto', $event)">
+                <div class="invalid-feedback" *ngIf="submitted && f.precioCosto.errors">
+                  <div *ngIf="f.precioCosto.errors.required">Requerido</div>
+                  <div *ngIf="f.precioCosto.errors.min">Mínimo {{ f.precioCosto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="gananciaPorcentaje">Ganancia (%)</label>
+                <div class="input-group mb-0">
+                  <input type="number" min="0" class="form-control text-right" id="gananciaPorcentaje" required formControlName="gananciaPorcentaje"
+                         [ngClass]="{ 'is-invalid': submitted && f.gananciaPorcentaje.errors }"
+                         (focusout)="calculosFieldChange('gananciaPorcentaje', $event)"
+                         (keyup.enter)="calculosFieldChange('gananciaPorcentaje', $event)">
+                  <div class="input-group-append">
+                    <span class="input-group-text">$ {{ formatBigForDisplay(calculosPrecio.gananciaNeto) }}</span>
+                  </div>
+                </div>
+                <div class="custom-error-message" *ngIf="submitted && f.gananciaPorcentaje.errors">
+                  <div *ngIf="f.gananciaPorcentaje.errors.required">Requerido</div>
+                  <div *ngIf="f.gananciaPorcentaje.errors.min">Mínimo {{ f.gananciaPorcentaje.errors.min.min | number:'1.0-2' }} %</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="precioVentaPublico">Precio Venta Público ($)</label>
+                <input type="number" min="0" class="form-control text-right" id="precioVentaPublico" required formControlName="precioVentaPublico"
+                       [ngClass]="{ 'is-invalid': submitted && f.precioVentaPublico.errors }"
+                       (focusout)="calculosFieldChange('precioVentaPublico', $event)"
+                       (keyup.enter)="calculosFieldChange('precioVentaPublico', $event)">
+                <div class="invalid-feedback" *ngIf="submitted && f.precioVentaPublico.errors">
+                  <div *ngIf="f.precioVentaPublico.errors.required">Requerido</div>
+                  <div *ngIf="f.precioVentaPublico.errors.min">Mínimo {{ f.precioVentaPublico.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="ivaPorcentaje">I.V.A. (%)</label>
+                <div class="input-group mb-0">
+                  <select class="form-control" id="ivaPorcentaje" required formControlName="ivaPorcentaje"
+                          [ngClass]="{ 'is-invalid': submitted && f.ivaPorcentaje.errors }"
+                          (change)="calculosFieldChange('ivaPorcentaje', $event)">
+                    <option *ngFor="let i of ivas" [value]="i">{{ i }}</option>
+                  </select>
+                  <div class="input-group-append">
+                    <span class="input-group-text">$ {{ formatBigForDisplay(calculosPrecio.ivaNeto) }}</span>
+                  </div>
+                </div>
+                <div class="custom-error-message" *ngIf="submitted && f.ivaPorcentaje.errors">
+                  <div *ngIf="f.ivaPorcentaje.errors.required">Requerido</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="precioLista">Precio de Lista ($)</label>
+                <input type="number" min="0" class="form-control text-right" id="precioLista" required formControlName="precioLista"
+                       [ngClass]="{ 'is-invalid': submitted && f.precioLista.errors }"
+                       (focusout)="calculosFieldChange('precioLista', $event)"
+                       (keyup.enter)="calculosFieldChange('precioLista', $event)">
+                <div class="invalid-feedback" *ngIf="submitted && f.precioLista.errors">
+                  <div *ngIf="f.precioLista.errors.required">Requerido</div>
+                  <div *ngIf="f.precioLista.errors.min">Mínimo {{ f.precioLista.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="porcentajeBonificacionPrecio">Porcentaje Bonif. (%)</label>
+                    <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionPrecio" required formControlName="porcentajeBonificacionPrecio"
+                           [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionPrecio.errors }"
+                           (focusout)="calculosFieldChange('porcentajeBonificacionPrecio', $event)"
+                           (keyup.enter)="calculosFieldChange('porcentajeBonificacionPrecio', $event)">
+                    <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionPrecio.errors">
+                      <div *ngIf="f.porcentajeBonificacionPrecio.errors.required">Requerido</div>
+                      <div *ngIf="f.porcentajeBonificacionPrecio.errors.min">Mínimo {{ f.porcentajeBonificacionPrecio.errors.min.min  | number:'1.0-2' }} %</div>
+                      <div *ngIf="f.porcentajeBonificacionPrecio.errors.max">Máximo {{ f.porcentajeBonificacionPrecio.errors.max.max  | number:'1.0-2' }} %</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="precioBonificado">Precio Bonif. ($)</label>
+                    <input type="number" min="0" class="form-control text-right" id="precioBonificado" required formControlName="precioBonificado"
+                           [ngClass]="{ 'is-invalid': submitted && f.precioBonificado.errors }"
+                           (focusout)="calculosFieldChange('precioBonificado', $event)"
+                           (keyup.enter)="calculosFieldChange('precioBonificado', $event)">
+                    <div class="invalid-feedback" *ngIf="submitted && f.precioBonificado.errors">
+                      <div *ngIf="f.precioBonificado.errors.required">Requerido</div>
+                      <div *ngIf="f.precioBonificado.errors.min">Mínimo {{ f.precioBonificado.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-row flex-wrap align-items-center">
+                <div class="form-check mr-2">
+                  <input class="form-check-input" type="checkbox" id="oferta" formControlName="oferta">
+                  <label class="form-check-label" for="oferta">Oferta</label>
+                </div>
+                <div class="custom-error-message m-0" *ngIf="form.get('oferta').value && !hasImagen()">
+                  Para ser Oferta, debe tener imagen
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label for="porcentajeBonificacionOferta">Porcentaje Oferta (%)</label>
+                  <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
+                         [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }"
+                         (focusout)="calculosFieldChange('porcentajeBonificacionOferta', $event)"
+                         (keyup.enter)="calculosFieldChange('porcentajeBonificacionOferta', $event)">
+                  <div class="invalid-feedback" *ngIf="submitted && f.porcentajeBonificacionOferta.errors">
+                    <div *ngIf="f.porcentajeBonificacionOferta.errors.required">Requerido</div>
+                    <div *ngIf="f.porcentajeBonificacionOferta.errors.min">Mínimo {{ f.porcentajeBonificacionOferta.errors.min.min  | number:'1.0-2' }} %</div>
+                    <div *ngIf="f.porcentajeBonificacionOferta.errors.max">Máximo {{ f.porcentajeBonificacionOferta.errors.max.max  | number:'1.0-2' }} %</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="precioOferta">Precio Oferta ($)</label>
+                  <input type="number" min="0" class="form-control text-right" id="precioOferta" required formControlName="precioOferta"
+                         [ngClass]="{ 'is-invalid': submitted && f.precioOferta.errors }"
+                         (focusout)="calculosFieldChange('precioOferta', $event)"
+                         (keyup.enter)="calculosFieldChange('precioOferta', $event)">
+                  <div class="invalid-feedback" *ngIf="submitted && f.precioOferta.errors">
+                    <div *ngIf="f.precioOferta.errors.required">Requerido</div>
+                    <div *ngIf="f.precioOferta.errors.min">Mínimo {{ f.precioOferta.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="cantidades" title="Cantidades">
+        <ng-template ngbPanelContent>
+          <label>Cantidad en sucursales</label>
+          <div formArrayName="cantidadEnSucursal">
+            <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
+              <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
+                </div>
+                <input type="number" min="0" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
+                       [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
+              </div>
+              <div class="custom-error-message" *ngIf="submitted && ces.get('cantidad').errors">
+                <div *ngIf="ces.get('cantidad').errors.required">Requerido</div>
+                <div *ngIf="ces.get('cantidad').errors.min">Mínimo {{ ces.get('cantidad').errors.min.min | number:'1.0-2' }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="bulto">Venta por cantidad</label>
+            <input type="number" min="1" class="form-control text-right" id="bulto" required formControlName="bulto"
+                   [ngClass]="{ 'is-invalid': submitted && f.bulto.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.bulto.errors">
+              <div *ngIf="f.bulto.errors.required">Requerido</div>
+              <div *ngIf="f.bulto.errors.min">Mínimo {{ f.bulto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+      <ngb-panel id="propiedades" title="Propiedades">
+        <ng-template ngbPanelContent>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="visibilidad">Visibilidad</label>
+                <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="publico">
+                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                    <input ngbButton type="radio" [value]="true"> Público
+                  </label>
+                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                    <input ngbButton type="radio" [value]="false"> Privado
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fechaVencimiento">Fecha de vencimiento</label>
+                <div class="input-group">
+                  <input class="form-control" readonly id="fechaVencimiento" formControlName="fechaVencimiento"
+                         [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
+                         [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
+                      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                    </button>
+                    <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+                      <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3" *ngIf="producto">
+            <div class="col-md-6 mb-2">Última Modificación: {{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</div>
+            <div class="col-md-6">Fecha de Alta: {{ producto.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+          <div class="form-group">
+            <label for="nota">Nota</label>
+            <textarea class="form-control" maxlength="250" id="nota" formControlName="nota" rows="5" [ngClass]="{ 'is-invalid': submitted && f.nota.errors }"></textarea>
+            <div class="invalid-feedback" *ngIf="submitted && f.nota.errors">
+              <div *ngIf="f.nota.errors.maxlength">Máximo {{ f.nota.errors.maxlength.requiredLength }} caracteres</div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+    <div class="text-right my-2">
+      <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!form.valid">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
+    </div>
+  </form>
 </div>

@@ -5,9 +5,9 @@ export enum StorageKeys {
   ID_SUCURSAL = 'idSucursal',
   APP_VERSION = 'appVersion',
   TOKEN = 'token',
-  NUEVO_PEDIDO = 'nuevoPedido',
-  EDITAR_PEDIDO = 'editarPedido',
-  FACTURAR_PEDIDO = 'facturarPedido'
+  PEDIDO_NUEVO = 'nuevoPedido',
+  PEDIDO_EDITAR = 'editarPedido',
+  PEDIDO_FACTURAR = 'facturarPedido',
 }
 
 @Injectable({

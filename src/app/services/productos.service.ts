@@ -10,6 +10,7 @@ import { ProductosParaVerificarStock } from '../models/productos-para-verificar-
 import { ProductoFaltante } from '../models/producto-faltante';
 import { CantidadEnSucursal } from '../models/cantidad-en-sucursal';
 import { SucursalesService } from './sucursales.service';
+import { NuevoProducto } from '../models/nuevo-producto';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,21 @@ export class ProductosService {
     return this.http.post<ProductoFaltante[]>(this.url + '/disponibilidad-stock', ppvs);
   }
 
+  crearProducto(np: NuevoProducto, idMedida: number, idRubro: number, idProveedor: number): Observable<Producto> {
+    const qs = HelperService.getQueryString({ idMedida, idRubro, idProveedor });
+    return this.http.post<Producto>(this.url + `?${qs}`, np);
+  }
+
+  actualizarProducto(p: Producto, idMedida: number, idRubro: number, idProveedor: number): Observable<void> {
+    const qs = HelperService.getQueryString({ idMedida, idRubro, idProveedor });
+    return this.http.put<void>(this.url + `?${qs}`, p);
+  }
+
+  eliminarProductos(ids: number[]): Observable<void> {
+    const qs = 'idProducto=' + ids.join(',');
+    return this.http.delete<void>(this.url + `?${qs}`);
+  }
+
   /* Helpers */
   getCantidad(p: Producto) {
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(
@@ -56,4 +72,5 @@ export class ProductosService {
   estaBonificado(p: Producto) {
     return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
+
 }

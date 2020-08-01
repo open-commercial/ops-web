@@ -8,7 +8,7 @@ import { Rubro } from '../models/rubro';
   providedIn: 'root'
 })
 export class RubrosService {
-  url = environment.apiUrl + '/api/v1/rubros/';
+  url = environment.apiUrl + '/api/v1/rubros';
 
   constructor(private http: HttpClient) { }
 

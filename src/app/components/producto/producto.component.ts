@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductosService } from '../../services/productos.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
@@ -6,7 +6,24 @@ import { finalize } from 'rxjs/operators';
 import { Producto } from '../../models/producto';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { combineLatest, Observable } from 'rxjs';
+import { MedidaService } from '../../services/medida.service';
+import { RubrosService } from '../../services/rubros.service';
+import { Medida } from '../../models/medida';
+import { Rubro } from '../../models/rubro';
+import { NgbAccordion, NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
+import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from '../../models/sucursal';
+import { NuevoProducto } from '../../models/nuevo-producto';
+import { HelperService } from '../../services/helper.service';
+import Big from 'big.js';
+import { CalculosPrecio } from '../../models/calculos-precio';
+import { formatNumber, Location } from '@angular/common';
+import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
+import * as moment from 'moment';
+
+Big.DP = 15;
 
 @Component({
   selector: 'app-producto',
@@ -15,46 +32,396 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ProductoComponent implements OnInit {
   title = '';
+  medidas: Medida[] = [];
+  rubros: Rubro[] = [];
+  sucursales: Sucursal[] = [];
+  ivas = [0, 10.5, 21];
+
   producto: Producto;
   form: FormGroup;
+  submitted = false;
 
-  constructor(private route: ActivatedRoute,
+  calculosPrecio = new CalculosPrecio();
+
+  @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+  imageDataUrl = '';
+
+  // esta variable solo es relevante en la edición
+  borrarImagen = false;
+
+  constructor(accordionConfig: NgbAccordionConfig,
+              private route: ActivatedRoute,
               private router: Router,
+              private medidaService: MedidaService,
+              private rubrosService: RubrosService,
               private productosService: ProductosService,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private sucursalesService: SucursalesService,
+              private location: Location) {
+    accordionConfig.type = 'dark';
+  }
 
   ngOnInit() {
+    this.createForm();
+    const obvs: Observable<any>[] = [
+      this.medidaService.getMedidas(),
+      this.rubrosService.getRubros(),
+      this.sucursalesService.getSucursales(),
+    ];
+
     if (this.route.snapshot.paramMap.has('id')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.loadingOverlayService.activate();
-      this.productosService.getProducto(id)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (p: Producto) => {
-            this.producto = p;
-            this.title = 'Producto ' + this.producto.codigo;
-          },
-          err => {
-            this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            this.volverAlListado();
-          }
-        )
-      ;
-    } else {
-      this.title = 'Nuevo Producto';
+      obvs.push(this.productosService.getProducto(id));
     }
+
+    this.loadingOverlayService.activate();
+    combineLatest(obvs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
+          this.medidas = recursos[0];
+          this.rubros = recursos[1];
+          this.sucursales = recursos[2];
+          if (recursos[3]) {
+            this.producto = recursos[3];
+            this.title = this.producto.descripcion;
+            this.calculosPrecio = CalculosPrecio.getInstance(this.producto);
+            // console.log(this.calculosPrecio.precioBonificado);
+            if (this.producto.urlImagen) {
+              this.imageDataUrl = this.producto.urlImagen;
+            }
+          } else {
+            this.title = 'Nuevo Producto';
+          }
+          this.initializeForm();
+        },
+        err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.router.navigate(['/productos']);
+        }
+      )
+    ;
   }
 
   createForm() {
     this.form = this.fb.group({
-      codigo: ['', Validators.required],
+      idProducto: null,
+      codigo: '',
       descripcion: ['', Validators.required],
+      idProveedor: [null, Validators.required],
+      idMedida: [null, Validators.required],
+      idRubro: [null, Validators.required],
+      precioCosto: [0, [Validators.required, Validators.min(0)]],
+      gananciaPorcentaje: [0, [Validators.required, Validators.min(0)]],
+      precioVentaPublico: [0, [Validators.required, Validators.min(0)]],
+      ivaPorcentaje: [0, Validators.required],
+      precioLista: [0, [Validators.required, Validators.min(0)]],
+      porcentajeBonificacionPrecio: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      precioBonificado: [0, [Validators.required, Validators.min(0)]],
+      oferta: false,
+      porcentajeBonificacionOferta: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0), Validators.max(100)]],
+      precioOferta: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0)]],
+      cantidadEnSucursal: this.fb.array([]),
+      bulto: [1, [Validators.required, Validators.min(1)]],
+      publico: false,
+      fechaVencimiento: null,
+      nota: [null, Validators.maxLength(250)],
+      imagen: null,
+    });
+
+    this.form.get('oferta').valueChanges.subscribe(value => {
+      if (value) {
+        this.form.get('porcentajeBonificacionOferta').enable();
+        this.form.get('precioOferta').enable();
+      } else {
+        this.form.get('porcentajeBonificacionOferta').disable();
+        this.form.get('precioOferta').disable();
+      }
     });
   }
 
+  initializeForm() {
+    if (this.producto) {
+      this.form.get('idProducto').setValue(this.producto.idProducto);
+      this.form.get('codigo').setValue(this.producto.codigo);
+      this.form.get('descripcion').setValue(this.producto.descripcion);
+      this.form.get('idProveedor').setValue(this.producto.idProveedor);
+      this.form.get('idMedida').setValue(this.producto.idMedida);
+      this.form.get('idRubro').setValue(this.producto.idRubro);
+      this.form.get('oferta').setValue(this.producto.oferta);
+      this.producto.cantidadEnSucursales.forEach(
+        ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
+      );
+      this.form.get('bulto').setValue(this.producto.bulto);
+      this.form.get('publico').setValue(this.producto.publico);
+
+      if (this.producto.fechaVencimiento) {
+        const fv = moment(this.producto.fechaVencimiento);
+        this.form.get('fechaVencimiento').setValue({ year: fv.year(), month: fv.month() + 1, day: fv.date()});
+      }
+
+      this.form.get('nota').setValue(this.producto.nota);
+    } else {
+      this.sucursales.forEach((s: Sucursal) => this.addCantidadEnSucursal(s.idSucursal, s.nombre));
+    }
+
+    this.refreshPreciosEnFormulario();
+  }
+
+  get cantidadEnSucursal() {
+    return this.form.get('cantidadEnSucursal') as FormArray;
+  }
+
+  addCantidadEnSucursal(idSucursal: number, nombreSucursal: string, cantidad: number = 0) {
+    this.cantidadEnSucursal.push(this.fb.group({
+      idSucursal: [idSucursal, Validators.required],
+      nombreSucursal: [nombreSucursal, Validators.required],
+      cantidad: [cantidad, [Validators.required, Validators.min(0)]],
+    }));
+  }
+
+  get f() { return this.form.controls; }
+
+  submit() {
+    this.submitted = true;
+    if (this.form.valid) {
+      if (this.form.get('oferta').value && !this.hasImagen()) {
+        this.mensajeService.msg('Para ser Oferta, debe tener imagen', MensajeModalType.INFO);
+      } else {
+        if (this.producto) {
+          this.submitProductoEditado();
+        } else {
+          this.submitProductoNuevo();
+        }
+      }
+    }
+  }
+
+  submitProductoNuevo() {
+    const np = this.getNuevoProductoModel();
+    const idMedida = this.form.get('idMedida').value;
+    const idRubro = this.form.get('idRubro').value;
+    const idProveedor = this.form.get('idProveedor').value;
+    this.loadingOverlayService.activate();
+    this.productosService.crearProducto(np, idMedida, idRubro, idProveedor)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        () => {
+          this.mensajeService.msg('Producto creado correctamente', MensajeModalType.INFO);
+          this.location.back();
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
+  }
+
+  submitProductoEditado() {
+    const p = this.getProductoModel();
+    const idMedida = this.form.get('idMedida').value;
+    const idRubro = this.form.get('idRubro').value;
+    const idProveedor = this.form.get('idProveedor').value;
+    this.loadingOverlayService.activate();
+    this.productosService.actualizarProducto(p, idMedida, idRubro, idProveedor)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        () => {
+          this.mensajeService.msg('Producto actualizado correctamente', MensajeModalType.INFO);
+          this.location.back();
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      );
+  }
+
+  /**
+   * Para el alta
+   */
+  getNuevoProductoModel(): NuevoProducto {
+    const formValues = this.form.value;
+
+    const auxCes = {};
+    if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
+      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.idSucursal] = ces.cantidad);
+    }
+
+    return {
+      codigo: formValues.codigo,
+      descripcion: formValues.descripcion,
+      cantidadEnSucursal: auxCes,
+      bulto: formValues.bulto,
+      precioCosto: this.calculosPrecio.precioCosto.toString(),
+      gananciaPorcentaje: this.calculosPrecio.gananciaPorcentaje.toString(),
+      gananciaNeto: this.calculosPrecio.gananciaNeto.toString(),
+      precioVentaPublico: this.calculosPrecio.precioVentaPublico.toString(),
+      ivaPorcentaje: this.calculosPrecio.ivaPorcentaje.toString(),
+      ivaNeto: this.calculosPrecio.ivaNeto.toString(),
+      oferta: formValues.oferta,
+      porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
+      porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
+      // precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      precioLista: this.calculosPrecio.precioLista.toString(),
+      publico: formValues.publico,
+      nota: formValues.nota,
+      fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
+      imagen: formValues.imagen,
+    };
+  }
+
+  /**
+   * Para la edicion
+   */
+  getProductoModel(): Producto {
+    const formValues = this.form.value;
+
+    const auxCes: CantidadEnSucursal[] = [];
+    if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
+      formValues.cantidadEnSucursal.forEach(ces => {
+        const aux = this.producto.cantidadEnSucursales.filter((v: CantidadEnSucursal) => v.idSucursal === ces.idSucursal);
+        if (aux.length) {
+          const nCes = aux[0];
+          nCes.cantidad = ces.cantidad;
+          auxCes.push(nCes);
+        }
+      });
+    }
+
+    return {
+      idProducto: formValues.idProducto,
+      codigo: formValues.codigo,
+      descripcion: formValues.descripcion,
+      cantidadEnSucursales: auxCes,
+      bulto: formValues.bulto,
+      precioCosto: this.calculosPrecio.precioCosto.toString(),
+      gananciaPorcentaje: this.calculosPrecio.gananciaPorcentaje.toString(),
+      gananciaNeto: this.calculosPrecio.gananciaNeto.toString(),
+      precioVentaPublico: this.calculosPrecio.precioVentaPublico.toString(),
+      ivaPorcentaje: this.calculosPrecio.ivaPorcentaje.toString(),
+      ivaNeto: this.calculosPrecio.ivaNeto.toString(),
+      precioLista: this.calculosPrecio.precioLista.toString(),
+      publico: formValues.publico,
+      oferta: formValues.oferta,
+      porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
+      porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
+      // precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      nota: formValues.nota,
+      fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
+      urlImagen: this.borrarImagen && !this.imageDataUrl ? null : this.producto.urlImagen,
+      imagen: formValues.imagen,
+    };
+  }
+
+  panelBeforeChange($event) {
+    const activeId = this.accordion.activeIds[0];
+
+    if (this.loadingOverlayService.isActive()) {
+      $event.preventDefault();
+      return;
+    }
+    if (this.accordion.activeIds.indexOf($event.panelId) >= 0) {
+      $event.preventDefault();
+      return;
+    }
+
+    if (
+      (activeId === 'general' && !this.isGeneralPanelValid()) ||
+      (activeId === 'precios' && !this.isPreciosPanelValid()) ||
+      (activeId === 'cantidades' && !this.isCantidadesPanelValid()) ||
+      (activeId === 'propiedades' && !this.isPropiedadesPanelValid())
+    ) {
+      this.submitted = true;
+      $event.preventDefault();
+      return;
+    }
+  }
+
   volverAlListado() {
-    this.router.navigate(['/productos']);
+    this.location.back();
+  }
+
+  imageChange($event) {
+    const file = $event.target.files[0];
+    const readerBuffer = new FileReader();
+    const readerDataUrl = new FileReader();
+
+    readerBuffer.addEventListener('load', () => {
+      this.borrarImagen = false;
+      const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
+      this.form.get('imagen').setValue(Array.from(arr));
+    });
+
+    readerDataUrl.addEventListener('load', () => {
+      this.imageDataUrl = readerDataUrl.result as string;
+    });
+
+    readerBuffer.readAsArrayBuffer(file);
+    readerDataUrl.readAsDataURL(file);
+  }
+
+  clearFile(file) {
+    file.value = null;
+    this.imageDataUrl = '';
+    this.borrarImagen = true;
+    this.form.get('imagen').setValue(null);
+  }
+
+  refreshPreciosEnFormulario() {
+    this.form.get('precioCosto').setValue(this.formatBigForDisplay(this.calculosPrecio.precioCosto));
+    this.form.get('gananciaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.gananciaPorcentaje));
+    this.form.get('precioVentaPublico').setValue(this.formatBigForDisplay(this.calculosPrecio.precioVentaPublico));
+    this.form.get('ivaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.ivaPorcentaje));
+    this.form.get('precioLista').setValue(this.formatBigForDisplay(this.calculosPrecio.precioLista));
+    this.form.get('porcentajeBonificacionPrecio').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionPrecio));
+    this.form.get('precioBonificado').setValue(this.formatBigForDisplay(this.calculosPrecio.precioBonificado));
+    // this.form.get('oferta').setValue(this.producto.oferta);
+    this.form.get('porcentajeBonificacionOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionOferta));
+    this.form.get('precioOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.precioOferta));
+  }
+
+  formatBigForDisplay(n: Big) {
+    return formatNumber(parseFloat(n.toFixed(2)), 'en-US', '1.0-2').replace(',', '');
+  }
+
+  calculosFieldChange(fieldName: string, $event) {
+    const v = $event.target.value;
+    const value = parseFloat(v);
+    this.calculosPrecio[fieldName] = isNaN(value) ? new Big(0) : new Big(v);
+    this.refreshPreciosEnFormulario();
+  }
+
+  hasImagen() {
+    return !!(!this.borrarImagen && this.imageDataUrl);
+  }
+
+  isGeneralPanelValid(): boolean {
+    return this.form &&
+      this.form.get('descripcion').valid &&
+      this.form.get('idProveedor').valid &&
+      this.form.get('idMedida').valid &&
+      this.form.get('idRubro').valid;
+  }
+
+  isPreciosPanelValid(): boolean {
+    const oferta = this.form.get('oferta').value;
+
+    return this.form.get('precioCosto').valid &&
+      this.form.get('gananciaPorcentaje').valid &&
+      this.form.get('precioVentaPublico').valid &&
+      this.form.get('ivaPorcentaje').valid &&
+      this.form.get('precioLista').valid &&
+      this.form.get('porcentajeBonificacionPrecio').valid &&
+      this.form.get('precioBonificado').valid &&
+      (!oferta || this.form.get('porcentajeBonificacionOferta').valid) &&
+      (!oferta || this.form.get('precioOferta').valid)
+    ;
+  }
+
+  isCantidadesPanelValid(): boolean {
+    return this.form.get('cantidadEnSucursal').valid &&
+      this.form.get('bulto').valid;
+  }
+
+  isPropiedadesPanelValid(): boolean {
+    return this.form.get('nota').valid;
   }
 }

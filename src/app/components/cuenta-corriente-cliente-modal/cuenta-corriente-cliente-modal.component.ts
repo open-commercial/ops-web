@@ -4,7 +4,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
-import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-cuenta-corriente-cliente-modal',
@@ -17,7 +16,6 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   loading = false;
   busqueda = '';
   cccSeleccionado: CuentaCorrienteCliente = null;
-  helper = HelperService;
 
   page = 0;
   totalElements = 0;

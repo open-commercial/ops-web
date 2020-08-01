@@ -20,6 +20,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-regular-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { faPortrait } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +46,7 @@ import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
@@ -99,6 +101,7 @@ import { TraspasosComponent } from './components/traspasos/traspasos.component';
 import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-home.component';
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
+import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -156,6 +159,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     TraspasosHomeComponent,
     VerTraspasoComponent,
     TraspasoComponent,
+    ClienteInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -197,6 +201,7 @@ export class AppModule {
       faTrash,
       faCalendar,
       faEye,
+      faEyeSlash,
       faPortrait,
       faTimes,
       faCheck,
@@ -222,6 +227,7 @@ export class AppModule {
       faPen,
       faEnvelope,
       faLink,
+      faFolderOpen,
       faCopy,
       faArrowAltCircleDown,
       faExchangeAlt,

@@ -42,7 +42,7 @@ export class FacturaVentaComponent implements OnInit {
 
   helper = HelperService;
 
-  localStorageKey = StorageKeys.FACTURAR_PEDIDO;
+  localStorageKey = StorageKeys.PEDIDO_FACTURAR;
   tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
 
   tiposDeComprobanteLabels = [
@@ -132,7 +132,7 @@ export class FacturaVentaComponent implements OnInit {
 
   checkAndLoadDataForForm() {
     if (this.pedido) {
-      this.localStorageKey = StorageKeys.FACTURAR_PEDIDO;
+      this.localStorageKey = StorageKeys.PEDIDO_FACTURAR;
       let data = this.storageService.getItem(this.localStorageKey);
       if (!data || !data.idPedido || data.idPedido !== this.pedido.idPedido) {
         data = this.getDefaultEmptyDataForForm();

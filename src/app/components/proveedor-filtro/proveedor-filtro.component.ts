@@ -1,5 +1,5 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Proveedor } from '../../models/proveedor';
 import { finalize } from 'rxjs/operators';
@@ -15,10 +15,15 @@ import { ProveedorModalComponent } from '../proveedor-modal/proveedor-modal.comp
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => ProveedorFiltroComponent),
       multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ProveedorFiltroComponent),
+      multi: true,
     }
   ]
 })
-export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor {
+export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor, Validator {
   loading = false;
   proveedor: Proveedor = null;
 
@@ -80,5 +85,9 @@ export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor {
 
   getDisplayValue() {
     return this.proveedor ? this.proveedor.razonSocial : '';
+  }
+
+  public validate(c: FormControl) {
+    return c.value ? null : { required: true };
   }
 }

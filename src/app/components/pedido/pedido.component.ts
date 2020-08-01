@@ -84,7 +84,7 @@ export class PedidoComponent implements OnInit {
   };
 
   cccReadOnly = false;
-  localStorageKey = StorageKeys.NUEVO_PEDIDO;
+  localStorageKey = StorageKeys.PEDIDO_NUEVO;
 
   cantidadesInicialesPedido: { [idProducto: number]: number } = {};
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
@@ -144,14 +144,14 @@ export class PedidoComponent implements OnInit {
       if (this.action === Action.EDITAR) {
         const id = Number(this.route.snapshot.paramMap.get('id'));
         this.title = 'Editar Pedido';
-        this.localStorageKey = StorageKeys.EDITAR_PEDIDO;
+        this.localStorageKey = StorageKeys.PEDIDO_EDITAR;
         this.cccReadOnly = true;
         this.getDatosParaEditarOClonar(id);
       }
 
       if (this.action === Action.CLONAR) {
         const idToClone = Number(this.route.snapshot.queryParamMap.get('idToClone'));
-        this.localStorageKey = StorageKeys.NUEVO_PEDIDO;
+        this.localStorageKey = StorageKeys.PEDIDO_NUEVO;
         this.getDatosParaEditarOClonar(idToClone);
       }
     }
