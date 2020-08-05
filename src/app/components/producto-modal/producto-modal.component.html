@@ -9,6 +9,7 @@
       </button>
     </div>
   </div>
+  <div class="mt-2 px-1 small" *ngIf="sucursal">Sucursal: <strong>{{ sucursal.nombre }}</strong></div>
   <div *ngIf="clearLoading" class="text-center mt-3">
     <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
   </div>
@@ -29,7 +30,10 @@
                 <span *ngIf="!p.oferta && productosService.estaBonificado(p)" class="badge badge-success">BONIF. {{ p.porcentajeBonificacionPrecio }}%</span>
               </span>
               <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
-              <span class="mr-2">Stock: <strong>{{ getCantidad(p) }} {{ p.nombreMedida }}</strong> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
+              <span class="mr-2">
+                <span>Stock: <strong>{{ getCantidad(p) }} {{ p.nombreMedida }}</strong></span>
+                <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
+              </span>
               <div *ngIf="p.porcentajeBonificacionOferta || p.porcentajeBonificacionPrecio">
                 <span *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más&nbsp;</span>
                 <span class="precio bonificado">$ {{ p.precioBonificado | number:'1.0-2':'es-AR' }}</span>

@@ -38,11 +38,11 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
   private setProducto(p: Producto, applyChange = true) {
     this.pProducto = p;
     this.value = p ? p.idProducto : null;
-  // if (applyChange) {
-    this.onTouch();
-    this.onChange(this.value);
-    this.objectChange.emit(this.producto);
-  // }
+    if (applyChange) {
+      this.onTouch();
+      this.onChange(this.value);
+      this.objectChange.emit(this.producto);
+    }
   }
 
   select() {

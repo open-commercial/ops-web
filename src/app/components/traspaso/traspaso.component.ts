@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Sucursal} from '../../models/sucursal';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -11,6 +11,11 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevoTraspaso} from '../../models/nuevo-traspaso';
 import {TraspasosService} from '../../services/traspasos.service';
 import {Producto} from '../../models/producto';
+import {CantidadProductoModalComponent} from '../cantidad-producto-modal/cantidad-producto-modal.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ProductosParaVerificarStock} from '../../models/productos-para-verificar-stock';
+import {ProductoFaltante} from '../../models/producto-faltante';
+import {ProductosService} from '../../services/productos.service';
 
 @Component({
   selector: 'app-traspaso',
@@ -25,16 +30,18 @@ export class TraspasoComponent implements OnInit {
   sucursalesOrigen: Sucursal[] = [];
   sucursalesDestino: Sucursal[] = [];
 
-  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
-  cantidadesActualesPedido: { [idProducto: number]: number } = {};
+  cantidadesActualesTraspaso: { [idProducto: number]: number } = {};
 
   constructor(private router: Router,
               private location: Location,
               private fb: FormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               public sucursalesService: SucursalesService,
+              private modalService: NgbModal,
               private mensajeService: MensajeService,
-              private traspasosService: TraspasosService) { }
+              private productosService: ProductosService,
+              private traspasosService: TraspasosService) {
+  }
 
   ngOnInit() {
     this.createForm();
@@ -42,7 +49,12 @@ export class TraspasoComponent implements OnInit {
     this.sucursalesService.getSucursales()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        sucursales => this.sucursalesOrigen = sucursales,
+        sucursales => {
+          this.sucursalesOrigen = sucursales;
+          if (this.sucursalesOrigen.length) {
+            this.form.get('idSucursalOrigen').setValue(this.sucursalesOrigen[0].idSucursal);
+          }
+        },
         err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.volverAlListado();
@@ -59,7 +71,7 @@ export class TraspasoComponent implements OnInit {
     this.form = this.fb.group({
       idSucursalOrigen: [null, Validators.required],
       idSucursalDestino: [null, Validators.required],
-      productos: this.fb.array([], [Validators.required]),
+      renglones: this.fb.array([], [Validators.required]),
     });
 
     this.form.get('idSucursalOrigen').valueChanges.subscribe(value => {
@@ -69,40 +81,104 @@ export class TraspasoComponent implements OnInit {
         this.sucursalesDestino = this.sucursalesOrigen.filter(s => s.idSucursal !== Number(value));
       }
     });
-  }
 
-  get f() { return this.form.controls; }
-
-  get productos() {
-    return this.form.get('productos') as FormArray;
-  }
-
-  createProductoForm() {
-    return this.fb.group({
-      producto: [null, Validators.required],
-      cantidad: [1, [Validators.required, Validators.min(1)]],
+    this.form.get('renglones').valueChanges.subscribe(value => {
+      const aux: { [idProducto: number]: number } = {};
+      value.forEach(e => aux[e.producto.idProducto] = e.cantidad);
+      this.cantidadesActualesTraspaso = aux;
     });
   }
 
-  addProductoForm() {
-    this.productos.push(this.createProductoForm());
+  get f() {
+    return this.form.controls;
   }
 
-  removeProductoForm(i: number) {
-    this.productos.removeAt(i);
+  get renglones() {
+    return this.form.get('renglones') as FormArray;
+  }
+
+  createRenglonTraspasoForm(p: Producto, cantidad: number) {
+    return this.fb.group({
+      producto: [p, Validators.required],
+      cantidad: [cantidad, [Validators.required, Validators.min(1)]],
+    });
+  }
+
+  addRenglonTraspasoForm(p: Producto, cantidad: number) {
+    this.renglones.push(this.createRenglonTraspasoForm(p, cantidad));
+  }
+
+  removeRenglonTraspasoForm(i: number) {
+    this.renglones.removeAt(i);
   }
 
   editarCantidad(i: number) {
-    const pForm = this.productos.at(i);
-    console.log(pForm);
+    const control = this.renglones.at(i);
+    const producto = control.get('producto').value;
+    this.showCantidadModal(producto, false);
   }
 
   selectProducto(p: Producto) {
-    console.log(p);
+    this.showCantidadModal(p, true);
   }
 
   directInputSeleccionProducto(p: Producto) {
-    console.log(p);
+    const control = this.searchRenglonByIdProducto(p.idProducto);
+    const cant = control ? control.get('cantidad').value + 1 : 1;
+
+    const ppvs: ProductosParaVerificarStock = {
+      idSucursal: null,
+      idPedido: null,
+      idProducto: [p.idProducto],
+      cantidad: [cant],
+    };
+
+    this.loadingOverlayService.activate();
+    this.productosService.getDisponibilidadEnStock(ppvs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((pfs: ProductoFaltante[]) => {
+        if (!pfs.length) {
+          if (control) {
+            control.setValue({producto: p, cantidad: cant});
+          } else {
+            this.addRenglonTraspasoForm(p, cant);
+          }
+        } else {
+          this.mensajeService.msg(
+            'No se puede solicitar mas stock para dicho producto. Por favor, verifique la sección Productos.',
+            MensajeModalType.ERROR
+          );
+        }
+      })
+    ;
+  }
+
+  showCantidadModal(p: Producto, addCantidad = false) {
+    const control = this.searchRenglonByIdProducto(p.idProducto);
+    const cPrevia = control ? control.get('cantidad').value : 0;
+
+    const modalRef = this.modalService.open(CantidadProductoModalComponent);
+    modalRef.componentInstance.addCantidad = addCantidad;
+    modalRef.componentInstance.cantidadesActualesPedido = this.cantidadesActualesTraspaso;
+    modalRef.componentInstance.cantidad = addCantidad ? 1 : cPrevia;
+    modalRef.componentInstance.loadProducto(p.idProducto);
+    modalRef.componentInstance.verificarStock = true;
+    modalRef.componentInstance.idSucursal = Number(this.form.get('idSucursalOrigen').value);
+
+    modalRef.result.then((cantidad: number) => {
+      if (control) {
+        cantidad = addCantidad ? cPrevia + cantidad : cantidad;
+        control.setValue({producto: p, cantidad});
+      } else {
+        this.addRenglonTraspasoForm(p, cantidad);
+      }
+    }, () => {
+    });
+  }
+
+  searchRenglonByIdProducto(idProducto: number): AbstractControl {
+    const aux = this.renglones.controls.filter(c => c.get('producto').value.idProducto === idProducto);
+    return aux.length ? aux[0] : null;
   }
 
   submit() {
@@ -128,7 +204,7 @@ export class TraspasoComponent implements OnInit {
     const formValues = this.form.value;
 
     const aux = {};
-    formValues.productos.forEach(p => aux[p.producto.idProducto] = p.cantidad);
+    formValues.renglones.forEach(p => aux[p.producto.idProducto] = p.cantidad);
 
     return {
       idSucursalOrigen: formValues.idSucursalOrigen ? Number(formValues.idSucursalOrigen) : null,

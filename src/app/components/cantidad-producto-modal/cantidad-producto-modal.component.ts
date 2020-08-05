@@ -25,7 +25,8 @@ export class CantidadProductoModalComponent implements OnInit {
   verificandoDisponibilidadStock = false;
   hayStockDisponible = false;
   stockDisponible = 0;
-  idPedido = null;
+  idPedido: number = null;
+  idSucursal: number = null;
 
   addCantidad = false;
   cantidadesInicialesPedido: { [idProducto: number]: number } = {};
@@ -69,14 +70,14 @@ export class CantidadProductoModalComponent implements OnInit {
         : this.form.value.cantidad
       ;
 
-      const ppvs: ProductosParaVerificarStock = {
-        idSucursal: null,
-        idPedido: this.idPedido,
-        idProducto: [this.producto.idProducto],
-        cantidad: [cantidad],
-      };
-
       if (this.verificarStock) {
+        const ppvs: ProductosParaVerificarStock = {
+          idSucursal: this.idSucursal,
+          idPedido: this.idPedido,
+          idProducto: [this.producto.idProducto],
+          cantidad: [cantidad],
+        };
+
         this.verificandoDisponibilidadStock = true;
         this.stockDisponible = 0;
         this.productosService.getDisponibilidadEnStock(ppvs)

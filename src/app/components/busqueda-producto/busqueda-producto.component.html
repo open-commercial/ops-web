@@ -7,9 +7,9 @@
         </span>
     </div>
     <input autocomplete="off" [id]="directInputId" placeholder="Código de producto..." type="text" aria-describedby="codigo-addon"
-           class="form-control" (keyup.enter)="ingresarProductoDirecto()" [readOnly]="loadingProducto" [(ngModel)]="codigo">
+           class="form-control" (keyup.enter)="ingresarProductoDirecto($event)" [readOnly]="loadingProducto" [(ngModel)]="codigo">
     <div class="input-group-append">
-      <button class="btn btn-primary spacer-derecho" type="button" (click)="ingresarProductoDirecto()">
+      <button class="btn btn-primary spacer-derecho" type="button" (click)="ingresarProductoDirecto($event)">
         <fa-icon [icon]="['fas', 'arrow-alt-circle-down']" *ngIf="!loadingProducto"></fa-icon>
         <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
       </button>

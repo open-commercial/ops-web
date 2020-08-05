@@ -1,10 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { ProductosService } from '../../services/productos.service';
 import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
+import {Sucursal} from '../../models/sucursal';
+import {LoadingOverlayService} from '../../services/loading-overlay.service';
+import {SucursalesService} from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-producto-modal',
@@ -27,10 +30,27 @@ export class ProductoModalComponent implements OnInit {
   cantidadesInicialesPedido: { [idProducto: number]: number } = {};
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
+  sucursal: Sucursal = null;
+
+  private pIdSucursal: number = null;
+  set idSucursal(value: number) {
+    this.pIdSucursal = value;
+    if (value) {
+      this.loadingOverlayService.activate();
+      this.sucursalesService.getSucursal(value)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe(s => this.sucursal = s, () => this.sucursal = null)
+      ;
+    }
+  }
+  get idSucursal(): number { return this.pIdSucursal; }
+
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
-              public productosService: ProductosService) { }
+              public productosService: ProductosService,
+              private sucursalesService: SucursalesService,
+              private loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {}
 
@@ -84,7 +104,7 @@ export class ProductoModalComponent implements OnInit {
   }
 
   getCantidad(p: Producto) {
-    const c = this.productosService.getCantidad(p);
+    const c = this.productosService.getCantidad(p, this.idSucursal);
     const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
     const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
 
@@ -94,8 +114,8 @@ export class ProductoModalComponent implements OnInit {
   }
 
   getCantOtrasSucursales(p: Producto) {
-    const c = this.productosService.getCantidad(p);
-    const cos = this.productosService.getCantOtrasSucursales(p);
+    const c = this.productosService.getCantidad(p, this.idSucursal);
+    const cos = this.productosService.getCantOtrasSucursales(p, this.idSucursal);
     const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
     const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
 
