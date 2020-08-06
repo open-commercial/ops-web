@@ -55,6 +55,9 @@
             <div class="item-info">
               <div class="codigo">{{ r.get('producto').value.codigo }}</div>
               <div class="descripcion">{{ r.get('producto').value.descripcion }}</div>
+              <div class="custom-error-message" *ngIf="mensajesVerificacion && mensajesVerificacion[r.get('producto').value.idProducto]">
+                {{ mensajesVerificacion[r.get('producto').value.idProducto] }}
+              </div>
             </div>
             <div class="item-cantidad text-right">
               <span class="ml-2 text-nowrap font-weight-bold">{{ r.get('cantidad').value | number: '1.0-2' }} ({{ r.get('producto').value.nombreMedida }})</span>

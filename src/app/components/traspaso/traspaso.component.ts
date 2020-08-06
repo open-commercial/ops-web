@@ -32,6 +32,8 @@ export class TraspasoComponent implements OnInit {
 
   cantidadesActualesTraspaso: { [idProducto: number]: number } = {};
 
+  mensajesVerificacion: {[key: number]: string };
+
   constructor(private router: Router,
               private location: Location,
               private fb: FormBuilder,
@@ -98,10 +100,16 @@ export class TraspasoComponent implements OnInit {
   }
 
   createRenglonTraspasoForm(p: Producto, cantidad: number) {
-    return this.fb.group({
+    const c = this.fb.group({
       producto: [p, Validators.required],
       cantidad: [cantidad, [Validators.required, Validators.min(1)]],
     });
+
+    c.valueChanges.subscribe(v => {
+      delete this.mensajesVerificacion[v.producto.idProducto];
+    });
+
+    return c;
   }
 
   addRenglonTraspasoForm(p: Producto, cantidad: number) {
@@ -127,7 +135,7 @@ export class TraspasoComponent implements OnInit {
     const cant = control ? control.get('cantidad').value + 1 : 1;
 
     const ppvs: ProductosParaVerificarStock = {
-      idSucursal: null,
+      idSucursal: this.form.get('idSucursalOrigen').value,
       idPedido: null,
       idProducto: [p.idProducto],
       cantidad: [cant],
@@ -185,18 +193,19 @@ export class TraspasoComponent implements OnInit {
     this.submitted = true;
     if (this.form.valid) {
       const nt = this.getNuevoTraspaso();
-
-      this.loadingOverlayService.activate();
-      this.traspasosService.guardarTraspaso(nt)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          () => {
-            this.mensajeService.msg('Traspaso creado correctamente.', MensajeModalType.INFO);
-            this.volverAlListado();
-          },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
-      ;
+      this.verificarCantidades(nt, () => {
+        this.loadingOverlayService.activate();
+        this.traspasosService.guardarTraspaso(nt)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            () => {
+              this.mensajeService.msg('Traspaso creado correctamente.', MensajeModalType.INFO);
+              this.volverAlListado();
+            },
+            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          )
+        ;
+      });
     }
   }
 
@@ -211,5 +220,34 @@ export class TraspasoComponent implements OnInit {
       idSucursalDestino: formValues.idSucursalDestino ? Number(formValues.idSucursalDestino) : null,
       idProductoConCantidad: aux,
     };
+  }
+
+  verificarCantidades(nt: NuevoTraspaso, successCallback: () => void) {
+    const ids: number[] = Object.keys(nt.idProductoConCantidad).map(v => Number(v));
+    const cants: number[] = Object.values(nt.idProductoConCantidad);
+
+    const ppvs: ProductosParaVerificarStock = {
+      idSucursal: this.form.get('idSucursalOrigen').value,
+      idPedido: null,
+      idProducto: ids,
+      cantidad: cants,
+    };
+
+    this.mensajesVerificacion = {};
+    this.loadingOverlayService.activate();
+    this.productosService.getDisponibilidadEnStock(ppvs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((pfs: ProductoFaltante[]) => {
+        if (pfs.length) {
+          const msgFormat = 'La cantidad solicitada del producto (__solicitada__) supera la cantidad disponible (__disponible__).';
+          pfs.forEach(pf => this.mensajesVerificacion[pf.idProducto] = msgFormat
+            .replace(/__solicitada__/g, pf.cantidadSolicitada.toString())
+            .replace(/__disponible__/g, pf.cantidadDisponible.toString())
+          );
+        } else {
+          successCallback();
+        }
+      })
+    ;
   }
 }
