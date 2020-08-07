@@ -36,4 +36,8 @@ export class TraspasosService {
   eliminarTraspaso(idTraspaso: number): Observable<void> {
     return this.http.delete<void>(this.url + `/${idTraspaso}`);
   }
+
+  getReporteTraspaso(criteria: BusquedaTraspasoCriteria): Observable<Blob> {
+    return this.http.post<Blob>(this.url + '/reporte/criteria', criteria, { responseType: 'blob' });
+  }
 }

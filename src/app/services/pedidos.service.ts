@@ -28,7 +28,7 @@ export class PedidosService {
   }
 
   getPedidoPdf(idPedido: number): Observable<Blob> {
-    return this.http.get(`${this.url}/${idPedido}/reporte`, {responseType: 'blob'});
+    return this.http.get(`${this.url}/${idPedido}/reporte`, { responseType: 'blob' });
   }
 
   calcularRenglones(renglones: NuevoRenglonPedido[], idCliente: number): Observable<RenglonPedido[]> {

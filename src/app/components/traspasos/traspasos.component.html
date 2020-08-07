@@ -6,6 +6,10 @@
               (click)="crearTraspaso()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>&nbsp;&nbsp;
+      <button class="btn btn-primary" placement="left" ngbPopover="Descargar Archivo de Reporte" triggers="mouseenter:mouseleave"
+              (click)="downloadReporteTraspasoPdf()">
+        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+      </button>&nbsp;&nbsp;
       <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="traspasosFiltersCollapse"
               [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"

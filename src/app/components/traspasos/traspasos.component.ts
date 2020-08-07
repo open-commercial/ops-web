@@ -17,6 +17,7 @@ import { Usuario } from '../../models/usuario';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Traspaso } from '../../models/traspaso';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-traspasos',
@@ -56,7 +57,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
     super.ngOnInit();
   }
 
-  getTerminosFromQueryParams(params) {
+  getTerminosFromQueryParams(params = null) {
     const terminos: BusquedaTraspasoCriteria = {
       pagina: 0,
     };
@@ -220,5 +221,17 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
         ;
       }
     }, () => {});
+  }
+
+  downloadReporteTraspasoPdf() {
+    const terminos = this.getTerminosFromQueryParams();
+    this.loadingOverlayService.activate();
+    this.traspasosService.getReporteTraspaso(terminos)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe((res) => {
+        const file = new Blob([res], {type: 'application/pdf'});
+        saveAs(file, `reporte-traspaso.pdf`);
+      })
+    ;
   }
 }
