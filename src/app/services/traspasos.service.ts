@@ -38,6 +38,6 @@ export class TraspasosService {
   }
 
   getReporteTraspaso(criteria: BusquedaTraspasoCriteria): Observable<Blob> {
-    return this.http.post<Blob>(this.url + '/reporte/criteria', criteria, { responseType: 'blob' });
+    return this.http.post<Blob>(this.url + '/reporte/criteria', criteria, { responseType: 'blob' as 'json' });
   }
 }
