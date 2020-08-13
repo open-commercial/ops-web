@@ -5,9 +5,9 @@
       <button class="btn btn-primary ml-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="productosFiltersCollapse"
-              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
+              [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>

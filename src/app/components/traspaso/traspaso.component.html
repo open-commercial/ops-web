@@ -37,9 +37,7 @@
       </div>
     </div>
     <fieldset class="mb-3" *ngIf="form && form.get('idSucursalOrigen').value">
-      <legend class="border-bottom py-2 mb-0">
-        Traspasos
-      </legend>
+      <legend class="border-bottom py-2 mb-0">Productos</legend>
       <div class="custom-error-message" *ngIf="submitted && f.renglones.errors">
         <div *ngIf="f.renglones.errors.required">Se requiere especificar el traspaso de al menos un (1) producto.</div>
       </div>
@@ -51,7 +49,7 @@
       ></app-busqueda-producto>
       <div  formArrayName="renglones">
         <div class="d-flex flex-row align-items-center border-bottom border-secondary py-2" *ngFor="let r of renglones.controls; index as i" [formGroupName]="i.toString()">
-          <div class="flex-fill d-flex flex-column flex-sm-row align-items-sm-center traspaso p-2">
+          <div class="d-flex flex-fill flex-column flex-sm-row align-items-sm-center traspaso p-2">
             <div class="item-info">
               <div class="codigo">{{ r.get('producto').value.codigo }}</div>
               <div class="descripcion">{{ r.get('producto').value.descripcion }}</div>
@@ -65,12 +63,12 @@
           </div>
           <div class="text-right pl-2">
             <ul class="list-inline mb-0">
-              <li class="list-inline-item">
+              <li class="list-inline-item mr-0 ml-2 my-1">
                 <button type="button" class="btn btn-primary" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left" (click)="editarCantidad(i)">
                   <fa-icon [icon]="['fas', 'pen']"></fa-icon>
                 </button>
               </li>
-              <li class="list-inline-item">
+              <li class="list-inline-item mr-0 ml-2">
                 <button type="button" class="btn btn-primary" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" (click)="removeRenglonTraspasoForm(i)">
                   <fa-icon [icon]="['fas', 'trash']"></fa-icon>
                 </button>

@@ -2,17 +2,17 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos</h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary fake-cursor" ngbPopover="Nuevo Traspaso" triggers="mouseenter:mouseleave" placement="left"
+      <button class="btn btn-primary my-1 ml-2" ngbPopover="Nuevo Traspaso" triggers="mouseenter:mouseleave" placement="left"
               (click)="crearTraspaso()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>&nbsp;&nbsp;
-      <button class="btn btn-primary" placement="left" ngbPopover="Descargar Archivo de Reporte" triggers="mouseenter:mouseleave"
+      </button>
+      <button class="btn btn-primary my-1 ml-2" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave"
               (click)="downloadReporteTraspasoPdf()">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-      </button>&nbsp;&nbsp;
-      <button type="button" class="btn" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      </button>
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="traspasosFiltersCollapse"
-              [class.btn-outline-primary]="!isFiltersCollapsed" [class.btn-primary]="isFiltersCollapsed"
+              [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>

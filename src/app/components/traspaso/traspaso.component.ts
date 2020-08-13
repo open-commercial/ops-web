@@ -52,6 +52,11 @@ export class TraspasoComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         sucursales => {
+          if (sucursales.length < 2) {
+            this.mensajeService.msg('Debe existir al menos 2(dos) sucursales', MensajeModalType.ERROR);
+            this.volverAlListado();
+          }
+
           this.sucursalesOrigen = sucursales;
           if (this.sucursalesOrigen.length) {
             this.form.get('idSucursalOrigen').setValue(this.sucursalesOrigen[0].idSucursal);
@@ -117,7 +122,12 @@ export class TraspasoComponent implements OnInit {
   }
 
   removeRenglonTraspasoForm(i: number) {
-    this.renglones.removeAt(i);
+    const msg = '¿Desea quitar este producto del traspaso?';
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.renglones.removeAt(i);
+      }
+    });
   }
 
   editarCantidad(i: number) {

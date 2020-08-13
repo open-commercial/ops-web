@@ -13,12 +13,12 @@
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del traspaso</caption>
       <tbody class="thead-dark">
+      <tr><th scope="row" class="w-25">Fecha</th><td>{{ traspaso.fechaDeAlta | date:'dd/MM/yyyy' }}</td></tr>
       <tr><th scope="row" class="w-25">Nº Traspaso</th><td>{{ traspaso.nroTraspaso }}</td></tr>
       <tr><th scope="row" class="w-25">Nº Pedido</th><td>{{ traspaso.nroPedido }}</td></tr>
-      <tr><th scope="row" class="w-25">Fecha</th><td>{{ traspaso.fechaDeAlta | date:'dd/MM/yyyy' }}</td></tr>
       <tr><th scope="row" class="w-25">Sucursal Origen</th><td>{{ traspaso.nombreSucursalOrigen }}</td></tr>
       <tr><th scope="row" class="w-25">Sucursal Destino</th><td>{{ traspaso.nombreSucursalDestino }}</td></tr>
-      <tr><th scope="row" colspan="2">Detalles</th></tr>
+      <tr><th scope="row" colspan="2">Productos</th></tr>
       <tr>
         <td colspan="2">
           <div *ngFor="let r of renglones" class="d-flex flex-column flex-sm-row align-items-sm-center traspaso p-2">

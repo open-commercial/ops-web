@@ -26,7 +26,7 @@ import { saveAs } from 'file-saver';
 })
 export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
   ordenarPorOptionsT = [
-    { val: 'fechaDeAlta', text: 'Fecha Traspaso' },
+    { val: 'fechaDeAlta', text: 'Fecha' },
     { val: 'nroTraspaso', text: 'Nº Traspaso' },
     { val: 'idSucursalOrigen', text: 'Sucursal Origen' },
     { val: 'idSucursalDestino', text: 'Sucursal Destino' },
