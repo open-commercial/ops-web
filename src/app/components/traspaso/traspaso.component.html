@@ -58,7 +58,7 @@
               </div>
             </div>
             <div class="item-cantidad text-right">
-              <span class="ml-2 text-nowrap font-weight-bold">{{ r.get('cantidad').value | number: '1.0-2' }} ({{ r.get('producto').value.nombreMedida }})</span>
+              <span class="ml-2 text-nowrap">{{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }}</span>
             </div>
           </div>
           <div class="text-right pl-2">

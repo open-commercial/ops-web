@@ -104,18 +104,16 @@ export class ProductoModalComponent implements OnInit {
   }
 
   getCantidad(p: Producto) {
-    const c = this.productosService.getCantidad(p, this.idSucursal);
+    const c = this.productosService.getCantidad(p, this.pIdSucursal);
     const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
     const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
-
     const res = c - (ca - ci);
-
     return res > 0 ? res : 0;
   }
 
   getCantOtrasSucursales(p: Producto) {
-    const c = this.productosService.getCantidad(p, this.idSucursal);
-    const cos = this.productosService.getCantOtrasSucursales(p, this.idSucursal);
+    const c = this.productosService.getCantidad(p, this.pIdSucursal);
+    const cos = this.productosService.getCantOtrasSucursales(p, this.pIdSucursal);
     const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
     const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
 

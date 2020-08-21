@@ -56,19 +56,20 @@ export class ProductosService {
 
   /* Helpers */
   getCantidad(p: Producto, idSucursal: number = null) {
-    idSucursal = idSucursal || Number(this.sucursalesService.getIdSucursal());
+    idSucursal = Number(idSucursal) || Number(this.sucursalesService.getIdSucursal());
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(c => c.idSucursal === idSucursal);
     return aux.length ? aux[0].cantidad : 0;
   }
+
   getCantOtrasSucursales(p: Producto, idSucursal: number = null) {
-    idSucursal = idSucursal || Number(this.sucursalesService.getIdSucursal());
+    idSucursal = Number(idSucursal) || Number(this.sucursalesService.getIdSucursal());
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(c => c.idSucursal !== idSucursal);
     let cant = 0;
     aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
     return cant;
   }
+
   estaBonificado(p: Producto) {
     return p && p.precioBonificado && p.precioBonificado < p.precioLista;
   }
-
 }

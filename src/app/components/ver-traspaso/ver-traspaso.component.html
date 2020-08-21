@@ -15,9 +15,10 @@
       <tbody class="thead-dark">
       <tr><th scope="row" class="w-25">Fecha</th><td>{{ traspaso.fechaDeAlta | date:'dd/MM/yyyy' }}</td></tr>
       <tr><th scope="row" class="w-25">Nº Traspaso</th><td>{{ traspaso.nroTraspaso }}</td></tr>
-      <tr><th scope="row" class="w-25">Nº Pedido</th><td>{{ traspaso.nroPedido }}</td></tr>
+      <tr *ngIf="traspaso.nroPedido"><th scope="row" class="w-25">Nº Pedido</th><td>{{ traspaso.nroPedido }}</td></tr>
       <tr><th scope="row" class="w-25">Sucursal Origen</th><td>{{ traspaso.nombreSucursalOrigen }}</td></tr>
       <tr><th scope="row" class="w-25">Sucursal Destino</th><td>{{ traspaso.nombreSucursalDestino }}</td></tr>
+      <tr><th scope="row" class="w-25">Usuario</th><td>{{ traspaso.nombreUsuario }}</td></tr>
       <tr><th scope="row" colspan="2">Productos</th></tr>
       <tr>
         <td colspan="2">
@@ -27,7 +28,7 @@
               <div class="descripcion">{{ r.descripcionProducto }}</div>
             </div>
             <div class="item-cantidad text-right text-sm-center">
-              <span class="ml-2 text-nowrap font-weight-bold">{{ r.cantidadProducto | number: '1.0-2' }} ({{ r.nombreMedidaProducto }})</span>
+              <span class="ml-2 text-nowrap">{{ r.cantidadProducto | number: '1.0-2' }} {{ r.nombreMedidaProducto }}</span>
             </div>
           </div>
         </td>

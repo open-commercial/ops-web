@@ -32,7 +32,7 @@ export class TraspasoComponent implements OnInit {
 
   cantidadesActualesTraspaso: { [idProducto: number]: number } = {};
 
-  mensajesVerificacion: {[key: number]: string };
+  mensajesVerificacion: {[key: string]: string } = {};
 
   constructor(private router: Router,
               private location: Location,
@@ -111,7 +111,9 @@ export class TraspasoComponent implements OnInit {
     });
 
     c.valueChanges.subscribe(v => {
-      delete this.mensajesVerificacion[v.producto.idProducto];
+      if (this.mensajesVerificacion) {
+        delete this.mensajesVerificacion[v.producto.idProducto];
+      }
     });
 
     return c;
@@ -209,7 +211,7 @@ export class TraspasoComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
-              this.mensajeService.msg('Traspaso creado correctamente.', MensajeModalType.INFO);
+              this.mensajeService.msg('Traspaso creado correctamente!', MensajeModalType.INFO);
               this.volverAlListado();
             },
             err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
@@ -221,20 +223,17 @@ export class TraspasoComponent implements OnInit {
 
   getNuevoTraspaso(): NuevoTraspaso {
     const formValues = this.form.value;
-
-    const aux = {};
-    formValues.renglones.forEach(p => aux[p.producto.idProducto] = p.cantidad);
-
     return {
       idSucursalOrigen: formValues.idSucursalOrigen ? Number(formValues.idSucursalOrigen) : null,
       idSucursalDestino: formValues.idSucursalDestino ? Number(formValues.idSucursalDestino) : null,
-      idProductoConCantidad: aux,
+      idProducto: formValues.renglones.map(p => p.producto.idProducto),
+      cantidad: formValues.renglones.map(p => p.cantidad),
     };
   }
 
   verificarCantidades(nt: NuevoTraspaso, successCallback: () => void) {
-    const ids: number[] = Object.keys(nt.idProductoConCantidad).map(v => Number(v));
-    const cants: number[] = Object.values(nt.idProductoConCantidad);
+    const ids: number[] = nt.idProducto;
+    const cants: number[] = nt.cantidad;
 
     const ppvs: ProductosParaVerificarStock = {
       idSucursal: this.form.get('idSucursalOrigen').value,
