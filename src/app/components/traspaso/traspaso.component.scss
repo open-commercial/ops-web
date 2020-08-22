@@ -5,23 +5,17 @@
 .app-traspaso {
   margin: 0;
   .traspaso {
-    .item-info {
-      width: 100%;
-      @include media-breakpoint-up(sm) {
-        width: 70%;
-      }
-    }
-    .item-cantidad {
-      width: 100%;
-      @include media-breakpoint-up(sm) {
-        width: 30%;
-      }
-    }
     .codigo {
       font-size: 12px;
     }
     .descripcion {
       font-weight: bold;
+    }
+    .disponibilidad-error {
+      color: red;
+      font-weight: bold;
+      font-size: 0.9em;
+      font-style: italic;
     }
   }
 }
