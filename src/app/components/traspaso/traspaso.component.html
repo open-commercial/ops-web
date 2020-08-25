@@ -66,8 +66,9 @@
               <div class="item-cantidad text-right">
                 <span class="ml-2 text-nowrap">{{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }}</span>
               </div>
-              <div class="disponibilidad-error" *ngIf="mensajesVerificacion && mensajesVerificacion[r.get('producto').value.idProducto]">
-                {{ mensajesVerificacion[r.get('producto').value.idProducto] }}
+              <div class="disponibilidad-error" *ngIf="disponibles && disponibles.hasOwnProperty(r.get('producto').value.idProducto.toString())">
+                Solicitado ({{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }})
+                Disponible ({{ disponibles[r.get('producto').value.idProducto.toString()] }} {{ r.get('producto').value.nombreMedida }})
               </div>
             </td>
             <td>

@@ -32,7 +32,7 @@ export class TraspasoComponent implements OnInit {
 
   cantidadesActualesTraspaso: { [idProducto: number]: number } = {};
 
-  mensajesVerificacion: {[key: string]: string } = {};
+  disponibles: {[key: number]: number } = {};
 
   constructor(private router: Router,
               private location: Location,
@@ -111,8 +111,8 @@ export class TraspasoComponent implements OnInit {
     });
 
     c.valueChanges.subscribe(v => {
-      if (this.mensajesVerificacion) {
-        delete this.mensajesVerificacion[v.producto.idProducto];
+      if (this.disponibles) {
+        delete this.disponibles[v.producto.idProducto];
       }
     });
 
@@ -242,17 +242,13 @@ export class TraspasoComponent implements OnInit {
       cantidad: cants,
     };
 
-    this.mensajesVerificacion = {};
+    this.disponibles = {};
     this.loadingOverlayService.activate();
     this.productosService.getDisponibilidadEnStock(ppvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((pfs: ProductoFaltante[]) => {
         if (pfs.length) {
-          const msgFormat = 'La cantidad solicitada del producto (__solicitada__) supera la cantidad disponible (__disponible__).';
-          pfs.forEach(pf => this.mensajesVerificacion[pf.idProducto] = msgFormat
-            .replace(/__solicitada__/g, pf.cantidadSolicitada.toString())
-            .replace(/__disponible__/g, pf.cantidadDisponible.toString())
-          );
+          pfs.forEach(pf => this.disponibles[pf.idProducto] = pf.cantidadDisponible);
         } else {
           successCallback();
         }
