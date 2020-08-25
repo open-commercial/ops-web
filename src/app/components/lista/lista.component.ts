@@ -31,6 +31,8 @@ export class ListaComponent implements OnInit {
   @Input() actionsTemplate: TemplateRef<any>;
 
   @Output() pageChange = new EventEmitter<number>();
+  @Output() selectItem = new EventEmitter<any>();
+  @Output() unselectItem = new EventEmitter<any>();
 
   constructor() { }
 
