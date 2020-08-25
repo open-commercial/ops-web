@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.app-traspaso {
+  margin: 0;
+  .traspaso {
+    .codigo {
+      font-size: 12px;
+    }
+    .descripcion {
+      font-weight: bold;
+    }
+    .disponibilidad-error {
+      color: red;
+      font-weight: bold;
+      font-size: 0.9em;
+      font-style: italic;
+    }
+  }
+}

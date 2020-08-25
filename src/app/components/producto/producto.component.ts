@@ -88,7 +88,6 @@ export class ProductoComponent implements OnInit {
             this.producto = recursos[3];
             this.title = this.producto.descripcion;
             this.calculosPrecio = CalculosPrecio.getInstance(this.producto);
-            // console.log(this.calculosPrecio.precioBonificado);
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
             }

@@ -1,0 +1,36 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.app-ver-traspaso {
+  table {
+    th, td {
+      vertical-align: middle;
+    }
+  }
+
+  .traspaso {
+    border-bottom: 1px solid #333;
+    &:last-child {
+      border-bottom: none;
+    }
+    .item-info {
+      width: 100%;
+      @include media-breakpoint-up(sm) {
+        width: 70%;
+      }
+    }
+    .item-cantidad {
+      width: 100%;
+      @include media-breakpoint-up(sm) {
+        width: 30%;
+      }
+    }
+    .codigo {
+      font-size: 12px;
+    }
+    .descripcion {
+      font-weight: bold;
+    }
+  }
+}
