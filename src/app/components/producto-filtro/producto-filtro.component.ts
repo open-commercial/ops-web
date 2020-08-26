@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, EventEmitter, forwardRef, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { Producto } from '../../models/producto';
@@ -20,7 +20,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
   loading = false;
-  producto: Producto = null;
+  private pProducto: Producto = null;
+  get producto() { return this.pProducto; }
+
+  @Output() objectChange = new EventEmitter<Producto>();
 
   value;
   isDisabled = false;
@@ -33,11 +36,12 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
   ngOnInit() {}
 
   private setProducto(p: Producto, applyChange = true) {
-    this.producto = p;
+    this.pProducto = p;
     this.value = p ? p.idProducto : null;
     if (applyChange) {
       this.onTouch();
       this.onChange(this.value);
+      this.objectChange.emit(this.producto);
     }
   }
 
@@ -45,7 +49,7 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.result.then((p: Producto) => {
       this.setProducto(p);
-    }, (reason) => {});
+    }, () => {});
   }
 
   clearValue() {
@@ -79,6 +83,6 @@ export class ProductoFiltroComponent implements OnInit, ControlValueAccessor {
   }
 
   getDisplayValue() {
-    return this.producto ? this.producto.descripcion : '';
+    return this.pProducto ? this.pProducto.descripcion : '';
   }
 }

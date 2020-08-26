@@ -20,7 +20,7 @@
       <tr *ngIf="pedido.fechaVencimiento"><th scope="row">Fecha de Vencimiento</th><td>{{ pedido.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}</td></tr>
       <tr *ngIf="pedido.nombreUsuario"><th scope="row">Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
       <tr *ngIf="pedido.nombreViajante"><th scope="row">Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
-      <tr><th scope="row" colspan="2">Artículos</th></tr>
+      <tr><th scope="row" colspan="2">Productos</th></tr>
       <tr>
         <td colspan="2">
           <div *ngFor="let r of renglones" class="d-flex flex-column flex-md-row align-items-md-center articulo">

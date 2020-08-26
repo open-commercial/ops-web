@@ -32,6 +32,11 @@ export class BusquedaProductoComponent implements OnInit {
   set directInputId(id: string) { this.pDirectInputId = id; }
   get directInputId(): string { return this.pDirectInputId; }
 
+  private pIdSucursal: number = null;
+  @Input()
+  set idSucursal(value: number) { this.pIdSucursal = value; }
+  get idSucursal(): number { return this.pIdSucursal; }
+
   @Output() seleccion = new EventEmitter<Producto>();
   @Output() directInputSeleccion = new EventEmitter<Producto>();
 
@@ -62,12 +67,14 @@ export class BusquedaProductoComponent implements OnInit {
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.componentInstance.cantidadesInicialesPedido = this.pCantidadesInicialesPedido;
     modalRef.componentInstance.cantidadesActualesPedido = this.pCantidadesActualesPedido;
+    modalRef.componentInstance.idSucursal = this.idSucursal;
     modalRef.result.then((p: Producto) => {
         this.seleccion.emit(p);
     }, () => {});
   }
 
-  ingresarProductoDirecto() {
+  ingresarProductoDirecto($event) {
+    $event.preventDefault();
     this.codigo = this.codigo.trim();
     if (!this.codigo) { return; }
 

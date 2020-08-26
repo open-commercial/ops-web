@@ -96,7 +96,7 @@ export class PedidoComponent implements OnInit {
               private pedidosService: PedidosService,
               private clientesService: ClientesService,
               private cuentasCorrienteService: CuentasCorrienteService,
-              private sucursalesService: SucursalesService,
+              public sucursalesService: SucursalesService,
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
@@ -763,11 +763,6 @@ export class PedidoComponent implements OnInit {
         )
       ;
     }
-  }
-
-  getSucursalLabel(s: Sucursal) {
-    if (!s) { return ''; }
-    return s.nombre + (s.detalleUbicacion ? ' (' + s.detalleUbicacion + ')' : '');
   }
 
   totalSuperaCompraMinima() {

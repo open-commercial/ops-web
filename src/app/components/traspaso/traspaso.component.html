@@ -1,0 +1,99 @@
+<div class="app-traspaso my-3">
+  <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2" *ngIf="!(loading)">
+    <h1 class="h3 pr-2 mb-0 flex-fill">
+      <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Nuevo Traspaso
+    </h1>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="container-fluid mt-2" *ngIf="form">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group my-3">
+          <label for="idSucursalOrigen">Sucursal Origen</label>
+          <select class="form-control" id="idSucursalOrigen" required formControlName="idSucursalOrigen"
+                  [ngClass]="{ 'is-invalid': submitted && f.idSucursalOrigen.errors }">
+            <option *ngFor="let s of sucursalesOrigen" [value]="s.idSucursal">{{ sucursalesService.getSucursalLabel(s) }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="submitted && f.idSucursalOrigen.errors">
+            <div *ngIf="f.idSucursalOrigen.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group my-3">
+          <label for="idSucursalDestino">Sucursal Destino</label>
+          <select class="form-control" id="idSucursalDestino" formControlName="idSucursalDestino"
+                  [ngClass]="{ 'is-invalid': submitted && f.idSucursalDestino.errors }">
+            <option></option>
+            <option *ngFor="let s of sucursalesDestino" [value]="s.idSucursal">{{ sucursalesService.getSucursalLabel(s) }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="submitted && f.idSucursalDestino.errors">
+            <div *ngIf="f.idSucursalDestino.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <fieldset class="mb-3" *ngIf="form && form.get('idSucursalOrigen').value">
+      <legend class="border-bottom py-2 mb-0">Productos</legend>
+      <div class="custom-error-message" *ngIf="submitted && f.renglones.errors">
+        <div *ngIf="f.renglones.errors.required">Se requiere especificar el traspaso de al menos un (1) producto.</div>
+      </div>
+      <app-busqueda-producto
+        (seleccion)="selectProducto($event)"
+        (directInputSeleccion)="directInputSeleccionProducto($event)"
+        [cantidadesActualesPedido]="cantidadesActualesTraspaso"
+        [idSucursal]="form.get('idSucursalOrigen').value"
+      ></app-busqueda-producto>
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm">
+          <caption class="sr-only">Productos del Traspaxo</caption>
+          <thead>
+          <tr>
+            <th class="w-100 align-middle" scope="col">Descripción</th>
+            <th scope="col">Acciones</th>
+          </tr>
+          </thead>
+          <tbody formArrayName="renglones">
+          <tr class="traspaso" *ngFor="let r of renglones.controls; index as i" [formGroupName]="i.toString()">
+            <td class="align-middle">
+              <div class="item-info">
+                <div class="codigo">{{ r.get('producto').value.codigo }}</div>
+                <div class="descripcion">{{ r.get('producto').value.descripcion }}</div>
+              </div>
+              <div class="item-cantidad text-right">
+                <span class="ml-2 text-nowrap">{{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }}</span>
+              </div>
+              <div class="disponibilidad-error" *ngIf="disponibles && disponibles.hasOwnProperty(r.get('producto').value.idProducto.toString())">
+                Solicitado ({{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }})
+                Disponible ({{ disponibles[r.get('producto').value.idProducto.toString()] }} {{ r.get('producto').value.nombreMedida }})
+              </div>
+            </td>
+            <td>
+              <ul class="list-inline mb-0 text-center">
+                <li class="list-inline-item mr-0 ml-2 my-1">
+                  <button type="button" class="btn btn-primary" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left" (click)="editarCantidad(i)">
+                    <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+                  </button>
+                </li>
+                <li class="list-inline-item mr-0 ml-2">
+                  <button type="button" class="btn btn-primary" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" (click)="removeRenglonTraspasoForm(i)">
+                    <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                  </button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </fieldset>
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary" [disabled]="!this.form.valid">
+        <fa-icon [icon]="['fas', 'check']" [size]="'lg'"></fa-icon> Guardar
+      </button>
+    </div>
+  </form>
+</div>

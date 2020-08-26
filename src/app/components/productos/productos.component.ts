@@ -45,7 +45,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorP', { static: false }) ordenarPorPElementP: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorP', { static: false }) ordenarPorPElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoP', { static: false }) sentidoPElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
@@ -206,7 +206,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     }
 
     setTimeout(() => {
-      this.ordenarPorAplicado = this.ordenarPorPElementP ? this.ordenarPorPElementP.getTexto() : '';
+      this.ordenarPorAplicado = this.ordenarPorPElement ? this.ordenarPorPElement.getTexto() : '';
       this.sentidoAplicado = this.sentidoPElement ? this.sentidoPElement.getTexto() : '';
     }, 500);
   }

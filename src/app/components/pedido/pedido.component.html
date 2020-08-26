@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                 <ng-template ngFor let-rp [ngForOf]="renglonesPedido.controls" let-i="index">
-                  <tr [formGroupName]="i">
+                  <tr [formGroupName]="i.toString()">
                     <td class="align-middle">
                       <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span>&nbsp;
                       <span  *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje > 0" class="badge badge-success">
@@ -131,7 +131,7 @@
             <label for="sucursal" class="sr-only">Sucursal</label>
             <select class="form-control" id="sucursal" formControlName="sucursal" [compareWith]="compareFn">
               <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
-                {{ getSucursalLabel(sucursal) }}
+                {{ sucursalesService.getSucursalLabel(sucursal) }}
               </option>
             </select>
           </div>

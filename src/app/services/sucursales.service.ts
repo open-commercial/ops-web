@@ -18,6 +18,11 @@ export class SucursalesService {
   constructor(private http: HttpClient,
               private storageService: StorageService) { }
 
+  getSucursalLabel(s: Sucursal) {
+    if (!s) { return ''; }
+    return s.nombre + (s.detalleUbicacion ? ' (' + s.detalleUbicacion + ')' : '');
+  }
+
   getIdSucursal() {
     const idSuc = Number(this.storageService.getItem('idSucursal'));
     return isNaN(idSuc) ? null : idSuc;
