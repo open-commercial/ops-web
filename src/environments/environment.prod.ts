@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://globo-sic-api-production.herokuapp.com',
+  apiUrl: 'https://api.globodeoro.com',
   appVersion: 13,
   appName: 'SIC_OPS_WEB'
 };
