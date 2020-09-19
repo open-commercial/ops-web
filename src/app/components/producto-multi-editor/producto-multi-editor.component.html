@@ -1,0 +1,178 @@
+<div class="app-producto-multi-editor my-3">
+  <div class="row">
+    <h1 class="h3 col-md-10 text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Edición múltiple de productos
+    </h1>
+  </div>
+  <div class="border rounded p-2">
+    <strong>Productos que se van a modificar:</strong>
+    <ul class="pl-3 mb-0">
+      <li *ngFor="let bae of baElements">{{ bae.description }}</li>
+    </ul>
+  </div>
+  <form [formGroup]="form" class="mt-2" *ngIf="form" (ngSubmit)="submit()">
+    <table class="table table-sm table-bordered">
+      <caption class="sr-only">Campos de productos a editar</caption>
+      <thead>
+      <tr><th scope="col"></th><th scope="col" class="w-100">Campo</th></tr>
+      </thead>
+      <tbody>
+      <tr formGroupName="idProveedor">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idProveedorCheck" formControlName="check" (change)="checkChange('idProveedor', $event)">
+            <label class="custom-control-label" for="idProveedorCheck"><span class="sr-only">Activo el campo Proveedor</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <app-proveedor-filtro formControlName="value"></app-proveedor-filtro>
+          <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProveedor.get('value').errors">
+            <div *ngIf="f.idProveedor.get('value').errors.required">Requerido</div>
+          </div>
+        </td>
+      </tr>
+      <tr formGroupName="idRubro">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idRubroCheck" formControlName="check" (change)="checkChange('idRubro', $event)">
+            <label class="custom-control-label" for="idRubroCheck"><span class="sr-only">Activo el campo Rubro</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="form-group mb-0">
+            <label for="rubro">Rubro</label>
+            <select class="form-control" id="rubro" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.idRubro.get('value').errors }">
+              <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.idRubro.get('value').errors">
+              <div *ngIf="f.idRubro.get('value').errors.required">Requerido</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr formGroupName="idMedida">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idMedidaCheck" formControlName="check" (change)="checkChange('idMedida', $event)">
+            <label class="custom-control-label" for="idMedidaCheck"><span class="sr-only">Activo el campo Medida</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="form-group mb-0">
+            <label for="medida">Medida</label>
+            <select class="form-control" id="medida" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.idMedida.get('value').errors }">
+              <option *ngFor="let m of medidas" [value]="m.idMedida">{{ m.nombre }}</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="submitted && f.idMedida.get('value').errors">
+              <div *ngIf="f.idMedida.get('value').errors.required">Requerido</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr formGroupName="publico">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idPublicoCheck" formControlName="check" (change)="checkChange('publico', $event)">
+            <label class="custom-control-label" for="idPublicoCheck"><span class="sr-only">Activo el campo Público</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="form-group mb-0">
+            <label for="visibilidad">Visibilidad</label>
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="value">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="true"> Público
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="false"> Privado
+              </label>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr formGroupName="calculosPrecio">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idPreciosCheck" formControlName="check" (change)="checkChange('calculosPrecio', $event)" #calculosPrecioCheck>
+            <label class="custom-control-label" for="idPreciosCheck"><span class="sr-only">Activo el campo Precios</span></label>
+          </div>
+        </td>
+        <td>
+          <div class="form-group mb-0">
+            <label for="precios">Precios</label>
+            <app-calculos-precio-form [submitted]="submitted" id="precios" formControlName="value"></app-calculos-precio-form>
+          </div>
+        </td>
+      </tr>
+      <tr formGroupName="descuentoRecargoPorcentaje">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="descuentoRecargoPorcentajeCheck" formControlName="check" (change)="checkChange('descuentoRecargoPorcentaje', $event)" #descuentoRecargoPorcentajeCheck>
+            <label class="custom-control-label" for="descuentoRecargoPorcentajeCheck"><span class="sr-only">Activo el campo Porcentaje</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="d-flex flex-column flex-sm-row align-items-center" formGroupName="value">
+            <div class="form-group mb-0 w-100 p-2">
+              <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="opcionPorcentaje" formControlName="opcion">
+                <label ngbButtonLabel class="btn-outline-secondary flex-fill text-nowrap">
+                  <input ngbButton type="radio" [value]="opcionPorcentaje.PORCENTAJE_RECARGO"> {{ opcionPorcentaje.PORCENTAJE_RECARGO }}
+                </label>
+                <label ngbButtonLabel class="btn-outline-secondary flex-fill text-nowrap">
+                  <input ngbButton type="radio" [value]="opcionPorcentaje.PORCENTAJE_DESCUENTO"> {{ opcionPorcentaje.PORCENTAJE_DESCUENTO }}
+                </label>
+              </div>
+            </div>
+            <div class="form-group mb-0 w-100 p-2">
+              <div class="input-group">
+                <input type="number" min="1" max="100" class="form-control text-right" required id="porcentaje" formControlName="porcentaje"
+                       aria-label="Porcentaje" aria-describedby="porcentaje-label" [ngClass]="{ 'is-invalid': submitted && f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors }">
+                <div class="input-group-append">
+                  <span class="input-group-text" id="porcentaje-label">%</span>
+                </div>
+              </div>
+              <div class="custom-error-message" *ngIf="submitted && f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors">
+                <div *ngIf="f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors.required">Requerido</div>
+                <div *ngIf="f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors.min">
+                  Mínimo {{ f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors.min.min | number:'1.0-2' }}
+                </div>
+                <div *ngIf="f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors.max">
+                  Máximo {{ f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors.max.max | number:'1.0-2' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr formGroupName="cantidadVentaMinima">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idCantidadVentaMinimaCheck" formControlName="check" (change)="checkChange('cantidadVentaMinima', $event)">
+            <label class="custom-control-label" for="idCantidadVentaMinimaCheck"><span class="sr-only">Activo el campo Rubro</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="form-group mb-0">
+            <label for="cantidadVentaMinima">Venta x Cantidad</label>
+            <input type="number" min="1" class="form-control text-right" required id="cantidadVentaMinima" formControlName="value"
+                   [ngClass]="{ 'is-invalid': submitted && f.cantidadVentaMinima.get('value').errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.cantidadVentaMinima.get('value').errors">
+              <div *ngIf="f.cantidadVentaMinima.get('value').errors.required">Requerido</div>
+              <div *ngIf="f.cantidadVentaMinima.get('value').errors.min">Mínimo {{ f.cantidadVentaMinima.get('value').errors.min.min | number:'1.0-2' }}</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="text-right">
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || !hasCheckedAnything()">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Actualizar
+      </button>
+    </div>
+  </form>
+</div>

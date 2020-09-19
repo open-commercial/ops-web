@@ -1,5 +1,20 @@
 import Big from 'big.js';
 
+export interface CalculosPrecioValues {
+  precioCosto: Big;
+  gananciaPorcentaje: Big;
+  gananciaNeto: Big;
+  precioVentaPublico: Big;
+  ivaPorcentaje: Big;
+  ivaNeto: Big;
+  precioLista: Big;
+  porcentajeBonificacionPrecio: Big;
+  precioBonificado: Big;
+  oferta: boolean;
+  porcentajeBonificacionOferta: Big;
+  precioOferta: Big;
+}
+
 export class CalculosPrecio {
 
   private pPrecioCosto = new Big(0);
@@ -11,8 +26,16 @@ export class CalculosPrecio {
   private pPrecioLista = new Big(0);
   private pPorcentajeBonificacionPrecio = new Big(0);
   private pPrecioBonificado = new Big(0);
+  private pOferta = false;
   private pPorcentajeBonificacionOferta = new Big(0);
   private pPrecioOferta = new Big(0);
+
+  /**
+   * Retorna un objeto con valores iniciales de CalculosPrecioValues
+   */
+  static getEmtpyValues(): CalculosPrecioValues {
+    return (new CalculosPrecio()).getValues();
+  }
 
   /**
    * Crea una instancia de esta clase a partir de un estado inicial.
@@ -27,6 +50,7 @@ export class CalculosPrecio {
     instance.pIvaNeto = new Big(initialState.ivaNeto);
     instance.pPrecioLista = new Big(initialState.precioLista);
     instance.pPorcentajeBonificacionPrecio = new Big(initialState.porcentajeBonificacionPrecio);
+    instance.pOferta = initialState.oferta;
     instance.pPorcentajeBonificacionOferta = new Big(initialState.porcentajeBonificacionOferta);
     instance.calcularPrecioBonificado();
     instance.calcularPrecioOferta();
@@ -91,10 +115,10 @@ export class CalculosPrecio {
     this.calcularIvaNeto();
     this.calcularPrecioLista();
     this.calcularPrecioBonificado();
+    this.calcularPrecioOferta();
   }
   get ivaPorcentaje(): Big { return this.pIvaPorcentaje; }
 
-  // set ivaNeto(value: Big) { this.pIvaNeto = value; }
   get ivaNeto(): Big { return this.pIvaNeto; }
   protected calcularIvaNeto() {
     this.pIvaNeto = this.pIvaPorcentaje.times(this.pPrecioVentaPublico).div(100);
@@ -121,7 +145,8 @@ export class CalculosPrecio {
   }
   get porcentajeBonificacionPrecio(): Big { return this.pPorcentajeBonificacionPrecio; }
   protected calcularporcentajeBonificacionPrecio() {
-    this.pPorcentajeBonificacionPrecio = (new Big(100)).times((new Big(1)).minus(this.pPrecioBonificado.div(this.pPrecioLista)));
+    this.pPorcentajeBonificacionPrecio = this.pPrecioLista.eq(0)
+      ? 0 : (new Big(100)).times((new Big(1)).minus(this.pPrecioBonificado.div(this.pPrecioLista)));
   }
 
   set precioBonificado(value: Big) {
@@ -133,21 +158,51 @@ export class CalculosPrecio {
     this.pPrecioBonificado = this.pPrecioLista.minus(this.pPorcentajeBonificacionPrecio.times(this.pPrecioLista).div(100));
   }
 
+  set oferta(value: boolean) {
+    this.pOferta = value;
+    // this.calcularPrecioOferta();
+  }
+  get oferta(): boolean { return this.pOferta; }
+
   set porcentajeBonificacionOferta(value: Big) {
     this.pPorcentajeBonificacionOferta = value;
     this.calcularPrecioOferta();
   }
-  get porcentajeBonificacionOferta(): Big { return this.pPorcentajeBonificacionOferta; }
+  get porcentajeBonificacionOferta(): Big {
+    // return this.pOferta ? this.pPorcentajeBonificacionOferta : new Big(0);
+    return this.pPorcentajeBonificacionOferta;
+  }
   protected calcularporcentajeBonificacionOferta() {
-    this.pPorcentajeBonificacionOferta = (new Big(100)).times((new Big(1)).minus(this.pPrecioOferta.div(this.pPrecioLista)));
+    this.pPorcentajeBonificacionOferta = this.pPrecioLista.eq(0)
+      ? 0 : (new Big(100)).times((new Big(1)).minus(this.pPrecioOferta.div(this.pPrecioLista)));
   }
 
   set precioOferta(value: Big) {
     this.pPrecioOferta = value;
     this.calcularporcentajeBonificacionOferta();
   }
-  get precioOferta(): Big { return this.pPrecioOferta; }
+  get precioOferta(): Big {
+    // return this.pOferta ? this.pPrecioOferta : new Big(0);
+    return this.pPrecioOferta;
+  }
   protected calcularPrecioOferta() {
     this.pPrecioOferta = this.pPrecioLista.minus(this.pPorcentajeBonificacionOferta.times(this.pPrecioLista).div(100));
+  }
+
+  getValues(): CalculosPrecioValues {
+    return {
+      precioCosto: this.precioCosto,
+      gananciaPorcentaje: this.gananciaPorcentaje,
+      gananciaNeto: this.gananciaNeto,
+      precioVentaPublico: this.precioVentaPublico,
+      ivaPorcentaje: this.ivaPorcentaje,
+      ivaNeto: this.ivaNeto,
+      precioLista: this.precioLista,
+      porcentajeBonificacionPrecio: this.porcentajeBonificacionPrecio,
+      precioBonificado: this.precioBonificado,
+      oferta: this.oferta,
+      porcentajeBonificacionOferta: this.porcentajeBonificacionOferta,
+      precioOferta: this.precioOferta,
+    };
   }
 }
