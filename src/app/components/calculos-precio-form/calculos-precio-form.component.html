@@ -70,7 +70,7 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <label for="porcentajeBonificacionPrecio">Porcentaje Bonif. (%)</label>
+          <label for="porcentajeBonificacionPrecio">(%) Bonif. </label>
           <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionPrecio" required formControlName="porcentajeBonificacionPrecio"
                  [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionPrecio.errors }"
                  (focusout)="calculosFieldChange('porcentajeBonificacionPrecio', $event)"
@@ -104,7 +104,7 @@
     </div>
     <div class="row mb-3">
       <div class="col-6">
-        <label for="porcentajeBonificacionOferta">Porcentaje Oferta (%)</label>
+        <label for="porcentajeBonificacionOferta">(%) Oferta</label>
         <input type="number" min="0" class="form-control text-right" id="porcentajeBonificacionOferta" required formControlName="porcentajeBonificacionOferta"
                [ngClass]="{ 'is-invalid': submitted && f.porcentajeBonificacionOferta.errors }"
                (focusout)="calculosFieldChange('porcentajeBonificacionOferta', $event)"

@@ -4,7 +4,7 @@ import {StorageService} from './storage.service';
 import {Producto} from '../models/producto';
 
 export enum BatchActionKey {
-  PRODUCTOS = 'BA-PRODUCTOS',
+  PRODUCTOS = 'ba-productos',
 }
 
 export interface BatchActionElement {
@@ -23,6 +23,7 @@ export class BatchActionsService {
         description: item.codigo ? (item.codigo + ' - ' + item.descripcion) : item.descripcion,
       });
     }
+    throw new Error('Unknown BatchActionKey');
   }
 
   constructor(private authService: AuthService,

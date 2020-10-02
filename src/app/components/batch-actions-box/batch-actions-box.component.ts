@@ -33,7 +33,7 @@ export class BatchActionsBoxComponent implements OnInit {
   }
 
   clearAll() {
-    const msg = '¿Desea quitar todos los productos de la selección?';
+    const msg = '¿Desea quitar todos los elementos de la selección?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.batchActionsService.clear(this.batchActionKey);

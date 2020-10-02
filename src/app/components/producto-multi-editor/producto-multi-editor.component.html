@@ -17,8 +17,8 @@
   <form [formGroup]="form" class="mt-2" *ngIf="form" (ngSubmit)="submit()">
     <table class="table table-sm table-bordered">
       <caption class="sr-only">Campos de productos a editar</caption>
-      <thead>
-      <tr><th scope="col"></th><th scope="col" class="w-100">Campo</th></tr>
+      <thead class="sr-only">
+      <tr><th scope="col">Seleccionar el campo</th><th scope="col" class="w-100">Campo</th></tr>
       </thead>
       <tbody>
       <tr formGroupName="idProveedor">

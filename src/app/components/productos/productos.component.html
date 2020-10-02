@@ -81,12 +81,12 @@
         </div>
         <div class="flex-fill d-flex flex-column ml-2">
           <span class="d-flex flex-row flex-wrap align-items-center">
-            <span class="mr-2 mb-1 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
             <span class="mr-2 mb-1 d-inline-block badge badge-info" *ngIf="item.publico"><fa-icon [icon]="['far', 'eye']"></fa-icon> PÚBLICO</span>
             <span class="mr-2 mb-1 d-inline-block badge badge-danger" *ngIf="!item.publico"><fa-icon [icon]="['far', 'eye-slash']"></fa-icon> PRIVADO</span>
             <span *ngIf="item.oferta" class="mb-1 badge badge-success">OFERTA {{ item.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
             <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="mb-1 badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio | number:'1.0-2' }}%</span>
           </span>
+          <span class="mr-2 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
           <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
           <span class="mr-2">Stock: <strong>{{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}</strong> - Otra Suc: {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}</span>
           <div *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">

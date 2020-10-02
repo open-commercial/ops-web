@@ -64,7 +64,12 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     {
       description: 'Editar los productos seleccionados',
       icon: ['fas', 'pen'],
-      clickFn: ids => this.router.navigate(['/productos/editar-multiple']),
+      clickFn: () => this.router.navigate(['/productos/editar-multiple']),
+    },
+    {
+      description: 'Eliminar los productos seleccionados',
+      icon: ['fas', 'trash'],
+      clickFn: ids => this.eliminarSeleccionados(ids),
     }
   ];
 
@@ -267,5 +272,29 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
         ;
       }
     }, () => {});
+  }
+
+  eliminarSeleccionados(ids: number[]) {
+    console.log(ids);
+    const msg = '¿Desea eliminar los productos seleccionandos?';
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.productosService.eliminarProductos(ids)
+          // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe(
+            () => {
+              this.batchActionsService.clear(this.baKey);
+              location.reload();
+              // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
+            },
+            err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
+          )
+        ;
+      }
+    });
   }
 }
