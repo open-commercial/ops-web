@@ -146,7 +146,8 @@ export class CalculosPrecio {
   get porcentajeBonificacionPrecio(): Big { return this.pPorcentajeBonificacionPrecio; }
   protected calcularporcentajeBonificacionPrecio() {
     this.pPorcentajeBonificacionPrecio = this.pPrecioLista.eq(0)
-      ? 0 : (new Big(100)).times((new Big(1)).minus(this.pPrecioBonificado.div(this.pPrecioLista)));
+      ? new Big(0)
+      : (new Big(100)).times((new Big(1)).minus(this.pPrecioBonificado.div(this.pPrecioLista)));
   }
 
   set precioBonificado(value: Big) {
@@ -174,7 +175,8 @@ export class CalculosPrecio {
   }
   protected calcularporcentajeBonificacionOferta() {
     this.pPorcentajeBonificacionOferta = this.pPrecioLista.eq(0)
-      ? 0 : (new Big(100)).times((new Big(1)).minus(this.pPrecioOferta.div(this.pPrecioLista)));
+      ? new Big(0)
+      : (new Big(100)).times((new Big(1)).minus(this.pPrecioOferta.div(this.pPrecioLista)));
   }
 
   set precioOferta(value: Big) {
