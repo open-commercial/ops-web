@@ -62,12 +62,12 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   baKey = BatchActionKey.PRODUCTOS;
   baActions: ActionConfiguration[] = [
     {
-      description: 'Editar los productos seleccionados',
+      description: 'Editar seleccionados',
       icon: ['fas', 'pen'],
       clickFn: () => this.router.navigate(['/productos/editar-multiple']),
     },
     {
-      description: 'Eliminar los productos seleccionados',
+      description: 'Eliminar seleccionados',
       icon: ['fas', 'trash'],
       clickFn: ids => this.eliminarSeleccionados(ids),
     }
@@ -264,10 +264,16 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos([producto.idProducto])
-          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
-            () => location.reload(),
-            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            () => {
+              this.batchActionsService.removeElememt(this.baKey, producto.idProducto);
+              // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
+              location.reload();
+            },
+            err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
           )
         ;
       }
@@ -275,13 +281,11 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   eliminarSeleccionados(ids: number[]) {
-    console.log(ids);
     const msg = '¿Desea eliminar los productos seleccionandos?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos(ids)
-          // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             () => {
               this.batchActionsService.clear(this.baKey);

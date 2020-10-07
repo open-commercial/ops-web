@@ -6,7 +6,7 @@
       <fa-icon [icon]="a.icon"></fa-icon>
     </button>
     <button class="btn btn-outline-secondary m-1" type="button"
-            ngbPopover="Limpiar selección" triggers="mouseenter:mouseleave" placement="left"
+            ngbPopover="Limpiar Seleccionados" triggers="mouseenter:mouseleave" placement="left"
             (click)="clearAll()" [disabled]="!batchActionsService.count(batchActionKey)">
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>

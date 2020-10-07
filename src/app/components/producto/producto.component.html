@@ -154,8 +154,8 @@
             </div>
           </div>
           <div class="row mb-3" *ngIf="producto">
-            <div class="col-md-6 mb-2">Última Modificación: {{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</div>
-            <div class="col-md-6">Fecha de Alta: {{ producto.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</div>
+            <div class="col-md-6 mb-2">Última Modificación: <strong>{{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</strong></div>
+            <div class="col-md-6">Fecha de Alta: <strong>{{ producto.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</strong></div>
           </div>
           <div class="form-group">
             <label for="nota">Nota</label>
