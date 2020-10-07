@@ -21,6 +21,8 @@ import { TraspasosComponent } from './components/traspasos/traspasos.component';
 import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-home.component';
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
+import {CajasHomeComponent} from './components/cajas-home/cajas-home.component';
+import {CajasComponent} from './components/cajas/cajas.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -61,6 +63,11 @@ const routes: Routes = [
           { path: '', component: TraspasosComponent },
           { path: 'nuevo', component: TraspasoComponent },
           { path: 'ver/:id', component: VerTraspasoComponent },
+        ]
+      },
+      { path: 'cajas', component: CajasHomeComponent, runGuardsAndResolvers: 'always',
+        children: [
+          { path: '', component: CajasComponent },
         ]
       }
     ]

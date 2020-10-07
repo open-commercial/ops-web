@@ -102,6 +102,8 @@ import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-ho
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
 import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
+import { CajasComponent } from './components/cajas/cajas.component';
+import { CajasHomeComponent } from './components/cajas-home/cajas-home.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -160,6 +162,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     VerTraspasoComponent,
     TraspasoComponent,
     ClienteInfoComponent,
+    CajasComponent,
+    CajasHomeComponent,
   ],
   imports: [
     BrowserModule,
