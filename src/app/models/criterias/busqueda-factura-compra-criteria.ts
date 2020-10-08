@@ -4,6 +4,8 @@ export interface BusquedaFacturaCompraCriteria {
   idSucursal: number;
   fechaDesde?: Date;
   fechaHasta?: Date;
+  fechaAltaDesde?: Date;
+  fechaAltaHasta?: Date;
   idProveedor?: number;
   numSerie?: number;
   numFactura?: number;
