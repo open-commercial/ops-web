@@ -31,9 +31,10 @@
             <label for="nro-pedido">Nº Pedido</label>
             <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
           </div>
-          <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
         </div>
         <div class="col-md-6">
+          <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
+          <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
           <div class="card card-body bg-light mb-3">
             <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorT" [values]="ordenarPorOptionsT" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorT></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoT" [values]="sentidoOptionsT" [label]="'Sentido'" formControlName="sentido" #sentidoT></app-filtro-ordenamiento>

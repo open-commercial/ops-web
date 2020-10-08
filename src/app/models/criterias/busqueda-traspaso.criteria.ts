@@ -5,6 +5,7 @@ export interface BusquedaTraspasoCriteria {
   nroPedido?: number;
   idSucursalOrigen?: number;
   idSucursalDestino?: number;
+  idProducto?: number;
   idUsuario?: number;
   pagina: number;
   ordenarPor?: string;
