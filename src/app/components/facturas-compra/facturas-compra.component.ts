@@ -93,22 +93,22 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
       terminos.idProducto = Number(ps.idProducto);
     }
 
-    if (ps.fechaDesde || ps.fechaHasta) {
+    if (ps.fechaFacturaDesde || ps.fechaFacturaHasta) {
       const aux = { desde: null, hasta: null };
 
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
+      if (ps.fechaFacturaDesde) {
+        const d = moment.unix(ps.fechaFacturaDesde).local();
         aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
+        terminos.fechaFacturaDesde = d.toDate();
       }
 
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
+      if (ps.fechaFacturaHasta) {
+        const h = moment.unix(ps.fechaFacturaHasta).local();
         aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
+        terminos.fechaFacturaHasta = h.toDate();
       }
 
-      this.filterForm.get('rangoFecha').setValue(aux);
+      this.filterForm.get('rangoFechaFactura').setValue(aux);
     }
 
     if (ps.fechaAltaDesde || ps.fechaAltaHasta) {
@@ -164,7 +164,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     this.filterForm = this.fb.group({
       idProveedor: '',
       idProducto: '',
-      rangoFecha: null,
+      rangoFechaFactura: null,
       rangoFechaAlta: null,
       tipoComprobante: '',
       numSerie: '',
@@ -178,7 +178,7 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     this.filterForm.reset({
       idProveedor: '',
       idProducto: '',
-      rangoFecha: null,
+      rangoFechaFactura: null,
       rangoFechaAlta: null,
       tipoComprobante: '',
       numSerie: '',
@@ -192,11 +192,11 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     const values = this.filterForm.value;
     const ret: {[k: string]: any} = {};
 
-    if (values.rangoFecha && values.rangoFecha.desde) {
-      ret.fechaDesde = this.helper.getUnixDateFromNgbDate(values.rangoFecha.desde);
+    if (values.rangoFechaFactura && values.rangoFechaFactura.desde) {
+      ret.fechaFacturaDesde = this.helper.getUnixDateFromNgbDate(values.rangoFechaFactura.desde);
     }
-    if (values.rangoFecha && values.rangoFecha.hasta) {
-      ret.fechaHasta = this.helper.getUnixDateFromNgbDate(values.rangoFecha.hasta);
+    if (values.rangoFechaFactura && values.rangoFechaFactura.hasta) {
+      ret.fechaFacturaHasta = this.helper.getUnixDateFromNgbDate(values.rangoFechaFactura.hasta);
     }
 
     if (values.rangoFechaAlta && values.rangoFechaAlta.desde) {
@@ -229,15 +229,15 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
       this.appliedFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
     }
 
-    if (values.rangoFecha && values.rangoFecha.desde) {
+    if (values.rangoFechaFactura && values.rangoFechaFactura.desde) {
       this.appliedFilters.push({
-        label: 'Fecha (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.desde)
+        label: 'Fecha Factura (desde)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFechaFactura.desde)
       });
     }
 
-    if (values.rangoFecha && values.rangoFecha.hasta) {
+    if (values.rangoFechaFactura && values.rangoFechaFactura.hasta) {
       this.appliedFilters.push({
-        label: 'Fecha (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFecha.hasta)
+        label: 'Fecha Factura (hasta)', value: HelperService.getFormattedDateFromNgbDate(values.rangoFechaFactura.hasta)
       });
     }
 
