@@ -32,7 +32,7 @@
       <tr *ngIf="factura.type === 'FacturaCompra'">
         <th scope="row">Proveedor</th><td>{{ factura.razonSocialProveedor }}</td>
       </tr>
-      <tr><th scope="row">Fecha Factura</th><td>{{ factura.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
+      <tr><th scope="row">Fecha Factura</th><td>{{ factura.fecha | date:'dd/MM/yyyy' }}</td></tr>
       <tr *ngIf="factura.type === 'FacturaCompra'">
         <th scope="row">Fecha de Alta</th><td>{{ factura.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</td>
       </tr>
