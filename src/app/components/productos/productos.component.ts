@@ -70,6 +70,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       description: 'Eliminar seleccionados',
       icon: ['fas', 'trash'],
       clickFn: ids => this.eliminarSeleccionados(ids),
+      isVisible: () => this.puedeEliminarProducto(),
     }
   ];
 
@@ -254,7 +255,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   eliminarProducto(producto: Producto) {
     if (!this.puedeEliminarProducto()) {
-      this.mensajeService.msg('No posee permiso para eliminar un producto.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para productos.', MensajeModalType.ERROR);
       return;
     }
 
@@ -281,6 +282,11 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   eliminarSeleccionados(ids: number[]) {
+    if (!this.puedeEliminarProducto()) {
+      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
+      return;
+    }
+
     const msg = '¿Desea eliminar los productos seleccionandos?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {

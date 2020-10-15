@@ -8,6 +8,7 @@ export interface ActionConfiguration {
   description: string;
   icon: IconProp;
   clickFn: (ids: number[]) => any;
+  isVisible?: () => boolean;
 }
 
 @Component({
@@ -53,5 +54,16 @@ export class BatchActionsBoxComponent implements OnInit {
     const elements = this.batchActionsService.getElements(this.batchActionKey);
     const ids = elements.map(e => e.id);
     a.clickFn(ids);
+  }
+
+  isButtonVisible(a: ActionConfiguration) {
+    /* if a.isVisible is a function */
+    if (a.isVisible && {}.toString.call(a.isVisible) === '[object Function]') {
+      return a.isVisible();
+    }
+    if (typeof a.isVisible === 'boolean') {
+      return a.isVisible;
+    }
+    return true;
   }
 }

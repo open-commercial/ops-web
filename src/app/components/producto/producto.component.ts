@@ -22,6 +22,9 @@ import { CalculosPrecio } from '../../models/calculos-precio';
 import { Location } from '@angular/common';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 import * as moment from 'moment';
+import {AuthService} from '../../services/auth.service';
+import {Usuario} from '../../models/usuario';
+import {Rol} from '../../models/rol';
 
 Big.DP = 15;
 
@@ -36,6 +39,9 @@ export class ProductoComponent implements OnInit {
   rubros: Rubro[] = [];
   sucursales: Sucursal[] = [];
   ivas = [0, 10.5, 21];
+
+  allowedRolesToEditCantidades = [ Rol.ADMINISTRADOR ];
+  hasRolToEditCantidades = false;
 
   producto: Producto;
   form: FormGroup;
@@ -57,13 +63,15 @@ export class ProductoComponent implements OnInit {
               private mensajeService: MensajeService,
               private fb: FormBuilder,
               private sucursalesService: SucursalesService,
-              private location: Location) {
+              private location: Location,
+              private authService: AuthService) {
     accordionConfig.type = 'dark';
   }
 
   ngOnInit() {
     this.createForm();
     const obvs: Observable<any>[] = [
+      this.authService.getLoggedInUsuario(),
       this.medidaService.getMedidas(),
       this.rubrosService.getRubros(),
       this.sucursalesService.getSucursales(),
@@ -78,12 +86,13 @@ export class ProductoComponent implements OnInit {
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
-          this.medidas = recursos[0];
-          this.rubros = recursos[1];
-          this.sucursales = recursos[2];
-          if (recursos[3]) {
-            this.producto = recursos[3];
+        (recursos: [Usuario, Medida[], Rubro[], Sucursal[], Producto?]) => {
+          this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(recursos[0], this.allowedRolesToEditCantidades);
+          this.medidas = recursos[1];
+          this.rubros = recursos[2];
+          this.sucursales = recursos[3];
+          if (recursos[4]) {
+            this.producto = recursos[4];
             this.title = this.producto.descripcion;
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
@@ -111,7 +120,7 @@ export class ProductoComponent implements OnInit {
       idRubro: [null, Validators.required],
       calculosPrecio: [CalculosPrecio.getEmtpyValues(), Validators.required],
       cantidadEnSucursal: this.fb.array([]),
-      bulto: [1, [Validators.required, Validators.min(1)]],
+      bulto: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]],
       publico: false,
       fechaVencimiento: null,
       nota: [null, Validators.maxLength(250)],
@@ -132,6 +141,9 @@ export class ProductoComponent implements OnInit {
         ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
       );
       this.form.get('bulto').setValue(this.producto.bulto);
+      if (this.hasRolToEditCantidades) {
+        this.form.get('bulto').enable();
+      }
       this.form.get('publico').setValue(this.producto.publico);
 
       if (this.producto.fechaVencimiento) {
@@ -153,7 +165,7 @@ export class ProductoComponent implements OnInit {
     this.cantidadEnSucursal.push(this.fb.group({
       idSucursal: [idSucursal, Validators.required],
       nombreSucursal: [nombreSucursal, Validators.required],
-      cantidad: [cantidad, [Validators.required, Validators.min(0)]],
+      cantidad: [{ value: cantidad, disabled: !this.hasRolToEditCantidades }, [Validators.required, Validators.min(0)]],
     }));
   }
 
@@ -213,14 +225,14 @@ export class ProductoComponent implements OnInit {
 
     const auxCes = {};
     if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
-      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.idSucursal] = ces.cantidad);
+      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.idSucursal] = this.hasRolToEditCantidades ? ces.cantidad : 0);
     }
 
     return {
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
       cantidadEnSucursal: auxCes,
-      bulto: formValues.bulto,
+      bulto: this.hasRolToEditCantidades ? formValues.bulto : 1,
       precioCosto: formValues.calculosPrecio.precioCosto.toString(),
       gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),
       gananciaNeto: formValues.calculosPrecio.gananciaNeto.toString(),
@@ -250,7 +262,7 @@ export class ProductoComponent implements OnInit {
         const aux = this.producto.cantidadEnSucursales.filter((v: CantidadEnSucursal) => v.idSucursal === ces.idSucursal);
         if (aux.length) {
           const nCes = aux[0];
-          nCes.cantidad = ces.cantidad;
+          nCes.cantidad = this.hasRolToEditCantidades ? ces.cantidad : aux[0].cantidad;
           auxCes.push(nCes);
         }
       });
@@ -261,7 +273,7 @@ export class ProductoComponent implements OnInit {
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
       cantidadEnSucursales: auxCes,
-      bulto: formValues.bulto,
+      bulto: this.hasRolToEditCantidades ? formValues.bulto : this.producto.bulto,
       publico: formValues.publico,
       precioCosto: formValues.calculosPrecio.precioCosto.toString(),
       gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),

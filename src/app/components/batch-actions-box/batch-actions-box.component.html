@@ -1,10 +1,12 @@
 <div class="app-batch-actions-box d-flex flex-column align-items-end flex-md-row-reverse align-items-md-center border rounded my-2">
   <div class="mb-0 d-flex flex-row flex-md-column align-items-center justify-content-center">
-    <button class="btn btn-primary m-1" type="button" *ngFor="let a of actions"
-            [ngbPopover]="a.description" triggers="mouseenter:mouseleave" placement="left"
-            (click)="actionClick(a)" [disabled]="!batchActionsService.count(batchActionKey)">
-      <fa-icon [icon]="a.icon"></fa-icon>
-    </button>
+    <ng-container *ngFor="let a of actions">
+      <button class="btn btn-primary m-1" type="button" *ngIf="isButtonVisible(a)"
+              [ngbPopover]="a.description" triggers="mouseenter:mouseleave" placement="left"
+              (click)="actionClick(a)" [disabled]="!batchActionsService.count(batchActionKey)">
+        <fa-icon [icon]="a.icon"></fa-icon>
+      </button>
+    </ng-container>
     <button class="btn btn-outline-secondary m-1" type="button"
             ngbPopover="Limpiar Seleccionados" triggers="mouseenter:mouseleave" placement="left"
             (click)="clearAll()" [disabled]="!batchActionsService.count(batchActionKey)">

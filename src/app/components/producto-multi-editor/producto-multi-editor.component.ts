@@ -15,6 +15,9 @@ import {MensajeService} from '../../services/mensaje.service';
 import {ProductosParaActualizar} from '../../models/productos-para-actualizar';
 import {CalculosPrecio, CalculosPrecioValues} from '../../models/calculos-precio';
 import {ProductosService} from '../../services/productos.service';
+import {Rol} from '../../models/rol';
+import {AuthService} from '../../services/auth.service';
+import {Usuario} from '../../models/usuario';
 
 enum OpcionPorcentaje {
   PORCENTAJE_RECARGO = '% Recargo',
@@ -33,6 +36,9 @@ export class ProductoMultiEditorComponent implements OnInit {
   medidas: Medida[] = [];
   rubros: Rubro[] = [];
 
+  allowedRolesToEditCantidades = [ Rol.ADMINISTRADOR ];
+  hasRolToEditCantidades = false;
+
   baElements: BatchActionElement[] = [];
   opcionPorcentaje = OpcionPorcentaje;
 
@@ -47,7 +53,8 @@ export class ProductoMultiEditorComponent implements OnInit {
               private mensajeService: MensajeService,
               private productosService: ProductosService,
               private router: Router,
-              private location: Location) { }
+              private location: Location,
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.creatForm();
@@ -59,6 +66,7 @@ export class ProductoMultiEditorComponent implements OnInit {
     }
 
     const obvs: Observable<any>[] = [
+      this.authService.getLoggedInUsuario(),
       this.medidaService.getMedidas(),
       this.rubrosService.getRubros(),
     ];
@@ -67,9 +75,13 @@ export class ProductoMultiEditorComponent implements OnInit {
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (recursos: [Medida[], Rubro[]]) => {
-          this.medidas = recursos[0];
-          this.rubros = recursos[1];
+        (recursos: [Usuario, Medida[], Rubro[]]) => {
+          this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(recursos[0], this.allowedRolesToEditCantidades);
+          this.medidas = recursos[1];
+          this.rubros = recursos[2];
+          if (this.hasRolToEditCantidades) {
+            this.form.get('cantidadVentaMinima').get('check').enable();
+          }
         },
         err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
@@ -90,7 +102,10 @@ export class ProductoMultiEditorComponent implements OnInit {
       idMedida: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
       publico: this.fb.group({ check: false, value: [{ value: false, disabled: true }] }),
       calculosPrecio: this.fb.group({ check: false, value: [{ value: CalculosPrecio.getEmtpyValues(), disabled: true }] }),
-      cantidadVentaMinima: this.fb.group({ check: false, value: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]] }),
+      cantidadVentaMinima: this.fb.group({
+        check: [{ value: false, disabled: true }],
+        value: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]] }
+      ),
       descuentoRecargoPorcentaje: this.fb.group({
         check: false,
         value: this.fb.group({
@@ -166,7 +181,7 @@ export class ProductoMultiEditorComponent implements OnInit {
         ppa.descuentoRecargoPorcentaje = (formValues.descuentoRecargoPorcentaje.value.opcion === OpcionPorcentaje.PORCENTAJE_RECARGO
           ? 1 : -1) * formValues.descuentoRecargoPorcentaje.value.porcentaje;
       }
-      if (formValues.cantidadVentaMinima.check) {
+      if (formValues.cantidadVentaMinima && formValues.cantidadVentaMinima.check) {
         ppa.cantidadVentaMinima = formValues.cantidadVentaMinima.value;
       }
 
