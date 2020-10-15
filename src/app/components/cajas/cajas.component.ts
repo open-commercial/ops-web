@@ -14,6 +14,9 @@ import {HelperService} from '../../services/helper.service';
 import {map} from 'rxjs/operators';
 import {Usuario} from '../../models/usuario';
 import {UsuariosService} from '../../services/usuarios.service';
+import {EstadoCaja} from '../../models/estado-caja';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NuevaCajaModalComponent} from '../nueva-caja-modal/nueva-caja-modal.component';
 
 @Component({
   selector: 'app-cajas',
@@ -21,7 +24,7 @@ import {UsuariosService} from '../../services/usuarios.service';
   styleUrls: ['./cajas.component.scss']
 })
 export class CajasComponent extends ListadoBaseComponent implements OnInit {
-
+  estado = EstadoCaja;
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -29,11 +32,13 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
               protected mensajeService: MensajeService,
               private fb: FormBuilder,
               private cajasService: CajasService,
-              private usuariosService: UsuariosService) {
+              private usuariosService: UsuariosService,
+              private modalService: NgbModal) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
+    super.ngOnInit();
   }
 
   getTerminosFromQueryParams(params = null) {
@@ -76,7 +81,6 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
       this.filterForm.get('idUsuarioCierre').setValue(Number(ps.idUsuarioCierre));
       terminos.idUsuarioCierre = Number(ps.idUsuarioCierre);
     }
-
     return terminos;
   }
 
@@ -148,5 +152,12 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
     return this.cajasService.getCajas(terminos as BusquedaCajaCriteria);
+  }
+
+  abrirCaja() {
+    const modalRef = this.modalService.open(NuevaCajaModalComponent, {scrollable: true});
+    modalRef.result.then(() => {
+      location.reload();
+    }, () => {});
   }
 }

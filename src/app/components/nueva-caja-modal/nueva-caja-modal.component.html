@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <h4 class="modal-title">Abrir Caja</h4>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form">
+    <div class="form-group">
+      <label for="saldo">Saldo Apertura</label>
+      <input type="number" required min="0" class="form-control" id="saldo" formControlName="saldo"
+             [ngClass]="{ 'is-invalid': submitted && f.saldo.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.saldo.errors">
+        <div *ngIf="f.saldo.errors.required">Requerido</div>
+        <div *ngIf="f.saldo.errors.min">Mínimo {{ f.saldo.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+    Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="loading">
+    <fa-icon [icon]="['fas', 'check']" *ngIf="!loading"></fa-icon>
+    <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
+    Aceptar
+  </button>
+</div>

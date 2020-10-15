@@ -22,7 +22,7 @@ import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageKeys, StorageService } from '../../services/storage.service';
 import { ProductosService } from '../../services/productos.service';
 import { PedidosService } from '../../services/pedidos.service';
-import { EstadoPedido } from '../../models/estado.pedido';
+import { EstadoPedido } from '../../models/estado-pedido';
 import { Pedido } from '../../models/pedido';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
