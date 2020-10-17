@@ -1,25 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { SucursalesService } from '../../services/sucursales.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-producto-criteria';
-import { Rubro } from '../../models/rubro';
-import { RubrosService } from '../../services/rubros.service';
-import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import { finalize, map } from 'rxjs/operators';
-import { MensajeService } from '../../services/mensaje.service';
-import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { Producto } from '../../models/producto';
-import { Pagination } from '../../models/pagination';
-import { ProductosService } from '../../services/productos.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {SucursalesService} from '../../services/sucursales.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BusquedaProductoCriteria} from '../../models/criterias/busqueda-producto-criteria';
+import {Rubro} from '../../models/rubro';
+import {RubrosService} from '../../services/rubros.service';
+import {LoadingOverlayService} from '../../services/loading-overlay.service';
+import {finalize, map} from 'rxjs/operators';
+import {MensajeService} from '../../services/mensaje.service';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {Producto} from '../../models/producto';
+import {Pagination} from '../../models/pagination';
+import {ProductosService} from '../../services/productos.service';
 import {combineLatest, Observable} from 'rxjs';
-import { Proveedor } from '../../models/proveedor';
-import { ProveedoresService } from '../../services/proveedores.service';
-import { ListadoBaseComponent } from '../listado-base.component';
-import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
+import {Proveedor} from '../../models/proveedor';
+import {ProveedoresService} from '../../services/proveedores.service';
+import {ListadoBaseComponent} from '../listado-base.component';
+import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
 import {Usuario} from '../../models/usuario';
+import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
+import {ActionConfiguration} from '../batch-actions-box/batch-actions-box.component';
+
+let self = null;
 
 @Component({
   selector: 'app-productos',
@@ -27,6 +31,7 @@ import {Usuario} from '../../models/usuario';
   styleUrls: ['./productos.component.scss']
 })
 export class ProductosComponent extends ListadoBaseComponent implements OnInit {
+  isBatchActionsBoxCollapsed = true;
   ordenarPorOptionsP = [
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
@@ -54,6 +59,21 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
 
+  baKey = BatchActionKey.PRODUCTOS;
+  baActions: ActionConfiguration[] = [
+    {
+      description: 'Editar seleccionados',
+      icon: ['fas', 'pen'],
+      clickFn: () => this.router.navigate(['/productos/editar-multiple']),
+    },
+    {
+      description: 'Eliminar seleccionados',
+      icon: ['fas', 'trash'],
+      clickFn: ids => this.eliminarSeleccionados(ids),
+      isVisible: () => this.puedeEliminarProducto(),
+    }
+  ];
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -63,8 +83,10 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
               public loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               public productosService: ProductosService,
-              private proveedoresService: ProveedoresService) {
+              private proveedoresService: ProveedoresService,
+              public batchActionsService: BatchActionsService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    self = this;
   }
 
   ngOnInit() {
@@ -233,7 +255,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   eliminarProducto(producto: Producto) {
     if (!this.puedeEliminarProducto()) {
-      this.mensajeService.msg('No posee permiso para eliminar un producto.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para productos.', MensajeModalType.ERROR);
       return;
     }
 
@@ -243,13 +265,46 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos([producto.idProducto])
-          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
-            () => location.reload(),
-            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            () => {
+              this.batchActionsService.removeElememt(this.baKey, producto.idProducto);
+              // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
+              location.reload();
+            },
+            err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
           )
         ;
       }
     }, () => {});
+  }
+
+  eliminarSeleccionados(ids: number[]) {
+    if (!this.puedeEliminarProducto()) {
+      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = '¿Desea eliminar los productos seleccionandos?';
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.productosService.eliminarProductos(ids)
+          .subscribe(
+            () => {
+              this.batchActionsService.clear(this.baKey);
+              location.reload();
+              // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
+            },
+            err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
+          )
+        ;
+      }
+    });
   }
 }

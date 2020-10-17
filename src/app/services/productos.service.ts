@@ -11,6 +11,7 @@ import { ProductoFaltante } from '../models/producto-faltante';
 import { CantidadEnSucursal } from '../models/cantidad-en-sucursal';
 import { SucursalesService } from './sucursales.service';
 import { NuevoProducto } from '../models/nuevo-producto';
+import {ProductosParaActualizar} from '../models/productos-para-actualizar';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,10 @@ export class ProductosService {
   actualizarProducto(p: Producto, idMedida: number, idRubro: number, idProveedor: number): Observable<void> {
     const qs = HelperService.getQueryString({ idMedida, idRubro, idProveedor });
     return this.http.put<void>(this.url + `?${qs}`, p);
+  }
+
+  actualizarMultiplesProductos(ppa: ProductosParaActualizar): Observable<void> {
+    return this.http.put<void>(this.url + '/multiples', ppa);
   }
 
   eliminarProductos(ids: number[]): Observable<void> {

@@ -1,0 +1,28 @@
+<div class="app-batch-actions-box d-flex flex-column align-items-end flex-md-row-reverse align-items-md-center border rounded my-2">
+  <div class="mb-0 d-flex flex-row flex-md-column align-items-center justify-content-center">
+    <ng-container *ngFor="let a of actions">
+      <button class="btn btn-primary m-1" type="button" *ngIf="isButtonVisible(a)"
+              [ngbPopover]="a.description" triggers="mouseenter:mouseleave" placement="left"
+              (click)="actionClick(a)" [disabled]="!batchActionsService.count(batchActionKey)">
+        <fa-icon [icon]="a.icon"></fa-icon>
+      </button>
+    </ng-container>
+    <button class="btn btn-outline-secondary m-1" type="button"
+            ngbPopover="Limpiar Seleccionados" triggers="mouseenter:mouseleave" placement="left"
+            (click)="clearAll()" [disabled]="!batchActionsService.count(batchActionKey)">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+    </button>
+  </div>
+  <div class="w-100 p-1 d-flex flex-column flex-sm-row flex-sm-wrap">
+    <div class="p-1" *ngFor="let e of batchActionsService.getElements(batchActionKey);">
+      <div class="d-flex flex-row justify-content-between align-items-center px-2 py-1 border border-secondary rounded">
+        <div class="description font-weight-bold small">{{ e.description }}</div>
+        <div class="flex-grow-0 flex-shrink-0">
+          <button class="btn btn-sm btn-primary ml-2" type="button" (click)="removeItem(e.id)">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

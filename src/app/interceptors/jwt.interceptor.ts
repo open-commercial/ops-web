@@ -17,12 +17,11 @@ export class JwtInterceptor implements HttpInterceptor {
       request = request.clone({setHeaders: {Authorization: `Bearer ${token}`}});
     }
     return next.handle(request)
-      .pipe(
-        catchError(err => {
-          if (err.status === 401 || err.status === 403) { auth.logout(); }
+      .pipe(catchError(err => {
+          if (err.status === 401 || err.status === 403) {
+            auth.logout();
+          }
           return throwError(err);
-        })
-      )
-    ;
+        }));
   }
 }

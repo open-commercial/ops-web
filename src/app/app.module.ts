@@ -50,6 +50,7 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -102,6 +103,9 @@ import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-ho
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
 import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
+import { BatchActionsBoxComponent } from './components/batch-actions-box/batch-actions-box.component';
+import { ProductoMultiEditorComponent } from './components/producto-multi-editor/producto-multi-editor.component';
+import { CalculosPrecioFormComponent } from './components/calculos-precio-form/calculos-precio-form.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -160,6 +164,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     VerTraspasoComponent,
     TraspasoComponent,
     ClienteInfoComponent,
+    BatchActionsBoxComponent,
+    ProductoMultiEditorComponent,
+    CalculosPrecioFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -231,6 +238,7 @@ export class AppModule {
       faCopy,
       faArrowAltCircleDown,
       faExchangeAlt,
+      faCheckSquare
     );
   }
 }

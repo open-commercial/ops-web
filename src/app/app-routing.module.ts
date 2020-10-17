@@ -21,6 +21,7 @@ import { TraspasosComponent } from './components/traspasos/traspasos.component';
 import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-home.component';
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
+import {ProductoMultiEditorComponent} from './components/producto-multi-editor/producto-multi-editor.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -53,7 +54,8 @@ const routes: Routes = [
           { path: '', component: ProductosComponent },
           { path: 'nuevo', component: ProductoComponent },
           { path: 'editar/:id', component: ProductoComponent },
-          { path: 'ver/:id', component: VerProductoComponent }
+          { path: 'ver/:id', component: VerProductoComponent },
+          { path: 'editar-multiple', component: ProductoMultiEditorComponent }
         ]
       },
       { path: 'traspasos', component: TraspasosHomeComponent, runGuardsAndResolvers: 'always',
