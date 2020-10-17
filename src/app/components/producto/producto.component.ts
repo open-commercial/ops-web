@@ -304,12 +304,15 @@ export class ProductoComponent implements OnInit {
       return;
     }
 
+    console.log(activeId);
+
     if (
       (activeId === 'general' && !this.isGeneralPanelValid()) ||
       (activeId === 'precios' && !this.isPreciosPanelValid()) ||
       (activeId === 'cantidades' && !this.isCantidadesPanelValid()) ||
       (activeId === 'propiedades' && !this.isPropiedadesPanelValid())
     ) {
+      if (activeId === 'cantidades') { console.log(this.isCantidadesPanelValid()); }
       this.submitted = true;
       $event.preventDefault();
       return;
@@ -359,7 +362,11 @@ export class ProductoComponent implements OnInit {
   }
 
   isCantidadesPanelValid(): boolean {
-    return this.form.get('cantidadEnSucursal').valid && this.form.get('bulto').valid;
+    let isValid = this.form.get('cantidadEnSucursal').valid;
+    if (this.form.get('bulto').enabled) {
+      isValid = isValid && this.form.get('bulto').valid;
+    }
+    return isValid;
   }
 
   isPropiedadesPanelValid(): boolean {
