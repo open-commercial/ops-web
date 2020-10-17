@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   apiUrl: 'https://api.globodeoro.com',
-  appVersion: 13,
+  appVersion: 14,
   appName: 'SIC_OPS_WEB'
 };
