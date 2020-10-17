@@ -61,15 +61,6 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
 
   usuario: Usuario;
 
-  allowedRolesToCrear: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
-  hasRoleToCrear = false;
-
-  allowedRolesToAutorizar: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
-  hasRoleToAutorizar = false;
-
-  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
-  hasRoleToDelete = false;
-
   allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRoleToEnviarPorEmail = false;
 
@@ -95,8 +86,6 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((u: Usuario) => {
         this.usuario = u;
-        this.hasRoleToAutorizar = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToAutorizar);
-        this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToDelete);
         this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToEnviarPorEmail);
       })
     ;
@@ -307,61 +296,6 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
 
   verFactura(factura: FacturaVenta) {
     this.router.navigate(['/facturas-venta/ver', factura.idFactura]);
-  }
-
-  puedeAutorizarFactura(f: FacturaVenta) {
-    return this.hasRoleToAutorizar && !f.cae &&
-      [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C].indexOf(f.tipoComprobante) >= 0;
-  }
-
-  autorizarFactura(factura: FacturaVenta) {
-    if (!this.puedeAutorizarFactura(factura)) {
-      this.mensajeService.msg('No posee permiso para autorizar una factura o bien ya se encuentra autorizada.', MensajeModalType.ERROR);
-      return;
-    }
-
-    this.loadingOverlayService.activate();
-    this.facturasVentaService.autorizarFactura(factura.idFactura)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (f: FacturaVenta) => {
-          if (f.cae) {
-            const idx: number = this.items.findIndex((fv: FacturaVenta) => fv.idFactura === f.idFactura);
-            if (idx >= 0) { this.items[idx] = f; }
-            this.mensajeService.msg('La factura fué autorizada correctamente.', MensajeModalType.INFO);
-          } else {
-            this.mensajeService.msg('La factura NO fué autorizada por AFIP.', MensajeModalType.ERROR);
-          }
-        },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
-    ;
-  }
-
-  puedeEliminarFactura(f: FacturaVenta) {
-    return this.hasRoleToDelete && !f.cae;
-  }
-
-  eliminarFactura(factura: FacturaVenta) {
-    if (!this.puedeEliminarFactura(factura)) {
-      this.mensajeService.msg('No posee permiso para eliminar una factura.', MensajeModalType.ERROR);
-      return;
-    }
-
-    const msg = `¿Está seguro que desea eliminar la factura #${this.helper.formatNumFactura(factura.numSerie, factura.numFactura)}?`;
-
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) {
-        this.loadingOverlayService.activate();
-        this.facturasService.eliminarFactura(factura.idFactura)
-          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe(
-            () => location.reload(),
-            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
-          )
-        ;
-      }
-    }, () => {});
   }
 
   puedeEnviarPorEmail() {

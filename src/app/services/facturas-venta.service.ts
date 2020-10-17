@@ -49,10 +49,6 @@ export class FacturasVentaService {
     return this.http.get<RenglonFactura[]>(`${this.url}/renglones/pedidos/${idPedido}?${qs}`);
   }
 
-  autorizarFactura(idFactura: number): Observable<FacturaVenta> {
-    return this.http.post<FacturaVenta>(`${this.url}/${idFactura}/autorizacion`, {});
-  }
-
   enviarPorEmail(idFactura: number): Observable<void> {
     return this.http.get<void>(`${this.url}/email/${idFactura}`);
   }
