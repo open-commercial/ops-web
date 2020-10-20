@@ -10,7 +10,6 @@ import {combineLatest, Observable} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {Router} from '@angular/router';
 import {MensajeService} from '../../services/mensaje.service';
 import {ProductosParaActualizar} from '../../models/productos-para-actualizar';
 import {CalculosPrecio, CalculosPrecioValues} from '../../models/calculos-precio';
@@ -52,7 +51,6 @@ export class ProductoMultiEditorComponent implements OnInit {
               private rubrosService: RubrosService,
               private mensajeService: MensajeService,
               private productosService: ProductosService,
-              private router: Router,
               private location: Location,
               private authService: AuthService) { }
 
@@ -85,7 +83,7 @@ export class ProductoMultiEditorComponent implements OnInit {
         },
         err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.router.navigate(['/productos']);
+          this.location.back();
         }
       )
     ;
@@ -192,7 +190,7 @@ export class ProductoMultiEditorComponent implements OnInit {
           () => {
             this.batchActionsService.clear(BatchActionKey.PRODUCTOS);
             this.mensajeService.msg('Productos actualizados correctamente!', MensajeModalType.INFO);
-            this.router.navigate(['/productos']);
+            this.location.back();
           },
           err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         )
