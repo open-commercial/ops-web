@@ -18,7 +18,6 @@ export class AuthService {
 
   urlLogin = environment.apiUrl + '/api/v1/login';
   urlLogout = environment.apiUrl + '/api/v1/logout';
-  urlPasswordRecovery = environment.apiUrl + '/api/v1/password-recovery';
   jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient,
@@ -28,7 +27,7 @@ export class AuthService {
               private loadingOverlayService: LoadingOverlayService) {}
 
   login(user: string, pass: string) {
-    const credential = { username: user, password: pass, aplicacion: environment.appName };
+    const credential = { username: user, password: pass };
     return this.http.post(this.urlLogin, credential, {responseType: 'text'})
       .pipe(
         map(data => {
@@ -51,11 +50,13 @@ export class AuthService {
     this.http.put(this.urlLogout, null)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(() => {
-        const keysToRemove = [StorageKeys.TOKEN];
-        keysToRemove.forEach(v => this.storageService.removeItem(v));
-        this.router.navigate(['']);
-      })
-    ;
+        this.cleanAccessTokenInLocalStorage();
+        this.router.navigate(['/login'], {queryParams: {return: this.router.routerState.snapshot.url}});
+      });
+  }
+
+  cleanAccessTokenInLocalStorage() {
+    this.storageService.removeItem(StorageKeys.TOKEN);
   }
 
   getToken(): string {
@@ -63,7 +64,9 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !this.jwtHelper.isTokenExpired(this.storageService.getItem('token'));
+    const isExpired = this.jwtHelper.isTokenExpired(this.storageService.getItem('token'));
+    if (isExpired) { this.cleanAccessTokenInLocalStorage(); }
+    return !isExpired;
   }
 
   getLoggedInUsuario(): Observable<Usuario> {
@@ -78,19 +81,11 @@ export class AuthService {
     return decodedToken.idUsuario;
   }
 
-  solicitarCambioContrasenia(email: string) {
-    return this.http.get(this.urlPasswordRecovery + `&email=${email}`);
-  }
-
-  cambiarPassword(k: string, i: number) {
-    return this.http.post(this.urlPasswordRecovery, { key: k, id: i, aplicacion: environment.appName }, {responseType: 'text'});
-  }
-
   setAuthenticationInfo(token: string) {
     this.storageService.setItem(StorageKeys.TOKEN, token);
   }
 
-  userHasAnyOfTheseRoles(u: Usuario, roles: Rol[]): boolean {
-    return u && u.roles.filter(x => roles.includes(x)).length > 0;
+  userHasAnyOfTheseRoles(usuario: Usuario, roles: Rol[]): boolean {
+    return usuario && usuario.roles.filter(x => roles.includes(x)).length > 0;
   }
 }
