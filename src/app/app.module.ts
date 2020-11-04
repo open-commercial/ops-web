@@ -51,7 +51,9 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -106,7 +108,10 @@ import { TraspasoComponent } from './components/traspaso/traspaso.component';
 import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
 import { CajasComponent } from './components/cajas/cajas.component';
 import { CajasHomeComponent } from './components/cajas-home/cajas-home.component';
-import { NuevaCajaModalComponent } from './components/nueva-caja-modal/nueva-caja-modal.component';
+import { MontoModalComponent } from './components/monto-modal/monto-modal.component';
+import { VerCajaComponent } from './components/ver-caja/ver-caja.component';
+import { MovimientoCajaComponent } from './components/movimiento-caja/movimiento-caja.component';
+import { NuevoGastoModalComponent } from './components/nuevo-gasto-modal/nuevo-gasto-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -167,7 +172,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ClienteInfoComponent,
     CajasComponent,
     CajasHomeComponent,
-    NuevaCajaModalComponent,
+    MontoModalComponent,
+    VerCajaComponent,
+    MovimientoCajaComponent,
+    NuevoGastoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -195,7 +203,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuarioModalComponent,
     ProveedorModalComponent,
     DisponibilidadStockModalComponent,
-    NuevaCajaModalComponent,
+    MontoModalComponent,
+    NuevoGastoModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -241,7 +250,9 @@ export class AppModule {
       faArrowAltCircleDown,
       faExchangeAlt,
       faLockOpen,
+      faLock,
       faSyncAlt,
+      faCoins,
     );
   }
 }

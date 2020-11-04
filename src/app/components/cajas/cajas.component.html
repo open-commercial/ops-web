@@ -72,17 +72,17 @@
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block">
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verCaja(item)">
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
         </li>
         <li class="list-inline-item" *ngIf="item.estado === estado.CERRADA">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Reabrir" placement="left" triggers="mouseenter:mouseleave">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Reabrir" placement="left" triggers="mouseenter:mouseleave" (click)="reabrirCaja(item)">
             <fa-icon [icon]="['fas', 'lock-open']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave">
+        <li class="list-inline-item" *ngIf="hasRoleToDelete">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarCaja(item)">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>
         </li>

@@ -23,6 +23,7 @@ import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.com
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
 import {CajasHomeComponent} from './components/cajas-home/cajas-home.component';
 import {CajasComponent} from './components/cajas/cajas.component';
+import {VerCajaComponent} from './components/ver-caja/ver-caja.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -68,6 +69,7 @@ const routes: Routes = [
       { path: 'cajas', component: CajasHomeComponent, runGuardsAndResolvers: 'always',
         children: [
           { path: '', component: CajasComponent },
+          { path: 'ver/:id', component: VerCajaComponent },
         ]
       }
     ]
