@@ -50,6 +50,7 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
@@ -106,6 +107,9 @@ import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-ho
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
 import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
+import { BatchActionsBoxComponent } from './components/batch-actions-box/batch-actions-box.component';
+import { ProductoMultiEditorComponent } from './components/producto-multi-editor/producto-multi-editor.component';
+import { CalculosPrecioFormComponent } from './components/calculos-precio-form/calculos-precio-form.component';
 import { CajasComponent } from './components/cajas/cajas.component';
 import { CajasHomeComponent } from './components/cajas-home/cajas-home.component';
 import { MontoModalComponent } from './components/monto-modal/monto-modal.component';
@@ -170,6 +174,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     VerTraspasoComponent,
     TraspasoComponent,
     ClienteInfoComponent,
+    BatchActionsBoxComponent,
+    ProductoMultiEditorComponent,
+    CalculosPrecioFormComponent,
     CajasComponent,
     CajasHomeComponent,
     MontoModalComponent,
@@ -249,6 +256,7 @@ export class AppModule {
       faCopy,
       faArrowAltCircleDown,
       faExchangeAlt,
+      faCheckSquare
       faLockOpen,
       faLock,
       faSyncAlt,

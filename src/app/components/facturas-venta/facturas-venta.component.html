@@ -95,16 +95,6 @@
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item" *ngIf="puedeAutorizarFactura(item)">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizarFactura(item)">
-            <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="puedeEliminarFactura(item)">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarFactura(item)">
-            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-          </button>
-        </li>
         <li class="list-inline-item" *ngIf="puedeEnviarPorEmail()">
           <button class="btn btn-primary fake-cursor" ngbPopover="Enviar por Email" placement="left" triggers="mouseenter:mouseleave" (click)="enviarPorEmail(item)">
             <fa-icon [icon]="['fas', 'envelope']"></fa-icon>

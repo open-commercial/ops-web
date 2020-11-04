@@ -18,6 +18,8 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { Traspaso } from '../../models/traspaso';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { saveAs } from 'file-saver';
+import {Producto} from '../../models/producto';
+import {ProductosService} from '../../services/productos.service';
 
 @Component({
   selector: 'app-traspasos',
@@ -49,6 +51,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
               protected mensajeService: MensajeService,
               private fb: FormBuilder,
               private traspasosService: TraspasosService,
+              private productosService: ProductosService,
               private usuariosService: UsuariosService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
@@ -77,6 +80,11 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
     if (ps.nroPedido) {
       this.filterForm.get('nroPedido').setValue(ps.nroPedido);
       terminos.nroPedido = ps.nroPedido;
+    }
+
+    if (ps.idProducto && !isNaN(ps.idProducto)) {
+      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
+      terminos.idProducto = Number(ps.idProducto);
     }
 
     if (ps.idUsuario && !isNaN(ps.idUsuario)) {
@@ -119,6 +127,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
       rangoFecha: null,
       nroTraspaso: '',
       nroPedido: '',
+      idProducto: null,
       idUsuario: null,
       ordenarPor: '',
       sentido: '',
@@ -134,6 +143,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
       rangoFecha: null,
       nroTraspaso: '',
       nroPedido: '',
+      idProducto: null,
       idUsuario: null,
       ordenarPor: '',
       sentido: '',
@@ -153,6 +163,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
 
     if (values.nroTraspaso) { ret.nroTraspaso = values.nroTraspaso; }
     if (values.nroPedido) { ret.nroPedido = values.nroPedido; }
+    if (values.idProducto) { ret.idProducto = values.idProducto; }
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
     if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
     if (values.sentido) { ret.sentido = values.sentido; }
@@ -184,6 +195,10 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
       this.appliedFilters.push({ label: 'Nº Pedido', value: values.nroPedido });
     }
 
+    if (values.idProducto) {
+      this.appliedFilters.push({ label: 'Producto', value: values.idProducto, asyncFn: this.getProductoInfoAsync(values.idProducto) });
+    }
+
     if (values.idUsuario) {
       this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
@@ -192,6 +207,10 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
       this.ordenarPorAplicado = this.ordenarPorTElement ? this.ordenarPorTElement.getTexto() : '';
       this.sentidoAplicado = this.sentidoTElement ? this.sentidoTElement.getTexto() : '';
     }, 500);
+  }
+
+  getProductoInfoAsync(id: number): Observable<string> {
+    return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
   }
 
   getUsuarioInfoAsync(id: number): Observable<string> {

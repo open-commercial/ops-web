@@ -19,9 +19,12 @@ import { NuevoProducto } from '../../models/nuevo-producto';
 import { HelperService } from '../../services/helper.service';
 import Big from 'big.js';
 import { CalculosPrecio } from '../../models/calculos-precio';
-import { formatNumber, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 import * as moment from 'moment';
+import {AuthService} from '../../services/auth.service';
+import {Usuario} from '../../models/usuario';
+import {Rol} from '../../models/rol';
 
 Big.DP = 15;
 
@@ -37,11 +40,12 @@ export class ProductoComponent implements OnInit {
   sucursales: Sucursal[] = [];
   ivas = [0, 10.5, 21];
 
+  allowedRolesToEditCantidades = [ Rol.ADMINISTRADOR ];
+  hasRolToEditCantidades = false;
+
   producto: Producto;
   form: FormGroup;
   submitted = false;
-
-  calculosPrecio = new CalculosPrecio();
 
   @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
   imageDataUrl = '';
@@ -59,13 +63,15 @@ export class ProductoComponent implements OnInit {
               private mensajeService: MensajeService,
               private fb: FormBuilder,
               private sucursalesService: SucursalesService,
-              private location: Location) {
+              private location: Location,
+              private authService: AuthService) {
     accordionConfig.type = 'dark';
   }
 
   ngOnInit() {
     this.createForm();
     const obvs: Observable<any>[] = [
+      this.authService.getLoggedInUsuario(),
       this.medidaService.getMedidas(),
       this.rubrosService.getRubros(),
       this.sucursalesService.getSucursales(),
@@ -80,14 +86,14 @@ export class ProductoComponent implements OnInit {
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
-          this.medidas = recursos[0];
-          this.rubros = recursos[1];
-          this.sucursales = recursos[2];
-          if (recursos[3]) {
-            this.producto = recursos[3];
+        (recursos: [Usuario, Medida[], Rubro[], Sucursal[], Producto?]) => {
+          this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(recursos[0], this.allowedRolesToEditCantidades);
+          this.medidas = recursos[1];
+          this.rubros = recursos[2];
+          this.sucursales = recursos[3];
+          if (recursos[4]) {
+            this.producto = recursos[4];
             this.title = this.producto.descripcion;
-            this.calculosPrecio = CalculosPrecio.getInstance(this.producto);
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
             }
@@ -112,32 +118,13 @@ export class ProductoComponent implements OnInit {
       idProveedor: [null, Validators.required],
       idMedida: [null, Validators.required],
       idRubro: [null, Validators.required],
-      precioCosto: [0, [Validators.required, Validators.min(0)]],
-      gananciaPorcentaje: [0, [Validators.required, Validators.min(0)]],
-      precioVentaPublico: [0, [Validators.required, Validators.min(0)]],
-      ivaPorcentaje: [0, Validators.required],
-      precioLista: [0, [Validators.required, Validators.min(0)]],
-      porcentajeBonificacionPrecio: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
-      precioBonificado: [0, [Validators.required, Validators.min(0)]],
-      oferta: false,
-      porcentajeBonificacionOferta: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0), Validators.max(100)]],
-      precioOferta: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0)]],
+      calculosPrecio: [CalculosPrecio.getEmtpyValues(), Validators.required],
       cantidadEnSucursal: this.fb.array([]),
-      bulto: [1, [Validators.required, Validators.min(1)]],
+      bulto: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]],
       publico: false,
       fechaVencimiento: null,
       nota: [null, Validators.maxLength(250)],
       imagen: null,
-    });
-
-    this.form.get('oferta').valueChanges.subscribe(value => {
-      if (value) {
-        this.form.get('porcentajeBonificacionOferta').enable();
-        this.form.get('precioOferta').enable();
-      } else {
-        this.form.get('porcentajeBonificacionOferta').disable();
-        this.form.get('precioOferta').disable();
-      }
     });
   }
 
@@ -149,11 +136,14 @@ export class ProductoComponent implements OnInit {
       this.form.get('idProveedor').setValue(this.producto.idProveedor);
       this.form.get('idMedida').setValue(this.producto.idMedida);
       this.form.get('idRubro').setValue(this.producto.idRubro);
-      this.form.get('oferta').setValue(this.producto.oferta);
+      this.form.get('calculosPrecio').setValue(CalculosPrecio.getInstance(this.producto).getValues());
       this.producto.cantidadEnSucursales.forEach(
         ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
       );
       this.form.get('bulto').setValue(this.producto.bulto);
+      if (this.hasRolToEditCantidades) {
+        this.form.get('bulto').enable();
+      }
       this.form.get('publico').setValue(this.producto.publico);
 
       if (this.producto.fechaVencimiento) {
@@ -165,8 +155,6 @@ export class ProductoComponent implements OnInit {
     } else {
       this.sucursales.forEach((s: Sucursal) => this.addCantidadEnSucursal(s.idSucursal, s.nombre));
     }
-
-    this.refreshPreciosEnFormulario();
   }
 
   get cantidadEnSucursal() {
@@ -177,7 +165,7 @@ export class ProductoComponent implements OnInit {
     this.cantidadEnSucursal.push(this.fb.group({
       idSucursal: [idSucursal, Validators.required],
       nombreSucursal: [nombreSucursal, Validators.required],
-      cantidad: [cantidad, [Validators.required, Validators.min(0)]],
+      cantidad: [{ value: cantidad, disabled: !this.hasRolToEditCantidades }, [Validators.required, Validators.min(0)]],
     }));
   }
 
@@ -186,14 +174,10 @@ export class ProductoComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      if (this.form.get('oferta').value && !this.hasImagen()) {
-        this.mensajeService.msg('Para ser Oferta, debe tener imagen', MensajeModalType.INFO);
+      if (this.producto) {
+        this.submitProductoEditado();
       } else {
-        if (this.producto) {
-          this.submitProductoEditado();
-        } else {
-          this.submitProductoNuevo();
-        }
+        this.submitProductoNuevo();
       }
     }
   }
@@ -241,25 +225,24 @@ export class ProductoComponent implements OnInit {
 
     const auxCes = {};
     if (formValues.cantidadEnSucursal && Array.isArray(formValues.cantidadEnSucursal)) {
-      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.idSucursal] = ces.cantidad);
+      formValues.cantidadEnSucursal.forEach(ces => auxCes[ces.idSucursal] = this.hasRolToEditCantidades ? ces.cantidad : 0);
     }
 
     return {
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
       cantidadEnSucursal: auxCes,
-      bulto: formValues.bulto,
-      precioCosto: this.calculosPrecio.precioCosto.toString(),
-      gananciaPorcentaje: this.calculosPrecio.gananciaPorcentaje.toString(),
-      gananciaNeto: this.calculosPrecio.gananciaNeto.toString(),
-      precioVentaPublico: this.calculosPrecio.precioVentaPublico.toString(),
-      ivaPorcentaje: this.calculosPrecio.ivaPorcentaje.toString(),
-      ivaNeto: this.calculosPrecio.ivaNeto.toString(),
-      oferta: formValues.oferta,
-      porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
-      porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
-      // precioBonificado: this.calculosPrecio.precioBonificado.toString(),
-      precioLista: this.calculosPrecio.precioLista.toString(),
+      bulto: this.hasRolToEditCantidades ? formValues.bulto : 1,
+      precioCosto: formValues.calculosPrecio.precioCosto.toString(),
+      gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),
+      gananciaNeto: formValues.calculosPrecio.gananciaNeto.toString(),
+      precioVentaPublico: formValues.calculosPrecio.precioVentaPublico.toString(),
+      ivaPorcentaje: formValues.calculosPrecio.ivaPorcentaje.toString(),
+      ivaNeto: formValues.calculosPrecio.ivaNeto.toString(),
+      oferta: formValues.calculosPrecio.oferta,
+      porcentajeBonificacionOferta: formValues.calculosPrecio.porcentajeBonificacionOferta.toString(),
+      porcentajeBonificacionPrecio: formValues.calculosPrecio.porcentajeBonificacionPrecio.toString(),
+      precioLista: formValues.calculosPrecio.precioLista.toString(),
       publico: formValues.publico,
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
@@ -279,7 +262,7 @@ export class ProductoComponent implements OnInit {
         const aux = this.producto.cantidadEnSucursales.filter((v: CantidadEnSucursal) => v.idSucursal === ces.idSucursal);
         if (aux.length) {
           const nCes = aux[0];
-          nCes.cantidad = ces.cantidad;
+          nCes.cantidad = this.hasRolToEditCantidades ? ces.cantidad : aux[0].cantidad;
           auxCes.push(nCes);
         }
       });
@@ -290,19 +273,18 @@ export class ProductoComponent implements OnInit {
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
       cantidadEnSucursales: auxCes,
-      bulto: formValues.bulto,
-      precioCosto: this.calculosPrecio.precioCosto.toString(),
-      gananciaPorcentaje: this.calculosPrecio.gananciaPorcentaje.toString(),
-      gananciaNeto: this.calculosPrecio.gananciaNeto.toString(),
-      precioVentaPublico: this.calculosPrecio.precioVentaPublico.toString(),
-      ivaPorcentaje: this.calculosPrecio.ivaPorcentaje.toString(),
-      ivaNeto: this.calculosPrecio.ivaNeto.toString(),
-      precioLista: this.calculosPrecio.precioLista.toString(),
+      bulto: this.hasRolToEditCantidades ? formValues.bulto : this.producto.bulto,
       publico: formValues.publico,
-      oferta: formValues.oferta,
-      porcentajeBonificacionOferta: formValues.oferta ? this.calculosPrecio.porcentajeBonificacionOferta.toString() : '0',
-      porcentajeBonificacionPrecio: this.calculosPrecio.porcentajeBonificacionPrecio.toString(),
-      // precioBonificado: this.calculosPrecio.precioBonificado.toString(),
+      precioCosto: formValues.calculosPrecio.precioCosto.toString(),
+      gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),
+      gananciaNeto: formValues.calculosPrecio.gananciaNeto.toString(),
+      precioVentaPublico: formValues.calculosPrecio.precioVentaPublico.toString(),
+      ivaPorcentaje: formValues.calculosPrecio.ivaPorcentaje.toString(),
+      ivaNeto: formValues.calculosPrecio.ivaNeto.toString(),
+      precioLista: formValues.calculosPrecio.precioLista.toString(),
+      oferta: formValues.calculosPrecio.oferta,
+      porcentajeBonificacionOferta: formValues.calculosPrecio.porcentajeBonificacionOferta.toString(),
+      porcentajeBonificacionPrecio: formValues.calculosPrecio.porcentajeBonificacionPrecio.toString(),
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
       urlImagen: this.borrarImagen && !this.imageDataUrl ? null : this.producto.urlImagen,
@@ -364,34 +346,6 @@ export class ProductoComponent implements OnInit {
     this.form.get('imagen').setValue(null);
   }
 
-  refreshPreciosEnFormulario() {
-    this.form.get('precioCosto').setValue(this.formatBigForDisplay(this.calculosPrecio.precioCosto));
-    this.form.get('gananciaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.gananciaPorcentaje));
-    this.form.get('precioVentaPublico').setValue(this.formatBigForDisplay(this.calculosPrecio.precioVentaPublico));
-    this.form.get('ivaPorcentaje').setValue(this.formatBigForDisplay(this.calculosPrecio.ivaPorcentaje));
-    this.form.get('precioLista').setValue(this.formatBigForDisplay(this.calculosPrecio.precioLista));
-    this.form.get('porcentajeBonificacionPrecio').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionPrecio));
-    this.form.get('precioBonificado').setValue(this.formatBigForDisplay(this.calculosPrecio.precioBonificado));
-    // this.form.get('oferta').setValue(this.producto.oferta);
-    this.form.get('porcentajeBonificacionOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.porcentajeBonificacionOferta));
-    this.form.get('precioOferta').setValue(this.formatBigForDisplay(this.calculosPrecio.precioOferta));
-  }
-
-  formatBigForDisplay(n: Big) {
-    return formatNumber(parseFloat(n.toFixed(2)), 'en-US', '1.0-2').replace(',', '');
-  }
-
-  calculosFieldChange(fieldName: string, $event) {
-    const v = $event.target.value;
-    const value = parseFloat(v);
-    this.calculosPrecio[fieldName] = isNaN(value) ? new Big(0) : new Big(v);
-    this.refreshPreciosEnFormulario();
-  }
-
-  hasImagen() {
-    return !!(!this.borrarImagen && this.imageDataUrl);
-  }
-
   isGeneralPanelValid(): boolean {
     return this.form &&
       this.form.get('descripcion').valid &&
@@ -401,23 +355,15 @@ export class ProductoComponent implements OnInit {
   }
 
   isPreciosPanelValid(): boolean {
-    const oferta = this.form.get('oferta').value;
-
-    return this.form.get('precioCosto').valid &&
-      this.form.get('gananciaPorcentaje').valid &&
-      this.form.get('precioVentaPublico').valid &&
-      this.form.get('ivaPorcentaje').valid &&
-      this.form.get('precioLista').valid &&
-      this.form.get('porcentajeBonificacionPrecio').valid &&
-      this.form.get('precioBonificado').valid &&
-      (!oferta || this.form.get('porcentajeBonificacionOferta').valid) &&
-      (!oferta || this.form.get('precioOferta').valid)
-    ;
+    return this.form.get('calculosPrecio').valid;
   }
 
   isCantidadesPanelValid(): boolean {
-    return this.form.get('cantidadEnSucursal').valid &&
-      this.form.get('bulto').valid;
+    let isValid = this.form.get('cantidadEnSucursal').valid;
+    if (this.form.get('bulto').enabled) {
+      isValid = isValid && this.form.get('bulto').valid;
+    }
+    return isValid;
   }
 
   isPropiedadesPanelValid(): boolean {
