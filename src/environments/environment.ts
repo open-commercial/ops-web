@@ -5,5 +5,6 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:8080',
-  appVersion: 14
+  appVersion: 15,
+  appName: 'SIC_OPS_WEB'
 };
