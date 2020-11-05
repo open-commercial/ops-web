@@ -12,15 +12,13 @@ import { combineLatest } from 'rxjs';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
+
   private pSideNavOpened = false;
   @Input() set sindeNavOpened(value: boolean) { this.pSideNavOpened = value; }
   get sideNavOpened(): boolean { return this.pSideNavOpened; }
-
   @Output() menuButtonClick = new EventEmitter<void>();
-
   isCollapsed = true;
   usuario: Usuario = null;
-
   sucursales: Sucursal[] = [];
   sucursalSeleccionada: Sucursal = null;
 
@@ -38,7 +36,6 @@ export class NavBarComponent implements OnInit {
         this.sucursales = v[1];
         this.refreshSucursalSeleccionada();
       });
-
       this.sucursalesService.sucursal$.subscribe((s: Sucursal) => this.refreshSucursalSeleccionada());
     }
   }
