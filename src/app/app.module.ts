@@ -256,7 +256,7 @@ export class AppModule {
       faCopy,
       faArrowAltCircleDown,
       faExchangeAlt,
-      faCheckSquare
+      faCheckSquare,
       faLockOpen,
       faLock,
       faSyncAlt,
