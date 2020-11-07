@@ -15,12 +15,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
   private pSideNavOpened = false;
   @Input() set sindeNavOpened(value: boolean) { this.pSideNavOpened = value; }
   get sideNavOpened(): boolean { return this.pSideNavOpened; }
-
   @Output() menuButtonClick = new EventEmitter<void>();
-
   isCollapsed = true;
   usuario: Usuario = null;
-
   sucursales: Sucursal[] = [];
   sucursalSeleccionada: Sucursal = null;
 
