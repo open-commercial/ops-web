@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import {StorageService} from './storage.service';
 import {Producto} from '../models/producto';
+import {FacturaVenta} from '../models/factura-venta';
+import {HelperService} from './helper.service';
 
 export enum BatchActionKey {
   PRODUCTOS = 'ba-productos',
+  FACTURAS_VENTA = 'ba-facturas-venta',
 }
 
 export interface BatchActionElement {
@@ -21,6 +24,14 @@ export class BatchActionsService {
       return (item: Producto) => ({
         id: item.idProducto,
         description: item.codigo ? (item.codigo + ' - ' + item.descripcion) : item.descripcion,
+      });
+    }
+    if (key === BatchActionKey.FACTURAS_VENTA) {
+      return (item: FacturaVenta) => ({
+        id: item.idFactura,
+        description: item.numSerieAfip
+          ? HelperService.formatNumFactura(item.numSerieAfip, item.numFacturaAfip)
+          : HelperService.formatNumFactura(item.numSerie, item.numFactura),
       });
     }
     throw new Error('Unknown BatchActionKey');

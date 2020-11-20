@@ -69,7 +69,7 @@
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
-  <div class="productosFiltersCollapse" [ngbCollapse]="isBatchActionsBoxCollapsed">
+  <div class="productosBatchActionsBoxCollapse" [ngbCollapse]="isBatchActionsBoxCollapsed">
     <app-batch-actions-box [batchActionKey]="baKey" [actions]="baActions"
                            (emptySelection)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed" ></app-batch-actions-box>
   </div>
@@ -111,7 +111,7 @@
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item" *ngIf="puedeEliminarProducto()">
+        <li class="list-inline-item" *ngIf="this.hasRoleToDelete">
           <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProducto(item)">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>

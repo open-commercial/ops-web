@@ -39,6 +39,12 @@ export class HelperService {
     return nSerieString + '-' + nFacString;
   }
 
+  static formatNumRemito(nSerie: number, nRem: number) {
+    const nSerieString = nSerie !== null && nSerie >= 0 ? ('000' + nSerie).slice(-4) : 'XXXX';
+    const nFacString = nRem !== null && nRem >= 0 ? ('0000000' + nRem).slice(-8) : 'XXXXXXXX';
+    return nSerieString + '-' + nFacString;
+  }
+
   static formatUbicacion(u: Ubicacion) {
     if (!u) { return ''; }
     const arr = [];

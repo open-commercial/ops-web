@@ -10,6 +10,7 @@ export interface Factura {
   numSerie: number;
   numFactura: number;
   fechaVencimiento: Date;
+  idPedido: number;
   nroPedido: number;
   idTransportista: number;
   nombreTransportista: string;

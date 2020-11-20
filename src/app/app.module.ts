@@ -51,6 +51,7 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { faFileExport } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -106,6 +107,10 @@ import { ClienteInfoComponent } from './components/cliente-info/cliente-info.com
 import { BatchActionsBoxComponent } from './components/batch-actions-box/batch-actions-box.component';
 import { ProductoMultiEditorComponent } from './components/producto-multi-editor/producto-multi-editor.component';
 import { CalculosPrecioFormComponent } from './components/calculos-precio-form/calculos-precio-form.component';
+import { RemitosComponent } from './components/remitos/remitos.component';
+import { RemitosHomeComponent } from './components/remitos-home/remitos-home.component';
+import { VerRemitoComponent } from './components/ver-remito/ver-remito.component';
+import { RemitoComponent } from './components/remito/remito.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -167,6 +172,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     BatchActionsBoxComponent,
     ProductoMultiEditorComponent,
     CalculosPrecioFormComponent,
+    RemitosComponent,
+    RemitosHomeComponent,
+    VerRemitoComponent,
+    RemitoComponent,
   ],
   imports: [
     BrowserModule,
@@ -238,7 +247,8 @@ export class AppModule {
       faCopy,
       faArrowAltCircleDown,
       faExchangeAlt,
-      faCheckSquare
+      faCheckSquare,
+      faFileExport,
     );
   }
 }

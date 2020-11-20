@@ -1,0 +1,14 @@
+.app-ver-remito {
+  margin: 0;
+  table {
+    th, td {
+      vertical-align: middle;
+    }
+  }
+  .remito {
+    border-bottom: 1px solid #333;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

@@ -29,6 +29,7 @@ export abstract class ListadoBaseComponent implements OnInit {
 
   abstract getTerminosFromQueryParams(params);
   abstract createFilterForm();
+  abstract resetFilterForm();
   abstract getAppliedFilters();
   abstract getFormValues();
   abstract getItemsObservableMethod(terminos): Observable<Pagination>;
@@ -40,13 +41,18 @@ export abstract class ListadoBaseComponent implements OnInit {
   }
 
   getItemsFromQueryParams(params = null) {
-    const terminos = this.getTerminosFromQueryParams(params);
+    const ps = params ? params.params : this.route.snapshot.queryParams;
+    const p = Number(ps.p);
+    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
+
+    this.resetFilterForm();
+    const terminos = this.getTerminosFromQueryParams(ps);
     this.fetchItems(terminos);
   }
 
   fetchItems(terminos = null) {
     terminos = terminos || this.getFormValues();
-    terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
+    // terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
 
     this.getAppliedFilters();
 

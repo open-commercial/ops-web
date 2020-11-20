@@ -15,4 +15,8 @@ export class TransportistasService {
   getTransportistas(): Observable<Transportista[]> {
     return this.http.get<Transportista[]>(this.url);
   }
+
+  getTransportista(idTransportista: number): Observable<Transportista> {
+    return this.http.get<Transportista>(`${this.url}/${idTransportista}`);
+  }
 }

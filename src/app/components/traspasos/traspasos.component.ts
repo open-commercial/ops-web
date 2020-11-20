@@ -60,17 +60,10 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
     super.ngOnInit();
   }
 
-  getTerminosFromQueryParams(params = null) {
+  getTerminosFromQueryParams(ps) {
     const terminos: BusquedaTraspasoCriteria = {
-      pagina: 0,
+      pagina: this.page,
     };
-
-    this.resetFilterForm();
-    const ps = params ? params.params : this.route.snapshot.queryParams;
-    const p = Number(ps.p);
-
-    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
-    terminos.pagina = this.page;
 
     if (ps.nroTraspaso) {
       this.filterForm.get('nroTraspaso').setValue(ps.nroTraspaso);
@@ -243,7 +236,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   downloadReporteTraspasoPdf() {
-    const terminos = this.getTerminosFromQueryParams();
+    const terminos = this.getTerminosFromQueryParams(this.route.snapshot.queryParams);
     this.loadingOverlayService.activate();
     this.traspasosService.getReporteTraspaso(terminos)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))

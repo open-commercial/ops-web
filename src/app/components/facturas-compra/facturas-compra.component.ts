@@ -69,18 +69,12 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
     super.ngOnInit();
   }
 
-  getTerminosFromQueryParams(params = null) {
+  getTerminosFromQueryParams(ps) {
     const terminos: BusquedaFacturaCompraCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: 0,
     };
 
-    this.resetFilterForm();
-
-    const ps = params ? params.params : this.route.snapshot.queryParams;
-    const p = Number(ps.p);
-
-    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
     terminos.pagina = this.page;
 
     if (ps.idProveedor && !isNaN(ps.idProveedor)) {

@@ -1,5 +1,6 @@
 import { CategoriaIVA } from './categoria-iva';
 import { Factura } from './factura';
+import { Remito } from './remito';
 
 export interface FacturaVenta extends Factura {
   idCliente: number;
@@ -9,4 +10,5 @@ export interface FacturaVenta extends Factura {
   idViajanteCliente: number;
   nombreViajanteCliente: string;
   ubicacionCliente: string;
+  remito: Remito;
 }
