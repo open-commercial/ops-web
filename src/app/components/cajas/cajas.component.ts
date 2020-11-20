@@ -180,10 +180,16 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
     modalRef.result.then((monto: number) => {
       this.loadingOverlayService.activate();
       this.cajasService.abrirCaja(monto)
-        /* hacer location.reload produce un mal efecto visual, es por eso que no se desactiva en finalize (el reload lo sustituye) */
+        /*
+        hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
+        es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
+        */
         .subscribe(
           () => location.reload(),
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          err => {
+            this.loadingOverlayService.deactivate();
+            this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          }
         )
       ;
     }, () => {});
@@ -196,10 +202,16 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
     modalRef.result.then((monto: number) => {
       this.loadingOverlayService.activate();
       this.cajasService.reabrirCaja(caja.idCaja, monto)
-        /* hacer location.reload produce un mal efecto visual, es por eso que no se desactiva en finalize (el reload lo sustituye) */
+        /*
+        hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
+        es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
+        */
         .subscribe(
           () => location.reload(),
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          err => {
+            this.loadingOverlayService.deactivate();
+            this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          }
         )
       ;
     }, () => {});
@@ -220,10 +232,16 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.cajasService.eliminarCaja(caja.idCaja)
-          /*.pipe(finalize(() => this.loadingOverlayService.deactivate()))*/
+          /*
+          hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
+          es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
+          */
           .subscribe(
             () => location.reload(),
-            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
           )
         ;
       }
