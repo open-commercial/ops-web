@@ -153,9 +153,9 @@ export class VerCajaComponent implements OnInit, OnDestroy {
           const modalRef = this.modalService.open(MontoModalComponent, {scrollable: true});
           modalRef.componentInstance.title = 'Cerrar Caja';
           modalRef.componentInstance.htmlInfo = [
-            '<em>Saldo Sistema:</em>', '&nbsp;', '<strong>' + formatCurrency(saldo, 'es-AR', '$') + '</strong>'
+            '<em>El Saldo Sistema es:</em>', '&nbsp;', '<strong>' + formatCurrency(saldo, 'es-AR', '$') + '</strong>'
           ].join('');
-          modalRef.componentInstance.label = 'Saldo Real';
+          modalRef.componentInstance.label = 'Ingrese el Saldo Real:';
           modalRef.result.then((monto: number) => {
             this.loadingOverlayService.activate();
             this.cajasService.cerrarCaja(this.caja.idCaja, monto)

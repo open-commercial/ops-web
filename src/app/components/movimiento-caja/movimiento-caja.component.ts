@@ -11,6 +11,7 @@ import {formatCurrency} from '@angular/common';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {RecibosService} from '../../services/recibos.service';
 import {saveAs} from 'file-saver';
+import {EstadoCaja} from '../../models/estado-caja';
 
 @Component({
   selector: 'app-movimiento-caja',
@@ -30,6 +31,9 @@ export class MovimientoCajaComponent implements OnInit {
   get idFormaDePago(): number { return this.pIdFormaDePago; }
 
   @Output() cantMovimientosChange = new EventEmitter<number>();
+
+  estadoCaja = EstadoCaja;
+  tipoComprobante = TipoDeComprobante;
 
   constructor(private cajasService: CajasService,
               private gastosService: GastosService,

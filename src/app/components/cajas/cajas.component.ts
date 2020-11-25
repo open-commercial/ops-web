@@ -33,6 +33,8 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
 
+  rolesEnFiltrosDeUsuario = [ Rol.ENCARGADO, Rol.ADMINISTRADOR ];
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,

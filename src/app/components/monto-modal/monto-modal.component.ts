@@ -26,7 +26,7 @@ export class MontoModalComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      monto: [this.monto , [Validators.required, Validators.min(0)]]
+      monto: [this.monto , [Validators.required]]
     });
   }
 
@@ -35,8 +35,8 @@ export class MontoModalComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      const saldoApertura = this.form.get('monto').value;
-      this.activeModal.close(saldoApertura);
+      const monto = this.form.get('monto').value;
+      this.activeModal.close(monto);
     }
   }
 

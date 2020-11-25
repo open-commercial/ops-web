@@ -19,10 +19,12 @@
       <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
       <div class="row">
         <div class="col-lg-6">
-          <app-usuario-filtro id="usuarioApertura" formControlName="idUsuarioApertura" [label]="'Usuario Apertura'"></app-usuario-filtro>
+          <app-usuario-filtro id="usuarioApertura" formControlName="idUsuarioApertura"
+                              [roles]="rolesEnFiltrosDeUsuario" [label]="'Usuario de Apertura'"></app-usuario-filtro>
         </div>
         <div class="col-lg-6">
-          <app-usuario-filtro id="usuarioCierre" formControlName="idUsuarioCierre" [label]="'Usuario Cierre'"></app-usuario-filtro>
+          <app-usuario-filtro id="usuarioCierre" formControlName="idUsuarioCierre"
+                              [roles]="rolesEnFiltrosDeUsuario" [label]="'Usuario de Cierre'"></app-usuario-filtro>
         </div>
       </div>
     </div>
@@ -49,10 +51,10 @@
       </div>
       <div class="px-2 flex-fill">
         <div>
-          <span class="dato">
+          <span class="dato" *ngIf="item.nombreUsuarioAbreCaja">
             <span class="column-name">Usuario Apertura:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioAbreCaja }}</span>
           </span>
-          <span class="dato">
+          <span class="dato" *ngIf="item.estado === estado.CERRADA || !item.nombreUsuarioCierraCaja">
             <span class="column-name">Usuario Cierre:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioCierraCaja }}</span>
           </span>
         </div>
@@ -60,10 +62,10 @@
           <span class="dato text-nowrap">
             <span class="column-name">Saldo Apertura:&nbsp;</span><span class="column-data monto">{{ item.saldoApertura | currency:'ARS':'symbol':'1.0-2' }}</span>
           </span>
-          <span class="dato text-nowrap" *ngIf="item.saldoSistema">
+          <span class="dato text-nowrap" *ngIf="item.saldoSistema !== null && item.saldoSistema !== undefined">
             <span class="column-name">Saldo Sistema:&nbsp;</span><span class="column-data monto">{{ item.saldoSistema | currency:'ARS':'symbol':'1.0-2' }}</span>
           </span>
-          <span class="dato text-nowrap" *ngIf="item.saldoReal">
+          <span class="dato text-nowrap" *ngIf="item.saldoReal !== null && item.saldoReal !== undefined">
             <span class="column-name">Saldo Real:&nbsp;</span><span class="column-data monto">{{ item.saldoReal | currency:'ARS':'symbol':'1.0-2' }}</span>
           </span>
         </div>

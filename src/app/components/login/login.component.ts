@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   loading = false;
   submitted = false;
-  returnUrl = '';
 
   allowedRoles: Rol[] = [
     Rol.ADMINISTRADOR,
@@ -39,18 +38,14 @@ export class LoginComponent implements OnInit {
               private loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['']);
+    }
+
     this.errors.subscribe((message) => this.errorMessage = message);
     this.errors
       .pipe(debounceTime(3000))
       .subscribe(() => this.errorMessage = null);
-
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['']);
-    } else {
-      this.route.queryParamMap.subscribe(params => {
-        if (params.has('return')) { this.returnUrl = params.get('return'); }
-      });
-    }
 
     this.createForm();
   }
@@ -103,11 +98,7 @@ export class LoginComponent implements OnInit {
                         } else {
                           this.sucursalesService.seleccionarSucursal(sucs[0]);
                         }
-                        if (this.returnUrl) {
-                          this.router.navigateByUrl(this.returnUrl);
-                        } else {
-                          this.router.navigate(['']);
-                        }
+                        this.router.navigate(['']);
                       } else {
                         this.showErrorMessage('No se pudieron obtener sucursales.');
                         this.authService.logout();
