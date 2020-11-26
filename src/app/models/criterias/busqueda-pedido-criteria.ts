@@ -1,4 +1,4 @@
-import {EstadoPedido} from '../estado.pedido';
+import {EstadoPedido} from '../estado-pedido';
 import {TipoDeEnvio} from '../tipo-de-envio';
 
 export interface BusquedaPedidoCriteria {

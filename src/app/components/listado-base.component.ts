@@ -1,15 +1,15 @@
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SucursalesService } from '../services/sucursales.service';
-import { OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import {OnDestroy, OnInit} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../models/pagination';
 import { MensajeModalType } from './mensaje-modal/mensaje-modal.component';
 import { LoadingOverlayService } from '../services/loading-overlay.service';
 import { MensajeService } from '../services/mensaje.service';
 
-export abstract class ListadoBaseComponent implements OnInit {
+export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
   items = [];
   isFiltersCollapsed = true;
 
@@ -21,11 +21,15 @@ export abstract class ListadoBaseComponent implements OnInit {
   filterForm: FormGroup;
   appliedFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
 
+  subscription: Subscription;
+
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
                         protected sucursalesService: SucursalesService,
                         protected loadingOverlayService: LoadingOverlayService,
-                        protected mensajeService: MensajeService) {}
+                        protected mensajeService: MensajeService) {
+    this.subscription = new Subscription();
+  }
 
   abstract getTerminosFromQueryParams(params);
   abstract createFilterForm();
@@ -35,8 +39,12 @@ export abstract class ListadoBaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.createFilterForm();
-    this.sucursalesService.sucursal$.subscribe(() => this.getItemsFromQueryParams());
-    this.route.queryParamMap.subscribe(params => this.getItemsFromQueryParams(params));
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.getItemsFromQueryParams()));
+    this.subscription.add(this.route.queryParamMap.subscribe(params => this.getItemsFromQueryParams(params)));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   getItemsFromQueryParams(params = null) {

@@ -1,4 +1,4 @@
-import {EstadoPedido} from './estado.pedido';
+import {EstadoPedido} from './estado-pedido';
 import { Cliente } from './cliente';
 import { TipoDeEnvio } from './tipo-de-envio';
 

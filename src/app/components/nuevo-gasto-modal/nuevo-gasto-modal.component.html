@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h4 class="modal-title">Nuevo Gasto</h4>
+</div>
+<div class="modal-body">
+  <div class="text-center" *ngIf="loading">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <form [formGroup]="form" (submit)="submit()" *ngIf="!loading && form">
+    <div class="form-group">
+      <label for="idFormaDePago">Forma de Pago</label>
+      <select id="idFormaDePago" formControlName="idFormaDePago" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.idFormaDePago.errors }">
+        <option *ngFor="let fdp of formasDePago" [value]="fdp.idFormaDePago">{{ fdp.nombre }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="submitted && f.idFormaDePago.errors">
+        <div *ngIf="f.idFormaDePago.errors.required">Requerido</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="concepto">Concepto</label>
+      <input type="text" required class="form-control" id="concepto" formControlName="concepto"
+             [ngClass]="{ 'is-invalid': submitted && f.concepto.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.concepto.errors">
+        <div *ngIf="f.concepto.errors.required">Requerido</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="monto">Monto</label>
+      <input type="number" required min="0" class="form-control" id="monto" formControlName="monto"
+             [ngClass]="{ 'is-invalid': submitted && f.monto.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.monto.errors">
+        <div *ngIf="f.monto.errors.required">Requerido</div>
+        <div *ngIf="f.monto.errors.min">Mínimo {{ f.monto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer" *ngIf="form">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="loading">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Aceptar
+  </button>
+</div>

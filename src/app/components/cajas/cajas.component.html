@@ -1,0 +1,96 @@
+<div class="app-cajas">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Cajas</h1>
+    <div class="text-right m-0">
+      <button class="btn btn-primary ml-2 my-1" ngbPopover="Abrir nueva caja" triggers="mouseenter:mouseleave" placement="left" (click)="abrirCaja()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="cajasFiltersCollapse"
+              [class.bg-white]="!isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="cajasFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+    <div [formGroup]="filterForm">
+      <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
+      <div class="row">
+        <div class="col-lg-6">
+          <app-usuario-filtro id="usuarioApertura" formControlName="idUsuarioApertura"
+                              [roles]="rolesEnFiltrosDeUsuario" [label]="'Usuario de Apertura'"></app-usuario-filtro>
+        </div>
+        <div class="col-lg-6">
+          <app-usuario-filtro id="usuarioCierre" formControlName="idUsuarioCierre"
+                              [roles]="rolesEnFiltrosDeUsuario" [label]="'Usuario de Cierre'"></app-usuario-filtro>
+        </div>
+      </div>
+    </div>
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"></app-filtros-aplicados>
+  <div class="cajas my-2">
+    <ng-template #info let-item>
+      <div class="d-flex flex-row flex-wrap">
+        <span class="badge ml-2 mb-2 px-2 py-1"
+              [class.badge-success]="item.estado === estado.ABIERTA"
+              [class.badge-danger]="item.estado === estado.CERRADA">
+          {{ item.estado }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+          Apertura: {{ item.fechaApertura | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.fechaCierre">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+          Cierre: {{ item.fechaCierre | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+      </div>
+      <div class="px-2 flex-fill">
+        <div>
+          <span class="dato" *ngIf="item.nombreUsuarioAbreCaja">
+            <span class="column-name">Usuario Apertura:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioAbreCaja }}</span>
+          </span>
+          <span class="dato" *ngIf="item.nombreUsuarioCierraCaja">
+            <span class="column-name">Usuario Cierre:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioCierraCaja }}</span>
+          </span>
+        </div>
+        <div>
+          <span class="dato text-nowrap">
+            <span class="column-name">Saldo Apertura:&nbsp;</span><span class="column-data monto">{{ item.saldoApertura | currency:'ARS':'symbol':'1.0-2' }}</span>
+          </span>
+          <span class="dato text-nowrap" *ngIf="item.saldoSistema !== null && item.saldoSistema !== undefined">
+            <span class="column-name">Saldo Sistema:&nbsp;</span><span class="column-data monto">{{ item.saldoSistema | currency:'ARS':'symbol':'1.0-2' }}</span>
+          </span>
+          <span class="dato text-nowrap" *ngIf="item.saldoReal !== null && item.saldoReal !== undefined">
+            <span class="column-name">Saldo Real:&nbsp;</span><span class="column-data monto">{{ item.saldoReal | currency:'ARS':'symbol':'1.0-2' }}</span>
+          </span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verCaja(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="item.estado === estado.CERRADA">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Reabrir" placement="left" triggers="mouseenter:mouseleave" (click)="reabrirCaja(item)">
+            <fa-icon [icon]="['fas', 'lock-open']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="hasRoleToDelete">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarCaja(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+  </div>
+</div>

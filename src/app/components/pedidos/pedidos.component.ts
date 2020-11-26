@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PedidosService } from '../../services/pedidos.service';
 import { Pedido } from '../../models/pedido';
 import { Pagination } from '../../models/pagination';
-import { EstadoPedido } from '../../models/estado.pedido';
+import { EstadoPedido } from '../../models/estado-pedido';
 import { finalize, map } from 'rxjs/operators';
 import { FormBuilder } from '@angular/forms';
 import { Rol } from '../../models/rol';

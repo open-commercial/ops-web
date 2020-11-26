@@ -51,6 +51,12 @@ import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCoins } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -106,6 +112,12 @@ import { ClienteInfoComponent } from './components/cliente-info/cliente-info.com
 import { BatchActionsBoxComponent } from './components/batch-actions-box/batch-actions-box.component';
 import { ProductoMultiEditorComponent } from './components/producto-multi-editor/producto-multi-editor.component';
 import { CalculosPrecioFormComponent } from './components/calculos-precio-form/calculos-precio-form.component';
+import { CajasComponent } from './components/cajas/cajas.component';
+import { CajasHomeComponent } from './components/cajas-home/cajas-home.component';
+import { MontoModalComponent } from './components/monto-modal/monto-modal.component';
+import { VerCajaComponent } from './components/ver-caja/ver-caja.component';
+import { MovimientoCajaComponent } from './components/movimiento-caja/movimiento-caja.component';
+import { NuevoGastoModalComponent } from './components/nuevo-gasto-modal/nuevo-gasto-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -167,6 +179,12 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     BatchActionsBoxComponent,
     ProductoMultiEditorComponent,
     CalculosPrecioFormComponent,
+    CajasComponent,
+    CajasHomeComponent,
+    MontoModalComponent,
+    VerCajaComponent,
+    MovimientoCajaComponent,
+    NuevoGastoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -194,6 +212,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UsuarioModalComponent,
     ProveedorModalComponent,
     DisponibilidadStockModalComponent,
+    MontoModalComponent,
+    NuevoGastoModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -238,7 +258,13 @@ export class AppModule {
       faCopy,
       faArrowAltCircleDown,
       faExchangeAlt,
-      faCheckSquare
+      faCheckSquare,
+      faLockOpen,
+      faLock,
+      faSyncAlt,
+      faCoins,
+      faChevronDown,
+      faChevronUp,
     );
   }
 }
