@@ -254,7 +254,6 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   crearPedido() {
-    this.storageService.removeItem(StorageKeys.PEDIDO_NUEVO);
     this.router.navigate(['/pedidos/nuevo']);
   }
 
