@@ -54,7 +54,7 @@
           <span class="dato" *ngIf="item.nombreUsuarioAbreCaja">
             <span class="column-name">Usuario Apertura:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioAbreCaja }}</span>
           </span>
-          <span class="dato" *ngIf="item.estado === estado.CERRADA || !item.nombreUsuarioCierraCaja">
+          <span class="dato" *ngIf="item.nombreUsuarioCierraCaja">
             <span class="column-name">Usuario Cierre:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioCierraCaja }}</span>
           </span>
         </div>

@@ -26,13 +26,13 @@
         <ng-template ngbPanelHeader>
           <button class="d-flex align-items-center justify-content-between mb-0" ngbPanelToggle
                   [class.table-success]="r.total>=0" [class.table-danger]="r.total < 0">
+            <fa-icon [icon]="['fas', accordion.isExpanded('panel-' + r.idFormaDePago) ? 'chevron-up' : 'chevron-down']"
+                     class="mr-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
             <span class="mb-0 flex-fill text-left nombre">
               {{ r.nombreFormaDePago }} <br *ngIf="r.afectaCaja">
               <small *ngIf="r.afectaCaja" class="font-weight-bold text-nowrap">(Afecta la caja)</small>
             </span>
             <span class="font-weight-bold">{{ r.total | currency: 'ARS':'symbol':'1.0-2' }}</span>
-            <fa-icon [icon]="['fas', accordion.isExpanded('panel-' + r.idFormaDePago) ? 'chevron-up' : 'chevron-down']"
-                     class="ml-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
           </button>
         </ng-template>
         <ng-template ngbPanelContent>
