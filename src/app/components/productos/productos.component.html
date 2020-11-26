@@ -88,7 +88,11 @@
           </span>
           <span class="mr-2 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
           <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
-          <span class="mr-2">Stock: <strong>{{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}</strong> - Otra Suc: {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}</span>
+          <span class="mr-2">
+            Stock: <strong>{{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}</strong>
+            - Otra Suc: {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}
+            - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}
+          </span>
           <div *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">
               <span *ngIf="item.bulto > 1">Llevando {{ item.bulto | number:'1.0-2' }} o más&nbsp;</span>
               <span class="precio bonificado">$ {{ item.precioBonificado | number:'1.0-2':'es-AR' }}</span>

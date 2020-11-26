@@ -6,6 +6,9 @@ export interface Producto {
   descripcion: string;
   cantidadEnSucursales: Array<CantidadEnSucursal>;
   cantidadTotalEnSucursales?: number;
+  cantidadEnSucursalesDisponible: Array<CantidadEnSucursal>;
+  cantidadTotalEnSucursalesDisponible: number;
+  cantidadReservada: number;
   hayStock?: boolean;
   cantMinima?: number;
   bulto: number;
@@ -36,4 +39,3 @@ export interface Producto {
   urlImagen?: string;
   imagen?: number[];
 }
-

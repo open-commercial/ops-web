@@ -414,7 +414,7 @@ export class PedidoComponent implements OnInit {
       const formValue = this.form.value;
 
       const ppvs: ProductosParaVerificarStock = {
-        idSucursal: null,
+        idSucursal: this.sucursalesService.getIdSucursal(),
         idPedido: formValue.idPedido,
         idProducto: formValue.renglonesPedido.map(e => e.renglonPedido.idProductoItem),
         cantidad: formValue.renglonesPedido.map(e => e.renglonPedido.cantidad),
@@ -610,7 +610,7 @@ export class PedidoComponent implements OnInit {
     if (rp) { cant = rp.get('renglonPedido').value.cantidad + 1; }
 
     const ppvs: ProductosParaVerificarStock = {
-      idSucursal: null,
+      idSucursal: this.sucursalesService.getIdSucursal(),
       idPedido: this.form.get('idPedido').value,
       idProducto: [p.idProducto],
       cantidad: [cant],

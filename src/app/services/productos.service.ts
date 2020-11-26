@@ -25,15 +25,18 @@ export class ProductosService {
               private sucursalesService: SucursalesService) {}
 
   buscar(criteria: BusquedaProductoCriteria): Observable<Pagination> {
-    return this.http.post<Pagination>(this.urlBusqueda, criteria);
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.post<Pagination>(this.urlBusqueda + `/sucursales/${idSucursal}`, criteria);
   }
 
   getProducto(idProducto: number): Observable<Producto> {
-    return this.http.get<Producto>(this.url + idProducto);
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.get<Producto>(this.url + `${idProducto}/sucursales/${idSucursal}`);
   }
 
   getProductoPorCodigo(cod: string): Observable<Producto> {
-    return this.http.get<Producto>(`${this.url}/busqueda?` + HelperService.getQueryString({ codigo: cod }));
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.get<Producto>(`${this.url}/busqueda/sucursales/${idSucursal}?` + HelperService.getQueryString({ codigo: cod }));
   }
 
   getDisponibilidadEnStock(ppvs: ProductosParaVerificarStock): Observable<ProductoFaltante[]> {

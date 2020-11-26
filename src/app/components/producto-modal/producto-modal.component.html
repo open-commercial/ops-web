@@ -33,6 +33,7 @@
               <span class="mr-2">
                 <span>Stock: <strong>{{ getCantidad(p) }} {{ p.nombreMedida }}</strong></span>
                 <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
+                <span> - Reservado: {{ p.cantidadReservada }} {{ p.nombreMedida }}</span>
               </span>
               <div *ngIf="p.porcentajeBonificacionOferta || p.porcentajeBonificacionPrecio">
                 <span *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más&nbsp;</span>
