@@ -29,9 +29,12 @@ export class BatchActionsService {
     if (key === BatchActionKey.FACTURAS_VENTA) {
       return (item: FacturaVenta) => ({
         id: item.idFactura,
-        description: item.numSerieAfip
+        description: [
+          item.tipoComprobante.replace('_', ' '),
+          item.numSerieAfip
           ? HelperService.formatNumFactura(item.numSerieAfip, item.numFacturaAfip)
-          : HelperService.formatNumFactura(item.numSerie, item.numFactura),
+          : HelperService.formatNumFactura(item.numSerie, item.numFactura)
+        ].join('')
       });
     }
     throw new Error('Unknown BatchActionKey');

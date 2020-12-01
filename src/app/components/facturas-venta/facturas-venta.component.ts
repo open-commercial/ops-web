@@ -70,7 +70,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
   baActions: ActionConfiguration[] = [
     {
       description: 'Nuevo Remito',
-      icon: ['fas', 'plus'],
+      icon: ['fas', 'file-export'],
       clickFn: () => this.router.navigate(['/remitos/nuevo']),
     }
   ];
