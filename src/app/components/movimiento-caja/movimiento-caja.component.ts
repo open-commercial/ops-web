@@ -7,7 +7,6 @@ import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {GastosService} from '../../services/gastos.service';
-import {formatCurrency} from '@angular/common';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {RecibosService} from '../../services/recibos.service';
 import {saveAs} from 'file-saver';
@@ -59,28 +58,6 @@ export class MovimientoCajaComponent implements OnInit {
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       )
     ;
-  }
-
-  verMovimiento(m: MovimientoCaja) {
-    if (m.tipoComprobante === TipoDeComprobante.RECIBO) {
-      this.downloadReciboPdf(m.idMovimiento);
-    } else if (m.tipoComprobante === TipoDeComprobante.GASTO) {
-      this.loadingOverlayService.activate();
-      this.gastosService.getGasto(m.idMovimiento)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          g => {
-            const msg = [
-              'En concepto de: ' + g.concepto,
-              'Monto: ' + formatCurrency(g.monto, 'es-AR', '$'),
-              'Usuario: ' + g.nombreUsuario
-            ];
-            this.mensajeService.msg(msg.join('<br>\n'), MensajeModalType.INFO);
-          },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        )
-      ;
-    }
   }
 
   eliminarGasto(m: MovimientoCaja) {
