@@ -29,11 +29,10 @@
             <li>En Sucursal: <strong>{{ getCantidadEnSucursal() }} {{ producto.nombreMedida }}</strong></li>
             <li>Otras Sucursales: <strong>{{ getCantOtrasSucursales() }} {{ producto.nombreMedida }}</strong></li>
             <li>Reservado: <strong>{{ producto.cantidadReservada }} {{ producto.nombreMedida }}</strong></li>
-            <li>Total: <strong>{{ producto.cantidadTotalEnSucursales }} {{ producto.nombreMedida }}</strong></li>
           </ul>
         </td>
       </tr>
-      <tr><th scope="row">Venta x Cantidad</th><td>{{ producto.bulto }}</td></tr>
+      <tr><th scope="row">Venta x Cantidad</th><td>{{ producto.bulto }} {{ producto.nombreMedida }}</td></tr>
       <tr><th scope="row">Unidad de Medida</th><td>{{ producto.nombreMedida }}</td></tr>
       <tr><th scope="row">Precio de Costo</th><td>{{ producto.precioCosto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr><th scope="row">% Ganancia</th><td>{{ producto.gananciaPorcentaje | number:'1.0-2' }} %</td></tr>

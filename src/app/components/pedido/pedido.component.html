@@ -52,6 +52,9 @@
                       </div>
                       <div *ngIf="rp.get('renglonPedido').value.errorDisponibilidad" class="disponibilidad-error">
                         {{ rp.get('renglonPedido').value.errorDisponibilidad }}
+                        <ul class="mb-0 pl-3">
+                          <li *ngFor="let e of rp.get('renglonPedido').value.errorDisponibilidadPorSucursal">{{ e }}</li>
+                        </ul>
                       </div>
                     </td>
                     <td>

@@ -464,13 +464,24 @@ export class PedidoComponent implements OnInit {
   }
 
   agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
-    pfs.forEach((pf: ProductoFaltante) => {
-      const control = this.searchRPInRenglones(pf.idProducto);
-      if (control) {
-        const v: RenglonPedido = control.get('renglonPedido').value;
-        v.errorDisponibilidad = 'Solicitado (' + pf.cantidadSolicitada + ' ' + v.medidaItem + ')'
-          + ' Disponible (' + pf.cantidadDisponible + ' ' + v.medidaItem + ')';
-        control.get('renglonPedido').setValue(v);
+    const productosIds = pfs.map(pf => pf.idProducto);
+
+    productosIds.forEach(id => {
+      const aux = pfs.filter(pf => pf.idProducto === id);
+      if (aux.length) {
+        const cantSolicitada = aux[0].cantidadSolicitada;
+        const cantDisponible = aux.reduce((total: number, pf: ProductoFaltante) => total + pf.cantidadDisponible, 0);
+        const errorDisponibilidad = ['Solicitado', ' ', cantSolicitada, ' --UM--', ' - Disponible ', cantDisponible, ' --UM--'].join('');
+
+        const errorDisponibilidadPorSucursal = aux.map(pf => [pf.nombreSucursal, ': ', pf.cantidadDisponible, ' --UM--'].join(''));
+
+        const control = this.searchRPInRenglones(id);
+        if (control) {
+          const v: RenglonPedido = control.get('renglonPedido').value;
+          v.errorDisponibilidad = errorDisponibilidad.replace(/--UM--/g, v.medidaItem);
+          v.errorDisponibilidadPorSucursal = errorDisponibilidadPorSucursal.map(e => e.replace(/--UM--/g, v.medidaItem));
+          control.get('renglonPedido').setValue(v);
+        }
       }
     });
   }
@@ -593,6 +604,7 @@ export class PedidoComponent implements OnInit {
     modalRef.componentInstance.cantidadesActualesPedido = this.cantidadesActualesPedido;
     modalRef.componentInstance.cantidad = addCantidad ? 1 : cPrevia;
     modalRef.componentInstance.idPedido = this.form.get('idPedido').value;
+    modalRef.componentInstance.idSucursal = this.sucursalesService.getIdSucursal();
     modalRef.componentInstance.loadProducto(idProducto);
     modalRef.componentInstance.verificarStock = true;
     modalRef.result.then((cant: number) => {

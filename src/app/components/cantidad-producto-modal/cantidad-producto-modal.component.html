@@ -35,6 +35,9 @@
       </div>
       <div class="custom-error-message" *ngIf="submitted && stockVerificado && !verificandoDisponibilidadStock && !hayStockDisponible">
         Cantidad no disponible (disponibles para {{ addCantidad ? 'agregar' : 'modificar' }}: {{ stockDisponible }})
+        <ul class="mb-0 pl-3">
+          <li *ngFor="let sds of stockDisponibleEnSucursales">Disponible en {{ sds }} ({{ producto.nombreMedida }})</li>
+        </ul>
       </div>
     </form>
   </div>

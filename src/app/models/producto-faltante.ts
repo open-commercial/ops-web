@@ -4,4 +4,6 @@ export interface ProductoFaltante {
   descripcion: string;
   cantidadSolicitada: number;
   cantidadDisponible: number;
+  idSucursal: number;
+  nombreSucursal: string;
 }

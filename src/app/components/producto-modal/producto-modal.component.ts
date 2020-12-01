@@ -103,23 +103,24 @@ export class ProductoModalComponent implements OnInit {
     }
   }
 
-  getCantidad(p: Producto) {
-    const c = this.productosService.getCantidad(p, this.pIdSucursal);
+  getCantidadDisponible(p: Producto) {
+    const c = this.productosService.getCantidadDisponible(p, this.pIdSucursal);
     const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
     const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
     const res = c - (ca - ci);
     return res > 0 ? res : 0;
   }
 
-  getCantOtrasSucursales(p: Producto) {
-    const c = this.productosService.getCantidad(p, this.pIdSucursal);
-    const cos = this.productosService.getCantOtrasSucursales(p, this.pIdSucursal);
+  getCantDisponibleOtrasSucursales(p: Producto) {
+    const c = this.productosService.getCantidadDisponible(p, this.pIdSucursal);
+    const cos = this.productosService.getCantDisponibleOtrasSucursales(p, this.pIdSucursal);
     const ci = this.cantidadesInicialesPedido[p.idProducto] || 0;
     const ca = this.cantidadesActualesPedido[p.idProducto] || 0;
 
     let left = c - (ca - ci);
     left = left >= 0 ? 0 : left * -1;
 
-    return cos - left;
+    const ret = cos - left;
+    return ret >= 0 ? ret : 0;
   }
 }
