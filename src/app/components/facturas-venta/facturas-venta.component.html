@@ -1,6 +1,6 @@
 <div class="app-facturas-venta">
-  <div class="d-flex flex-row align-items-center my-3">
-    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Venta</h1>
     <div class="text-right m-0">
       <button type="button" class="btn btn-primary ml-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
               [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="facturasVentaBatchActionsBoxCollapse"
