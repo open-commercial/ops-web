@@ -318,6 +318,18 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     });
   }
 
+  verRemito(item: FacturaVenta) {
+    if (item.remito) {
+      this.router.navigate(['/remitos/ver', item.remito.idRemito]);
+    }
+  }
+
+  nuevoRemito(item: FacturaVenta) {
+    if (!item.remito) {
+      console.log('falta implementacion');
+    }
+  }
+
   getClienteInfoAsync(id: number): Observable<string> {
     return this.clientesService.getCliente(id).pipe(map((c: Cliente) => c.nombreFiscal));
   }

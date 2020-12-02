@@ -110,6 +110,16 @@
             <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
           </button>
         </li>
+        <li class="list-inline-item" *ngIf="item.remito">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Remito" placement="left" triggers="mouseenter:mouseleave" (click)="verRemito(item)">
+            <fa-icon [icon]="['fas', 'link']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="!item.remito">
+          <button class="btn btn-primary fake-cursor" ngbPopover="nuevo Remito" placement="left" triggers="mouseenter:mouseleave" (click)="nuevoRemito(item)">
+            <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
+          </button>
+        </li>
       </ul>
     </ng-template>
     <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
