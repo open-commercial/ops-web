@@ -1,5 +1,6 @@
 import {Ubicacion} from './ubicacion';
 import { CategoriaIVA } from './categoria-iva';
+import {ConfiguracionScursal} from './configuracion-scursal';
 
 export interface Sucursal {
   idSucursal: number;
@@ -15,4 +16,5 @@ export interface Sucursal {
   detalleUbicacion: string;
   logo: string;
   eliminada: boolean;
+  configuracionSucursal: ConfiguracionScursal;
 }

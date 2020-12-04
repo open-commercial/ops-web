@@ -18,8 +18,8 @@ import {ProductosParaActualizar} from '../models/productos-para-actualizar';
 })
 export class ProductosService {
 
-  url = environment.apiUrl + '/api/v1/productos/';
-  urlBusqueda = this.url + 'busqueda/criteria';
+  url = environment.apiUrl + '/api/v1/productos';
+  urlBusqueda = this.url + '/busqueda/criteria';
 
   constructor(private http: HttpClient,
               private sucursalesService: SucursalesService) {}
@@ -31,7 +31,7 @@ export class ProductosService {
 
   getProducto(idProducto: number): Observable<Producto> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    return this.http.get<Producto>(this.url + `${idProducto}/sucursales/${idSucursal}`);
+    return this.http.get<Producto>(this.url + `/${idProducto}/sucursales/${idSucursal}`);
   }
 
   getProductoPorCodigo(cod: string): Observable<Producto> {
