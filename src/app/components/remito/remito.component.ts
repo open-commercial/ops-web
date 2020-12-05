@@ -14,6 +14,8 @@ import {combineLatest, Observable} from 'rxjs';
 import {TransportistasService} from '../../services/transportistas.service';
 import {NuevoRemito} from '../../models/nuevo-remito';
 import {RemitosService} from '../../services/remitos.service';
+import {ActivatedRoute} from '@angular/router';
+import {HelperService} from '../../services/helper.service';
 
 const bultosCount = (min: number): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -40,6 +42,8 @@ export class RemitoComponent implements OnInit {
 
   transportistas: Transportista[] = [];
 
+  helper = HelperService;
+
   constructor(private batchActionsService: BatchActionsService,
               private loadingOverlayService: LoadingOverlayService,
               private facturasVentaService: FacturasVentaService,
@@ -47,11 +51,18 @@ export class RemitoComponent implements OnInit {
               private mensajeService: MensajeService,
               private transportistasService: TransportistasService,
               private location: Location,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.createForm();
-    const ids = this.batchActionsService.getElements(BatchActionKey.FACTURAS_VENTA).map(bae => bae.id);
+
+    const idFactura = this.route.snapshot.paramMap.has('id')
+      ? Number(this.route.snapshot.paramMap.get('id'))
+      : null;
+
+    const ids = idFactura ? [idFactura] : this.batchActionsService.getElements(BatchActionKey.FACTURAS_VENTA).map(bae => bae.id);
+
     const obs: Observable<any>[] = [
       this.facturasVentaService.getFacturasPorId(ids),
       this.transportistasService.getTransportistas(),
@@ -170,7 +181,7 @@ export class RemitoComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(
           () => {
-            this.mensajeService.msg('El remito fue creado exitosamente.');
+            this.mensajeService.msg('El Remito fue creado correctamente!', MensajeModalType.INFO);
             this.batchActionsService.clear(BatchActionKey.FACTURAS_VENTA);
             this.volverAlListado();
           },

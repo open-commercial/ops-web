@@ -326,7 +326,7 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
 
   nuevoRemito(item: FacturaVenta) {
     if (!item.remito) {
-      console.log('falta implementacion');
+      this.router.navigate(['/remitos/de-factura', item.idFactura]);
     }
   }
 

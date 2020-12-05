@@ -73,6 +73,7 @@ const routes: Routes = [
         children: [
           { path: '', component: RemitosComponent },
           { path: 'nuevo', component: RemitoComponent },
+          { path: 'de-factura/:id', component: RemitoComponent },
           { path: 'ver/:id', component: VerRemitoComponent },
         ]
       }

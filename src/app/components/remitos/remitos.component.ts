@@ -34,7 +34,7 @@ export class RemitosComponent extends ListadoBaseComponent implements OnInit {
   ordenarPorOptionsR = [
     { val: 'fecha', text: 'Fecha Remito' },
     { val: 'transportista.nombre', text: 'Transportista' },
-    { val: 'costo', text: 'Costo' },
+    { val: 'costoDeEnvio', text: 'Costo' },
   ];
 
   sentidoOptionsR = [
@@ -51,6 +51,8 @@ export class RemitosComponent extends ListadoBaseComponent implements OnInit {
   hasRoleToDelete = false;
 
   helper = HelperService; // se hace esto para poder usarlo en la vista.
+
+  rolesForUsuarioFilter = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -175,7 +177,7 @@ export class RemitosComponent extends ListadoBaseComponent implements OnInit {
     }
 
     if (values.serieRemito || values.nroRemito) {
-      this.appliedFilters.push({ label: 'Nº Remito', value: values.serieRemito + '-' + values.nroRemito });
+      this.appliedFilters.push({ label: 'Nº Remito', value: HelperService.formatNumRemito(values.serieRemito, values.nroRemito) });
     }
 
     if (values.idTransportista) {
@@ -215,6 +217,9 @@ export class RemitosComponent extends ListadoBaseComponent implements OnInit {
     if (values.idTransportista) { ret.idTransportista = values.idTransportista; }
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
     if (values.idCliente) { ret.idCliente = values.idCliente; }
+
+    if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
+    if (values.sentido) { ret.sentido = values.sentido; }
 
     return ret;
   }

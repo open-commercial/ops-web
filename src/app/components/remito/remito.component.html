@@ -9,7 +9,15 @@
         <fa-icon [icon]="['fas', 'file-export']"></fa-icon> Nuevo Remito
       </h1>
     </div>
-    <form [formGroup]="form" (submit)="submit()" *ngIf="form">
+    <div class="border rounded p-2 mb-3">
+      <strong>Facturas que van a ser parte del remito:</strong>
+      <ul class="pl-3 mb-0">
+        <li *ngFor="let f of facturasVenta">
+          {{ f.tipoComprobante.toString().replace('_', ' ') }} {{ f.cae ? helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) : helper.formatNumFactura(f.numSerie, f.numFactura) }}
+        </li>
+      </ul>
+    </div>
+    <form [formGroup]="form" (submit)="submit()" *ngIf="form" class="border rounded bg-light p-3">
       <div class="row">
         <div class="col-md-4" formArrayName="bultos">
           <div class="d-flex flex-row align-items-center mb-2" *ngFor="let b of bultos.controls; let i=index;" [formGroupName]="i.toString()">
@@ -28,10 +36,15 @@
             </div>
           </div>
           <hr>
-          Total de bultos: {{ totalBultos }}
-          <div class="custom-error-message" *ngIf="submitted && form.get('bultos').errors">
-            <div *ngIf="form.get('bultos').errors.bultosCount">
-              Debe ingresar al menos {{ form.get('bultos').errors.bultosCount.min }} bulto{{ form.get('bultos').errors.bultosCount.min === 1 ? '' : 's' }}
+          <div class="mb-3">
+            <div class="d-flex flex-row justify-content-between align-items-center">
+              <span [class.text-danger]="submitted && form.get('bultos').errors">Total de Bultos:&nbsp;</span>
+              <span class="px-4 flex-fill text-right">{{ totalBultos }}</span>
+            </div>
+            <div class="custom-error-message" *ngIf="submitted && form.get('bultos').errors">
+              <div *ngIf="form.get('bultos').errors.bultosCount">
+                Debe ingresar al menos {{ form.get('bultos').errors.bultosCount.min }} bulto{{ form.get('bultos').errors.bultosCount.min === 1 ? '' : 's' }}
+              </div>
             </div>
           </div>
         </div>
@@ -52,7 +65,7 @@
               <div *ngIf="form.get('volumenTotalEnM3').errors.min">Mínimo {{ form.get('volumenTotalEnM3').errors.min.min | number:'1.0-2' }}</div>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group mb-4">
             <label for="idTransportista">Transportista</label>
             <select class="form-control" id="idTransportista" formControlName="idTransportista"
                     [ngClass]="{ 'is-invalid': submitted && form.get('idTransportista').errors }">
@@ -63,7 +76,7 @@
             </div>
           </div>
           <div class="mb-3">
-            Total Facturas: {{ totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}
+            Total Facturas: <span class="font-weight-bold">{{ totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </div>
           <div class="form-group">
             <label for="costoDeEnvio">Costo de Envio ($)</label>

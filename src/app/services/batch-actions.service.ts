@@ -30,7 +30,7 @@ export class BatchActionsService {
       return (item: FacturaVenta) => ({
         id: item.idFactura,
         description: [
-          item.tipoComprobante.replace('_', ' '),
+          item.tipoComprobante.toString().replace('_', ' '),
           item.numSerieAfip
           ? HelperService.formatNumFactura(item.numSerieAfip, item.numFacturaAfip)
           : HelperService.formatNumFactura(item.numSerie, item.numFactura)

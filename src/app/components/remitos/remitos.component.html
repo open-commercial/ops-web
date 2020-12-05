@@ -1,6 +1,6 @@
 <div class="app-remitos">
-  <div class="d-flex flex-row align-items-center my-3">
-    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'file-export']"></fa-icon> Remitos</h1>
+  <div class="d-flex flex-column flex-md-row align-items-md-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-export']"></fa-icon> Remitos</h1>
     <div class="text-right m-0">
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="remitosFiltersCollapse"
@@ -20,19 +20,19 @@
             <div class="row">
               <div class="col-4">
                 <label class="sr-only" for="num-serie">Número de serie</label>
-                <input type="text" class="form-control" id="num-serie" formControlName="serieRemito">
+                <input type="number" class="form-control" id="num-serie" formControlName="serieRemito">
               </div>
               <div class="col-8">
                 <label class="sr-only" for="num-remito">Número remito</label>
-                <input type="text" class="form-control" id="num-remito" formControlName="nroRemito">
+                <input type="number" class="form-control" id="num-remito" formControlName="nroRemito">
               </div>
             </div>
           </div>
           <app-transportista formControlName="idTransportista"></app-transportista>
         </div>
         <div class="col-md-6">
-          <app-usuario-filtro id="usuarioFiltroR" formControlName="idUsuario"></app-usuario-filtro>
           <app-cliente-filtro id="clienteFiltroR" formControlName="idCliente"></app-cliente-filtro>
+          <app-usuario-filtro id="usuarioFiltroR" formControlName="idUsuario" [roles]="rolesForUsuarioFilter"></app-usuario-filtro>
           <div class="card card-body bg-light mb-3">
             <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorT" [values]="ordenarPorOptionsR" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorR></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoT" [values]="sentidoOptionsR" [label]="'Sentido'" formControlName="sentido" #sentidoR></app-filtro-ordenamiento>
@@ -51,11 +51,8 @@
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
-          #{{ item.serie }}-{{ item.nroRemito }}
+          #{{ helper.formatNumRemito(item.serie, item.nroRemito) }}
         </span>
-      </div>
-      <div class="px-2 flex-fill">
-        <span class="font-weight-bold">Ubicación:&nbsp;</span><span class="font-italic">{{ item.detalleEnvio }}</span>
       </div>
       <div class="px-2 flex-fill">
         <div class="d-flex flex-row flex-wrap align-items-center">
@@ -64,6 +61,9 @@
           <span class="mr-2"><span class="font-weight-bold">Transportista:&nbsp;</span><span class="font-italic">{{ item.nombreTransportista }}</span></span>
           <span class="mr-2"><span class="font-weight-bold">Costo Envio:&nbsp;</span><span class="font-italic costo-de-envio">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span></span>
         </div>
+      </div>
+      <div class="px-2 flex-fill">
+        <span class="font-weight-bold">Ubicación:&nbsp;</span><span class="font-italic">{{ item.detalleEnvio }}</span>
       </div>
     </ng-template>
     <ng-template #actions let-item let-index>

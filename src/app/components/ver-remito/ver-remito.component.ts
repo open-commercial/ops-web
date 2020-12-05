@@ -10,6 +10,7 @@ import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {Location} from '@angular/common';
 import {saveAs} from 'file-saver';
+import {HelperService} from '../../services/helper.service';
 
 @Component({
   selector: 'app-ver-remito',
@@ -19,6 +20,8 @@ import {saveAs} from 'file-saver';
 export class VerRemitoComponent implements OnInit {
   remito: Remito;
   renglones: RenglonRemito[] = [];
+
+  helper = HelperService;
 
   constructor(private remitosService: RemitosService,
               private route: ActivatedRoute,
