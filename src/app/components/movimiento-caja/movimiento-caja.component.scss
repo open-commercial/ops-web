@@ -1,0 +1,9 @@
+.app-movimiento-caja {
+  margin: 0;
+  .movimiento {
+    border-bottom: 1px solid #333;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

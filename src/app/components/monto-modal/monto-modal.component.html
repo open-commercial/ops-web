@@ -1,0 +1,25 @@
+<div class="modal-header" *ngIf="title">
+  <h4 class="modal-title">{{ title }}</h4>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form">
+    <div *ngIf="htmlInfo" [innerHTML]="getSafeHtml()"></div>
+    <div class="form-group">
+      <label for="monto" *ngIf="label">{{ label }}</label>
+      <input type="number" required min="0" class="form-control" id="monto" formControlName="monto"
+             [ngClass]="{ 'is-invalid': submitted && f.monto.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.monto.errors">
+        <div *ngIf="f.monto.errors.required">Requerido</div>
+        <div *ngIf="f.monto.errors.min">Mínimo {{ f.monto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!form.valid">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Aceptar
+  </button>
+</div>

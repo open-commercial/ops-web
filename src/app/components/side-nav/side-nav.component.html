@@ -38,4 +38,12 @@
       </a>
     </li>
   </ul>
+  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;ADMINISTRACIÓN</h2>
+  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/cajas" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Cajas
+      </a>
+    </li>
+  </ul>
 </div>

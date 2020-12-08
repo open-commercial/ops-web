@@ -51,8 +51,9 @@ export class AuthService {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(() => {
         this.cleanAccessTokenInLocalStorage();
-        this.router.navigate(['/login'], {queryParams: {return: this.router.routerState.snapshot.url}});
-      });
+        this.router.navigate(['/login']);
+      })
+    ;
   }
 
   cleanAccessTokenInLocalStorage() {

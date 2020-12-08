@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
@@ -22,11 +22,12 @@ import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageKeys, StorageService } from '../../services/storage.service';
 import { ProductosService } from '../../services/productos.service';
 import { PedidosService } from '../../services/pedidos.service';
-import { EstadoPedido } from '../../models/estado.pedido';
+import { EstadoPedido } from '../../models/estado-pedido';
 import { Pedido } from '../../models/pedido';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
 import { Transportista } from '../../models/transportista';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -34,7 +35,7 @@ import { Transportista } from '../../models/transportista';
   templateUrl: './factura-venta.component.html',
   styleUrls: ['./factura-venta.component.scss']
 })
-export class FacturaVentaComponent implements OnInit {
+export class FacturaVentaComponent implements OnInit, OnDestroy {
   title = '';
   form: FormGroup;
   submitted = false;
@@ -69,6 +70,8 @@ export class FacturaVentaComponent implements OnInit {
   checkingAll = false;
   checkingRenglon = false;
 
+  subscription: Subscription;
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -89,12 +92,17 @@ export class FacturaVentaComponent implements OnInit {
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
     modalConfig.keyboard = false;
+    this.subscription = new Subscription();
   }
 
   ngOnInit() {
     this.createFrom();
     this.verificarPedido();
-    this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes());
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes()));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   verificarPedido() {

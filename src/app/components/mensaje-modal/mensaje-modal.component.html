@@ -6,7 +6,7 @@
       <fa-icon [icon]="['fas', 'question-circle']" [size]="'3x'" *ngIf="type === typeEnum.CONFIRM"></fa-icon>
       <fa-icon [icon]="['fas', 'times-circle']" [size]="'3x'" *ngIf="type === typeEnum.ERROR"></fa-icon>
     </div>
-    <div class="p-2 flex-fill">{{ mensaje }}</div>
+    <div class="p-2 flex-fill" [innerHTML]="getSafeHtml()"></div>
   </div>
 </div>
 <div class="modal-footer">

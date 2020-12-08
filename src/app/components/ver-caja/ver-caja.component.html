@@ -1,0 +1,64 @@
+<div class="app-ver-caja my-3">
+  <div *ngIf="caja">
+    <div class="d-flex flex-column flex-md-row mb-2">
+      <h1 class="h3 flex-fill text-truncate">
+        <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+           (click)="volverAlListado()">
+          <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+        </a>
+        <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Arqueo de Caja
+      </h1>
+      <div class="text-nowrap text-right" *ngIf="caja.estado === estado.ABIERTA" >
+        <button type="button" class="btn btn-primary ml-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
+          <fa-icon [icon]="['fas', 'coins']"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-primary ml-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left">
+          <fa-icon [icon]="['fas', 'lock']"></fa-icon>
+        </button>
+      </div>
+    </div>
+    <div class="mb-3">
+      Apertura: <strong>{{ caja.fechaApertura | date:'dd/MM/yyyy HH:mm' }}</strong><br>
+      Estado: <strong [ngClass]="{'text-danger': caja.estado === estado.CERRADA, 'text-success': caja.estado === estado.ABIERTA}">{{ caja.estado }}</strong>
+    </div>
+    <ngb-accordion class="ops-accordion-2" #accordion [closeOthers]="true" [destroyOnHide]="true" (panelChange)="panelBeforeChange($event)">
+      <ngb-panel *ngFor="let r of resumen"  [id]="'panel-' + r.idFormaDePago">
+        <ng-template ngbPanelHeader>
+          <button class="d-flex align-items-center justify-content-between mb-0" ngbPanelToggle
+                  [class.table-success]="r.total>=0" [class.table-danger]="r.total < 0">
+            <fa-icon [icon]="['fas', accordion.isExpanded('panel-' + r.idFormaDePago) ? 'chevron-up' : 'chevron-down']"
+                     class="mr-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
+            <span class="mb-0 flex-fill text-left nombre">
+              {{ r.nombreFormaDePago }} <br *ngIf="r.afectaCaja">
+              <small *ngIf="r.afectaCaja" class="font-weight-bold text-nowrap">(Afecta la caja)</small>
+            </span>
+            <span class="font-weight-bold">{{ r.total | currency: 'ARS':'symbol':'1.0-2' }}</span>
+          </button>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <app-movimiento-caja [caja]="caja" [idFormaDePago]="r.idFormaDePago" *ngIf="r.idFormaDePago > 0" (cantMovimientosChange)="onMovimientosChange($event)"></app-movimiento-caja>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+    <ul class="list-unstyled my-3 text-right">
+      <li>
+        <strong>Total afecta Caja: </strong>
+        <span class="lead">
+          <span class="badge" [class.badge-success]="totalQueAfectaCaja >= 0" [class.badge-danger]="totalQueAfectaCaja < 0">
+            <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
+            <span *ngIf="!loadingTotales">{{ totalQueAfectaCaja | currency: 'ARS':'symbol':'1.0-2' }}</span>
+          </span>
+        </span>
+      </li>
+      <li>
+        <strong>Total Sistema: </strong>
+        <span class="lead">
+          <span class="badge" [class.badge-success]="totalSistema >= 0" [class.badge-danger]="totalSistema < 0">
+            <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
+            <span *ngIf="!loadingTotales">{{ totalSistema | currency: 'ARS':'symbol':'1.0-2' }}</span>
+          </span>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
