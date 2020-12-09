@@ -52,9 +52,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.refreshCaja(id);
 
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() =>
-      this.volverAlListado())
-    );
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
   }
 
   ngOnDestroy() {

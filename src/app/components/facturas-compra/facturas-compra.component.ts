@@ -72,10 +72,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaFacturaCompraCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
-      pagina: 0,
+      pagina: this.page,
     };
-
-    terminos.pagina = this.page;
 
     if (ps.idProveedor && !isNaN(ps.idProveedor)) {
       this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));

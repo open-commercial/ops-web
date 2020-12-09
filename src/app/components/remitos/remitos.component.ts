@@ -234,16 +234,21 @@ export class RemitosComponent extends ListadoBaseComponent implements OnInit {
       return;
     }
 
-    this.loadingOverlayService.activate();
-    this.remitosService.eliminarRemito(remito.idRemito)
-      .subscribe(
-        () => location.reload(),
-        err => {
-          this.loadingOverlayService.deactivate();
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-        },
-      )
-    ;
+    const msg = `¿Está seguro que desea eliminar el remito ` + this.helper.formatNumRemito(remito.serie, remito.nroRemito) + '?';
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.remitosService.eliminarRemito(remito.idRemito)
+          .subscribe(
+            () => location.reload(),
+            err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
+          )
+        ;
+      }
+    });
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
