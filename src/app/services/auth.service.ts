@@ -75,7 +75,7 @@ export class AuthService {
   }
 
   getLoggedInIdUsuario(): string {
-    const token = this.storageService.getItem('token');
+    const token = this.getToken();
     if (!token) { return null; }
 
     const decodedToken = this.jwtHelper.decodeToken(token);
@@ -86,7 +86,12 @@ export class AuthService {
     this.storageService.setItem(StorageKeys.TOKEN, token);
   }
 
-  userHasAnyOfTheseRoles(usuario: Usuario, roles: Rol[]): boolean {
-    return usuario && usuario.roles.filter(x => roles.includes(x)).length > 0;
+  userHasAnyOfTheseRoles(roles: Rol[]): boolean {
+    const token = this.getToken();
+    if (!token) { return false; }
+
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    const decodedRoles = decodedToken.roles;
+    return decodedRoles.filter(x => roles.includes(x)).length > 0;
   }
 }

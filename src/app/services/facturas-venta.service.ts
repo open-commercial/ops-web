@@ -26,6 +26,11 @@ export class FacturasVentaService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
+  getFacturasPorId(ids: number[]): Observable<FacturaVenta[]> {
+    const qs = HelperService.getQueryString({ idFactura: ids.join(',') });
+    return this.http.get<FacturaVenta[]>(`${this.url}?${qs}`);
+  }
+
   getTiposDeComprobante(idCliente: number): Observable<TipoDeComprobante[]> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     return this.http.get<TipoDeComprobante[]>(this.url + `/tipos/sucursales/${idSucursal}/clientes/${idCliente}`);

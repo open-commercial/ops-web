@@ -12,18 +12,15 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {Producto} from '../../models/producto';
 import {Pagination} from '../../models/pagination';
 import {ProductosService} from '../../services/productos.service';
-import {combineLatest, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Proveedor} from '../../models/proveedor';
 import {ProveedoresService} from '../../services/proveedores.service';
 import {ListadoBaseComponent} from '../listado-base.component';
 import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
-import {Usuario} from '../../models/usuario';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {ActionConfiguration} from '../batch-actions-box/batch-actions-box.component';
-
-let self = null;
 
 @Component({
   selector: 'app-productos',
@@ -70,7 +67,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       description: 'Eliminar seleccionados',
       icon: ['fas', 'trash'],
       clickFn: ids => this.eliminarSeleccionados(ids),
-      isVisible: () => this.puedeEliminarProducto(),
+      isVisible: () => this.hasRoleToDelete,
     }
   ];
 
@@ -86,37 +83,26 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
               private proveedoresService: ProveedoresService,
               public batchActionsService: BatchActionsService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
-    self = this;
   }
 
   ngOnInit() {
     super.ngOnInit();
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+
     this.loadingOverlayService.activate();
-    combineLatest([
-      this.authService.getLoggedInUsuario(),
-      this.rubrosService.getRubros()
-    ]).pipe(finalize(() => this.loadingOverlayService.deactivate()))
+    this.rubrosService.getRubros()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (data: [Usuario, Rubro[]]) => {
-          this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(data[0], this.allowedRolesToDelete);
-          this.rubros = data[1];
-        },
+        rubros => this.rubros = rubros,
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       )
     ;
   }
 
-  getTerminosFromQueryParams(params = null) {
+  getTerminosFromQueryParams(ps) {
     const terminos: BusquedaProductoCriteria = {
-      pagina: 0,
+      pagina: this.page,
     };
-
-    this.resetFilterForm();
-    const ps = params ? params.params : this.route.snapshot.queryParams;
-    const p = Number(ps.p);
-
-    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
-    terminos.pagina = this.page;
 
     if (ps.codODes) {
       this.filterForm.get('codODes').setValue(ps.codODes);
@@ -249,12 +235,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     this.router.navigate(['/productos/editar', producto.idProducto]);
   }
 
-  puedeEliminarProducto(): boolean {
-    return this.hasRoleToDelete;
-  }
-
   eliminarProducto(producto: Producto) {
-    if (!this.puedeEliminarProducto()) {
+    if (!this.hasRoleToDelete) {
       this.mensajeService.msg('No posee permiso para productos.', MensajeModalType.ERROR);
       return;
     }
@@ -282,7 +264,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   }
 
   eliminarSeleccionados(ids: number[]) {
-    if (!this.puedeEliminarProducto()) {
+    if (!this.hasRoleToDelete) {
       this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
       return;
     }

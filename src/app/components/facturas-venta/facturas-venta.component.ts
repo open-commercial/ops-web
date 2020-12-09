@@ -1,30 +1,32 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FacturaVenta } from '../../models/factura-venta';
-import { Rol } from '../../models/rol';
-import { HelperService } from '../../services/helper.service';
-import { Pagination } from '../../models/pagination';
-import { finalize, map } from 'rxjs/operators';
-import { FacturasService } from '../../services/facturas.service';
-import { FacturasVentaService } from '../../services/facturas-venta.service';
-import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
-import { BusquedaFacturaVentaCriteria } from '../../models/criterias/busqueda-factura-venta-criteria';
-import { SucursalesService } from '../../services/sucursales.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {FacturaVenta} from '../../models/factura-venta';
+import {Rol} from '../../models/rol';
+import {HelperService} from '../../services/helper.service';
+import {Pagination} from '../../models/pagination';
+import {finalize, map} from 'rxjs/operators';
+import {FacturasService} from '../../services/facturas.service';
+import {FacturasVentaService} from '../../services/facturas-venta.service';
+import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
+import {BusquedaFacturaVentaCriteria} from '../../models/criterias/busqueda-factura-venta-criteria';
+import {SucursalesService} from '../../services/sucursales.service';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as moment from 'moment';
-import { Cliente } from '../../models/cliente';
-import { Observable } from 'rxjs';
-import { ClientesService } from '../../services/clientes.service';
-import { UsuariosService } from '../../services/usuarios.service';
-import { Usuario } from '../../models/usuario';
-import { ProductosService } from '../../services/productos.service';
-import { Producto } from '../../models/producto';
-import { AuthService } from '../../services/auth.service';
-import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { MensajeService } from '../../services/mensaje.service';
-import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
-import { ListadoBaseComponent } from '../listado-base.component';
+import {Cliente} from '../../models/cliente';
+import {Observable} from 'rxjs';
+import {ClientesService} from '../../services/clientes.service';
+import {UsuariosService} from '../../services/usuarios.service';
+import {Usuario} from '../../models/usuario';
+import {ProductosService} from '../../services/productos.service';
+import {Producto} from '../../models/producto';
+import {AuthService} from '../../services/auth.service';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeService} from '../../services/mensaje.service';
+import {LoadingOverlayService} from '../../services/loading-overlay.service';
+import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
+import {ListadoBaseComponent} from '../listado-base.component';
+import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
+import {ActionConfiguration} from '../batch-actions-box/batch-actions-box.component';
 
 @Component({
   selector: 'app-facturas-venta',
@@ -64,6 +66,16 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
   allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRoleToEnviarPorEmail = false;
 
+  baKey = BatchActionKey.FACTURAS_VENTA;
+  baActions: ActionConfiguration[] = [
+    {
+      description: 'Nuevo Remito',
+      icon: ['fas', 'file-export'],
+      clickFn: () => this.router.navigate(['/remitos/nuevo']),
+    }
+  ];
+  isBatchActionsBoxCollapsed = true;
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -75,35 +87,21 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
               private productosService: ProductosService,
               private authService: AuthService,
               protected mensajeService: MensajeService,
-              public loadingOverlayService: LoadingOverlayService) {
+              public loadingOverlayService: LoadingOverlayService,
+              public batchActionsService: BatchActionsService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.loadingOverlayService.activate();
-    this.authService.getLoggedInUsuario()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((u: Usuario) => {
-        this.usuario = u;
-        this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(u, this.allowedRolesToEnviarPorEmail);
-      })
-    ;
+    this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEnviarPorEmail);
   }
 
-  getTerminosFromQueryParams(params = null) {
+  getTerminosFromQueryParams(ps) {
     const terminos: BusquedaFacturaVentaCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
-      pagina: 0,
+      pagina: this.page,
     };
-
-    this.resetFilterForm();
-
-    const ps = params ? params.params : this.route.snapshot.queryParams;
-    const p = Number(ps.p);
-
-    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
-    terminos.pagina = this.page;
 
     if (ps.idCliente && !isNaN(ps.idCliente)) {
       this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
@@ -298,12 +296,8 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     this.router.navigate(['/facturas-venta/ver', factura.idFactura]);
   }
 
-  puedeEnviarPorEmail() {
-    return this.hasRoleToEnviarPorEmail;
-  }
-
   enviarPorEmail(factura: FacturaVenta) {
-    if (!this.puedeEnviarPorEmail()) {
+    if (!this.hasRoleToEnviarPorEmail) {
       this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
       return;
     }
@@ -322,6 +316,18 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
         ;
       }
     });
+  }
+
+  verRemito(item: FacturaVenta) {
+    if (item.remito) {
+      this.router.navigate(['/remitos/ver', item.remito.idRemito]);
+    }
+  }
+
+  nuevoRemito(item: FacturaVenta) {
+    if (!item.remito) {
+      this.router.navigate(['/remitos/de-factura', item.idFactura]);
+    }
   }
 
   getClienteInfoAsync(id: number): Observable<string> {

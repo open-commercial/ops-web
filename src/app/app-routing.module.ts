@@ -25,13 +25,17 @@ import {ProductoMultiEditorComponent} from './components/producto-multi-editor/p
 import {CajasHomeComponent} from './components/cajas-home/cajas-home.component';
 import {CajasComponent} from './components/cajas/cajas.component';
 import {VerCajaComponent} from './components/ver-caja/ver-caja.component';
+import {RemitosHomeComponent} from './components/remitos-home/remitos-home.component';
+import {RemitosComponent} from './components/remitos/remitos.component';
+import {VerRemitoComponent} from './components/ver-remito/ver-remito.component';
+import {RemitoComponent} from './components/remito/remito.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
-      { path: 'pedidos', component: PedidosHomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
+      { path: 'pedidos', component: PedidosHomeComponent,
         children: [
           { path: '', component: PedidosComponent },
           { path: 'nuevo', component: PedidoComponent },
@@ -52,7 +56,7 @@ const routes: Routes = [
           { path: 'ver/:id', component: VerFacturaComponent }
         ]
       },
-      { path: 'productos', component: ProductosHomeComponent, runGuardsAndResolvers: 'always',
+      { path: 'productos', component: ProductosHomeComponent,
         children: [
           { path: '', component: ProductosComponent },
           { path: 'nuevo', component: ProductoComponent },
@@ -61,7 +65,7 @@ const routes: Routes = [
           { path: 'editar-multiple', component: ProductoMultiEditorComponent }
         ]
       },
-      { path: 'traspasos', component: TraspasosHomeComponent, runGuardsAndResolvers: 'always',
+      { path: 'traspasos', component: TraspasosHomeComponent,
         children: [
           { path: '', component: TraspasosComponent },
           { path: 'nuevo', component: TraspasoComponent },
@@ -72,6 +76,14 @@ const routes: Routes = [
         children: [
           { path: '', component: CajasComponent },
           { path: 'ver/:id', component: VerCajaComponent },
+        ]
+      },
+      { path: 'remitos', component: RemitosHomeComponent,
+        children: [
+          { path: '', component: RemitosComponent },
+          { path: 'nuevo', component: RemitoComponent },
+          { path: 'de-factura/:id', component: RemitoComponent },
+          { path: 'ver/:id', component: VerRemitoComponent },
         ]
       }
     ]

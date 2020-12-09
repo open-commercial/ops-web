@@ -16,7 +16,6 @@ import {CalculosPrecio, CalculosPrecioValues} from '../../models/calculos-precio
 import {ProductosService} from '../../services/productos.service';
 import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
-import {Usuario} from '../../models/usuario';
 
 enum OpcionPorcentaje {
   PORCENTAJE_RECARGO = '% Recargo',
@@ -64,7 +63,6 @@ export class ProductoMultiEditorComponent implements OnInit {
     }
 
     const obvs: Observable<any>[] = [
-      this.authService.getLoggedInUsuario(),
       this.medidaService.getMedidas(),
       this.rubrosService.getRubros(),
     ];
@@ -73,13 +71,9 @@ export class ProductoMultiEditorComponent implements OnInit {
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (recursos: [Usuario, Medida[], Rubro[]]) => {
-          this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(recursos[0], this.allowedRolesToEditCantidades);
-          this.medidas = recursos[1];
-          this.rubros = recursos[2];
-          if (this.hasRolToEditCantidades) {
-            this.form.get('cantidadVentaMinima').get('check').enable();
-          }
+        (recursos: [Medida[], Rubro[]]) => {
+          this.medidas = recursos[0];
+          this.rubros = recursos[1];
         },
         err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
@@ -94,6 +88,8 @@ export class ProductoMultiEditorComponent implements OnInit {
   }
 
   creatForm() {
+    this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEditCantidades);
+
     this.form = this.fb.group({
       idProveedor: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
       idRubro: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
@@ -101,7 +97,7 @@ export class ProductoMultiEditorComponent implements OnInit {
       publico: this.fb.group({ check: false, value: [{ value: false, disabled: true }] }),
       calculosPrecio: this.fb.group({ check: false, value: [{ value: CalculosPrecio.getEmtpyValues(), disabled: true }] }),
       cantidadVentaMinima: this.fb.group({
-        check: [{ value: false, disabled: true }],
+        check: [{ value: this.hasRolToEditCantidades, disabled: true }],
         value: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]] }
       ),
       descuentoRecargoPorcentaje: this.fb.group({

@@ -57,6 +57,7 @@ import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faFileExport } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -118,6 +119,10 @@ import { MontoModalComponent } from './components/monto-modal/monto-modal.compon
 import { VerCajaComponent } from './components/ver-caja/ver-caja.component';
 import { MovimientoCajaComponent } from './components/movimiento-caja/movimiento-caja.component';
 import { NuevoGastoModalComponent } from './components/nuevo-gasto-modal/nuevo-gasto-modal.component';
+import { RemitosComponent } from './components/remitos/remitos.component';
+import { RemitosHomeComponent } from './components/remitos-home/remitos-home.component';
+import { VerRemitoComponent } from './components/ver-remito/ver-remito.component';
+import { RemitoComponent } from './components/remito/remito.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -185,6 +190,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     VerCajaComponent,
     MovimientoCajaComponent,
     NuevoGastoModalComponent,
+    RemitosComponent,
+    RemitosHomeComponent,
+    VerRemitoComponent,
+    RemitoComponent,
   ],
   imports: [
     BrowserModule,
@@ -265,6 +274,8 @@ export class AppModule {
       faCoins,
       faChevronDown,
       faChevronUp,
+      faCheckSquare,
+      faFileExport,
     );
   }
 }

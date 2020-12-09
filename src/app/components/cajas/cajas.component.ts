@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 import {Pagination} from '../../models/pagination';
 import * as moment from 'moment';
 import {HelperService} from '../../services/helper.service';
-import {finalize, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Usuario} from '../../models/usuario';
 import {UsuariosService} from '../../services/usuarios.service';
 import {EstadoCaja} from '../../models/estado-caja';
@@ -50,30 +50,14 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
 
   ngOnInit() {
     super.ngOnInit();
-    this.loadingOverlayService.activate();
-    this.authService.getLoggedInUsuario()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (usuario: Usuario) => {
-          this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(usuario, this.allowedRolesToDelete);
-        },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
-    ;
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
   }
 
-  getTerminosFromQueryParams(params = null) {
+  getTerminosFromQueryParams(ps) {
     const terminos: BusquedaCajaCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
-      pagina: 0,
+      pagina: this.page,
     };
-
-    this.resetFilterForm();
-    const ps = params ? params.params : this.route.snapshot.queryParams;
-    const p = Number(ps.p);
-
-    this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
-    terminos.pagina = this.page;
 
     if (ps.fechaDesde || ps.fechaHasta) {
       const aux = { desde: null, hasta: null };

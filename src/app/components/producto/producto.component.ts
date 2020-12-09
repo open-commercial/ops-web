@@ -23,7 +23,6 @@ import { Location } from '@angular/common';
 import { CantidadEnSucursal } from '../../models/cantidad-en-sucursal';
 import * as moment from 'moment';
 import {AuthService} from '../../services/auth.service';
-import {Usuario} from '../../models/usuario';
 import {Rol} from '../../models/rol';
 
 Big.DP = 15;
@@ -70,8 +69,8 @@ export class ProductoComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
+
     const obvs: Observable<any>[] = [
-      this.authService.getLoggedInUsuario(),
       this.medidaService.getMedidas(),
       this.rubrosService.getRubros(),
       this.sucursalesService.getSucursales(),
@@ -86,13 +85,12 @@ export class ProductoComponent implements OnInit {
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (recursos: [Usuario, Medida[], Rubro[], Sucursal[], Producto?]) => {
-          this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(recursos[0], this.allowedRolesToEditCantidades);
-          this.medidas = recursos[1];
-          this.rubros = recursos[2];
-          this.sucursales = recursos[3];
-          if (recursos[4]) {
-            this.producto = recursos[4];
+        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
+          this.medidas = recursos[0];
+          this.rubros = recursos[1];
+          this.sucursales = recursos[2];
+          if (recursos[3]) {
+            this.producto = recursos[3];
             this.title = this.producto.descripcion;
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
@@ -111,6 +109,8 @@ export class ProductoComponent implements OnInit {
   }
 
   createForm() {
+    this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEditCantidades);
+
     this.form = this.fb.group({
       idProducto: null,
       codigo: '',
