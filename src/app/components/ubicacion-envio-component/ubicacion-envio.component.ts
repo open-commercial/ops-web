@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Ubicacion } from '../../models/ubicacion';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UbicacionModalComponent } from '../ubicacion-modal-component/ubicacion-modal.component';
-import { Cliente } from '../../models/cliente';
-import { ClientesService } from '../../services/clientes.service';
-import { finalize } from 'rxjs/operators';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Ubicacion} from '../../models/ubicacion';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {UbicacionModalComponent} from '../ubicacion-modal-component/ubicacion-modal.component';
+import {Cliente} from '../../models/cliente';
+import {ClientesService} from '../../services/clientes.service';
+import {finalize} from 'rxjs/operators';
+import {MensajeService} from '../../services/mensaje.service';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-ubicacion-envio-component',
@@ -30,7 +32,8 @@ export class UbicacionEnvioComponent implements OnInit {
   @Output() updated = new EventEmitter<Cliente>();
 
   constructor(private modalService: NgbModal,
-              private clientesService: ClientesService) { }
+              private clientesService: ClientesService,
+              private mensajeService: MensajeService) { }
 
   ngOnInit() {}
 
@@ -52,7 +55,10 @@ export class UbicacionEnvioComponent implements OnInit {
             this.cliente = c;
             this.updated.emit(this.cliente);
           },
-          err => { this.updating = false; alert(err.error); }
+          err => {
+            this.updating = false;
+            this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          }
         );
     }, () => {});
   }
