@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {FacturasVentaService} from '../../services/facturas-venta.service';
 import {FacturaVenta} from '../../models/factura-venta';
@@ -10,12 +10,13 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {TipoBulto} from '../../models/tipo-bulto';
 import {Transportista} from '../../models/transportista';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {TransportistasService} from '../../services/transportistas.service';
 import {NuevoRemito} from '../../models/nuevo-remito';
 import {RemitosService} from '../../services/remitos.service';
 import {ActivatedRoute} from '@angular/router';
 import {HelperService} from '../../services/helper.service';
+import {SucursalesService} from '../../services/sucursales.service';
 
 const bultosCount = (min: number): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -32,7 +33,7 @@ const bultosCount = (min: number): ValidatorFn => {
   templateUrl: './remito.component.html',
   styleUrls: ['./remito.component.scss']
 })
-export class RemitoComponent implements OnInit {
+export class RemitoComponent implements OnInit, OnDestroy {
   facturasVenta: FacturaVenta[] = [];
   form: FormGroup;
   submitted = false;
@@ -44,6 +45,8 @@ export class RemitoComponent implements OnInit {
 
   helper = HelperService;
 
+  subscription: Subscription;
+
   constructor(private batchActionsService: BatchActionsService,
               private loadingOverlayService: LoadingOverlayService,
               private facturasVentaService: FacturasVentaService,
@@ -52,7 +55,10 @@ export class RemitoComponent implements OnInit {
               private transportistasService: TransportistasService,
               private location: Location,
               private fb: FormBuilder,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private sucursalesService: SucursalesService) {
+    this.subscription = new Subscription();
+  }
 
   ngOnInit() {
     this.createForm();
@@ -88,6 +94,12 @@ export class RemitoComponent implements OnInit {
         },
       )
     ;
+
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   createForm() {

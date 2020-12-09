@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {combineLatest} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {combineLatest, Subscription} from 'rxjs';
 import {RemitosService} from '../../services/remitos.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {ActivatedRoute} from '@angular/router';
@@ -11,23 +11,29 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {Location} from '@angular/common';
 import {saveAs} from 'file-saver';
 import {HelperService} from '../../services/helper.service';
+import {SucursalesService} from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-ver-remito',
   templateUrl: './ver-remito.component.html',
   styleUrls: ['./ver-remito.component.scss']
 })
-export class VerRemitoComponent implements OnInit {
+export class VerRemitoComponent implements OnInit, OnDestroy {
   remito: Remito;
   renglones: RenglonRemito[] = [];
 
   helper = HelperService;
 
+  subscription: Subscription;
+
   constructor(private remitosService: RemitosService,
               private route: ActivatedRoute,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
-              private location: Location) { }
+              private location: Location,
+              private sucursalesService: SucursalesService) {
+    this.subscription = new Subscription();
+  }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -49,6 +55,12 @@ export class VerRemitoComponent implements OnInit {
         }
       )
     ;
+
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   volverAlListado() {
