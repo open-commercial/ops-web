@@ -129,6 +129,9 @@ export class ProductoComponent implements OnInit {
   }
 
   initializeForm() {
+    if (this.hasRolToEditCantidades) {
+      this.form.get('bulto').enable();
+    }
     if (this.producto) {
       this.form.get('idProducto').setValue(this.producto.idProducto);
       this.form.get('codigo').setValue(this.producto.codigo);
@@ -141,9 +144,6 @@ export class ProductoComponent implements OnInit {
         ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
       );
       this.form.get('bulto').setValue(this.producto.bulto);
-      if (this.hasRolToEditCantidades) {
-        this.form.get('bulto').enable();
-      }
       this.form.get('publico').setValue(this.producto.publico);
 
       if (this.producto.fechaVencimiento) {
