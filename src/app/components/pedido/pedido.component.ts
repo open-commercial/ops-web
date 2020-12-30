@@ -1,38 +1,38 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
-import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
-import { PedidosService } from '../../services/pedidos.service';
-import { RenglonPedido } from '../../models/renglon-pedido';
-import { CantidadProductoModalComponent } from '../cantidad-producto-modal/cantidad-producto-modal.component';
-import { Producto } from '../../models/producto';
-import { TipoDeEnvio } from '../../models/tipo-de-envio';
-import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
-import { Resultados } from '../../models/resultados';
-import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
-import { SucursalesService } from '../../services/sucursales.service';
-import { Sucursal } from '../../models/sucursal';
-import { DetallePedido } from '../../models/detalle-pedido';
-import { AuthService } from '../../services/auth.service';
-import { debounceTime, finalize } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
-import { ProductosService } from '../../services/productos.service';
-import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
-import { Cliente } from '../../models/cliente';
-import { ClientesService } from '../../services/clientes.service';
-import { StorageKeys, StorageService } from '../../services/storage.service';
-import { Usuario } from '../../models/usuario';
-import { Rol } from '../../models/rol';
-import { Pedido } from '../../models/pedido';
-import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { MensajeService } from '../../services/mensaje.service';
-import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
-import { Location } from '@angular/common';
-import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
-import { ProductoFaltante } from '../../models/producto-faltante';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
+import {NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NuevoRenglonPedido} from '../../models/nuevo-renglon-pedido';
+import {PedidosService} from '../../services/pedidos.service';
+import {RenglonPedido} from '../../models/renglon-pedido';
+import {CantidadProductoModalComponent} from '../cantidad-producto-modal/cantidad-producto-modal.component';
+import {Producto} from '../../models/producto';
+import {TipoDeEnvio} from '../../models/tipo-de-envio';
+import {NuevosResultadosComprobante} from '../../models/nuevos-resultados-comprobante';
+import {Resultados} from '../../models/resultados';
+import {CuentasCorrienteService} from '../../services/cuentas-corriente.service';
+import {SucursalesService} from '../../services/sucursales.service';
+import {Sucursal} from '../../models/sucursal';
+import {DetallePedido} from '../../models/detalle-pedido';
+import {AuthService} from '../../services/auth.service';
+import {debounceTime, finalize} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
+import {combineLatest, Subscription} from 'rxjs';
+import {ProductosService} from '../../services/productos.service';
+import {EliminarRenglonPedidoModalComponent} from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
+import {Cliente} from '../../models/cliente';
+import {ClientesService} from '../../services/clientes.service';
+import {StorageKeys, StorageService} from '../../services/storage.service';
+import {Usuario} from '../../models/usuario';
+import {Rol} from '../../models/rol';
+import {Pedido} from '../../models/pedido';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeService} from '../../services/mensaje.service';
+import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
+import {Location} from '@angular/common';
+import {LoadingOverlayService} from '../../services/loading-overlay.service';
+import {ProductosParaVerificarStock} from '../../models/productos-para-verificar-stock';
+import {ProductoFaltante} from '../../models/producto-faltante';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -54,7 +54,7 @@ enum Action {
   templateUrl: './pedido.component.html',
   styleUrls: ['./pedido.component.scss'],
 })
-export class PedidoComponent implements OnInit {
+export class PedidoComponent implements OnInit, OnDestroy {
   title = 'Nuevo Pedido';
   form: FormGroup;
 
@@ -89,6 +89,8 @@ export class PedidoComponent implements OnInit {
   cantidadesInicialesPedido: { [idProducto: number]: number } = {};
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
+  subscription: Subscription;
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -106,6 +108,7 @@ export class PedidoComponent implements OnInit {
               private location: Location,
               public loadingOverlayService: LoadingOverlayService) {
 
+    this.subscription = new Subscription();
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
     modalConfig.keyboard = false;
@@ -122,7 +125,17 @@ export class PedidoComponent implements OnInit {
       )
     ;
 
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
+      if (!s.configuracionSucursal.puntoDeRetiro) {
+        this.form.get('opcionEnvio').setValue(OpcionEnvio.ENVIO_A_DOMICILIO);
+      }
+    }));
+
     this.init();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   init() {
@@ -269,7 +282,6 @@ export class PedidoComponent implements OnInit {
       descuento: 0,
       recargo: 0,
       opcionEnvio: [null, Validators.required],
-      sucursal: null,
       opcionEnvioUbicacion: null,
       resultados: null,
       pagos: [],
@@ -318,13 +330,8 @@ export class PedidoComponent implements OnInit {
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
         this.form.get('opcionEnvioUbicacion').setValue(null);
-        if (!this.form.get('sucursal').value && this.sucursales.length) {
-          const aux = this.sucursales.filter((s: Sucursal) => s.idSucursal === this.sucursalesService.getIdSucursal());
-          this.form.get('sucursal').setValue(aux.length ?  aux[0] : this.sucursales[0]);
-        }
       }
       if (oe === OpcionEnvio.ENVIO_A_DOMICILIO) {
-        this.form.get('sucursal').setValue(null);
         if (!this.form.get('opcionEnvioUbicacion').value) {
           this.form.get('opcionEnvioUbicacion').setValue(OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION);
         }
@@ -392,11 +399,6 @@ export class PedidoComponent implements OnInit {
     this.form.get('pagos').setValue(
       data.pagos && Array.isArray(data.pagos) && data.pagos.length ? data.pagos : []
     );
-
-    if (data.sucursal) {
-        const idx = this.sucursales.findIndex((s: Sucursal) => s.idSucursal === data.sucursal.idSucursal);
-        if (idx >= 0) { this.form.get('sucursal').setValue(this.sucursales[idx]); }
-    }
   }
 
   clienteHasUbicacionFacturacion() {
@@ -414,7 +416,7 @@ export class PedidoComponent implements OnInit {
       const formValue = this.form.value;
 
       const ppvs: ProductosParaVerificarStock = {
-        idSucursal: null,
+        idSucursal: this.sucursalesService.getIdSucursal(),
         idPedido: formValue.idPedido,
         idProducto: formValue.renglonesPedido.map(e => e.renglonPedido.idProductoItem),
         cantidad: formValue.renglonesPedido.map(e => e.renglonPedido.cantidad),
@@ -464,13 +466,24 @@ export class PedidoComponent implements OnInit {
   }
 
   agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
-    pfs.forEach((pf: ProductoFaltante) => {
-      const control = this.searchRPInRenglones(pf.idProducto);
-      if (control) {
-        const v: RenglonPedido = control.get('renglonPedido').value;
-        v.errorDisponibilidad = 'Solicitado (' + pf.cantidadSolicitada + ' ' + v.medidaItem + ')'
-          + ' Disponible (' + pf.cantidadDisponible + ' ' + v.medidaItem + ')';
-        control.get('renglonPedido').setValue(v);
+    const productosIds = pfs.map(pf => pf.idProducto);
+
+    productosIds.forEach(id => {
+      const aux = pfs.filter(pf => pf.idProducto === id);
+      if (aux.length) {
+        const cantSolicitada = aux[0].cantidadSolicitada;
+        const cantDisponible = aux.reduce((total: number, pf: ProductoFaltante) => total + pf.cantidadDisponible, 0);
+        const errorDisponibilidad = ['Solicitado', ' ', cantSolicitada, ' --UM--', ' - Disponible ', cantDisponible, ' --UM--'].join('');
+
+        const errorDisponibilidadPorSucursal = aux.map(pf => [pf.nombreSucursal, ': ', pf.cantidadDisponible, ' --UM--'].join(''));
+
+        const control = this.searchRPInRenglones(id);
+        if (control) {
+          const v: RenglonPedido = control.get('renglonPedido').value;
+          v.errorDisponibilidad = errorDisponibilidad.replace(/--UM--/g, v.medidaItem);
+          v.errorDisponibilidadPorSucursal = errorDisponibilidadPorSucursal.map(e => e.replace(/--UM--/g, v.medidaItem));
+          control.get('renglonPedido').setValue(v);
+        }
       }
     });
   }
@@ -502,11 +515,9 @@ export class PedidoComponent implements OnInit {
 
   getNuevoPedido() {
     let te: TipoDeEnvio;
-    let sucursalEnvio: Sucursal = null;
 
     if (this.form.get('opcionEnvio').value === OpcionEnvio.RETIRO_EN_SUCURSAL) {
       te = TipoDeEnvio.RETIRO_EN_SUCURSAL;
-      sucursalEnvio = this.form.get('sucursal').value;
     } else {
       const opcionEnvioUbicacion = this.form.get('opcionEnvioUbicacion').value;
       te = opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION ?
@@ -522,7 +533,7 @@ export class PedidoComponent implements OnInit {
     const np: DetallePedido = {
       idPedido: this.form.get('idPedido').value,
       observaciones: this.form.get('observaciones').value,
-      idSucursal: sucursalEnvio ? sucursalEnvio.idSucursal : null,
+      idSucursal: this.sucursalesService.getIdSucursal(),
       tipoDeEnvio: te,
       idCliente: ccc && ccc.cliente ? ccc.cliente.idCliente : null,
       renglones: renglones.map(r => {
@@ -593,6 +604,7 @@ export class PedidoComponent implements OnInit {
     modalRef.componentInstance.cantidadesActualesPedido = this.cantidadesActualesPedido;
     modalRef.componentInstance.cantidad = addCantidad ? 1 : cPrevia;
     modalRef.componentInstance.idPedido = this.form.get('idPedido').value;
+    modalRef.componentInstance.idSucursal = this.sucursalesService.getIdSucursal();
     modalRef.componentInstance.loadProducto(idProducto);
     modalRef.componentInstance.verificarStock = true;
     modalRef.result.then((cant: number) => {
@@ -610,7 +622,7 @@ export class PedidoComponent implements OnInit {
     if (rp) { cant = rp.get('renglonPedido').value.cantidad + 1; }
 
     const ppvs: ProductosParaVerificarStock = {
-      idSucursal: null,
+      idSucursal: this.sucursalesService.getIdSucursal(),
       idPedido: this.form.get('idPedido').value,
       idProducto: [p.idProducto],
       cantidad: [cant],
@@ -790,11 +802,10 @@ export class PedidoComponent implements OnInit {
 
   isPagosPanelEnabled() {
     const opcionEnvio = this.form.get('opcionEnvio') ? this.form.get('opcionEnvio').value : null;
-    const sucursal = this.form.get('sucursal') ? this.form.get('sucursal').value : null;
-    const opcionEnvioUbicacion = this.form.get('sucursal') ? this.form.get('opcionEnvioUbicacion').value : null;
+    const opcionEnvioUbicacion = opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO ? this.form.get('opcionEnvioUbicacion').value : null;
 
     return this.isEnvioPanelEnabled() && (
-      (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL && sucursal) ||
+      (opcionEnvio === OpcionEnvio.RETIRO_EN_SUCURSAL) ||
       (opcionEnvio === OpcionEnvio.ENVIO_A_DOMICILIO &&
         (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION && this.clienteHasUbicacionFacturacion()) ||
         (opcionEnvioUbicacion === OpcionEnvioUbicacion.USAR_UBICACION_ENVIO && this.clienteHasUbicacionEnvio())
@@ -802,8 +813,8 @@ export class PedidoComponent implements OnInit {
     );
   }
 
-  compareFn(suc1: Sucursal, suc2: Sucursal) {
-    return suc1 && suc2 && suc1.idSucursal === suc2.idSucursal;
+  esSucursalSeleccionadaPuntoDeRetiro() {
+    return !!this.sucursales.filter(s => s.idSucursal === this.sucursalesService.getIdSucursal()).length;
   }
 }
 

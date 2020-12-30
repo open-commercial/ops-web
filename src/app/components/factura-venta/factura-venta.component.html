@@ -13,13 +13,25 @@
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form && !loading && !verificandoPedido">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
-      <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
+      <ngb-panel id="cliente">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('cliente') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Cliente {{ getCccLabel() }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="true" (select)="handleSelectCcc($event)"
                                                  *ngIf="!loading && !verificandoPedido"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="tipoDeComprobante" [title]="'Tipo de Comprobante: ' + getTipoComprobanteLabel()" [disabled]="!form.get('ccc').value">
+      <ngb-panel id="tipoDeComprobante" [disabled]="!form.get('ccc').value">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobante') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Tipo de Comprobante: {{ getTipoComprobanteLabel() }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div class="form-group">
             <label for="tipo-de-comprobante">Seleccione un Tipo de Comprobante</label>
@@ -33,8 +45,13 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="productos" [title]="'Productos' + ' (' + (form.get('renglones') ? form.get('renglones').value.length : 0) + ')'"
-                 [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value">
+      <ngb-panel id="productos" [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('productos') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Productos ({{ form.get('renglones') ? form.get('renglones').value.length : 0 }})</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div class="table-responsive" formArrayName="renglones">
             <table class="table table-bordered table-sm mb-0">
@@ -52,7 +69,7 @@
               </thead>
               <tbody>
               <ng-template ngFor let-rf [ngForOf]="renglones.controls" let-i="index">
-                <tr [formGroupName]="i" [class.table-warning]="rf.get('checked') && rf.get('checked').value">
+                <tr [formGroupName]="i.toString()" [class.table-warning]="rf.get('checked') && rf.get('checked').value">
                   <td class="align-middle">
                     <div class="custom-control custom-checkbox ml-2">
                       <input type="checkbox" [id]="'cb_' + i" class="custom-control-input" formControlName="checked">
@@ -164,13 +181,24 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="transportista" [title]="'Transportista' + (transportistaSeleccionado ? ': ' + transportistaSeleccionado.nombre : '')">
+      <ngb-panel id="transportista">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('transportista') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Transportista{{ transportistaSeleccionado ? ': ' + transportistaSeleccionado.nombre : '' }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <app-transportista formControlName="idTransportista" (objectChange)="transportistaChange($event)"></app-transportista>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="pago" [title]="'Pago' + (this.resultados && this.resultados.total > 0 ? ': ' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') :'')"
-                 [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
+      <ngb-panel id="pago" [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('pago') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Pago{{ this.resultados && this.resultados.total > 0 ? ': ' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') : '' }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div *ngIf="!saving">
             <app-pagos formControlName="pagos"

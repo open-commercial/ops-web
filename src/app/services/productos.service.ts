@@ -18,22 +18,25 @@ import {ProductosParaActualizar} from '../models/productos-para-actualizar';
 })
 export class ProductosService {
 
-  url = environment.apiUrl + '/api/v1/productos/';
-  urlBusqueda = this.url + 'busqueda/criteria';
+  url = environment.apiUrl + '/api/v1/productos';
+  urlBusqueda = this.url + '/busqueda/criteria';
 
   constructor(private http: HttpClient,
               private sucursalesService: SucursalesService) {}
 
   buscar(criteria: BusquedaProductoCriteria): Observable<Pagination> {
-    return this.http.post<Pagination>(this.urlBusqueda, criteria);
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.post<Pagination>(this.urlBusqueda + `/sucursales/${idSucursal}`, criteria);
   }
 
   getProducto(idProducto: number): Observable<Producto> {
-    return this.http.get<Producto>(this.url + idProducto);
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.get<Producto>(this.url + `/${idProducto}/sucursales/${idSucursal}`);
   }
 
   getProductoPorCodigo(cod: string): Observable<Producto> {
-    return this.http.get<Producto>(`${this.url}/busqueda?` + HelperService.getQueryString({ codigo: cod }));
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.get<Producto>(`${this.url}/busqueda/sucursales/${idSucursal}?` + HelperService.getQueryString({ codigo: cod }));
   }
 
   getDisponibilidadEnStock(ppvs: ProductosParaVerificarStock): Observable<ProductoFaltante[]> {
@@ -69,6 +72,20 @@ export class ProductosService {
   getCantOtrasSucursales(p: Producto, idSucursal: number = null) {
     idSucursal = Number(idSucursal) || Number(this.sucursalesService.getIdSucursal());
     const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursales.filter(c => c.idSucursal !== idSucursal);
+    let cant = 0;
+    aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
+    return cant;
+  }
+
+  getCantidadDisponible(p: Producto, idSucursal: number = null) {
+    idSucursal = Number(idSucursal) || Number(this.sucursalesService.getIdSucursal());
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursalesDisponible.filter(c => c.idSucursal === idSucursal);
+    return aux.length ? aux[0].cantidad : 0;
+  }
+
+  getCantDisponibleOtrasSucursales(p: Producto, idSucursal: number = null) {
+    idSucursal = Number(idSucursal) || Number(this.sucursalesService.getIdSucursal());
+    const aux: Array<CantidadEnSucursal> = p.cantidadEnSucursalesDisponible.filter(c => c.idSucursal !== idSucursal);
     let cant = 0;
     aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
     return cant;

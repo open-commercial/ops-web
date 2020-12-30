@@ -214,7 +214,8 @@ export class ProductoComponent implements OnInit {
           this.location.back();
         },
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      );
+      )
+    ;
   }
 
   /**

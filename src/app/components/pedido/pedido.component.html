@@ -10,12 +10,24 @@
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
-      <ngb-panel id="cliente" [title]="'Cliente ' + getCccLabel()">
+      <ngb-panel id="cliente">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('cliente') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Cliente {{ getCccLabel() }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <app-busqueda-cuenta-corriente-cliente [ccc]="form.get('ccc').value" [readOnly]="cccReadOnly" (select)="handleSelectCcc($event)"></app-busqueda-cuenta-corriente-cliente>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="productos" [title]="'Productos' + ' (' + form.get('renglonesPedido').value.length + ')'" [disabled]="!isProductosPanelEnabled()">
+      <ngb-panel id="productos" [disabled]="!isProductosPanelEnabled()">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('productos') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Productos ({{ form.get('renglonesPedido').value.length }})</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div formArrayName="renglonesPedido">
             <app-busqueda-producto
@@ -52,6 +64,9 @@
                       </div>
                       <div *ngIf="rp.get('renglonPedido').value.errorDisponibilidad" class="disponibilidad-error">
                         {{ rp.get('renglonPedido').value.errorDisponibilidad }}
+                        <ul class="mb-0 pl-3">
+                          <li *ngFor="let e of rp.get('renglonPedido').value.errorDisponibilidadPorSucursal">{{ e }}</li>
+                        </ul>
                       </div>
                     </td>
                     <td>
@@ -114,26 +129,24 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="envio" [title]="'Envio' + getEnvioLabel()" [disabled]="!isEnvioPanelEnabled()">
+      <ngb-panel id="envio" [disabled]="!isEnvioPanelEnabled()">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('envio') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Envio {{ getEnvioLabel() }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <label for="opcionEnvio">Seleccione el tipo de envío:</label>&nbsp;
           <div class="btn-group btn-group-toggle" id="opcionEnvio" ngbRadioGroup name="radioBasic" formControlName="opcionEnvio">
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
-              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!sucursales.length">
+              <input ngbButton type="radio" [value]="oe.RETIRO_EN_SUCURSAL" [disabled]="!esSucursalSeleccionadaPuntoDeRetiro()">
               Retiro en sucursal
             </label>
             <label ngbButtonLabel class="btn-outline-primary letra-negra">
               <input ngbButton type="radio" [value]="oe.ENVIO_A_DOMICILIO">
               Envío a domicilio
             </label>
-          </div>
-          <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
-            <label for="sucursal" class="sr-only">Sucursal</label>
-            <select class="form-control" id="sucursal" formControlName="sucursal" [compareWith]="compareFn">
-              <option *ngFor="let sucursal of sucursales" [ngValue]="sucursal">
-                {{ sucursalesService.getSucursalLabel(sucursal) }}
-              </option>
-            </select>
           </div>
           <div class="form-group my-3" *ngIf="form && form.get('opcionEnvio').value  === oe.ENVIO_A_DOMICILIO">
             <label for="opcionEnvioUbicacion" class="sr-only">Ubicación</label>
@@ -153,8 +166,13 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="pago" [title]="'Pago' + (form && form.get('resultados').value ? ': ' + (form.get('resultados').value.total| currency:'ARS':'symbol':'1.0-2') : '')"
-                [disabled]="!isPagosPanelEnabled()">
+      <ngb-panel id="pago" [disabled]="!isPagosPanelEnabled()">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('pago') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>Pago {{ form && form.get('resultados').value ? ': ' + (form.get('resultados').value.total| currency:'ARS':'symbol':'1.0-2') : '' }}</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <app-pagos formControlName="pagos"
                      [totalAPagar]="form && form.get('resultados') ? form.get('resultados').value.total : 0"

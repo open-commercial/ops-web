@@ -25,6 +25,7 @@ export class CantidadProductoModalComponent implements OnInit {
   verificandoDisponibilidadStock = false;
   hayStockDisponible = false;
   stockDisponible = 0;
+  stockDisponibleEnSucursales: string[];
   idPedido: number = null;
   idSucursal: number = null;
 
@@ -80,6 +81,7 @@ export class CantidadProductoModalComponent implements OnInit {
 
         this.verificandoDisponibilidadStock = true;
         this.stockDisponible = 0;
+        this.stockDisponibleEnSucursales = [];
         this.productosService.getDisponibilidadEnStock(ppvs)
           .pipe(finalize(() => this.verificandoDisponibilidadStock = false))
           .subscribe((pfs: ProductoFaltante[]) => {
@@ -92,11 +94,17 @@ export class CantidadProductoModalComponent implements OnInit {
             const cantActual = this.cantidadesActualesPedido[this.producto.idProducto] || 0;
 
             if (pfs.length) {
+              const cantDisponible = pfs.reduce((acc, pf) => {
+                return acc + pf.cantidadDisponible;
+              }, 0);
               const aux = this.addCantidad
-                ? Math.abs(cantActual - cantInicial - pfs[0].cantidadDisponible)
-                : (cantInicial) + pfs[0].cantidadDisponible
+                ? Math.abs(cantActual - cantInicial - cantDisponible)
+                : (cantInicial) + cantDisponible
               ;
               this.stockDisponible = aux > 0 ? aux : 0;
+
+              this.stockDisponibleEnSucursales = [];
+              this.stockDisponibleEnSucursales = pfs.map(pf => pf.nombreSucursal + ': ' + pf.cantidadDisponible);
             }
 
             if (!pfs.length) {
