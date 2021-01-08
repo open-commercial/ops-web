@@ -32,11 +32,11 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
   ordenarPorOptionsP = [
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
-    { val: 'cantidadTotalEnSucursales', text: 'Total Sucursales' },
-    { val: 'bulto', text: 'Venta x Cantidad' },
-    { val: 'precioCosto', text: 'Precio Costo' },
-    { val: 'gananciaPorcentaje', text: '% Ganancia' },
-    { val: 'precioLista', text: 'Precio Lista' },
+    { val: 'cantidadProducto.cantidadTotalEnSucursales', text: 'Total Sucursales' },
+    { val: 'cantidadProducto.bulto', text: 'Venta x Cantidad' },
+    { val: 'precioProducto.precioCosto', text: 'Precio Costo' },
+    { val: 'precioProducto.gananciaPorcentaje', text: '% Ganancia' },
+    { val: 'precioProducto.precioLista', text: 'Precio Lista' },
     { val: 'fechaAlta', text: 'Fecha Alta' },
   ];
 
