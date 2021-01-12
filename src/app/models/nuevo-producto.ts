@@ -2,7 +2,6 @@ export interface NuevoProducto {
   codigo: string;
   descripcion: string;
   cantidadEnSucursal: { [key: number]: number };
-  hayStock?: boolean;
   cantMinima?: number;
   bulto: number;
   precioCosto: number|string;
