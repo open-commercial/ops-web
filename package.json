@@ -2,7 +2,8 @@
   "name": "sic-ops-web",
   "version": "0.0.0",
   "scripts": {
-    "build": "ng build --configuration ${ENV_NAME}"
+    "build": "ng build --configuration ${ENV_NAME}",
+    "start": "ng serve"
   },
   "private": true,
   "dependencies": {
