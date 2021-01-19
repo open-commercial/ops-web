@@ -62,6 +62,12 @@ export class ProductosService {
     return this.http.delete<void>(this.url + `?${qs}`);
   }
 
+  getReporte(criteria: BusquedaProductoCriteria, formato = 'pdf'): Observable<void> {
+    const qs = HelperService.getQueryString({ formato });
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.post<void>(this.url +  `/reporte/criteria/sucursales/${idSucursal}?${qs}`, criteria);
+  }
+
   /* Helpers */
   getCantidad(p: Producto, idSucursal: number = null) {
     idSucursal = Number(idSucursal) || Number(this.sucursalesService.getIdSucursal());

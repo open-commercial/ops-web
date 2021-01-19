@@ -12,7 +12,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {Producto} from '../../models/producto';
 import {Pagination} from '../../models/pagination';
 import {ProductosService} from '../../services/productos.service';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {Proveedor} from '../../models/proveedor';
 import {ProveedoresService} from '../../services/proveedores.service';
 import {ListadoBaseComponent} from '../listado-base.component';
@@ -21,6 +21,7 @@ import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {ActionConfiguration} from '../batch-actions-box/batch-actions-box.component';
+import {Sucursal} from '../../models/sucursal';
 
 @Component({
   selector: 'app-productos',
@@ -288,5 +289,29 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
         ;
       }
     });
+  }
+
+  descargarReporteAlEmail() {
+    const qParams = this.getFormValues();
+    // qParams.p = 1;
+    const terminos = this.getTerminosFromQueryParams(qParams);
+    const obs: Observable<any>[] = [
+      this.sucursalesService.getSucursal(this.sucursalesService.getIdSucursal()),
+      this.productosService.getReporte(terminos)
+    ];
+
+    this.loadingOverlayService.activate();
+    combineLatest(obs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        (data: [Sucursal]) => {
+          const email = data[0].email;
+          this.mensajeService.msg(
+            `En breve recibirá un email con la información solicitada a la dirección ${email}`, MensajeModalType.INFO
+          );
+        },
+      err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      )
+    ;
   }
 }
