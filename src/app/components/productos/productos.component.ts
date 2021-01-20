@@ -293,7 +293,6 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   descargarReporteAlEmail() {
     const qParams = this.getFormValues();
-    // qParams.p = 1;
     const terminos = this.getTerminosFromQueryParams(qParams);
     const obs: Observable<any>[] = [
       this.sucursalesService.getSucursal(this.sucursalesService.getIdSucursal()),

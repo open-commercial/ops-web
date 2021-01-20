@@ -1,6 +1,6 @@
 <div class="app-productos">
-  <div class="d-flex flex-row align-items-center my-3">
-    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos</h1>
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos</h1>
     <div class="text-right m-0">
       <button class="btn btn-primary ml-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -11,7 +11,7 @@
               ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="font-weight-bold">{{ batchActionsService.count(baKey) }}</span>
       </button>
-      <button class="btn btn-primary ml-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
+      <button class="btn btn-primary ml-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"

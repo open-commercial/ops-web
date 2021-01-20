@@ -1,6 +1,6 @@
 <div class="app-pedidos">
-  <div class="d-flex flex-row align-items-center my-3">
-    <h1 class="h3 m-0 flex-fill"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos</h1>
     <div class="text-right m-0">
       <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Pedido" triggers="mouseenter:mouseleave" placement="left"
               (click)="crearPedido()">
