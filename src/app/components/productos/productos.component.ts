@@ -39,6 +39,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     { val: 'precioProducto.gananciaPorcentaje', text: '% Ganancia' },
     { val: 'precioProducto.precioLista', text: 'Precio Lista' },
     { val: 'fechaAlta', text: 'Fecha Alta' },
+    { val: 'proveedor.razonSocial', text: 'Proveedor' },
+    { val: 'rubro.nombre', text: 'Rubro' },
   ];
 
   sentidoOptionsP = [
