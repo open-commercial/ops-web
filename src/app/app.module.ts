@@ -12,54 +12,20 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { faEye } from '@fortawesome/free-regular-svg-icons';
-import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import { faPortrait } from '@fortawesome/free-solid-svg-icons';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { faCashRegister } from '@fortawesome/free-solid-svg-icons';
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { faBarcode } from '@fortawesome/free-solid-svg-icons';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-import { faMinus } from '@fortawesome/free-solid-svg-icons';
-import { faStore } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
-import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
-import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
-import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
-import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
-import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
-import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { faCoins } from '@fortawesome/free-solid-svg-icons';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { faFileExport } from '@fortawesome/free-solid-svg-icons';
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-
+import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import {
+  faBars, faCircleNotch, faFileInvoice, faFilter,
+  faSearch, faTrash, faCalendar, faPortrait,
+  faTimes, faCheck, faExclamationTriangle, faCashRegister,
+  faClipboardList, faPlus, faBarcode, faEdit,
+  faBoxOpen, faMinus, faStore, faUser,
+  faSignOutAlt, faInfoCircle, faQuestionCircle, faTimesCircle,
+  faFileSignature, faFileDownload, faChevronLeft, faIndustry ,
+  faSuitcase, faPen, faEnvelope, faLink,
+  faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
+  faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
+  faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
