@@ -29,6 +29,11 @@ import {RemitosHomeComponent} from './components/remitos-home/remitos-home.compo
 import {RemitosComponent} from './components/remitos/remitos.component';
 import {VerRemitoComponent} from './components/ver-remito/ver-remito.component';
 import {RemitoComponent} from './components/remito/remito.component';
+import {
+  CuentasCorrientesClienteHomeComponent
+} from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
+import {CuentasCorrientesClienteComponent} from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
+import {ClienteComponent} from './components/cliente/cliente.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -84,6 +89,14 @@ const routes: Routes = [
           { path: 'nuevo', component: RemitoComponent },
           { path: 'de-factura/:id', component: RemitoComponent },
           { path: 'ver/:id', component: VerRemitoComponent },
+        ]
+      },
+      {
+        path: 'clientes', component: CuentasCorrientesClienteHomeComponent,
+        children: [
+          { path: '', component: CuentasCorrientesClienteComponent },
+          { path: 'nuevo', component: ClienteComponent },
+          { path: 'editar/:id', component: ClienteComponent },
         ]
       }
     ]

@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
+import { CuentasCorrientesService } from '../../services/cuentas-corrientes.service';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 
@@ -25,7 +25,7 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
-              private cuentasCorrienteService: CuentasCorrienteService) { }
+              private cuentasCorrienteService: CuentasCorrientesService) { }
 
   ngOnInit() {}
 
@@ -39,7 +39,7 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
       this.loading = true;
     }
 
-    this.cuentasCorrienteService.getCuentasCorriente(this.busqueda, this.page)
+    this.cuentasCorrienteService.getCuentasCorrientesCliente(this.busqueda, this.page)
       .pipe(
         finalize(() => {
           this.loading = false;

@@ -122,21 +122,37 @@ export class UbicacionModalComponent implements OnInit {
   }
 
   getFormValues(): Ubicacion {
+    const idProvincia = this.form.get('idProvincia').value;
+    const idLocalidad = this.form.get('idLocalidad').value;
+
+    const p = this.getProvincia(idProvincia);
+    const l = this.getLocalidad(idLocalidad);
+
     return {
       calle: this.form.get('calle').value,
       codigoPostal: this.ubicacion ? this.ubicacion.codigoPostal : null,
       departamento: this.form.get('departamento').value,
       descripcion: this.form.get('descripcion').value,
-      idLocalidad: this.form.get('idLocalidad').value,
-      idProvincia: this.form.get('idProvincia').value,
+      idLocalidad,
+      idProvincia,
       idUbicacion: this.ubicacion ? this.ubicacion.idUbicacion : null,
       latitud: this.ubicacion ? this.ubicacion.latitud : null,
       longitud: this.ubicacion ? this.ubicacion.longitud : null,
-      nombreLocalidad: '',
-      nombreProvincia: '',
+      nombreLocalidad: l ? l.nombre : '',
+      nombreProvincia: p ? p.nombre : '',
       numero: this.form.get('numero').value,
       piso: this.form.get('piso').value,
       eliminada: this.ubicacion ? this.ubicacion.eliminada : null,
     };
+  }
+
+  getProvincia(idProvincia: number): Provincia {
+    const aux = this.provincias.filter(p => p.idProvincia === idProvincia);
+    return aux.length ? aux[0] : null;
+  }
+
+  getLocalidad(idPLocalidad: number): Localidad {
+    const aux = this.localidades.filter(l => l.idLocalidad === idPLocalidad);
+    return aux.length ? aux[0] : null;
   }
 }

@@ -58,6 +58,7 @@ import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { faFileExport } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -123,6 +124,12 @@ import { RemitosComponent } from './components/remitos/remitos.component';
 import { RemitosHomeComponent } from './components/remitos-home/remitos-home.component';
 import { VerRemitoComponent } from './components/ver-remito/ver-remito.component';
 import { RemitoComponent } from './components/remito/remito.component';
+import { CuentasCorrientesClienteComponent } from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
+import { CuentasCorrientesClienteHomeComponent } from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
+import { ClienteComponent } from './components/cliente/cliente.component';
+import { UbicacionFormFieldComponent } from './components/ubicacion-form-field/ubicacion-form-field.component';
+import { UsuarioFormComponent } from './components/usuario-form/usuario-form.component';
+import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -194,6 +201,12 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     RemitosHomeComponent,
     VerRemitoComponent,
     RemitoComponent,
+    CuentasCorrientesClienteComponent,
+    CuentasCorrientesClienteHomeComponent,
+    ClienteComponent,
+    UbicacionFormFieldComponent,
+    UsuarioFormComponent,
+    NewOrUpdateUsuarioModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -223,6 +236,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     DisponibilidadStockModalComponent,
     MontoModalComponent,
     NuevoGastoModalComponent,
+    NewOrUpdateUsuarioModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -276,6 +290,7 @@ export class AppModule {
       faChevronUp,
       faCheckSquare,
       faFileExport,
+      faMapMarkerAlt,
     );
   }
 }

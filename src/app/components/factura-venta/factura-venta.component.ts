@@ -10,7 +10,7 @@ import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
-import { CuentasCorrienteService } from '../../services/cuentas-corriente.service';
+import { CuentasCorrientesService } from '../../services/cuentas-corrientes.service';
 import { RenglonFactura } from '../../models/renglon-factura';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
 import { NuevoRenglonFactura } from '../../models/nuevo-renglon-factura';
@@ -82,7 +82,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
               private router: Router,
               private location: Location,
               private clientesService: ClientesService,
-              private cuentasCorrienteService: CuentasCorrienteService,
+              private cuentasCorrienteService: CuentasCorrientesService,
               private mensajeService: MensajeService,
               private sucursalesService: SucursalesService,
               private storageService: StorageService,
@@ -148,7 +148,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
         data.descuento = this.pedido.descuentoPorcentaje;
         data.recargo = this.pedido.recargoPorcentaje;
         this.loadingOverlayService.activate();
-        this.cuentasCorrienteService.getCuentaCorriente(this.pedido.cliente.idCliente)
+        this.cuentasCorrienteService.getCuentaCorrienteCliente(this.pedido.cliente.idCliente)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe(
             (ccc: CuentaCorrienteCliente) => {

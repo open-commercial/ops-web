@@ -9,20 +9,24 @@ import { CuentaCorrienteCliente } from '../models/cuenta-corriente';
 @Injectable({
   providedIn: 'root'
 })
-export class CuentasCorrienteService {
+export class CuentasCorrientesService {
   url = environment.apiUrl + '/api/v1/cuentas-corriente';
-  urlBusqueda = this.url + '/clientes/busqueda/criteria';
+  urlBusquedaCuentasCorrienteCliente = this.url + '/clientes/busqueda/criteria';
 
   constructor(private http: HttpClient) { }
 
-  getCuentasCorriente(input, page: number = 0): Observable<Pagination> {
+  buscarCuentasCorrientesCliente(criteria: BusquedaCuentaCorrienteClienteCriteria): Observable<Pagination> {
+    return this.http.post<Pagination>(this.urlBusquedaCuentasCorrienteCliente, criteria);
+  }
+
+  getCuentasCorrientesCliente(input, page: number = 0): Observable<Pagination> {
     const criteria: BusquedaCuentaCorrienteClienteCriteria = {
       nombreFiscal: input, nombreFantasia: input, nroDeCliente: input, pagina: page
     };
-    return this.http.post<Pagination>(this.urlBusqueda, criteria);
+    return this.buscarCuentasCorrientesCliente(criteria);
   }
 
-  getCuentaCorriente(idCliente: number): Observable<CuentaCorrienteCliente> {
+  getCuentaCorrienteCliente(idCliente: number): Observable<CuentaCorrienteCliente> {
     return this.http.get<CuentaCorrienteCliente>(`${this.url}/clientes/${idCliente}`);
   }
 

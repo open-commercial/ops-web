@@ -1,0 +1,61 @@
+<form (ngSubmit)="submit()" *ngIf="form" [formGroup]="form" class="pt-3 px-3">
+  <div class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="habilitado" formControlName="habilitado">
+      <label class="form-check-label" for="habilitado">Habilitado</label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="username">Usuario</label>
+    <input type="text" class="form-control" id="username" formControlName="username"
+           [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+    <div class="invalid-feedback" *ngIf="submitted && f.username.errors">
+      <div *ngIf="f.username.errors.required">Requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="nombre">Nombre</label>
+    <input type="text" class="form-control" id="nombre" formControlName="nombre"
+           [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }">
+    <div class="invalid-feedback" *ngIf="submitted && f.nombre.errors">
+      <div *ngIf="f.nombre.errors.required">Requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="apellido">Apellido</label>
+    <input type="text" class="form-control" id="apellido" formControlName="apellido"
+           [ngClass]="{ 'is-invalid': submitted && f.apellido.errors }">
+    <div class="invalid-feedback" *ngIf="submitted && f.apellido.errors">
+      <div *ngIf="f.apellido.errors.required">Requerido</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="u-email">Email</label>
+    <input type="email" class="form-control" id="u-email" formControlName="email"
+           [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+    <div class="invalid-feedback" *ngIf="submitted && f.email.errors">
+      <div *ngIf="f.email.errors.required">Requerido</div>
+      <div *ngIf="f.email.errors.email">El email no es válido.</div>
+    </div>
+  </div>
+  <hr>
+  <div class="form-group">
+    <label for="password">Contraseña</label>
+    <input type="password" class="form-control" id="password" formControlName="password"
+           [ngClass]="{ 'is-invalid': submitted && (f.password.errors || (form.errors && form.errors.repeatedPassword)) }">
+    <div class="invalid-feedback" *ngIf="submitted && (f.password.errors || (form.errors && form.errors.repeatedPassword))">
+      <div *ngIf="f.password.errors && f.password.errors.required">Requerido</div>
+      <div *ngIf="form.errors && form.errors.repeatedPassword">Las contraseñas no coinciden</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="repetir_password">Repetir Contraseña</label>
+    <input type="password" class="form-control" id="repetir_password" formControlName="repetir_password">
+  </div>
+  <div class="form-group">
+    <label for="roles">Roles</label>
+    <select multiple="multiple" class="form-control" id="roles" formControlName="roles">
+      <option *ngFor="let r of allRoles" [value]="r.value">{{ r.text }}</option>
+    </select>
+  </div>
+</form>

@@ -6,6 +6,8 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { Rol } from '../../models/rol';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuarioModalComponent } from '../usuario-modal/usuario-modal.component';
+import {NewOrUpdateUsuarioModalComponent} from '../new-or-update-usuario-modal/new-or-update-usuario-modal.component';
+import {UFProfile} from '../usuario-form/usuario-form.component';
 
 
 @Component({
@@ -26,6 +28,8 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
 
   private pRoles: Array<Rol>;
   private pLabel = 'Usuario';
+  private pShowNewButton = false;
+  private pProfile = UFProfile.USUARIO;
 
   icono = 'user';
 
@@ -47,6 +51,13 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   set label(label: string) { this.pLabel = label; }
   get label() { return this.pLabel; }
 
+  @Input()
+  set showNewButton(value: boolean) { this.pShowNewButton = value; }
+  get showNewButton(): boolean { return this.pShowNewButton; }
+
+  @Input() set profile(value: UFProfile) { this.pProfile = value; }
+  get profile(): UFProfile { return this.pProfile; }
+
   constructor(private usuariosService: UsuariosService,
               private modalService: NgbModal) { }
 
@@ -66,7 +77,7 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
     modalRef.componentInstance.roles = this.pRoles;
     modalRef.result.then((u: Usuario) => {
       this.setUsuario(u);
-    }, (reason) => {});
+    }, () => {});
   }
 
   clearValue() {
@@ -105,5 +116,25 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
 
   getLabelForId() {
     return `${this.label.toLowerCase().replace(' ', '_')}`;
+  }
+
+  new() {
+    const nuevoUsuario: Usuario = {
+      idUsuario: null,
+      username: '',
+      password: '',
+      email: '',
+      nombre: '',
+      apellido: '',
+      habilitado: true,
+      roles: this.pRoles,
+    };
+
+    const modalRef = this.modalService.open(NewOrUpdateUsuarioModalComponent);
+    modalRef.componentInstance.usuario = nuevoUsuario;
+    modalRef.componentInstance.ufProfile = this.profile;
+    modalRef.result.then((u: Usuario) => {
+      this.setUsuario(u);
+    }, () => {});
   }
 }

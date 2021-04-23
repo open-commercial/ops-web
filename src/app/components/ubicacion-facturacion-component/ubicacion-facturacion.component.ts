@@ -48,7 +48,7 @@ export class UbicacionFacturacionComponent implements OnInit {
     modalRef.result.then((u: Ubicacion) => {
       this.updating = true;
       this.cliente.ubicacionFacturacion = u;
-      this.clientesService.saveCliente(this.cliente)
+      this.clientesService.updateCliente(this.cliente)
         .pipe(finalize(() => this.updating = false))
         .subscribe(
           (c: Cliente) => {

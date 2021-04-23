@@ -26,8 +26,16 @@ export class ClientesService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
-  saveCliente(cliente: Cliente): Observable<Cliente> {
+  createCliente(cliente: Cliente): Observable<Cliente> {
+    return this.http.post<Cliente>(this.url, cliente);
+  }
+
+  updateCliente(cliente: Cliente): Observable<Cliente> {
     return this.http.put<Cliente>(this.url, cliente);
+  }
+
+  deleteCliente(idCliente: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idCliente}`);
   }
 
   getClientePredeterminado(): Observable<Cliente> {
