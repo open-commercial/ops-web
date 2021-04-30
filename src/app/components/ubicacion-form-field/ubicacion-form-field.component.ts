@@ -29,10 +29,10 @@ export class UbicacionFormFieldComponent implements ControlValueAccessor {
   @Input() set label(value: string) { this.pLabel = value; }
   get label(): string { return this.pLabel; }
 
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { /*This is intentional*/ };
+  onTouch = () => { /*This is intentional*/ };
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal) {}
 
   private setUbicacion(u: Ubicacion, applyChange = true) {
     this.value = u;
@@ -72,6 +72,6 @@ export class UbicacionFormFieldComponent implements ControlValueAccessor {
     modalRef.componentInstance.title = this.label;
     modalRef.result.then((u: Ubicacion) => {
       this.setUbicacion(u);
-    }, () => {});
+    }, () => { /*This is intentional*/ });
   }
 }

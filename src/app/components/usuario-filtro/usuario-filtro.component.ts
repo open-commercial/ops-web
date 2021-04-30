@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Usuario } from '../../models/usuario';
 import { finalize } from 'rxjs/operators';
@@ -22,7 +22,7 @@ import {UFProfile} from '../usuario-form/usuario-form.component';
     }
   ]
 })
-export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
+export class UsuarioFiltroComponent implements ControlValueAccessor {
   loading = false;
   usuario: Usuario = null;
 
@@ -35,8 +35,8 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
 
   value;
   isDisabled: boolean;
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { /*This is intentional*/ };
+  onTouch = () => { /*This is intentional*/ };
 
   @Input()
   set roles(roles: Array<Rol>) {
@@ -61,8 +61,6 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   constructor(private usuariosService: UsuariosService,
               private modalService: NgbModal) { }
 
-  ngOnInit() {}
-
   private setUsuario(u: Usuario, applyChange = true) {
     this.usuario = u;
     this.value = u ? u.idUsuario : null;
@@ -77,7 +75,7 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
     modalRef.componentInstance.roles = this.pRoles;
     modalRef.result.then((u: Usuario) => {
       this.setUsuario(u);
-    }, () => {});
+    }, () => { /*This is intentional*/ });
   }
 
   clearValue() {
@@ -135,6 +133,6 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
     modalRef.componentInstance.ufProfile = this.profile;
     modalRef.result.then((u: Usuario) => {
       this.setUsuario(u);
-    }, () => {});
+    }, () => { /*This is intentional*/ });
   }
 }

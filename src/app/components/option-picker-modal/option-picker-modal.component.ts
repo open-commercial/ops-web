@@ -9,8 +9,7 @@ export interface OPOption {
 
 @Component({
   selector: 'app-option-picker-modal',
-  templateUrl: './option-picker-modal.component.html',
-  styleUrls: ['./option-picker-modal.component.scss']
+  templateUrl: './option-picker-modal.component.html'
 })
 export class OptionPickerModalComponent implements OnInit {
   options: OPOption[] = [];

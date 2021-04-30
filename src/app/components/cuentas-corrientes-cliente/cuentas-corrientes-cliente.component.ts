@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import {Observable, pipe} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Pagination} from '../../models/pagination';
 import {FormBuilder} from '@angular/forms';
 import {BusquedaCuentaCorrienteClienteCriteria} from '../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
@@ -24,7 +24,6 @@ import {AuthService} from '../../services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {OPOption, OptionPickerModalComponent} from '../option-picker-modal/option-picker-modal.component';
 import { saveAs } from 'file-saver';
-import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
 
 @Component({
   selector: 'app-cuentas-corrientes-cliente',
