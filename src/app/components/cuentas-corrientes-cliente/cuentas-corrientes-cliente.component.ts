@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import {Observable} from 'rxjs';
+import {Observable, pipe} from 'rxjs';
 import {Pagination} from '../../models/pagination';
 import {FormBuilder} from '@angular/forms';
 import {BusquedaCuentaCorrienteClienteCriteria} from '../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
@@ -21,6 +21,10 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {Cliente} from '../../models/cliente';
 import {ClientesService} from '../../services/clientes.service';
 import {AuthService} from '../../services/auth.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {OPOption, OptionPickerModalComponent} from '../option-picker-modal/option-picker-modal.component';
+import { saveAs } from 'file-saver';
+import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
 
 @Component({
   selector: 'app-cuentas-corrientes-cliente',
@@ -47,7 +51,9 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
   rol = Rol;
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  allowedRolesToSetPredeterminado: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToDelete = false;
+  hasRoleToSetPredeterminado = false;
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
@@ -64,13 +70,15 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
               private usuariosService: UsuariosService,
               private ubicacionesService: UbicacionesService,
               private clientesService: ClientesService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private modalService: NgbModal) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
     super.ngOnInit();
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToSetPredeterminado = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSetPredeterminado);
 
     this.loadingOverlayService.activate();
     this.ubicacionesService.getProvincias()
@@ -221,6 +229,62 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
     if (!idLocalidad) { return ''; }
     const aux = this.localidades.filter(p => p.idLocalidad === Number(idLocalidad));
     return aux.length ? aux[0].nombre : '';
+  }
+
+  generateReporte() {
+    const options: OPOption[] = [{ value: 'xlsx', text: 'Excel'}, { value: 'pdf', text: 'Pdf' }];
+    const modalRef = this.modalService.open(OptionPickerModalComponent);
+    modalRef.componentInstance.options = options;
+    modalRef.componentInstance.title = 'Formato';
+    modalRef.componentInstance.label = 'Seleccione un formato:';
+    modalRef.result.then(formato => {
+      const qParams = this.getFormValues();
+      const terminos = this.getTerminosFromQueryParams(qParams);
+
+      this.loadingOverlayService.activate();
+      this.ccService.generateListaClientesReporte(terminos, formato)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe(
+          (res) => {
+            const mimeType = formato === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
+            const file = new Blob([res], {type: mimeType});
+            saveAs(file, `clientes.${formato}`);
+          },
+          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        );
+    }, () => { return; });
+  }
+
+  irACtaCte(cliente: Cliente) {
+    this.router.navigate(['/clientes/cuenta-corriente', cliente.idCliente]);
+  }
+
+  setPredeterminado(cliente: Cliente) {
+    if (!this.hasRoleToSetPredeterminado) {
+      this.mensajeService.msg('No posee permiso establecer un cliente como predeterminado.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = [
+      `¿Está seguro de establecer al cliente: "${cliente.nombreFiscal}" como cliente predeterminado?`
+    ].join('');
+
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        if (!cliente.predeterminado) {
+          this.loadingOverlayService.activate();
+          this.clientesService.setClientePredeterminado(cliente.idCliente)
+            .subscribe(
+              () => location.reload(),
+              err => {
+                this.loadingOverlayService.deactivate();
+                this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+              },
+            )
+          ;
+        }
+      }
+    });
   }
 
   editarCliente(cliente: Cliente) {

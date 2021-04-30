@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { BusquedaCuentaCorrienteClienteCriteria } from '../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
 import { CuentaCorrienteCliente } from '../models/cuenta-corriente';
+import {HelperService} from './helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,22 @@ export class CuentasCorrientesService {
     return this.http.get<CuentaCorrienteCliente>(`${this.url}/clientes/${idCliente}`);
   }
 
+  getCuentaCorrienteRenglones(idCuentaCorriente: number, pagina = 0): Observable<Pagination> {
+    const qs = HelperService.getQueryString({ pagina });
+    return this.http.get<Pagination>(`${this.url}/${idCuentaCorriente}/renglones?${qs}`);
+  }
+
   getCuentaCorrienteClientePredeterminado(): Observable<CuentaCorrienteCliente> {
     return this.http.get<CuentaCorrienteCliente>(`${this.url}/clientes/predeterminado`);
+  }
+
+  generateListaClientesReporte(criteria: BusquedaCuentaCorrienteClienteCriteria, formato = 'xlsx'): Observable<Blob> {
+    return this.http.post<Blob>(
+      `${this.url}/lista-clientes/reporte/criteria?formato=${formato}`, criteria, { responseType: 'blob' as 'json' }
+    );
+  }
+
+  getReporte(criteria: BusquedaCuentaCorrienteClienteCriteria, formato = 'xlsx'): Observable<Blob> {
+    return this.http.post<Blob>(`${this.url}/clientes/reporte/criteria?formato=${formato}`, criteria, { responseType: 'blob' as 'json'});
   }
 }

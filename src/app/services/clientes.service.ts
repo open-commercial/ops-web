@@ -42,6 +42,10 @@ export class ClientesService {
     return this.http.get<Cliente>(`${this.url}/predeterminado`);
   }
 
+  setClientePredeterminado(idCliente: number): Observable<void> {
+    return this.http.put<void>(`${this.url}/${idCliente}/predeterminado`, {});
+  }
+
   existeClientePredetermiando(): Observable<boolean> {
     return this.http.get<boolean>(`${this.url}/existe-predeterminado`);
   }

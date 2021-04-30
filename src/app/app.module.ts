@@ -25,6 +25,7 @@ import {
   faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
   faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
+  faUserCheck, faBook
 } from '@fortawesome/free-solid-svg-icons';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -96,6 +97,8 @@ import { ClienteComponent } from './components/cliente/cliente.component';
 import { UbicacionFormFieldComponent } from './components/ubicacion-form-field/ubicacion-form-field.component';
 import { UsuarioFormComponent } from './components/usuario-form/usuario-form.component';
 import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
+import { OptionPickerModalComponent } from './components/option-picker-modal/option-picker-modal.component';
+import { CuentaCorrienteClienteComponent } from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -173,6 +176,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     UbicacionFormFieldComponent,
     UsuarioFormComponent,
     NewOrUpdateUsuarioModalComponent,
+    OptionPickerModalComponent,
+    CuentaCorrienteClienteComponent,
   ],
   imports: [
     BrowserModule,
@@ -203,60 +208,26 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     MontoModalComponent,
     NuevoGastoModalComponent,
     NewOrUpdateUsuarioModalComponent,
+    OptionPickerModalComponent,
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faBars,
-      faCircleNotch,
-      faFileInvoice,
-      faFilter,
-      faSearch,
-      faTrash,
-      faCalendar,
-      faEye,
-      faEyeSlash,
-      faPortrait,
-      faTimes,
-      faCheck,
-      faExclamationTriangle,
-      faCashRegister,
-      faClipboardList,
-      faPlus,
-      faBarcode,
-      faEdit,
-      faBoxOpen,
-      faMinus,
-      faStore,
-      faUser,
-      faSignOutAlt,
-      faInfoCircle,
-      faQuestionCircle,
-      faTimesCircle,
-      faFileSignature,
-      faFileDownload,
-      faChevronLeft,
-      faIndustry,
-      faSuitcase,
-      faPen,
-      faEnvelope,
-      faLink,
-      faFolderOpen,
-      faCopy,
-      faArrowAltCircleDown,
-      faExchangeAlt,
-      faCheckSquare,
-      faLockOpen,
-      faLock,
-      faSyncAlt,
-      faCoins,
-      faChevronDown,
-      faChevronUp,
-      faCheckSquare,
-      faFileExport,
-      faMapMarkerAlt,
+      faBars, faCircleNotch, faFileInvoice, faFilter,
+      faSearch, faTrash, faCalendar, faEye,
+      faEyeSlash, faPortrait, faTimes, faCheck,
+      faExclamationTriangle, faCashRegister, faClipboardList, faPlus,
+      faBarcode, faEdit, faBoxOpen, faMinus,
+      faStore, faUser, faSignOutAlt, faInfoCircle,
+      faQuestionCircle, faTimesCircle, faFileSignature,
+      faFileDownload, faChevronLeft, faIndustry, faSuitcase,
+      faPen, faEnvelope, faLink, faFolderOpen,
+      faCopy, faArrowAltCircleDown, faExchangeAlt, faCheckSquare,
+      faLockOpen, faLock, faSyncAlt, faCoins,
+      faChevronDown, faChevronUp, faCheckSquare, faFileExport,
+      faMapMarkerAlt, faUserCheck, faBook
     );
   }
 }

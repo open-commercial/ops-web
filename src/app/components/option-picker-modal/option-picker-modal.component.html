@@ -1,0 +1,17 @@
+<div class="modal-header" *ngIf="title">
+  {{title}}
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
+    <div class="form-group">
+      <label for="value">{{label}}</label>
+      <select class="form-control" id="value" formControlName="value">
+        <option *ngFor="let o of options" [value]="o.value">{{ o.text }}</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">Cerrar</button>
+  <button type="button" class="btn btn-success" (click)="submit()" [disabled]="form.invalid">Seleccionar</button>
+</div>

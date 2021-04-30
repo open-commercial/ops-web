@@ -5,6 +5,9 @@
       <button class="btn btn-primary ml-2 my-1" routerLink="/clientes/nuevo" ngbPopover="Nuevo Cliente" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
+      <button class="btn btn-primary ml-2" (click)="generateReporte()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+      </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="cccFilterCollapse"
               [class.bg-white]="!isFiltersCollapsed"
@@ -62,6 +65,9 @@
           <div class="ml-2 mb-2 font-italic font-weight-bold nombre">
             {{ item.cliente.nombreFiscal }} <span *ngIf="item.cliente.nombreFantasia">({{ item.cliente.nombreFantasia }})</span>
           </div>
+          <span class="badge badge-success ml-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
+            Cliente Predeterminado
+          </span>
           <div class="text-nowrap ml-2">
             <span class="font-weight-bold">Fecha Alta: </span>{{ item.cliente.fechaAlta | date:'dd/MM/yyyy HH:mm'  }}
           </div>
@@ -92,6 +98,16 @@
     </ng-template>
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.cliente)">
+            <fa-icon [icon]="['fas', 'book']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="!item.cliente.predeterminado">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Establecer como predeterminado" placement="left" triggers="mouseenter:mouseleave" (click)="setPredeterminado(item.cliente)">
+            <fa-icon [icon]="['fas', 'user-check']"></fa-icon>
+          </button>
+        </li>
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarCliente(item.cliente)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>

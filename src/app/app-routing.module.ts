@@ -34,6 +34,7 @@ import {
 } from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
 import {CuentasCorrientesClienteComponent} from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
 import {ClienteComponent} from './components/cliente/cliente.component';
+import {CuentaCorrienteClienteComponent} from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -97,6 +98,7 @@ const routes: Routes = [
           { path: '', component: CuentasCorrientesClienteComponent },
           { path: 'nuevo', component: ClienteComponent },
           { path: 'editar/:id', component: ClienteComponent },
+          { path: 'cuenta-corriente/:id', component: CuentaCorrienteClienteComponent }
         ]
       }
     ]
