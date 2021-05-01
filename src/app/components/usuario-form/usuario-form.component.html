@@ -54,7 +54,7 @@
   </div>
   <div class="form-group">
     <label for="roles">Roles</label>
-    <select multiple="multiple" class="form-control" id="roles" formControlName="roles">
+    <select multiple="multiple" class="form-control roles" id="roles" formControlName="roles">
       <option *ngFor="let r of allRoles" [value]="r.value">{{ r.text }}</option>
     </select>
   </div>

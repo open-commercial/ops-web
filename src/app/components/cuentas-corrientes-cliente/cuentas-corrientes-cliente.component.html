@@ -55,7 +55,7 @@
   <div class="ccc my-2 bg-white">
     <ng-template #info let-item>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-6">
           <span class="badge badge-secondary ml-2 mb-2 px-2 py-1">
             #{{ item.cliente.nroCliente }}
           </span>
@@ -75,7 +75,7 @@
             <span class="font-weight-bold">Ubicación: </span>{{ item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion  }}
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6">
           <div class="d-flex flex-row flex-wrap">
             <span class="badge badge-pill badge-light border border-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cliente.puedeComprarAPlazo">
               Compra a Plazo

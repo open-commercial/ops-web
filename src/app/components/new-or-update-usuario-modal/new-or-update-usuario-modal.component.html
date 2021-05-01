@@ -8,7 +8,7 @@
                     *ngIf="usuario" #usuarioForm></app-usuario-form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary"  (click)="activeModal.close()">Cancelar</button>
+  <button type="button" class="btn btn-secondary"  (click)="activeModal.dismiss()">Cancelar</button>
   <button type="button" class="btn btn-primary" (click)="submit()">
     <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
   </button>
