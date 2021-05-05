@@ -11,7 +11,7 @@ import {RenglonCuentaCorriente} from '../../models/renglon-cuenta-corriente';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../services/notas.service';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {FacturasVentaService} from '../../services/facturas-venta.service';
 import {RecibosService} from '../../services/recibos.service';
 import {RemitosService} from '../../services/remitos.service';
@@ -21,6 +21,7 @@ import {OPOption, OptionPickerModalComponent} from '../option-picker-modal/optio
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
+import {Pagination} from '../../models/pagination';
 
 @Component({
   selector: 'app-cuenta-corriente-cliente',
@@ -31,6 +32,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
 
   ccc: CuentaCorrienteCliente;
   renglones: RenglonCuentaCorriente[] = [];
+  saldo = 0;
 
   displayPage = 1;
   page = 0;
@@ -91,14 +93,22 @@ export class CuentaCorrienteClienteComponent implements OnInit {
 
   getRenglones() {
     this.loadingOverlayService.activate();
-    this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, this.page)
+
+    const obvs = [
+      this.cuentasCorrientesService.getCuentaCorrienteClienteSaldo(this.ccc.cliente.idCliente),
+      this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, this.page)
+    ];
+
+    // this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, this.page)
+    combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        p => {
-          this.renglones = p.content;
-          this.totalElements = p.totalElements;
-          this.totalPages = p.totalPages;
-          this.size = p.size;
+        (data: [number, Pagination]) => {
+          this.saldo = data[0];
+          this.renglones = data[1].content;
+          this.totalElements = data[1].totalElements;
+          this.totalPages = data[1].totalPages;
+          this.size = data[1].size;
         },
         err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);

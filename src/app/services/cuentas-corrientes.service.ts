@@ -36,6 +36,10 @@ export class CuentasCorrientesService {
     return this.http.get<Pagination>(`${this.url}/${idCuentaCorriente}/renglones?${qs}`);
   }
 
+  getCuentaCorrienteClienteSaldo(idCliente: number): Observable<number> {
+    return this.http.get<number>(`${this.url}/clientes/${idCliente}/saldo`);
+  }
+
   getCuentaCorrienteClientePredeterminado(): Observable<CuentaCorrienteCliente> {
     return this.http.get<CuentaCorrienteCliente>(`${this.url}/clientes/predeterminado`);
   }
