@@ -15,7 +15,7 @@
         <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
         <span class="sr-only">Buscar {{ label }}</span>
       </button>
-      <button class="btn btn-outline-secondary" type="button" (click)="new()" [disabled]="isDisabled || loading">
+      <button class="btn btn-outline-secondary" type="button" (click)="new()" [disabled]="isDisabled || loading" *ngIf="showNewButton">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
     </div>

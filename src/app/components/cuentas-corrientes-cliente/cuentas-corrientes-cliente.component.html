@@ -25,6 +25,8 @@
             <input type="text" class="form-control" id="nroONom" formControlName="nroONom">
           </div>
           <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
+        </div>
+        <div class="col-md-6">
           <div class="form-group">
             <label for="idProvincia">Provincia</label>
             <select class="form-control" id="idProvincia" formControlName="idProvincia">
@@ -39,8 +41,6 @@
               <option [value]="l.idLocalidad" *ngFor="let l of localidades">{{ l.nombre }}</option>
             </select>
           </div>
-        </div>
-        <div class="col-md-6">
           <div class="card card-body bg-light mb-3">
             <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenarPorOptionsCCC" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorP></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoCCC" [values]="sentidoOptionsCCC" [label]="'Sentido'" formControlName="sentido" #sentidoP></app-filtro-ordenamiento>
@@ -84,14 +84,12 @@
               Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
             </span>
           </div>
-          <div class="d-flex flex-row flex-wrap">
-            <span class="ml-2 text-nowrap">
-              <span class="font-weight-bold">Saldo C/C: </span>
-              <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
-            </span>
-            <span class="ml-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-              <span class="font-weight-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
-            </span>
+          <div class="ml-2 text-nowrap">
+            <span class="font-weight-bold">Saldo C/C: </span>
+            <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
+          </div>
+          <div class="ml-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
+            <span class="font-weight-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
         </div>
       </div>

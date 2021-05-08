@@ -62,30 +62,36 @@
         </div>
       </div>
     </div>
-    <app-ubicacion-form-field id="ubicacion-facturacion" label="Ubicación de Facturación" formControlName="ubicacionFacturacion"></app-ubicacion-form-field>
-    <app-ubicacion-form-field id="ubicacion-envio" label="Ubicación de Envío" formControlName="ubicacionEnvio"></app-ubicacion-form-field>
-    <app-usuario-filtro formControlName="idViajante" label="Viajante" [roles]="[rol.VIAJANTE]" [profile]="ufProfile" ></app-usuario-filtro>
-    <div class="form-group">
-      <label for="telefono">Teléfono *</label>
-      <input type="text" class="form-control" id="telefono" required formControlName="telefono"
-             [ngClass]="{ 'is-invalid': submitted && f.telefono.errors }">
-      <div class="invalid-feedback" *ngIf="submitted && f.telefono.errors">
-        <div *ngIf="f.telefono.errors.required">Requerido</div>
+    <div class="row">
+      <div class="col-md-6">
+        <app-ubicacion-form-field id="ubicacion-facturacion" label="Ubicación de Facturación" formControlName="ubicacionFacturacion"></app-ubicacion-form-field>
+        <app-ubicacion-form-field id="ubicacion-envio" label="Ubicación de Envío" formControlName="ubicacionEnvio"></app-ubicacion-form-field>
+        <app-usuario-filtro formControlName="idViajante" label="Viajante" [roles]="[rol.VIAJANTE]" [profile]="ufProfile" [showNewButton]="true" ></app-usuario-filtro>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="telefono">Teléfono *</label>
+          <input type="text" class="form-control" id="telefono" required formControlName="telefono"
+                 [ngClass]="{ 'is-invalid': submitted && f.telefono.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.telefono.errors">
+            <div *ngIf="f.telefono.errors.required">Requerido</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="contacto">Contacto</label>
+          <input type="text" class="form-control" id="contacto" formControlName="contacto">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" class="form-control" id="email" formControlName="email"
+                 [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.email.errors">
+            <div *ngIf="f.email.errors.email">Email inválido</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="contacto">Contacto</label>
-      <input type="text" class="form-control" id="contacto" formControlName="contacto">
-    </div>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="text" class="form-control" id="email" formControlName="email"
-             [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
-      <div class="invalid-feedback" *ngIf="submitted && f.email.errors">
-        <div *ngIf="f.email.errors.email">Email inválido</div>
-      </div>
-    </div>
-    <app-usuario-filtro formControlName="idCredencial" label="Credencial *"  [roles]="[rol.COMPRADOR]" [profile]="ufProfile"></app-usuario-filtro>
+    <app-usuario-filtro formControlName="idCredencial" label="Credencial *"  [roles]="[rol.COMPRADOR]" [profile]="ufProfile" [showNewButton]="true"></app-usuario-filtro>
     <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idCredencial.errors">
       <div *ngIf="f.idCredencial.errors.required">Requerido</div>
     </div>
