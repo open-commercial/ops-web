@@ -10,7 +10,7 @@ import {Producto} from '../../models/producto';
 import {TipoDeEnvio} from '../../models/tipo-de-envio';
 import {NuevosResultadosComprobante} from '../../models/nuevos-resultados-comprobante';
 import {Resultados} from '../../models/resultados';
-import {CuentasCorrienteService} from '../../services/cuentas-corriente.service';
+import {CuentasCorrientesService} from '../../services/cuentas-corrientes.service';
 import {SucursalesService} from '../../services/sucursales.service';
 import {Sucursal} from '../../models/sucursal';
 import {DetallePedido} from '../../models/detalle-pedido';
@@ -97,7 +97,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
               accordionConfig: NgbAccordionConfig,
               private pedidosService: PedidosService,
               private clientesService: ClientesService,
-              private cuentasCorrienteService: CuentasCorrienteService,
+              private cuentasCorrienteService: CuentasCorrientesService,
               public sucursalesService: SucursalesService,
               private authService: AuthService,
               private router: Router,
@@ -196,7 +196,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           }
           this.loadingOverlayService.activate();
           combineLatest([
-            this.cuentasCorrienteService.getCuentaCorriente(p.cliente.idCliente),
+            this.cuentasCorrienteService.getCuentaCorrienteCliente(p.cliente.idCliente),
             this.pedidosService.getRenglonesDePedido(p.idPedido, this.action === Action.CLONAR)
           ])
             .pipe(finalize(() => this.loadingOverlayService.deactivate()))

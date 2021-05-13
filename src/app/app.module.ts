@@ -12,53 +12,21 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
 
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { faEye } from '@fortawesome/free-regular-svg-icons';
-import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import { faPortrait } from '@fortawesome/free-solid-svg-icons';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { faCashRegister } from '@fortawesome/free-solid-svg-icons';
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { faBarcode } from '@fortawesome/free-solid-svg-icons';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-import { faMinus } from '@fortawesome/free-solid-svg-icons';
-import { faStore } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { faFileSignature  } from '@fortawesome/free-solid-svg-icons';
-import { faFileDownload  } from '@fortawesome/free-solid-svg-icons';
-import { faChevronLeft  } from '@fortawesome/free-solid-svg-icons';
-import { faIndustry  } from '@fortawesome/free-solid-svg-icons';
-import { faSuitcase  } from '@fortawesome/free-solid-svg-icons';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { faArrowAltCircleDown } from '@fortawesome/free-solid-svg-icons';
-import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
-import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faLockOpen } from '@fortawesome/free-solid-svg-icons';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { faCoins } from '@fortawesome/free-solid-svg-icons';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { faFileExport } from '@fortawesome/free-solid-svg-icons';
-
+import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import {
+  faBars, faCircleNotch, faFileInvoice, faFilter,
+  faSearch, faTrash, faCalendar, faPortrait,
+  faTimes, faCheck, faExclamationTriangle, faCashRegister,
+  faClipboardList, faPlus, faBarcode, faEdit,
+  faBoxOpen, faMinus, faStore, faUser,
+  faSignOutAlt, faInfoCircle, faQuestionCircle, faTimesCircle,
+  faFileSignature, faFileDownload, faChevronLeft, faIndustry ,
+  faSuitcase, faPen, faEnvelope, faLink,
+  faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
+  faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
+  faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
+  faUserCheck, faBook
+} from '@fortawesome/free-solid-svg-icons';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
@@ -123,6 +91,14 @@ import { RemitosComponent } from './components/remitos/remitos.component';
 import { RemitosHomeComponent } from './components/remitos-home/remitos-home.component';
 import { VerRemitoComponent } from './components/ver-remito/ver-remito.component';
 import { RemitoComponent } from './components/remito/remito.component';
+import { CuentasCorrientesClienteComponent } from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
+import { CuentasCorrientesClienteHomeComponent } from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
+import { ClienteComponent } from './components/cliente/cliente.component';
+import { UbicacionFormFieldComponent } from './components/ubicacion-form-field/ubicacion-form-field.component';
+import { UsuarioFormComponent } from './components/usuario-form/usuario-form.component';
+import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
+import { OptionPickerModalComponent } from './components/option-picker-modal/option-picker-modal.component';
+import { CuentaCorrienteClienteComponent } from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -194,6 +170,14 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     RemitosHomeComponent,
     VerRemitoComponent,
     RemitoComponent,
+    CuentasCorrientesClienteComponent,
+    CuentasCorrientesClienteHomeComponent,
+    ClienteComponent,
+    UbicacionFormFieldComponent,
+    UsuarioFormComponent,
+    NewOrUpdateUsuarioModalComponent,
+    OptionPickerModalComponent,
+    CuentaCorrienteClienteComponent,
   ],
   imports: [
     BrowserModule,
@@ -223,59 +207,27 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     DisponibilidadStockModalComponent,
     MontoModalComponent,
     NuevoGastoModalComponent,
+    NewOrUpdateUsuarioModalComponent,
+    OptionPickerModalComponent,
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIcons(
-      faBars,
-      faCircleNotch,
-      faFileInvoice,
-      faFilter,
-      faSearch,
-      faTrash,
-      faCalendar,
-      faEye,
-      faEyeSlash,
-      faPortrait,
-      faTimes,
-      faCheck,
-      faExclamationTriangle,
-      faCashRegister,
-      faClipboardList,
-      faPlus,
-      faBarcode,
-      faEdit,
-      faBoxOpen,
-      faMinus,
-      faStore,
-      faUser,
-      faSignOutAlt,
-      faInfoCircle,
-      faQuestionCircle,
-      faTimesCircle,
-      faFileSignature,
-      faFileDownload,
-      faChevronLeft,
-      faIndustry,
-      faSuitcase,
-      faPen,
-      faEnvelope,
-      faLink,
-      faFolderOpen,
-      faCopy,
-      faArrowAltCircleDown,
-      faExchangeAlt,
-      faCheckSquare,
-      faLockOpen,
-      faLock,
-      faSyncAlt,
-      faCoins,
-      faChevronDown,
-      faChevronUp,
-      faCheckSquare,
-      faFileExport,
+      faBars, faCircleNotch, faFileInvoice, faFilter,
+      faSearch, faTrash, faCalendar, faEye,
+      faEyeSlash, faPortrait, faTimes, faCheck,
+      faExclamationTriangle, faCashRegister, faClipboardList, faPlus,
+      faBarcode, faEdit, faBoxOpen, faMinus,
+      faStore, faUser, faSignOutAlt, faInfoCircle,
+      faQuestionCircle, faTimesCircle, faFileSignature,
+      faFileDownload, faChevronLeft, faIndustry, faSuitcase,
+      faPen, faEnvelope, faLink, faFolderOpen,
+      faCopy, faArrowAltCircleDown, faExchangeAlt, faCheckSquare,
+      faLockOpen, faLock, faSyncAlt, faCoins,
+      faChevronDown, faChevronUp, faCheckSquare, faFileExport,
+      faMapMarkerAlt, faUserCheck, faBook
     );
   }
 }

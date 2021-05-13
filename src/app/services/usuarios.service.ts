@@ -31,8 +31,12 @@ export class UsuariosService {
     return this.http.get<Usuario>(this.url + '/' + id);
   }
 
-  saveUsuario(usuario: Usuario) {
-    return this.http.put(this.url, usuario);
+  updateUsuario(usuario: Usuario): Observable<Usuario> {
+    return this.http.put<Usuario>(this.url, usuario);
+  }
+
+  createUsuario(usuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(this.url, usuario);
   }
 
   setSucursalPredeterminadaDeUsuario(idUsuario: number, idSucursal: number): Observable<void> {

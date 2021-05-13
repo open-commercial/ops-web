@@ -1,16 +1,16 @@
 <div class="form-group">
-  <label for="idCliente">Cliente</label>
+  <label>Cliente</label>
   <div class="input-group mb-3">
     <div class="input-group-prepend">
       <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', 'portrait']"></fa-icon></span>
     </div>
-    <input type="text" class="form-control" aria-label="Cliente" disabled aria-describedby="find-cliente-button" tabindex="-1" id="idCliente"
+    <input type="text" class="form-control" aria-label="Cliente" disabled tabindex="-1"
            [value]="getDisplayValue()">
     <div class="input-group-append">
       <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled || loading" (click)="clearValue()">
         <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar cliente</span>
       </button>
-      <button class="btn btn-outline-secondary" type="button" id="find-cliente-button" [disabled]="isDisabled || loading" (click)="select()">
+      <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled || loading" (click)="select()">
         <fa-icon [icon]="['fas', 'search']" *ngIf="!loading"></fa-icon>
         <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
         <span class="sr-only">Buscar cliente</span>

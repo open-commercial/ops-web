@@ -3,7 +3,7 @@ import {Ubicacion} from './ubicacion';
 
 export interface Cliente {
   idCliente: number;
-  nroCliente: string;
+  nroCliente?: string;
   nombreFiscal: string;
   nombreFantasia: string;
   categoriaIVA: CategoriaIVA;
@@ -13,15 +13,15 @@ export interface Cliente {
   email: string;
   telefono: string;
   contacto: string;
-  fechaAlta: Date;
+  fechaAlta?: Date;
   idViajante: number;
-  nombreViajante: string;
+  nombreViajante?: string;
   idCredencial: number;
-  nombreCredencial: string;
+  nombreCredencial?: string;
   predeterminado: boolean;
-  saldoCuentaCorriente: number;
+  saldoCuentaCorriente?: number;
   montoCompraMinima: number;
-  detalleUbicacionDeFacturacion: string;
-  detalleUbicacionDeEnvio: string;
+  detalleUbicacionDeFacturacion?: string;
+  detalleUbicacionDeEnvio?: string;
   puedeComprarAPlazo: boolean;
 }

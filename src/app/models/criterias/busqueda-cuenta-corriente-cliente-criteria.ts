@@ -1,4 +1,5 @@
 export interface BusquedaCuentaCorrienteClienteCriteria {
+  idCliente?: number;
   nombreFiscal?: string;
   nombreFantasia?: string;
   idFiscal?: number;

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Usuario } from '../../models/usuario';
 import { finalize } from 'rxjs/operators';
@@ -6,6 +6,8 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { Rol } from '../../models/rol';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuarioModalComponent } from '../usuario-modal/usuario-modal.component';
+import {NewOrUpdateUsuarioModalComponent} from '../new-or-update-usuario-modal/new-or-update-usuario-modal.component';
+import {UFProfile} from '../usuario-form/usuario-form.component';
 
 
 @Component({
@@ -20,19 +22,21 @@ import { UsuarioModalComponent } from '../usuario-modal/usuario-modal.component'
     }
   ]
 })
-export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
+export class UsuarioFiltroComponent implements ControlValueAccessor {
   loading = false;
   usuario: Usuario = null;
 
   private pRoles: Array<Rol>;
   private pLabel = 'Usuario';
+  private pShowNewButton = false;
+  private pProfile = UFProfile.USUARIO;
 
   icono = 'user';
 
   value;
   isDisabled: boolean;
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { /*This is intentional*/ };
+  onTouch = () => { /*This is intentional*/ };
 
   @Input()
   set roles(roles: Array<Rol>) {
@@ -47,10 +51,15 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
   set label(label: string) { this.pLabel = label; }
   get label() { return this.pLabel; }
 
+  @Input()
+  set showNewButton(value: boolean) { this.pShowNewButton = value; }
+  get showNewButton(): boolean { return this.pShowNewButton; }
+
+  @Input() set profile(value: UFProfile) { this.pProfile = value; }
+  get profile(): UFProfile { return this.pProfile; }
+
   constructor(private usuariosService: UsuariosService,
               private modalService: NgbModal) { }
-
-  ngOnInit() {}
 
   private setUsuario(u: Usuario, applyChange = true) {
     this.usuario = u;
@@ -66,7 +75,7 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
     modalRef.componentInstance.roles = this.pRoles;
     modalRef.result.then((u: Usuario) => {
       this.setUsuario(u);
-    }, (reason) => {});
+    }, () => { /*This is intentional*/ });
   }
 
   clearValue() {
@@ -105,5 +114,25 @@ export class UsuarioFiltroComponent implements OnInit, ControlValueAccessor {
 
   getLabelForId() {
     return `${this.label.toLowerCase().replace(' ', '_')}`;
+  }
+
+  new() {
+    const nuevoUsuario: Usuario = {
+      idUsuario: null,
+      username: '',
+      password: '',
+      email: '',
+      nombre: '',
+      apellido: '',
+      habilitado: true,
+      roles: this.pRoles,
+    };
+
+    const modalRef = this.modalService.open(NewOrUpdateUsuarioModalComponent);
+    modalRef.componentInstance.usuario = nuevoUsuario;
+    modalRef.componentInstance.ufProfile = this.profile;
+    modalRef.result.then((u: Usuario) => {
+      this.setUsuario(u);
+    }, () => { /*This is intentional*/ });
   }
 }

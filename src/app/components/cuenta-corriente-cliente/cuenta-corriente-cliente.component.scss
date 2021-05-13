@@ -1,0 +1,11 @@
+.app-cuenta-corriente-cliente {
+  margin: 0;
+  table th, table td {
+    vertical-align: middle;
+    font-size: 0.9rem;
+    @media (min-width: 576px) {
+      font-size: unset;
+    }
+    min-width: 5rem;
+  }
+}

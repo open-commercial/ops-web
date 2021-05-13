@@ -1,0 +1,15 @@
+<div class="modal-header p-2">
+  <h4 class="h5 modal-title flex-fill">
+    <fa-icon [icon]="['fas', 'user']"></fa-icon> {{ usuario && usuario.username ? usuario.username : 'Nuevo Usuario' }}
+  </h4>
+</div>
+<div class="modal-body d-flex flex-column p-2">
+  <app-usuario-form [usuario]="usuario" [profile]="ufProfile" (userSaved)="onUserSaved($event)"
+                    *ngIf="usuario" #usuarioForm></app-usuario-form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary"  (click)="activeModal.dismiss()">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="submit()">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+  </button>
+</div>
