@@ -1,0 +1,22 @@
+<table class="table table-bordered table-sm" *ngIf="cliente">
+  <caption class="sr-only">Detalles de Cliente</caption>
+  <tbody class="thead-dark">
+  <tr>
+    <th scope="row" class="w-25">Nombre</th>
+    <td>{{ cliente.nombreFiscal + (cliente.nombreFantasia ? ' (' + cliente.nombreFantasia + ')' : '')}}</td>
+  </tr>
+  <tr>
+    <th scope="row">Ubicación</th>
+    <td>{{ cliente.detalleUbicacionDeFacturacion || cliente.detalleUbicacionDeEnvio }}</td>
+  </tr>
+  <tr>
+    <th scope="row">Categoría IVA</th>
+    <td>{{ helper.categoriaIVALabel(cliente.categoriaIVA) | titlecase }}</td>
+  </tr>
+  <tr>
+    <th scope="row">CUIT ó DNI</th>
+    <td>{{ cliente.idFiscal }}</td>
+  </tr>
+  </tbody>
+</table>
+

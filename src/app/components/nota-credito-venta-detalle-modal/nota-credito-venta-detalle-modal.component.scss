@@ -1,0 +1,15 @@
+.renglones {
+  border: 1px solid lightgray;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  margin-bottom: 1rem;
+  .renglon {
+    padding: .7rem;
+    border-bottom: 1px solid lightgray;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+

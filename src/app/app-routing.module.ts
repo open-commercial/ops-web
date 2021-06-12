@@ -35,6 +35,10 @@ import {
 import {CuentasCorrientesClienteComponent} from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
 import {ClienteComponent} from './components/cliente/cliente.component';
 import {CuentaCorrienteClienteComponent} from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
+import {NotasDebitoVentaHomeComponent} from './components/notas-debito-venta-home/notas-debito-venta-home.component';
+import {NotasDebitoVentaComponent} from './components/notas-debito-venta/notas-debito-venta.component';
+import {NotasCreditoVentaHomeComponent} from './components/notas-credito-venta-home/notas-credito-venta-home.component';
+import {NotasCreditoVentaComponent} from './components/notas-credito-venta/notas-credito-venta.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -99,6 +103,16 @@ const routes: Routes = [
           { path: 'nuevo', component: ClienteComponent },
           { path: 'editar/:id', component: ClienteComponent },
           { path: 'cuenta-corriente/:id', component: CuentaCorrienteClienteComponent }
+        ]
+      },
+      { path: 'notas-credito-venta', component: NotasCreditoVentaHomeComponent,
+        children: [
+          { path: '', component: NotasCreditoVentaComponent },
+        ]
+      },
+      { path: 'notas-debito-venta', component: NotasDebitoVentaHomeComponent,
+        children: [
+          { path: '', component: NotasDebitoVentaComponent },
         ]
       }
     ]

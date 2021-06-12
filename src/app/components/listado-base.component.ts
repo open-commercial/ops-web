@@ -60,7 +60,6 @@ export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
 
   fetchItems(terminos = null) {
     terminos = terminos || this.getFormValues();
-    // terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
 
     this.getAppliedFilters();
 

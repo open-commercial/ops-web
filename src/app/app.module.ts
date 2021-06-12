@@ -25,7 +25,7 @@ import {
   faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
   faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
-  faUserCheck, faBook
+  faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
@@ -99,6 +99,19 @@ import { UsuarioFormComponent } from './components/usuario-form/usuario-form.com
 import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
 import { OptionPickerModalComponent } from './components/option-picker-modal/option-picker-modal.component';
 import { CuentaCorrienteClienteComponent } from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
+import { NotasDebitoVentaHomeComponent } from './components/notas-debito-venta-home/notas-debito-venta-home.component';
+import { NotasDebitoVentaComponent } from './components/notas-debito-venta/notas-debito-venta.component';
+import { NotasCreditoVentaHomeComponent } from './components/notas-credito-venta-home/notas-credito-venta-home.component';
+import { NotasCreditoVentaComponent } from './components/notas-credito-venta/notas-credito-venta.component';
+import { NotaCreditoVentaSinFacturaModalComponent } from './components/nota-credito-venta-sin-factura-modal/nota-credito-venta-sin-factura-modal.component';
+import { NotaCreditoVentaDetalleSinFacturaModalComponent } from './components/nota-credito-venta-detalle-sin-factura-modal/nota-credito-venta-detalle-sin-factura-modal.component';
+import { ClienteDetalleComponent } from './components/cliente-detalle/cliente-detalle.component';
+import { NotaCreditoVentaFacturaModalComponent } from './components/nota-credito-venta-factura-modal/nota-credito-venta-factura-modal.component';
+import { NotaDebitoVentaSinReciboModalComponent } from './components/nota-debito-venta-sin-recibo-modal/nota-debito-venta-sin-recibo-modal.component';
+import { NotaCreditoVentaDetalleFacturaModalComponent } from './components/nota-credito-venta-detalle-factura-modal/nota-credito-venta-detalle-factura-modal.component';
+import { NotaDebitoVentaDetalleSinReciboModalComponent } from './components/nota-debito-venta-detalle-sin-recibo-modal/nota-debito-venta-detalle-sin-recibo-modal.component';
+import { NotaDebitoVentaReciboModalComponent } from './components/nota-debito-venta-recibo-modal/nota-debito-venta-recibo-modal.component';
+import { NotaDebitoVentaDetalleReciboModalComponent } from './components/nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -178,6 +191,19 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     NewOrUpdateUsuarioModalComponent,
     OptionPickerModalComponent,
     CuentaCorrienteClienteComponent,
+    NotasDebitoVentaHomeComponent,
+    NotasDebitoVentaComponent,
+    NotasCreditoVentaHomeComponent,
+    NotasCreditoVentaComponent,
+    NotaCreditoVentaSinFacturaModalComponent,
+    NotaCreditoVentaDetalleSinFacturaModalComponent,
+    ClienteDetalleComponent,
+    NotaCreditoVentaFacturaModalComponent,
+    NotaCreditoVentaDetalleFacturaModalComponent,
+    NotaDebitoVentaSinReciboModalComponent,
+    NotaDebitoVentaReciboModalComponent,
+    NotaDebitoVentaDetalleSinReciboModalComponent,
+    NotaDebitoVentaDetalleReciboModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -209,6 +235,14 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     NuevoGastoModalComponent,
     NewOrUpdateUsuarioModalComponent,
     OptionPickerModalComponent,
+    NotaCreditoVentaSinFacturaModalComponent,
+    NotaCreditoVentaDetalleSinFacturaModalComponent,
+    NotaCreditoVentaFacturaModalComponent,
+    NotaCreditoVentaDetalleFacturaModalComponent,
+    NotaDebitoVentaSinReciboModalComponent,
+    NotaDebitoVentaReciboModalComponent,
+    NotaDebitoVentaDetalleSinReciboModalComponent,
+    NotaDebitoVentaDetalleReciboModalComponent,
   ],
   bootstrap: [AppComponent]
 })
@@ -227,7 +261,8 @@ export class AppModule {
       faCopy, faArrowAltCircleDown, faExchangeAlt, faCheckSquare,
       faLockOpen, faLock, faSyncAlt, faCoins,
       faChevronDown, faChevronUp, faCheckSquare, faFileExport,
-      faMapMarkerAlt, faUserCheck, faBook
+      faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
+      faBalanceScaleLeft
     );
   }
 }
