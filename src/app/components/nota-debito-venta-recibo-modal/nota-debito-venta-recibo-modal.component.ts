@@ -13,8 +13,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-nota-debito-venta-recibo-modal',
-  templateUrl: '../nota-debito-venta-modal/nota-debito-venta-modal.component.html',
-  styleUrls: ['../nota-debito-venta-modal/nota-debito-venta-modal.component.scss']
+  templateUrl: '../nota-debito-venta-modal/nota-debito-venta-modal.component.html'
 })
 export class NotaDebitoVentaReciboModalComponent extends NotaDebitoVentaModalComponent implements OnInit {
   idRecibo: number;

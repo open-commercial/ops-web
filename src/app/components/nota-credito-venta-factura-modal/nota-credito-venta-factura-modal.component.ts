@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {NotasService} from '../../services/notas.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
@@ -10,17 +10,12 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevaNotaCreditoDeFactura} from '../../models/nueva-nota-credito-de-factura';
 
 const noneSelected = (): ValidatorFn => {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const atLeastOneSelected = (control as FormArray).controls.some((rControl) => {
+  return (control: FormArray): ValidationErrors | null => {
+    const atLeastOneSelected = control.controls.some((rControl) => {
       return rControl.get('checked') && rControl.get('checked').value;
     });
 
     return atLeastOneSelected ? null : { noneSelected: true };
-    /*let cant = 0;
-    (control as FormArray).controls.forEach((b) => {
-      cant += b.get('cantidad') && b.get('cantidad').valid ? b.get('cantidad').value : 0;
-    });
-    return cant >= min ? null : { reglonesCount: { count: cant, min }};*/
   };
 };
 
@@ -65,7 +60,7 @@ export class NotaCreditoVentaFacturaModalComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-  get renglones() {
+  get renglones(): FormArray {
     return this.form.get('renglones') as FormArray;
   }
 

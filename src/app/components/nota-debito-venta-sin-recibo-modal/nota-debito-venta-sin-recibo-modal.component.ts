@@ -12,8 +12,7 @@ import {NotaDebitoVentaModalComponent} from '../nota-debito-venta-modal/nota-deb
 
 @Component({
   selector: 'app-nota-debito-venta-sin-recibo-modal',
-  templateUrl: '../nota-debito-venta-modal/nota-debito-venta-modal.component.html',
-  styleUrls: ['../nota-debito-venta-modal/nota-debito-venta-modal.component.scss']
+  templateUrl: '../nota-debito-venta-modal/nota-debito-venta-modal.component.html'
 })
 export class NotaDebitoVentaSinReciboModalComponent extends NotaDebitoVentaModalComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal,

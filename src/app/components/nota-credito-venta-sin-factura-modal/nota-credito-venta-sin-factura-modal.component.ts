@@ -14,8 +14,7 @@ import {HelperService} from '../../services/helper.service';
 
 @Component({
   selector: 'app-nota-credito-venta-sin-factura-modal',
-  templateUrl: './nota-credito-venta-sin-factura-modal.component.html',
-  styleUrls: ['./nota-credito-venta-sin-factura-modal.component.scss']
+  templateUrl: './nota-credito-venta-sin-factura-modal.component.html'
 })
 export class NotaCreditoVentaSinFacturaModalComponent implements OnInit {
   form: FormGroup;
