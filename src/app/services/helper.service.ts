@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Ubicacion } from '../models/ubicacion';
 import * as moment from 'moment';
+import {TipoDeComprobante} from '../models/tipo-de-comprobante';
+import {CategoriaIVA} from '../models/categoria-iva';
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +61,13 @@ export class HelperService {
 
   static isEmptyObject(obj) {
     return Object.entries(obj).length === 0 && obj.constructor === Object;
+  }
+
+  static tipoComprobanteLabel(tc: TipoDeComprobante) {
+    return tc.toString().replace(/_/g, ' ');
+  }
+
+  static categoriaIVALabel(ci: CategoriaIVA) {
+    return ci.toString().replace(/_/g, ' ');
   }
 }
