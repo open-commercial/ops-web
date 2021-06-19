@@ -1,9 +1,9 @@
 <div class="d-flex flex-column h-100 app-home">
   <app-nav-bar [sindeNavOpened]="menuOpened" (menuButtonClick)="toggleMenu()"></app-nav-bar>
   <div class="d-flex flex-row flex-fill content-container">
-    <app-side-nav class="app-side-nav flex-shrink-0 flex-sm-grow-0" [class.opened]="menuOpened" (menuOptionClick)="toggleMenu()"></app-side-nav>
     <div class="flex-fill px-1 main-content">
       <router-outlet></router-outlet>
     </div>
+    <app-side-nav class="app-side-nav flex-shrink-0 flex-sm-grow-0" [class.opened]="menuOpened" (menuOptionClick)="toggleMenu()"></app-side-nav>
   </div>
 </div>

@@ -1,5 +1,17 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
 .sic-ops-web-app {
+  height: 100%;
   padding: 0;
+  &.menu-opened {
+    overflow-y: hidden;
+    @include media-breakpoint-up(lg) {
+      overflow-y: unset;
+    }
+  }
+
   .env-banner {
     text-align: center;
     background: #39ff14;
