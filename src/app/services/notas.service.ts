@@ -27,6 +27,10 @@ export class NotasService {
   constructor(private http: HttpClient) {}
 
   // NOTAS
+  getNota(idNota: number): Observable<Nota> {
+    return this.http.get<Nota>(`${this.url}/${idNota}`);
+  }
+
   autorizar(idNota: number): Observable<Nota> {
     return this.http.post<Nota>(`${this.url}/${idNota}/autorizacion`, {});
   }

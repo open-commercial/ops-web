@@ -33,20 +33,24 @@
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
     <button class="btn btn-primary mr-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
-            (click)="crearNotaCreditoFactura(r)" *ngIf="tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
+            (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
     </button>
-    <button class="btn btn-primary mr-2" type="button" ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
-            (click)="crearNotaDebitoRecibo(r)" *ngIf="tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
+    <button class="btn btn-primary mr-2" type="button"
+            ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
+            (click)="crearNotaDebitoRecibo(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
     </button>
-    <button class="btn btn-primary mr-2" type="button" ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizar(r)">
+    <button class="btn btn-primary mr-2" type="button" *ngIf="hasRoleToAutorizar && tiposDeComprobantesParaAutorizacion.indexOf(r.tipoComprobante) >= 0"
+            ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizar(r)">
       <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
     </button>
-    <button class="btn btn-primary mr-2" type="button" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
+    <button class="btn btn-primary mr-2" type="button" *ngIf="hasRoleToVerDetalle"
+            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
       <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
-    <button class="btn btn-primary mr-2" type="button" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
+    <button class="btn btn-primary mr-2" type="button" *ngIf="hasRoleToDelete"
+            ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
       <fa-icon [icon]="['fas', 'trash']"></fa-icon>
     </button>
   </ng-template>

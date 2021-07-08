@@ -27,11 +27,20 @@ import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenam
 import {ListadoBaseComponent} from '../listado-base.component';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {ActionConfiguration} from '../batch-actions-box/batch-actions-box.component';
+import {NotaCreditoVentaFacturaModalComponent} from '../nota-credito-venta-factura-modal/nota-credito-venta-factura-modal.component';
+import {NuevaNotaCreditoDeFactura} from '../../models/nueva-nota-credito-de-factura';
+import {NotaCredito} from '../../models/nota';
+import {NotaCreditoVentaDetalleFacturaModalComponent} from '../nota-credito-venta-detalle-factura-modal/nota-credito-venta-detalle-factura-modal.component';
+import {DatePipe} from '@angular/common';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
+import {NotasService} from '../../services/notas.service';
 
 @Component({
   selector: 'app-facturas-venta',
   templateUrl: './facturas-venta.component.html',
-  styleUrls: ['./facturas-venta.component.scss']
+  styleUrls: ['./facturas-venta.component.scss'],
+  providers: [DatePipe]
 })
 export class FacturasVentaComponent extends ListadoBaseComponent implements OnInit {
   rol = Rol;
@@ -66,6 +75,9 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
   allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRoleToEnviarPorEmail = false;
 
+  allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  hasRoleToCrearNota = false;
+
   baKey = BatchActionKey.FACTURAS_VENTA;
   baActions: ActionConfiguration[] = [
     {
@@ -88,13 +100,18 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
               private authService: AuthService,
               protected mensajeService: MensajeService,
               public loadingOverlayService: LoadingOverlayService,
-              public batchActionsService: BatchActionsService) {
+              public batchActionsService: BatchActionsService,
+              private datePipe: DatePipe,
+              private modalService: NgbModal,
+              private configuracionesSucursalService: ConfiguracionesSucursalService,
+              private notasService: NotasService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
     super.ngOnInit();
     this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEnviarPorEmail);
+    this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
   }
 
   getTerminosFromQueryParams(ps) {
@@ -328,6 +345,70 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
     if (!item.remito) {
       this.router.navigate(['/remitos/de-factura', item.idFactura]);
     }
+  }
+
+  crearNotaCreditoFactura(f: FacturaVenta) {
+    if (!this.hasRoleToCrearNota) {
+      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const modalRef = this.modalService.open(NotaCreditoVentaFacturaModalComponent, { backdrop: 'static', size: 'lg' });
+    modalRef.componentInstance.idFactura = f.idFactura;
+    const nf = f.numSerieAfip
+      ? this.helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip)
+      : this.helper.formatNumFactura(f.numSerie, f.numFactura)
+    ;
+    modalRef.componentInstance.title = [
+      f.tipoComprobante.toString().replace('_', ' '),
+      'Nº ' + nf + ' del Cliente ' + f.nombreFiscalCliente,
+      'con fecha ' + this.datePipe.transform(f.fecha, 'dd/MM/yyyy')
+    ].join(' ');
+    modalRef.result.then((data: [NuevaNotaCreditoDeFactura, NotaCredito]) => {
+      const modalRef2 = this.modalService.open(NotaCreditoVentaDetalleFacturaModalComponent, { backdrop: 'static', size: 'lg' });
+      modalRef2.componentInstance.nncf = data[0];
+      modalRef2.componentInstance.notaCredito = data[1];
+      modalRef2.componentInstance.idCliente = f.idCliente;
+      modalRef2.result.then(
+        (nota: NotaCredito) => {
+          const message = 'Nota de Crédito creada correctamente.';
+          if (nota.idNota) {
+            this.mensajeService.msg(message, MensajeModalType.INFO).then(
+              () => this.doAutorizar(nota.idNota, () => this.loadPage(this.page))
+            );
+          } else {
+            throw new Error('La Nota no posee id');
+          }
+        },
+        () => { return; }
+      );
+    }, () => { return; });
+  }
+
+  doAutorizar(idNota: number, callback = () => { return; }) {
+    this.loadingOverlayService.activate();
+    this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe(
+        habilitada => {
+          if (habilitada) {
+            this.loadingOverlayService.activate();
+            this.notasService.autorizar(idNota)
+              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+              .subscribe(
+                () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                  .then(() => callback()),
+                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                  .then(() => callback()),
+              )
+            ;
+          } else {
+            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
+          }
+        },
+        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      )
+    ;
   }
 
   getClienteInfoAsync(id: number): Observable<string> {

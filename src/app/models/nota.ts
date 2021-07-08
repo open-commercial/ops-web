@@ -30,6 +30,7 @@ export interface Nota {
   vencimientoCae: Date;
   numSerieAfip: number;
   numNotaAfip: number;
+  type: string;
 }
 
 export interface NotaCredito extends Nota {

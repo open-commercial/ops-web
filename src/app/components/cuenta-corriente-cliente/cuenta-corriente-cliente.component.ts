@@ -36,6 +36,7 @@ import {NuevaNotaDebitoDeRecibo} from '../../models/nueva-nota-debito-de-recibo'
 import {NotaDebitoVentaDetalleSinReciboModalComponent} from '../nota-debito-venta-detalle-sin-recibo-modal/nota-debito-venta-detalle-sin-recibo-modal.component';
 import {NotaDebitoVentaDetalleReciboModalComponent} from '../nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
 import {HelperService} from '../../services/helper.service';
+import {SucursalesService} from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-cuenta-corriente-cliente',
@@ -82,6 +83,15 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     TipoDeComprobante.RECIBO,
   ];
 
+  tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
+    TipoDeComprobante.NOTA_CREDITO_A,
+    TipoDeComprobante.NOTA_CREDITO_B,
+    TipoDeComprobante.NOTA_CREDITO_C,
+    TipoDeComprobante.NOTA_DEBITO_A,
+    TipoDeComprobante.NOTA_DEBITO_B,
+    TipoDeComprobante.NOTA_DEBITO_C,
+  ];
+
   helper = HelperService;
 
   constructor(private route: ActivatedRoute,
@@ -97,7 +107,8 @@ export class CuentaCorrienteClienteComponent implements OnInit {
               private remitosService: RemitosService,
               private modalService: NgbModal,
               private authService: AuthService,
-              private datePipe: DatePipe) { }
+              private datePipe: DatePipe,
+              private sucursalesService: SucursalesService) { }
 
   ngOnInit() {
     if (this.route.snapshot.paramMap.has('id')) {
@@ -168,19 +179,15 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       return;
     }
 
-    const TiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
-      TipoDeComprobante.NOTA_CREDITO_A,
-      TipoDeComprobante.NOTA_CREDITO_B,
-      TipoDeComprobante.NOTA_CREDITO_C,
-      TipoDeComprobante.NOTA_DEBITO_A,
-      TipoDeComprobante.NOTA_DEBITO_B,
-      TipoDeComprobante.NOTA_DEBITO_C,
-    ];
-    if (TiposDeComprobantesParaAutorizacion.indexOf(r.tipoComprobante) < 0) {
+    if (this.tiposDeComprobantesParaAutorizacion.indexOf(r.tipoComprobante) < 0) {
       this.mensajeService.msg('El tipo de movimiento seleccionado no corresponde con la operación solicitada.', MensajeModalType.ERROR);
       return;
     }
 
+    this.doAutorizar(r.idMovimiento);
+  }
+
+  doAutorizar(idMovimiento: number, callback = () => { return; }) {
     this.loadingOverlayService.activate();
     this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
@@ -188,11 +195,13 @@ export class CuentaCorrienteClienteComponent implements OnInit {
         habilitada => {
           if (habilitada) {
             this.loadingOverlayService.activate();
-            this.notasService.autorizar(r.idMovimiento)
+            this.notasService.autorizar(idMovimiento)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe(
-                () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO),
-                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+                () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                  .then(() => callback()),
+                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                  .then(() => callback()),
               )
             ;
           } else {
@@ -232,13 +241,13 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     let obvs: Observable<Blob> = null;
 
     if (notasDeDebito.indexOf(r.tipoComprobante) >= 0) {
-      nombreArchivo = 'NotaDebito.pdf';
-      obvs = this.notasService.getReporte(r.idMovimiento);
+      this.router.navigate(['/notas-debito-venta/ver', r.idMovimiento]);
+      return;
     }
 
     if (notasDeCredito.indexOf(r.tipoComprobante) >= 0) {
-      nombreArchivo = 'NotaCredito.pdf';
-      obvs = this.notasService.getReporte(r.idMovimiento);
+      this.router.navigate(['/notas-credito-venta/ver', r.idMovimiento]);
+      return;
     }
 
     if (facturas.indexOf(r.tipoComprobante) >= 0) {
@@ -396,6 +405,20 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       return;
     }
 
+    if (r.idSucursal !== this.sucursalesService.getIdSucursal()) {
+      this.mensajeService.msg('La factura seleccionada fue emitida en otra sucursal. ¿Desea continuar?', MensajeModalType.CONFIRM)
+        .then((result) => {
+          if (result) {
+            this.doCrearNotaCreditoFactura(r);
+          }
+        })
+      ;
+    } else {
+      this.doCrearNotaCreditoFactura(r);
+    }
+  }
+
+  doCrearNotaCreditoFactura(r: RenglonCuentaCorriente) {
     const modalRef = this.modalService.open(NotaCreditoVentaFacturaModalComponent, { backdrop: 'static', size: 'lg' });
     modalRef.componentInstance.idFactura = r.idMovimiento;
     modalRef.componentInstance.title = [
@@ -427,6 +450,20 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       return;
     }
 
+    if (r.idSucursal !== this.sucursalesService.getIdSucursal()) {
+      this.mensajeService.msg('El recibo seleccionado fue emitido en otra sucursal. ¿Desea continuar?', MensajeModalType.CONFIRM)
+        .then((result) => {
+          if (result) {
+            this.doCrearNotaDebitoRecibo(r);
+          }
+        })
+      ;
+    } else {
+      this.doCrearNotaDebitoRecibo(r);
+    }
+  }
+
+  doCrearNotaDebitoRecibo(r: RenglonCuentaCorriente) {
     const modalRef = this.modalService.open(NotaDebitoVentaReciboModalComponent, { backdrop: 'static' });
     modalRef.componentInstance.cliente = this.ccc.cliente;
     modalRef.componentInstance.idRecibo = r.idMovimiento;
@@ -446,8 +483,9 @@ export class CuentaCorrienteClienteComponent implements OnInit {
 
   private showNotaCreationSuccessMessage(nota: Nota, message: string) {
     if (nota.idNota) {
-      this.loadPage(1);
-      this.mensajeService.msg(message, MensajeModalType.INFO);
+      this.mensajeService.msg(message, MensajeModalType.INFO).then(
+        () => this.doAutorizar(nota.idNota, () => this.loadPage(1))
+      );
     } else {
       throw new Error('La Nota no posee id');
     }

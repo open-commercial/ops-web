@@ -9,6 +9,7 @@ import {finalize} from 'rxjs/operators';
 import {NotaCredito} from '../../models/nota';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevaNotaCreditoDeFactura} from '../../models/nueva-nota-credito-de-factura';
+import {ClientesService} from '../../services/clientes.service';
 
 @Component({
   selector: 'app-nota-credito-venta-detalle-factura-modal',
@@ -23,8 +24,9 @@ export class NotaCreditoVentaDetalleFacturaModalComponent extends NotaCreditoVen
               protected fb: FormBuilder,
               protected notasService: NotasService,
               protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService) {
-    super(activeModal, fb, notasService, loadingOverlayService, mensajeService);
+              protected mensajeService: MensajeService,
+              protected clientesService: ClientesService) {
+    super(activeModal, fb, notasService, loadingOverlayService, mensajeService, clientesService);
   }
 
   ngOnInit() {

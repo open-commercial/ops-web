@@ -112,6 +112,7 @@ import { NotaCreditoVentaDetalleFacturaModalComponent } from './components/nota-
 import { NotaDebitoVentaDetalleSinReciboModalComponent } from './components/nota-debito-venta-detalle-sin-recibo-modal/nota-debito-venta-detalle-sin-recibo-modal.component';
 import { NotaDebitoVentaReciboModalComponent } from './components/nota-debito-venta-recibo-modal/nota-debito-venta-recibo-modal.component';
 import { NotaDebitoVentaDetalleReciboModalComponent } from './components/nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
+import { VerNotaComponent } from './components/ver-nota/ver-nota.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -204,6 +205,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     NotaDebitoVentaReciboModalComponent,
     NotaDebitoVentaDetalleSinReciboModalComponent,
     NotaDebitoVentaDetalleReciboModalComponent,
+    VerNotaComponent,
   ],
   imports: [
     BrowserModule,

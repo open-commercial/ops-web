@@ -10,6 +10,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import Big from 'big.js';
 import {NuevaNotaCreditoSinFactura} from '../../models/nueva-nota-credito-sin-factura';
 import NotaCreditoVentaDetalleModalComponent from '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal-component';
+import {ClientesService} from '../../services/clientes.service';
 
 Big.DP = 15;
 
@@ -25,8 +26,9 @@ export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCredito
               protected fb: FormBuilder,
               protected notasService: NotasService,
               protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService) {
-    super(activeModal, fb, notasService, loadingOverlayService, mensajeService);
+              protected mensajeService: MensajeService,
+              protected clientesService: ClientesService) {
+    super(activeModal, fb, notasService, loadingOverlayService, mensajeService, clientesService);
   }
 
   ngOnInit() {

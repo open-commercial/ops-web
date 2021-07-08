@@ -24,7 +24,6 @@ import {AuthService} from '../../services/auth.service';
 import {Nota} from '../../models/nota';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../services/notas.service';
-import {saveAs} from 'file-saver';
 
 /** NO ES COMPONENT YA QUE ES UNA CLASE ABSTRACTA */
 export abstract class NotasVentaComponent extends ListadoBaseComponent implements OnInit {
@@ -56,6 +55,15 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
+
+  tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
+    TipoDeComprobante.NOTA_CREDITO_A,
+    TipoDeComprobante.NOTA_CREDITO_B,
+    TipoDeComprobante.NOTA_CREDITO_C,
+    TipoDeComprobante.NOTA_DEBITO_A,
+    TipoDeComprobante.NOTA_DEBITO_B,
+    TipoDeComprobante.NOTA_DEBITO_C,
+  ];
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
@@ -266,16 +274,7 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
       return;
     }
 
-    const TiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
-      TipoDeComprobante.NOTA_CREDITO_A,
-      TipoDeComprobante.NOTA_CREDITO_B,
-      TipoDeComprobante.NOTA_CREDITO_C,
-      TipoDeComprobante.NOTA_DEBITO_A,
-      TipoDeComprobante.NOTA_DEBITO_B,
-      TipoDeComprobante.NOTA_DEBITO_C,
-    ];
-
-    if (TiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) < 0) {
+    if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) < 0) {
       this.mensajeService.msg('El tipo de movimiento seleccionado no corresponde con la operación solicitada.', MensajeModalType.ERROR);
       return;
     }
@@ -303,23 +302,15 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
     ;
   }
 
-  verDetalle(nota: Nota, nombreArchivoPDF: string) {
+  verDetalle(nota: Nota) {
     if (!this.hasRoleToVerDetalle) {
       this.mensajeService.msg('No posee permiso para ver la nota.', MensajeModalType.ERROR);
       return;
     }
 
-    this.loadingOverlayService.activate();
-    this.notasService.getReporte(nota.idNota)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, nombreArchivoPDF);
-        },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
-    ;
+    const path = nota.type === 'NotaCredito' ? '/notas-credito-venta/ver' : '/notas-debito-venta/ver';
+
+    this.router.navigate([path, nota.idNota]);
   }
 
   eliminar(nota) {

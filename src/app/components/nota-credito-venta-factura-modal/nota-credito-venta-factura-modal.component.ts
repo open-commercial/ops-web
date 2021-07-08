@@ -78,6 +78,14 @@ export class NotaCreditoVentaFacturaModalComponent implements OnInit {
     });
   }
 
+  seleccionarTodo() {
+    this.renglones.controls.forEach((c: FormGroup) => {
+      const r = c.get('renglon').value;
+      c.get('checked').setValue(true);
+      c.get('cantidad').setValue(r.cantidad);
+    });
+  }
+
   submit() {
     this.submitted = true;
     if (this.form.valid) {

@@ -39,6 +39,7 @@ import {NotasDebitoVentaHomeComponent} from './components/notas-debito-venta-hom
 import {NotasDebitoVentaComponent} from './components/notas-debito-venta/notas-debito-venta.component';
 import {NotasCreditoVentaHomeComponent} from './components/notas-credito-venta-home/notas-credito-venta-home.component';
 import {NotasCreditoVentaComponent} from './components/notas-credito-venta/notas-credito-venta.component';
+import {VerNotaComponent} from './components/ver-nota/ver-nota.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -108,11 +109,13 @@ const routes: Routes = [
       { path: 'notas-credito-venta', component: NotasCreditoVentaHomeComponent,
         children: [
           { path: '', component: NotasCreditoVentaComponent },
+          { path: 'ver/:id', component: VerNotaComponent }
         ]
       },
       { path: 'notas-debito-venta', component: NotasDebitoVentaHomeComponent,
         children: [
           { path: '', component: NotasDebitoVentaComponent },
+          { path: 'ver/:id', component: VerNotaComponent }
         ]
       }
     ]

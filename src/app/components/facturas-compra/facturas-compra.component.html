@@ -49,13 +49,13 @@
     </ng-template>
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
-  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="facturas my-2">
     <ng-template #info let-item let-i="index" id="infoFC">
       <div class="d-flex flex-row flex-wrap">
         <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
-          {{ item.tipoComprobante.replace('_', ' ') }}
+          {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
           #INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}

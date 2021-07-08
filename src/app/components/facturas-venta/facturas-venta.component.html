@@ -60,7 +60,7 @@
     </ng-template>
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
-  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="facturasVentaBatchActionsBoxCollapse" [ngbCollapse]="isBatchActionsBoxCollapsed">
     <app-batch-actions-box [batchActionKey]="baKey" [actions]="baActions"
@@ -73,7 +73,7 @@
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
         <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFV_{{ i }}">
-          {{ item.tipoComprobante.replace('_', ' ') }}
+          {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
         <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFV_{{ i }}">
           #INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
@@ -118,6 +118,12 @@
         <li class="list-inline-item" *ngIf="!item.remito">
           <button class="btn btn-primary fake-cursor" ngbPopover="Nuevo Remito" placement="left" triggers="mouseenter:mouseleave" (click)="nuevoRemito(item)">
             <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="hasRoleToCrearNota">
+          <button class="btn btn-primary fake-cursor" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
+                  (click)="crearNotaCreditoFactura(item)">
+            <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
           </button>
         </li>
       </ul>

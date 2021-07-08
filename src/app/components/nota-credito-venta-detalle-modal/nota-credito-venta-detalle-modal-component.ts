@@ -7,9 +7,13 @@ import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {OnInit} from '@angular/core';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
+import {ClientesService} from '../../services/clientes.service';
+import {finalize} from 'rxjs/operators';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 export default abstract class NotaCreditoVentaDetalleModalComponent implements OnInit {
   notaCredito: NotaCredito;
+  idCliente: number;
   cliente: Cliente;
   form: FormGroup;
   submitted = false;
@@ -19,10 +23,20 @@ export default abstract class NotaCreditoVentaDetalleModalComponent implements O
                         protected fb: FormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
-                        protected mensajeService: MensajeService) {}
-
+                        protected mensajeService: MensajeService,
+                        protected clientesService: ClientesService) {}
   ngOnInit() {
     this.createForm();
+    if (!this.cliente && this.idCliente) {
+      this.loadingOverlayService.activate();
+      this.clientesService.getCliente(this.idCliente)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe(
+          (c: Cliente) => this.cliente = c,
+          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        )
+      ;
+    }
   }
 
   getTitle() {
