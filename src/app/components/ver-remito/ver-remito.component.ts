@@ -75,7 +75,8 @@ export class VerRemitoComponent implements OnInit, OnDestroy {
         (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `Remito_${this.remito.serie}-${this.remito.nroRemito}.pdf`);
-        }
+        },
+        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
     ;
   }

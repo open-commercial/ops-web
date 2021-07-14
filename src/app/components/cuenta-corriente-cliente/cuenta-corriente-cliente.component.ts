@@ -169,6 +169,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
   }
 
   loadPage(page) {
+    this.displayPage = page;
     this.page = page - 1;
     this.getRenglones();
   }
@@ -274,7 +275,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
             const file = new Blob([res], {type: 'application/pdf'});
             saveAs(file, nombreArchivo);
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+          () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
         )
       ;
     }
@@ -300,7 +301,8 @@ export class CuentaCorrienteClienteComponent implements OnInit {
               const mimeType = formato === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
               const file = new Blob([res], {type: mimeType});
               saveAs(file, `CuentaCorrienteCliente.${formato}`);
-            }
+            },
+            () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
           )
         ;
       });
@@ -484,7 +486,13 @@ export class CuentaCorrienteClienteComponent implements OnInit {
   private showNotaCreationSuccessMessage(nota: Nota, message: string) {
     if (nota.idNota) {
       this.mensajeService.msg(message, MensajeModalType.INFO).then(
-        () => this.doAutorizar(nota.idNota, () => this.loadPage(1))
+        () => {
+          if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
+            this.doAutorizar(nota.idNota, () => this.loadPage(1));
+          } else {
+            this.loadPage(1);
+          }
+        }
       );
     } else {
       throw new Error('La Nota no posee id');

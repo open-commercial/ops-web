@@ -39,7 +39,7 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
     { val: 'cliente.fechaAlta', text: 'Fecha Alta' },
     { val: 'cliente.nombreFantasia', text: 'Nombre Fantasía' },
     { val: 'saldo', text: 'Saldo C/C' },
-    { val: 'fechaUltimoMovimiento', text: 'Saldo C/C' },
+    { val: 'fechaUltimoMovimiento', text: 'Fecha último Movimiento' },
   ];
 
   sentidoOptionsCCC = [
@@ -249,7 +249,7 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
             const file = new Blob([res], {type: mimeType});
             saveAs(file, `clientes.${formato}`);
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+          () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
         );
     }, () => { return; });
   }

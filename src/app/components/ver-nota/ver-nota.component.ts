@@ -50,7 +50,7 @@ export class VerNotaComponent implements OnInit {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, nombreArchivoPDF);
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
     ;
   }

@@ -9,6 +9,8 @@ import { saveAs } from 'file-saver';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeService} from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-ver-pedido',
@@ -24,7 +26,8 @@ export class VerPedidoComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private pedidosService: PedidosService,
               private location: Location,
-              public loadingOverlayService: LoadingOverlayService) { }
+              public loadingOverlayService: LoadingOverlayService,
+              private mensajeService: MensajeService) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -58,7 +61,8 @@ export class VerPedidoComponent implements OnInit {
         (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
-        }
+        },
+        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
     ;
   }

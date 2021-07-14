@@ -12,6 +12,8 @@ import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaCompra } from '../../models/factura-compra';
+import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeService} from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-ver-factura-venta',
@@ -35,7 +37,8 @@ export class VerFacturaComponent implements OnInit {
               private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private location: Location,
-              private loadingOverlayService: LoadingOverlayService) { }
+              private loadingOverlayService: LoadingOverlayService,
+              private mensajeService: MensajeService) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -64,7 +67,8 @@ export class VerFacturaComponent implements OnInit {
         (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `factura-venta.pdf`);
-        }
+        },
+        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
     ;
   }

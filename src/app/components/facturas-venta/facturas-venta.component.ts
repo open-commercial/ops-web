@@ -88,6 +88,15 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
   ];
   isBatchActionsBoxCollapsed = true;
 
+  tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
+    TipoDeComprobante.NOTA_CREDITO_A,
+    TipoDeComprobante.NOTA_CREDITO_B,
+    TipoDeComprobante.NOTA_CREDITO_C,
+    TipoDeComprobante.NOTA_DEBITO_A,
+    TipoDeComprobante.NOTA_DEBITO_B,
+    TipoDeComprobante.NOTA_DEBITO_C,
+  ];
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -374,7 +383,11 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
           const message = 'Nota de Crédito creada correctamente.';
           if (nota.idNota) {
             this.mensajeService.msg(message, MensajeModalType.INFO).then(
-              () => this.doAutorizar(nota.idNota, () => this.loadPage(this.page))
+              () => {
+                if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
+                  this.doAutorizar(nota.idNota, () => this.loadPage(0));
+                } else { this.loadPage(0); }
+              }
             );
           } else {
             throw new Error('La Nota no posee id');
