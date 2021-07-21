@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ title }}</h4>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form">
+    <div class="form-group">
+      <label for="tipoDeComprobante">Tipo de Nota de Débito</label>
+      <select name="" id="tipoDeComprobante" class="form-control" formControlName="tipoDeComprobante"
+              [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
+        <option *ngFor="let tc of tiposDeComprobantes" [value]="tc">{{ helper.tipoComprobanteLabel(tc) }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="submitted && f.tipoDeComprobante.errors">
+        <div *ngIf="f.tipoDeComprobante.errors.required">Requerido</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="gastoAdministrativo">Gasto Administrativo</label>
+      <input type="number" min="0" class="form-control" id="gastoAdministrativo" formControlName="gastoAdministrativo"
+             [ngClass]="{ 'is-invalid': submitted && f.gastoAdministrativo.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.gastoAdministrativo.errors">
+        <div *ngIf="f.gastoAdministrativo.errors.required">Requerido</div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="form.invalid">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Aceptar
+  </button>
+</div>

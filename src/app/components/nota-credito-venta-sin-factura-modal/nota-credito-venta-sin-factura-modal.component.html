@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h4 class="modal-title">Nueva Nota de Crédito</h4>
+</div>
+<div class="modal-body">
+  <div *ngIf="loading" class="text-center">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading">
+    <div class="form-group">
+      <label for="tipoDeComprobante">Tipo de Comprobante</label>
+      <select class="form-control" id="tipoDeComprobante" formControlName="tipoDeComprobante"
+              [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
+        <option *ngFor="let tc of tiposDeComprobantes" [value]="tc">{{ helper.tipoComprobanteLabel(tc) }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="submitted && f.tipoDeComprobante.errors">
+        <div *ngIf="f.tipoDeComprobante.errors.required">Requerido</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <input type="text" required class="form-control" id="descripcion" formControlName="descripcion"
+             [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.descripcion.errors">
+        <div *ngIf="f.descripcion.errors.required">Requerido</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="monto">Monto ($)</label>
+      <input type="number" required min="0" class="form-control" id="monto" formControlName="monto"
+             [ngClass]="{ 'is-invalid': submitted && f.monto.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.monto.errors">
+        <div *ngIf="f.monto.errors.required">Requerido</div>
+        <div *ngIf="f.monto.errors.min">Mínimo {{ f.monto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!form.valid">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Aceptar
+  </button>
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   templateUrl: './filtros-aplicados.component.html',
   styleUrls: ['./filtros-aplicados.component.scss']
 })
-export class FiltrosAplicadosComponent implements OnInit {
+export class FiltrosAplicadosComponent {
   private pAppliedFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
   @Input() set appliedFilters(value: { label: string; value: string; asyncFn?: Observable<string> }[]) {
     this.pAppliedFilters = value;
@@ -25,8 +25,7 @@ export class FiltrosAplicadosComponent implements OnInit {
   @Input() set sentidoAplicado(value: string) { this.pSentidoAplicado = value; }
   get sentidoAplicado() { return this.pSentidoAplicado; }
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  private pSearching = false;
+  @Input() set searching(value: boolean) { this.pSearching = value; }
+  get searching(): boolean { return this.pSearching; }
 }

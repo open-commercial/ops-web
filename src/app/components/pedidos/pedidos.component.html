@@ -41,7 +41,7 @@
     </ng-template>
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
-  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"></app-filtros-aplicados>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"></app-filtros-aplicados>
   <div class="pedidos my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">

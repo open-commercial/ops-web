@@ -89,7 +89,7 @@ export class MovimientoCajaComponent implements OnInit {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `Recibo.pdf`);
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
     ;
   }

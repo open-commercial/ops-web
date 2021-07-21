@@ -23,6 +23,8 @@ export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
 
+  searching = false;
+
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
                         protected sucursalesService: SucursalesService,
@@ -60,7 +62,6 @@ export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
 
   fetchItems(terminos = null) {
     terminos = terminos || this.getFormValues();
-    // terminos.idSucursal = Number(this.sucursalesService.getIdSucursal());
 
     this.getAppliedFilters();
 
@@ -70,8 +71,12 @@ export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
 
   getItems(terminos) {
     this.loadingOverlayService.activate();
+    this.searching = true;
     this.getItemsObservableMethod(terminos)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .pipe(finalize(() => {
+        this.loadingOverlayService.deactivate();
+        this.searching = false;
+      }))
       .subscribe(
         (p: Pagination) => {
           this.items = p.content;

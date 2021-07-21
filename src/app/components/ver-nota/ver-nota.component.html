@@ -1,0 +1,92 @@
+<div class="app-ver-nota my-3">
+  <div *ngIf="nota">
+    <div class="d-flex flex-column flex-md-row align-items-md-center">
+      <h1 class="h3 flex-fill text-truncate">
+        <a class="btn fake-cursor" placement="right" ngbPopover="Volver atras" triggers="mouseenter:mouseleave"
+           (click)="volverAtras()">
+          <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+        </a>
+        <fa-icon [icon]="['fas', (nota.type === 'NotaCredito' ? 'balance-scale-left' : 'balance-scale-right') ]"></fa-icon>
+        {{ getTitle() }}
+      </h1>
+      <div class="ml-2 text-right">
+        <button class="btn btn-primary" (click)="dowloadNotaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
+          <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+        </button>
+      </div>
+    </div>
+    <table class="table table-bordered table-sm">
+      <caption class="sr-only">Datos de la nota</caption>
+      <tbody class="thead-dark">
+
+      <tr><th scope="row" class="w-25">Tipo de Comprobante</th><td>{{ helper.tipoComprobanteLabel(nota.tipoComprobante) }}</td></tr>
+      <tr>
+        <th scope="row" class="w-25">Nº de Comprobante</th>
+        <td>
+          {{ nota.numSerieAfip ? helper.formatNumFactura(nota.numSerieAfip, nota.numNotaAfip) : helper.formatNumFactura(nota.serie, nota.nroNota) }}
+          <div *ngIf="nota.cae">CAE: {{nota.cae}} (vto.: {{ nota.vencimientoCae | date:'dd/MM/yyyy'}})</div>
+        </td>
+      </tr>
+      <tr><th scope="row" class="w-25">Cliente</th><td>{{ nota.nombreFiscalCliente }}</td></tr>
+      <tr><th scope="row" class="w-25">Fecha</th><td>{{ nota.fecha | date:'dd/MM/yyyy' }}</td></tr>
+      <tr><th scope="row" class="w-25">Usuario</th><td>{{ nota.nombreUsuario }}</td></tr>
+      <tr><th scope="row" class="w-25">Viajante</th><td>{{ nota.nombreViajante }}</td></tr>
+      <tr><th scope="row" colspan="2">Productos</th></tr>
+      <tr *ngIf="nota.type === 'NotaCredito'">
+        <td colspan="2">
+          <div *ngFor="let r of nota.renglonesNotaCredito" class="d-flex flex-column flex-md-row align-items-md-center articulo">
+            <div class="item-info">
+              <span class="codigo">{{ r.codigoItem }}</span><br>
+              <span class="descripcion">{{ r.descripcionItem }}</span>
+            </div>
+            <div class="item-numeros text-right">
+              {{ r.cantidad }}&nbsp;{{ r.medidaItem }} x {{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
+              <span *ngIf="r.descuentoPorcentaje">(- {{ r.descuentoPorcentaje | number: '1.0-2' }}% desc)</span>
+              = {{ r.importeBruto | currency: 'ARS':'symbol':'1.0-2' }}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="nota.type === 'NotaDebito'">
+        <td colspan="2">
+          <div *ngFor="let r of nota.renglonesNotaDebito" class="d-flex flex-column flex-md-row align-items-md-center articulo">
+            <div class="item-info">
+              <span class="descripcion">{{ r.descripcion }}</span>
+            </div>
+            <div class="item-numeros text-right">
+              {{ r.monto | currency: 'ARS':'symbol':'1.0-2' }}
+              <span *ngIf="r.ivaPorcentaje">(+ {{ r.ivaPorcentaje | number: '1.0-2' }}% IVA)</span>
+              = {{ r.importeNeto | currency: 'ARS':'symbol':'1.0-2' }}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr><th scope="row" class="w-25">Motivo</th><td>{{ nota.motivo }}</td></tr>
+      <tr *ngIf="nota.type === 'NotaCredito'">
+        <th scope="row" class="w-25">Subtotal</th><td>{{ nota.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr *ngIf="nota.type === 'NotaCredito'">
+        <th scope="row" class="w-25">Descuento ({{ nota.descuentoPorcentaje | number: '1.0-2' }} %)</th><td>{{ nota.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr *ngIf="nota.type === 'NotaCredito'">
+        <th scope="row" class="w-25">Recargo ({{ nota.recargoPorcentaje | number: '1.0-2' }} %)</th><td>{{ nota.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Subtotal Bruto</th><td>{{ nota.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">IVA (10.5 %)</th><td>{{ nota.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">IVA (21 %)</th><td>{{ nota.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr *ngIf="nota.type === 'NotaDebito'">
+        <th scope="row" class="w-25">No Gravado</th><td>{{ nota.montoNoGravado | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Total</th><td>{{ nota.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

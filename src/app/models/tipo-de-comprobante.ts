@@ -1,12 +1,12 @@
 export enum TipoDeComprobante {
-  FACTURA_A = 'FACTURA_A',
-  FACTURA_B = 'FACTURA_B',
-  FACTURA_C = 'FACTURA_C',
-  FACTURA_X = 'FACTURA_X',
-  FACTURA_Y = 'FACTURA_Y',
+  FACTURA_A = 'FACTURA_A', // notas de credito
+  FACTURA_B = 'FACTURA_B', // notas de credito
+  FACTURA_C = 'FACTURA_C', // notas de credito
+  FACTURA_X = 'FACTURA_X', // notas de credito
+  FACTURA_Y = 'FACTURA_Y', // notas de credito
   PEDIDO = 'PEDIDO',
-  PRESUPUESTO = 'PRESUPUESTO',
-  RECIBO = 'RECIBO',
+  PRESUPUESTO = 'PRESUPUESTO', // notas de credito
+  RECIBO = 'RECIBO', // NOtas de debito
   GASTO = 'GASTO',
   NOTA_CREDITO_A = 'NOTA_CREDITO_A',
   NOTA_CREDITO_B = 'NOTA_CREDITO_B',

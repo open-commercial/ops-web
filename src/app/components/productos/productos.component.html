@@ -70,7 +70,7 @@
 
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
-  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements"
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="productosBatchActionsBoxCollapse" [ngbCollapse]="isBatchActionsBoxCollapsed">
     <app-batch-actions-box [batchActionKey]="baKey" [actions]="baActions"

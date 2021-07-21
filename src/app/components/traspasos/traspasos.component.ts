@@ -232,7 +232,7 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
           )
         ;
       }
-    }, () => {});
+    }, () => { return; });
   }
 
   downloadReporteTraspasoPdf() {
@@ -240,10 +240,13 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.traspasosService.getReporteTraspaso(terminos)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((res) => {
-        const file = new Blob([res], {type: 'application/pdf'});
-        saveAs(file, `reporte-traspaso.pdf`);
-      })
+      .subscribe(
+        (res) => {
+          const file = new Blob([res], {type: 'application/pdf'});
+          saveAs(file, `reporte-traspaso.pdf`);
+        },
+        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+      )
     ;
   }
 }

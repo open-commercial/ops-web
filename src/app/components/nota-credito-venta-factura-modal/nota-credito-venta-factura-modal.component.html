@@ -1,0 +1,69 @@
+<div class="modal-header">
+  <h4 class="modal-title h5" *ngIf="idFactura">{{ title }}</h4>
+</div>
+<div class="modal-body">
+
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form" class="border rounded bg-light p-3">
+    <ng-container formArrayName="renglones">
+      <div class="d-flex flex-column flex-lg-row align-items-lg-center mb-3 border-bottom" *ngFor="let r of renglones.controls; let i=index;" [formGroupName]="i.toString()">
+        <div class="flex-fill d-flex flex-row">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" [id]="'checked_' + i.toString()" formControlName="checked">
+            <label class="custom-control-label" [for]="'checked_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>
+          </div>
+          <div class="d-flex flex-column info">
+            <span class="codigo">{{ r.get('renglon').value.codigoItem }}</span>
+            <span class="descripcion">{{ r.get('renglon').value.descripcionItem }}</span>
+            <div class="d-flex flex-row flex-wrap">
+              <span class="mr-2">
+                <span class="font-weight-bold">PU: </span>
+                {{ r.get('renglon').value.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
+              </span>
+              <span class="mr-2">
+                <span class="font-weight-bold">IVA: </span>
+                {{ r.get('renglon').value.ivaPorcentaje | number:'1.0-2' }}%
+              </span>
+              <span class="mr-2">
+                <span class="font-weight-bold">Cant.: </span>
+                {{ r.get('renglon').value.cantidad | number:'1.0-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label [for]="'cantidad_' + i.toString()">Cantidad ({{ r.get('renglon').value.medidaItem }})</label>
+          <input type="number" min="0" class="form-control text-right" [id]="'cantidad_' + i.toString()" formControlName="cantidad"
+                 [ngClass]="{ 'is-invalid': submitted && r.get('cantidad').errors }">
+          <div class="invalid-feedback" *ngIf="submitted && r.get('cantidad').errors">
+            <div *ngIf="r.get('cantidad').errors.required">Requerido</div>
+            <div *ngIf="r.get('cantidad').errors.min">
+              Mínimo {{ r.get('cantidad').errors.min.min | number:'1.0-2' }} {{ r.get('renglon').value.medidaItem }}
+            </div>
+            <div *ngIf="r.get('cantidad').errors.max">
+              Máximo {{ r.get('cantidad').errors.max.max | number:'1.0-2' }} {{ r.get('renglon').value.medidaItem }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div class="custom-error-message mb-3" *ngIf="submitted && f.renglones.errors">
+      <div *ngIf="f.renglones.errors.required">No se listan productos.</div>
+      <div *ngIf="f.renglones.errors.noneSelected">Debe ingresar la cantidad de al menos un producto.</div>
+    </div>
+    <div class="d-flex flex-row align-items-center justify-content-between">
+      <div class="custom-control custom-checkbox mr-3">
+        <input type="checkbox" class="custom-control-input" id="modificaStock" formControlName="modificaStock">
+        <label class="custom-control-label" for="modificaStock">Modifica Stock</label>
+      </div>
+      <button class="btn btn-sm btn-secondary" type="button" (click)="seleccionarTodo()">Seleccionar todo</button>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Aceptar
+  </button>
+</div>
