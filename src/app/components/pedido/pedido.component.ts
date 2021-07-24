@@ -426,10 +426,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.productosService.getDisponibilidadEnStock(ppvs)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe((pfs: ProductoFaltante[]) => {
-            if (!pfs.length) {
-            if (this.puedeRealizarCompra()) {
-              this.doSubmit();
-            }
+          if (!pfs.length) {
+            this.doSubmit();
           } else {
             this.agregarErroresDisponibilidad(pfs);
             this.accordion.expand('productos');
@@ -488,31 +486,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
     });
   }
 
-  puedeRealizarCompra() {
-    const ccc: CuentaCorrienteCliente = this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value : null;
-    const resultados: Resultados = this.form.get('resultados') ? this.form.get('resultados').value : null;
-    let pagos = this.form.get('pagos') ? this.form.get('pagos').value : [];
-    pagos = Array.isArray(pagos) && pagos.length ? pagos : [];
-
-    const montoTotal = resultados && resultados.total ? resultados.total : 0;
-    const montoTotalPagos = pagos.reduce((sum, v) => sum + v.monto, 0);
-
-    if (!ccc || !ccc.cliente) {
-      this.mensajeService.msg('No se pudo determinar el cliente', MensajeModalType.ERROR);
-      return false;
-    }
-    if (!ccc.cliente.puedeComprarAPlazo) {
-      if ((ccc.saldo + montoTotalPagos) < montoTotal ) {
-        this.mensajeService.msg(
-          'No puede comprar a plazo (Debe ingresar pagos que cubran el total de la deuda)',
-          MensajeModalType.ERROR
-        );
-        return false;
-      }
-    }
-    return true;
-  }
-
   getNuevoPedido() {
     let te: TipoDeEnvio;
 
@@ -530,7 +503,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
     const resultados: Resultados = this.form.get('resultados').value ? this.form.get('resultados').value : null;
 
-    const np: DetallePedido = {
+    return {
       idPedido: this.form.get('idPedido').value,
       observaciones: this.form.get('observaciones').value,
       idSucursal: this.sucursalesService.getIdSucursal(),
@@ -547,8 +520,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
       recargoPorcentaje: resultados && resultados.recargoPorcentaje ? resultados.recargoPorcentaje : 0,
       descuentoPorcentaje: resultados && resultados.descuentoPorcentaje ? resultados.descuentoPorcentaje : 0,
     };
-
-    return np;
   }
 
   reset() {
@@ -613,7 +584,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         cantidad: addCantidad ? cPrevia + cant : cant,
       };
       this.addRenglonPedido(nrp);
-    }, () => {});
+    }, () => { return; });
   }
 
   directInputSeleccionProducto(p: Producto) {
@@ -674,7 +645,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.rp = rp;
     modalRef.result.then(() => {
       this.renglonesPedido.removeAt(index);
-    }, () => {});
+    }, () => { return; });
   }
 
   searchRPInRenglones(idProducto): AbstractControl {
