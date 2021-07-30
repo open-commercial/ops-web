@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotasVentaComponent} from '../notas-venta/notas-venta.component';
+import {NotasCreditoComponent} from '../notas/notas-credito.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -10,19 +10,15 @@ import {UsuariosService} from '../../services/usuarios.service';
 import {AuthService} from '../../services/auth.service';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../services/notas.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {Observable} from 'rxjs';
-import {Pagination} from '../../models/pagination';
-import {BusquedaNotaCriteria} from '../../models/criterias/busqueda-nota-criteria';
-import {Nota} from '../../models/nota';
+import {Movimiento} from '../../models/movimiento';
+import {ProveedoresService} from '../../services/proveedores.service';
 
 @Component({
   selector: 'app-notas-credito-venta',
   templateUrl: './notas-credito-venta.component.html',
   styleUrls: ['./notas-credito-venta.component.scss']
 })
-export class NotasCreditoVentaComponent extends NotasVentaComponent implements OnInit {
+export class NotasCreditoVentaComponent extends NotasCreditoComponent implements OnInit {
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -34,10 +30,12 @@ export class NotasCreditoVentaComponent extends NotasVentaComponent implements O
               protected usuariosService: UsuariosService,
               protected authService: AuthService,
               protected configuracionesSucursalService: ConfiguracionesSucursalService,
-              protected notasService: NotasService) {
+              protected notasService: NotasService,
+              protected proveedoresService: ProveedoresService) {
     super(
       route, router, sucursalesService, loadingOverlayService, mensajeService,
-      clientesService, fb, usuariosService, authService, configuracionesSucursalService, notasService
+      clientesService, fb, usuariosService, authService, configuracionesSucursalService,
+      notasService, proveedoresService
     );
   }
 
@@ -45,24 +43,7 @@ export class NotasCreditoVentaComponent extends NotasVentaComponent implements O
     super.ngOnInit();
   }
 
-  getTiposDeNotasSucursal() {
-    this.loadingOverlayService.activate();
-    this.notasService.getTiposDeNotaCreditoSucursal(this.sucursalesService.getIdSucursal())
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        tipos => this.tiposNota = tipos,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
-    ;
-  }
-
-  getItemsObservableMethod(terminos): Observable<Pagination> {
-    return this.notasService.buscarNotasCredito(terminos as BusquedaNotaCriteria);
-  }
-
-  verFactura(nota: Nota) {
-    if (nota.idFacturaVenta) {
-      this.router.navigate(['/facturas-venta/ver', nota.idFacturaVenta]);
-    }
+  getMovimiento(): Movimiento {
+    return Movimiento.VENTA;
   }
 }

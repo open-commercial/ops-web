@@ -40,6 +40,10 @@ import {NotasDebitoVentaComponent} from './components/notas-debito-venta/notas-d
 import {NotasCreditoVentaHomeComponent} from './components/notas-credito-venta-home/notas-credito-venta-home.component';
 import {NotasCreditoVentaComponent} from './components/notas-credito-venta/notas-credito-venta.component';
 import {VerNotaComponent} from './components/ver-nota/ver-nota.component';
+import {NotasCreditoCompraHomeComponent} from './components/notas-credito-compra-home/notas-credito-compra-home.component';
+import {NotasCreditoCompraComponent} from './components/notas-credito-compra/notas-credito-compra.component';
+import {NotasDebitoCompraHomeComponent} from './components/notas-debito-compra-home/notas-debito-compra-home.component';
+import {NotasDebitoCompraComponent} from './components/notas-debito-compra/notas-debito-compra.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -115,6 +119,18 @@ const routes: Routes = [
       { path: 'notas-debito-venta', component: NotasDebitoVentaHomeComponent,
         children: [
           { path: '', component: NotasDebitoVentaComponent },
+          { path: 'ver/:id', component: VerNotaComponent }
+        ]
+      },
+      { path: 'notas-credito-compra', component: NotasCreditoCompraHomeComponent,
+        children: [
+          { path: '', component: NotasCreditoCompraComponent },
+          { path: 'ver/:id', component: VerNotaComponent }
+        ]
+      },
+      { path: 'notas-debito-compra', component: NotasDebitoCompraHomeComponent,
+        children: [
+          { path: '', component: NotasDebitoCompraComponent },
           { path: 'ver/:id', component: VerNotaComponent }
         ]
       }

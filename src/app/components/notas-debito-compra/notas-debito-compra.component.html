@@ -1,0 +1,104 @@
+<div class="app-notas-debito-compra">
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon> Notas de Débito de Compras</h1>
+    <div class="text-right m-0">
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="notasDebitoFiltersCollapse"
+              [class.bg-white]="!isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="notasDebitoFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
+        <div class="col-md-6">
+          <app-proveedor-filtro id="proveedorFiltroND" formControlName="idProveedor"></app-proveedor-filtro>
+          <app-usuario-filtro id="usuarioFiltroND" formControlName="idUsuario"></app-usuario-filtro>
+          <app-usuario-filtro id="viajanteFiltroND" formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
+        </div>
+        <div class="col-md-6">
+          <app-rango-fecha-filtro id="rangoFechaNC" formControlName="rangoFecha"></app-rango-fecha-filtro>
+          <div class="form-group">
+            <label for="tipoNota">Tipo de Nota</label>
+            <select class="form-control" id="tipoNota" formControlName="tipoNota">
+              <option value=""></option>
+              <option *ngFor="let tn of tiposNota" [value]="tn">{{ helper.tipoComprobanteLabel(tn) }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nº Nota de Crédito </label>
+            <div class="row">
+              <div class="col-4">
+                <label class="sr-only" for="num-serie">Número de serie</label>
+                <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
+              </div>
+              <div class="col-8">
+                <label class="sr-only" for="num-nota">Número de Nota</label>
+                <input type="text" class="form-control" id="num-nota" formControlName="numNota">
+              </div>
+            </div>
+          </div>
+          <div class="card card-body bg-light mb-3">
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorNC" [values]="ordenarPorOptionsN" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorN></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoNC" [values]="sentidoOptionsN" [label]="'Sentido'" formControlName="sentido" #sentidoN></app-filtro-ordenamiento>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <div class="notas-debito-compra my-2 bg-white">
+    <ng-template #info let-item let-i>
+      <div class="d-flex flex-row flex-wrap">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="fechaNC_{{ i }}">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteNC_{{ i }}">
+          {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.serie > 0" id="nroComprobanteInternoNC_{{ i }}">
+          #INTERNO: {{ helper.formatNumFactura(item.serie, item.nroNota ) }}
+        </span>
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfip_{{ i }}">
+          #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numNotaAfip) }}
+        </span>
+        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="cae_{{ i }}">
+          CAE: {{ item.cae }} (vto: {{ item.vencimientoCae | date:'dd/MM/yyyy' }})
+        </span>
+      </div>
+      <div class="px-2 flex-fill">
+        <div class="d-flex flex-row flex-wrap align-items-center">
+          <div class="">
+            <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ item.razonSocialProveedor }}</span></span>
+            <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
+            <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
+          </div>
+          <div class="">
+            <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item" *ngIf="hasRoleToVerDetalle">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="hasRoleToDelete">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+  </div>
+</div>
+
