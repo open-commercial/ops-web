@@ -1,4 +1,4 @@
-import { OnInit } from '@angular/core';
+import {OnInit} from '@angular/core';
 import {NotasComponent} from './notas.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -17,6 +17,7 @@ import {Pagination} from '../../models/pagination';
 import {BusquedaNotaCriteria} from '../../models/criterias/busqueda-nota-criteria';
 import {Nota} from '../../models/nota';
 import {ProveedoresService} from '../../services/proveedores.service';
+import {Movimiento} from '../../models/movimiento';
 
 export abstract class NotasCreditoComponent extends NotasComponent implements OnInit {
 
@@ -59,9 +60,19 @@ export abstract class NotasCreditoComponent extends NotasComponent implements On
   }
 
   verFactura(nota: Nota) {
-    const idFactura = nota.idFacturaVenta || nota.idFacturaCompra;
-    if (idFactura) {
-      this.router.navigate(['/facturas-venta/ver', idFactura]);
+    let idFactura = null;
+    let path = '';
+
+    if (nota.movimiento === Movimiento.VENTA) {
+      idFactura = nota.idFacturaVenta;
+      path = '/facturas-venta/ver';
+    } else if (nota.movimiento === Movimiento.COMPRA) {
+      idFactura = nota.idFacturaCompra;
+      path = '/facturas-compra/ver';
+    } else {
+      return;
     }
+
+    this.router.navigate([path, idFactura]);
   }
 }

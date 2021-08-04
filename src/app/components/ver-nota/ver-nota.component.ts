@@ -9,6 +9,7 @@ import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {saveAs} from 'file-saver';
 import {HelperService} from '../../services/helper.service';
+import {Movimiento} from '../../models/movimiento';
 
 @Component({
   selector: 'app-ver-nota',
@@ -18,6 +19,9 @@ import {HelperService} from '../../services/helper.service';
 export class VerNotaComponent implements OnInit {
   nota: Nota;
   helper = HelperService;
+
+  movimiento = Movimiento;
+
   constructor(private route: ActivatedRoute,
               private location: Location,
               private notasService: NotasService,
@@ -41,6 +45,7 @@ export class VerNotaComponent implements OnInit {
   }
 
   dowloadNotaPdf() {
+    if (!this.nota.idCliente) { return; }
     this.loadingOverlayService.activate();
     this.notasService.getReporte(this.nota.idNota)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))

@@ -376,7 +376,14 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
       return;
     }
 
-    const path = nota.type === 'NotaCredito' ? '/notas-credito-venta/ver' : '/notas-debito-venta/ver';
+    let path = '';
+    if (nota.movimiento === Movimiento.VENTA) {
+       path = nota.type === 'NotaCredito' ? '/notas-credito-venta/ver' : '/notas-debito-venta/ver';
+    } else if (nota.movimiento === Movimiento.COMPRA) {
+       path = nota.type === 'NotaCredito' ? '/notas-credito-compra/ver' : '/notas-debito-compra/ver';
+    } else {
+       return;
+    }
 
     this.router.navigate([path, nota.idNota]);
   }
