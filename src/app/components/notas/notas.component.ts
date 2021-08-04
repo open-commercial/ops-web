@@ -121,6 +121,10 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
         this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
         terminos.idCliente = Number(ps.idCliente);
       }
+      if (ps.idViajante && !isNaN(ps.idViajante)) {
+        this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
+        terminos.idViajante = Number(ps.idViajante);
+      }
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -133,11 +137,6 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
     if (ps.idUsuario && !isNaN(ps.idUsuario)) {
       this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
       terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.idViajante && !isNaN(ps.idViajante)) {
-      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
-      terminos.idViajante = Number(ps.idViajante);
     }
 
     if (ps.fechaDesde || ps.fechaHasta) {
@@ -190,7 +189,6 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
   createFilterForm() {
     const controlsConfigs: { [key: string]: any } = {
       idUsuario: null,
-      idViajante: null,
       rangoFecha: null,
       tipoNota: null,
       numSerie: null,
@@ -201,6 +199,7 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
 
     if (this.getMovimiento() === Movimiento.VENTA) {
       controlsConfigs.idCliente = null;
+      controlsConfigs.idViajante = null;
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -213,7 +212,6 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
   resetFilterForm() {
     const value: { [key: string]: any } = {
       idUsuario: null,
-      idViajante: null,
       rangoFecha: null,
       tipoNota: null,
       numSerie: null,
@@ -224,6 +222,7 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
 
     if (this.getMovimiento() === Movimiento.VENTA) {
       value.idCliente = null;
+      value.idViajante = null;
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -241,6 +240,9 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
       if (values.idCliente) {
         this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
       }
+      if (values.idViajante) {
+        this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
+      }
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -255,9 +257,6 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
       this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
-    if (values.idViajante) {
-      this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
-    }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.appliedFilters.push({
@@ -315,6 +314,7 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
 
     if (this.getMovimiento() === Movimiento.VENTA) {
       if (values.idCliente) { ret.idCliente = values.idCliente; }
+      if (values.idViajante) { ret.idViajante = values.idViajante; }
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -322,7 +322,6 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
     }
 
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
-    if (values.idViajante) { ret.idViajante = values.idViajante; }
     if (values.rangoFecha && values.rangoFecha.desde) {
       ret.fechaDesde = this.helper.getUnixDateFromNgbDate(values.rangoFecha.desde); }
     if (values.rangoFecha && values.rangoFecha.hasta) {

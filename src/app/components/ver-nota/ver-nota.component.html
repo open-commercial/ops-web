@@ -31,7 +31,7 @@
       <tr *ngIf="nota.movimiento === movimiento.COMPRA"><th scope="row" class="w-25">Proveedor</th><td>{{ nota.razonSocialProveedor }}</td></tr>
       <tr><th scope="row" class="w-25">Fecha</th><td>{{ nota.fecha | date:'dd/MM/yyyy' }}</td></tr>
       <tr><th scope="row" class="w-25">Usuario</th><td>{{ nota.nombreUsuario }}</td></tr>
-      <tr><th scope="row" class="w-25">Viajante</th><td>{{ nota.nombreViajante }}</td></tr>
+      <tr *ngIf="nota.movimiento === movimiento.VENTA"><th scope="row" class="w-25">Viajante</th><td>{{ nota.nombreViajante }}</td></tr>
       <tr><th scope="row" colspan="2">Productos</th></tr>
       <tr *ngIf="nota.type === 'NotaCredito'">
         <td colspan="2">
