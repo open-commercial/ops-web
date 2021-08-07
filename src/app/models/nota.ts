@@ -1,6 +1,7 @@
 import {TipoDeComprobante} from './tipo-de-comprobante';
 import {RenglonNotaCredito} from './renglon-nota-credito';
 import {RenglonNotaDebito} from './renglon-nota-debito';
+import {Movimiento} from './movimiento';
 
 export interface Nota {
   idNota: number;
@@ -22,6 +23,7 @@ export interface Nota {
   idUsuario: number;
   nombreUsuario: string;
   motivo: string;
+  movimiento: Movimiento;
   subTotalBruto: number|string;
   iva21Neto: number|string;
   iva105Neto: number|string;

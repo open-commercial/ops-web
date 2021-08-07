@@ -1,4 +1,4 @@
-import { OnInit, ViewChild} from '@angular/core';
+import {OnInit, ViewChild} from '@angular/core';
 import {ListadoBaseComponent} from '../listado-base.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -24,15 +24,13 @@ import {AuthService} from '../../services/auth.service';
 import {Nota} from '../../models/nota';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../services/notas.service';
+import {Proveedor} from '../../models/proveedor';
+import {ProveedoresService} from '../../services/proveedores.service';
 
 /** NO ES COMPONENT YA QUE ES UNA CLASE ABSTRACTA */
-export abstract class NotasVentaComponent extends ListadoBaseComponent implements OnInit {
+export abstract class NotasComponent extends ListadoBaseComponent implements OnInit {
   rol = Rol;
-  ordenarPorOptionsN = [
-    { val: 'fecha', text: 'Fecha' },
-    { val: 'cliente.idCliente', text: 'Cliente' },
-    { val: 'total', text: 'Total' },
-  ];
+  ordenarPorOptionsN = [];
 
   sentidoOptionsN = [
     { val: 'ASC', text: 'Ascendente' },
@@ -65,6 +63,8 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
     TipoDeComprobante.NOTA_DEBITO_C,
   ];
 
+  protected allowedMovimientos = [Movimiento.COMPRA, Movimiento.VENTA];
+
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
                         protected sucursalesService: SucursalesService,
@@ -75,8 +75,13 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
                         protected usuariosService: UsuariosService,
                         protected authService: AuthService,
                         protected configuracionesSucursalService: ConfiguracionesSucursalService,
-                        protected notasService: NotasService) {
+                        protected notasService: NotasService,
+                        protected proveedoresService: ProveedoresService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.fillOrdenarPorOptions();
+    if (this.allowedMovimientos.indexOf(this.getMovimiento()) < 0) {
+      throw new Error('El movimiento configurado no está permitido');
+    }
   }
 
   ngOnInit() {
@@ -87,28 +92,51 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
   }
 
+  fillOrdenarPorOptions() {
+    this.ordenarPorOptionsN.push({ val: 'fecha', text: 'Fecha' });
+
+    if (this.getMovimiento() === Movimiento.VENTA) {
+      this.ordenarPorOptionsN.push({ val: 'cliente.idCliente', text: 'Cliente' });
+    }
+
+    if (this.getMovimiento() === Movimiento.COMPRA) {
+      this.ordenarPorOptionsN.push({ val: 'proveedor.razonSocial', text: 'Proveedor' });
+    }
+
+    this.ordenarPorOptionsN.push({ val: 'total', text: 'Total' });
+  }
+
   abstract getTiposDeNotasSucursal();
+  abstract getMovimiento(): Movimiento;
 
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaNotaCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
-      movimiento: Movimiento.VENTA,
+      movimiento: this.getMovimiento(),
     };
 
-    if (ps.idCliente && !isNaN(ps.idCliente)) {
-      this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
-      terminos.idCliente = Number(ps.idCliente);
+    if (this.getMovimiento() === Movimiento.VENTA) {
+      if (ps.idCliente && !isNaN(ps.idCliente)) {
+        this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
+        terminos.idCliente = Number(ps.idCliente);
+      }
+      if (ps.idViajante && !isNaN(ps.idViajante)) {
+        this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
+        terminos.idViajante = Number(ps.idViajante);
+      }
+    }
+
+    if (this.getMovimiento() === Movimiento.COMPRA) {
+      if (ps.idProveedor && !isNaN(ps.idProveedor)) {
+        this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));
+        terminos.idProveedor = Number(ps.idProveedor);
+      }
     }
 
     if (ps.idUsuario && !isNaN(ps.idUsuario)) {
       this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
       terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.idViajante && !isNaN(ps.idViajante)) {
-      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
-      terminos.idViajante = Number(ps.idViajante);
     }
 
     if (ps.fechaDesde || ps.fechaHasta) {
@@ -159,48 +187,76 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
   abstract getItemsObservableMethod(terminos): Observable<Pagination>;
 
   createFilterForm() {
-    this.filterForm = this.fb.group({
-      idCliente: null,
+    const controlsConfigs: { [key: string]: any } = {
       idUsuario: null,
-      idViajante: null,
       rangoFecha: null,
       tipoNota: null,
       numSerie: null,
       numNota: '',
       ordenarPor: null,
       sentido: null,
-    });
+    };
+
+    if (this.getMovimiento() === Movimiento.VENTA) {
+      controlsConfigs.idCliente = null;
+      controlsConfigs.idViajante = null;
+    }
+
+    if (this.getMovimiento() === Movimiento.COMPRA) {
+      controlsConfigs.idProveedor = null;
+    }
+
+    this.filterForm = this.fb.group(controlsConfigs);
   }
 
   resetFilterForm() {
-    this.filterForm.reset({
-      idCliente: null,
+    const value: { [key: string]: any } = {
       idUsuario: null,
-      idViajante: null,
       rangoFecha: null,
       tipoNota: null,
       numSerie: null,
       numNota: '',
       ordenarPor: null,
       sentido: null,
-    });
+    };
+
+    if (this.getMovimiento() === Movimiento.VENTA) {
+      value.idCliente = null;
+      value.idViajante = null;
+    }
+
+    if (this.getMovimiento() === Movimiento.COMPRA) {
+      value.idProveedor = null;
+    }
+
+    this.filterForm.reset(value);
   }
 
   getAppliedFilters() {
     const values = this.filterForm.value;
     this.appliedFilters = [];
 
-    if (values.idCliente) {
-      this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
+    if (this.getMovimiento() === Movimiento.VENTA) {
+      if (values.idCliente) {
+        this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
+      }
+      if (values.idViajante) {
+        this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
+      }
+    }
+
+    if (this.getMovimiento() === Movimiento.COMPRA) {
+      if (values.idProveedor) {
+        this.appliedFilters.push(
+          { label: 'Proveedor', value: values.idProveedor, asyncFn: this.getProveedorInfoAsync(values.idProveedor) }
+        );
+      }
     }
 
     if (values.idUsuario) {
       this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
-    if (values.idViajante) {
-      this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
-    }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.appliedFilters.push({
@@ -247,14 +303,25 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
     return this.usuariosService.getUsuario(id).pipe(map((u: Usuario) => u.nombre + ' ' + u.apellido));
   }
 
+  getProveedorInfoAsync(id: number): Observable<string> {
+    return this.proveedoresService.getProveedor(id).pipe(map((p: Proveedor) => p.razonSocial));
+  }
+
   getFormValues() {
     const values = this.filterForm.value;
     const ret: {[k: string]: any} = {};
-    ret.movimiento = Movimiento.VENTA;
+    ret.movimiento = this.getMovimiento();
 
-    if (values.idCliente) { ret.idCliente = values.idCliente; }
+    if (this.getMovimiento() === Movimiento.VENTA) {
+      if (values.idCliente) { ret.idCliente = values.idCliente; }
+      if (values.idViajante) { ret.idViajante = values.idViajante; }
+    }
+
+    if (this.getMovimiento() === Movimiento.COMPRA) {
+      if (values.idProveedor) { ret.idProveedor = values.idProveedor; }
+    }
+
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
-    if (values.idViajante) { ret.idViajante = values.idViajante; }
     if (values.rangoFecha && values.rangoFecha.desde) {
       ret.fechaDesde = this.helper.getUnixDateFromNgbDate(values.rangoFecha.desde); }
     if (values.rangoFecha && values.rangoFecha.hasta) {
@@ -308,7 +375,14 @@ export abstract class NotasVentaComponent extends ListadoBaseComponent implement
       return;
     }
 
-    const path = nota.type === 'NotaCredito' ? '/notas-credito-venta/ver' : '/notas-debito-venta/ver';
+    let path = '';
+    if (nota.movimiento === Movimiento.VENTA) {
+       path = nota.type === 'NotaCredito' ? '/notas-credito-venta/ver' : '/notas-debito-venta/ver';
+    } else if (nota.movimiento === Movimiento.COMPRA) {
+       path = nota.type === 'NotaCredito' ? '/notas-credito-compra/ver' : '/notas-debito-compra/ver';
+    } else {
+       return;
+    }
 
     this.router.navigate([path, nota.idNota]);
   }
