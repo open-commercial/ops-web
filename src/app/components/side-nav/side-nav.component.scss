@@ -4,10 +4,15 @@
   height: 100%;
   width: 15rem;
   padding-top: 1rem;
+  background: whitesmoke;
+  overflow-y: auto;
+  border-left: 2px solid #dee2e6;
   h2 {
     margin: 0;
     padding: .2rem 1rem .2rem .2rem;
     font-size: 1.3rem;
+    font-weight: bold;
+    font-style: italic;
   }
   a.nav-link {
     color: #212529;

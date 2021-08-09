@@ -1,4 +1,9 @@
 <div class="side-nav">
+  <div class="text-right mb-2 d-lg-none">
+    <button class="btn btn-primary mr-2" (click)="optionClick()">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+    </button>
+  </div>
   <h2 *ngIf="tieneRolAdminOEncargado"><span class="label">&nbsp;COMPRAS</span></h2>
   <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
     <li class="nav-item">

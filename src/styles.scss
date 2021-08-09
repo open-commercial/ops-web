@@ -93,14 +93,14 @@ body {
   font-weight: bold;
 }
 
-.app-side-nav {
-  margin-left: -15rem;
-  transition: margin-left 250ms;
+/*.app-side-nav {
+  margin-right: -15rem;
+  transition: margin-right 250ms;
   &.opened {
-    margin-left: 0;
+    margin-right: 0;
   }
   @include media-breakpoint-up(lg) {
-    margin-left: 0;
+    margin-right: 0;
   }
 }
 
@@ -109,7 +109,7 @@ body {
   @include media-breakpoint-up(md) {
     min-width: unset;
   }
-}
+}*/
 
 .ops-accordion {
   .card-body {

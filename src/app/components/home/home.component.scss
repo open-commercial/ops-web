@@ -1,6 +1,28 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
 .app-home {
   padding: 0;
   .content-container {
-    overflow-x: hidden;
+    app-side-nav {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: -16rem;
+      transition: right .25s;
+      &.opened {
+        right: 0;
+      }
+      box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
+      -webkit-box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
+      -moz-box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
+      @include media-breakpoint-up(lg) {
+        position: unset;
+        box-shadow: unset;
+        -webkit-box-shadow: unset;
+        -moz-box-shadow: unset;
+      }
+    }
   }
 }
