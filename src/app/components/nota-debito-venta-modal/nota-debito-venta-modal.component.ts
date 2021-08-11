@@ -1,4 +1,4 @@
-import {OnInit} from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -11,6 +11,7 @@ import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {HelperService} from '../../services/helper.service';
 
+@Directive()
 export abstract class NotaDebitoVentaModalComponent implements OnInit {
   form: FormGroup;
   submitted = false;

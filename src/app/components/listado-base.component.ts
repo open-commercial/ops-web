@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SucursalesService } from '../services/sucursales.service';
-import {OnDestroy, OnInit} from '@angular/core';
+import { OnDestroy, OnInit, Directive } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../models/pagination';
@@ -9,6 +9,7 @@ import { MensajeModalType } from './mensaje-modal/mensaje-modal.component';
 import { LoadingOverlayService } from '../services/loading-overlay.service';
 import { MensajeService } from '../services/mensaje.service';
 
+@Directive()
 export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
   items = [];
   isFiltersCollapsed = true;

@@ -5,12 +5,13 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../../services/notas.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import {OnInit} from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {ClientesService} from '../../services/clientes.service';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
+@Directive()
 export default abstract class NotaCreditoVentaDetalleModalComponent implements OnInit {
   notaCredito: NotaCredito;
   idCliente: number;
