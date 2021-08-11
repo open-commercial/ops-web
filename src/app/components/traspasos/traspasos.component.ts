@@ -41,8 +41,8 @@ export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorT', { static: false }) ordenarPorTElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoT', { static: false }) sentidoTElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorT') ordenarPorTElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoT') sentidoTElement: FiltroOrdenamientoComponent;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,

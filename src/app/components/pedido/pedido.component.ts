@@ -68,7 +68,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   loadingResultados = false;
 
-  @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+  @ViewChild('accordion') accordion: NgbAccordion;
 
   usuario: Usuario = null;
 

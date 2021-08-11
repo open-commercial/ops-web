@@ -56,8 +56,8 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorCCC', { static: false }) ordenarPorCCCElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoCCC', { static: false }) sentidoCCCElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorCCC') ordenarPorCCCElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoCCC') sentidoCCCElement: FiltroOrdenamientoComponent;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,

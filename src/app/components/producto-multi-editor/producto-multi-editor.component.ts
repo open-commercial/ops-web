@@ -40,8 +40,8 @@ export class ProductoMultiEditorComponent implements OnInit {
   baElements: BatchActionElement[] = [];
   opcionPorcentaje = OpcionPorcentaje;
 
-  @ViewChild('calculosPrecioCheck', { static: false }) calculosPrecioCheck: ElementRef;
-  @ViewChild('descuentoRecargoPorcentajeCheck', { static: false }) descuentoRecargoPorcentajeCheck: ElementRef;
+  @ViewChild('calculosPrecioCheck') calculosPrecioCheck: ElementRef;
+  @ViewChild('descuentoRecargoPorcentajeCheck') descuentoRecargoPorcentajeCheck: ElementRef;
 
   constructor(private fb: FormBuilder,
               private batchActionsService: BatchActionsService,
@@ -125,7 +125,6 @@ export class ProductoMultiEditorComponent implements OnInit {
 
     if (!checked && !valueControl.disabled) {
       valueControl.disable();
-      return;
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Usuario } from '../../models/usuario';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuariosService } from '../../services/usuarios.service';
@@ -11,7 +11,7 @@ import { Rol } from '../../models/rol';
   templateUrl: './usuario-modal.component.html',
   styleUrls: ['./usuario-modal.component.scss']
 })
-export class UsuarioModalComponent implements OnInit {
+export class UsuarioModalComponent {
   usuarios: Usuario[] = [];
   clearLoading = false;
   loading = false;
@@ -24,13 +24,10 @@ export class UsuarioModalComponent implements OnInit {
   totalPages = 0;
   size = 0;
 
-  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
+  @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               private usuariosService: UsuariosService) { }
-
-  ngOnInit() {
-  }
 
   getUsuarios(clearResults = false) {
     this.page += 1;

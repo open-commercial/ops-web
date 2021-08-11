@@ -13,7 +13,6 @@ import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { CuentasCorrientesService } from '../../services/cuentas-corrientes.service';
 import { RenglonFactura } from '../../models/renglon-factura';
 import { FacturasVentaService } from '../../services/facturas-venta.service';
-import { NuevoRenglonFactura } from '../../models/nuevo-renglon-factura';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { SucursalesService } from '../../services/sucursales.service';
 import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
@@ -65,8 +64,8 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   transportistaSeleccionado: Transportista = null;
 
-  @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
-  @ViewChild('checkAllToggler', {static: false}) checkAllToggler: ElementRef;
+  @ViewChild('accordion') accordion: NgbAccordion;
+  @ViewChild('checkAllToggler') checkAllToggler: ElementRef;
   checkingAll = false;
   checkingRenglon = false;
 
@@ -341,12 +340,11 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
       ;
     } else {
       const nrfs = this.renglones.value.map(e => {
-        const nrf: NuevoRenglonFactura = {
+        return  {
           bonificacion: null,
           idProducto: e.renglon.idProductoItem,
           cantidad: e.renglon.cantidad,
         };
-        return nrf;
       });
 
       this.loadingOverlayService.activate();

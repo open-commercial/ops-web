@@ -1,4 +1,4 @@
-import {OnInit, ViewChild} from '@angular/core';
+import { OnInit, ViewChild, Directive } from '@angular/core';
 import {ListadoBaseComponent} from '../listado-base.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -28,6 +28,7 @@ import {Proveedor} from '../../models/proveedor';
 import {ProveedoresService} from '../../services/proveedores.service';
 
 /** NO ES COMPONENT YA QUE ES UNA CLASE ABSTRACTA */
+@Directive()
 export abstract class NotasComponent extends ListadoBaseComponent implements OnInit {
   rol = Rol;
   ordenarPorOptionsN = [];
@@ -39,8 +40,8 @@ export abstract class NotasComponent extends ListadoBaseComponent implements OnI
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorN', { static: false }) ordenarPorNElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoN', { static: false }) sentidoNElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorN') ordenarPorNElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoN') sentidoNElement: FiltroOrdenamientoComponent;
 
   helper = HelperService;
   tiposNota: TipoDeComprobante[] = [];

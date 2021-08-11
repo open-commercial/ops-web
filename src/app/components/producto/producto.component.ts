@@ -46,7 +46,7 @@ export class ProductoComponent implements OnInit {
   form: FormGroup;
   submitted = false;
 
-  @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+  @ViewChild('accordion') accordion: NgbAccordion;
   imageDataUrl = '';
 
   // esta variable solo es relevante en la edición
@@ -313,7 +313,6 @@ export class ProductoComponent implements OnInit {
     ) {
       this.submitted = true;
       $event.preventDefault();
-      return;
     }
   }
 

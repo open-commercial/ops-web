@@ -50,8 +50,8 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorP', { static: false }) ordenarPorPElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoP', { static: false }) sentidoPElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorP') ordenarPorPElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoP') sentidoPElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
   visibilidades = ['públicos', 'privados'];
@@ -263,7 +263,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
           )
         ;
       }
-    }, () => {});
+    }, () => { return; });
   }
 
   eliminarSeleccionados(ids: number[]) {

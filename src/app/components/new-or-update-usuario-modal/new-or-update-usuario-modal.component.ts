@@ -12,7 +12,7 @@ export class NewOrUpdateUsuarioModalComponent {
   usuario: Usuario;
   ufProfile = UFProfile.USUARIO;
 
-  @ViewChild('usuarioForm', { static: false }) usuarioForm: UsuarioFormComponent;
+  @ViewChild('usuarioForm') usuarioForm: UsuarioFormComponent;
   constructor(public activeModal: NgbActiveModal) { }
 
   submit() {

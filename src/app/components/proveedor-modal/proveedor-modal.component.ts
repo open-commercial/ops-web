@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Proveedor } from '../../models/proveedor';
 import { Subject } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,7 +11,7 @@ import { Pagination } from '../../models/pagination';
   templateUrl: './proveedor-modal.component.html',
   styleUrls: ['./proveedor-modal.component.scss']
 })
-export class ProveedorModalComponent implements OnInit {
+export class ProveedorModalComponent {
   proveedores: Proveedor[] = [];
   clearLoading = false;
   loading = false;
@@ -25,13 +25,10 @@ export class ProveedorModalComponent implements OnInit {
   totalPages = 0;
   size = 0;
 
-  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
+  @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               private proveedoresService: ProveedoresService) { }
-
-  ngOnInit() {
-  }
 
   getProveedores(clearResults = false) {
     this.page += 1;

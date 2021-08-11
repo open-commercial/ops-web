@@ -44,8 +44,8 @@ export class RemitosComponent extends ListadoBaseComponent implements OnInit {
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorR', { static: false }) ordenarPorRElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoR', { static: false }) sentidoRElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorR') ordenarPorRElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoR') sentidoRElement: FiltroOrdenamientoComponent;
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;

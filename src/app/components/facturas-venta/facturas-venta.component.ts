@@ -65,8 +65,8 @@ export class FacturasVentaComponent extends ListadoBaseComponent implements OnIn
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorFV', { static: false }) ordenarPorFVElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoFV', { static: false }) sentidoFVElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorFV') ordenarPorFVElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoFV') sentidoFVElement: FiltroOrdenamientoComponent;
 
   helper = HelperService;
 

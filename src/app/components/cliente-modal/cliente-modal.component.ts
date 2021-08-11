@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
@@ -11,7 +11,7 @@ import { ClientesService } from '../../services/clientes.service';
   templateUrl: './cliente-modal.component.html',
   styleUrls: ['./cliente-modal.component.scss']
 })
-export class ClienteModalComponent implements OnInit {
+export class ClienteModalComponent {
   clientes: Cliente[] = [];
   clearLoading = false;
   loading = false;
@@ -24,12 +24,10 @@ export class ClienteModalComponent implements OnInit {
   totalPages = 0;
   size = 0;
 
-  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
+  @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               private clientesService: ClientesService) { }
-
-  ngOnInit() {}
 
   getClientes(clearResults = false) {
     this.page += 1;

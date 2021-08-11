@@ -33,7 +33,7 @@ export class CantidadProductoModalComponent implements OnInit {
   cantidadesInicialesPedido: { [idProducto: number]: number } = {};
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
-  @ViewChild('cantidadInput', { static: false }) cantidadInput: ElementRef;
+  @ViewChild('cantidadInput') cantidadInput: ElementRef;
 
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal,

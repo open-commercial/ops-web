@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CuentasCorrientesService } from '../../services/cuentas-corrientes.service';
@@ -10,7 +10,7 @@ import { Pagination } from '../../models/pagination';
   templateUrl: './cuenta-corriente-cliente-modal.component.html',
   styleUrls: ['./cuenta-corriente-cliente-modal.component.scss']
 })
-export class CuentaCorrienteClienteModalComponent implements OnInit {
+export class CuentaCorrienteClienteModalComponent {
   cccs: CuentaCorrienteCliente[] = [];
   clearLoading = false;
   loading = false;
@@ -22,12 +22,10 @@ export class CuentaCorrienteClienteModalComponent implements OnInit {
   totalPages = 0;
   size = 0;
 
-  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
+  @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               private cuentasCorrienteService: CuentasCorrientesService) { }
-
-  ngOnInit() {}
 
   getCccs(clearResults = false) {
     this.page += 1;

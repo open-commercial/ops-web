@@ -33,7 +33,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
   totalSistema: number = null;
   loadingTotales = false;
 
-  @ViewChild('accordion', {static: false}) accordion: NgbAccordion;
+  @ViewChild('accordion') accordion: NgbAccordion;
 
   subscription: Subscription;
 
@@ -134,7 +134,6 @@ export class VerCajaComponent implements OnInit, OnDestroy {
   panelBeforeChange($event) {
     if ($event.panelId === 'panel-0') {
       $event.preventDefault();
-      return;
     }
   }
 
@@ -163,7 +162,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
                 err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
               )
             ;
-          }, () => {});
+          }, () => { return; });
         },
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       )
@@ -193,7 +192,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
           err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         )
       ;
-    }, () => {});
+    }, () => { return; });
   }
 
 

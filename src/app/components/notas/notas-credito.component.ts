@@ -1,4 +1,4 @@
-import {OnInit} from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import {NotasComponent} from './notas.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -19,6 +19,7 @@ import {Nota} from '../../models/nota';
 import {ProveedoresService} from '../../services/proveedores.service';
 import {Movimiento} from '../../models/movimiento';
 
+@Directive()
 export abstract class NotasCreditoComponent extends NotasComponent implements OnInit {
 
   protected constructor(protected route: ActivatedRoute,

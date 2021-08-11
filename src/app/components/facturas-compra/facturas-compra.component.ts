@@ -50,8 +50,8 @@ export class FacturasCompraComponent extends ListadoBaseComponent implements OnI
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorFC', { static: false }) ordenarPorFCElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoFC', { static: false }) sentidoFCElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordernarPorFC') ordenarPorFCElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoFC') sentidoFCElement: FiltroOrdenamientoComponent;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,

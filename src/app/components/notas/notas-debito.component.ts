@@ -1,4 +1,4 @@
-import {OnInit} from '@angular/core';
+import { OnInit, Directive } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -17,6 +17,7 @@ import {Pagination} from '../../models/pagination';
 import {BusquedaNotaCriteria} from '../../models/criterias/busqueda-nota-criteria';
 import {ProveedoresService} from '../../services/proveedores.service';
 
+@Directive()
 export abstract class NotasDebitoComponent extends NotasComponent implements OnInit {
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,

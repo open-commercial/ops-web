@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, ViewChild} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import {SucursalesService} from '../../services/sucursales.service';
   templateUrl: './producto-modal.component.html',
   styleUrls: ['./producto-modal.component.scss']
 })
-export class ProductoModalComponent implements OnInit {
+export class ProductoModalComponent {
   productos: Producto[] = [];
   clearLoading = false;
   loading = false;
@@ -45,14 +45,12 @@ export class ProductoModalComponent implements OnInit {
   }
   get idSucursal(): number { return this.pIdSucursal; }
 
-  @ViewChild('searchInput', { static: false }) searchInput: ElementRef;
+  @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(public activeModal: NgbActiveModal,
               public productosService: ProductosService,
               private sucursalesService: SucursalesService,
               private loadingOverlayService: LoadingOverlayService) { }
-
-  ngOnInit() {}
 
   getProductos(clearResults = false) {
     this.page += 1;
