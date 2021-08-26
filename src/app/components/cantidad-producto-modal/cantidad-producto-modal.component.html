@@ -8,7 +8,7 @@
         <span class="codigo">{{ producto.codigo }}</span>&nbsp;
         <span *ngIf="producto.oferta" class="badge badge-success">OFERTA {{ producto.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
         <p class="m-0"><strong>{{ producto.descripcion }}</strong></p>
-        <span *ngIf="producto.bulto > 1">Llevando {{ producto.bulto }} o más</span>
+        <span *ngIf="producto.cantMinima > 1">Llevando {{ producto.cantMinima }} o más</span>
       </div>
     </div>
     <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading && !productoLoading">

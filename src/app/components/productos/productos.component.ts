@@ -34,7 +34,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
     { val: 'cantidadProducto.cantidadTotalEnSucursales', text: 'Total Sucursales' },
-    { val: 'cantidadProducto.bulto', text: 'Venta x Cantidad' },
+    { val: 'cantidadProducto.cantMinima', text: 'Venta x Cantidad' },
     { val: 'precioProducto.precioCosto', text: 'Precio Costo' },
     { val: 'precioProducto.gananciaPorcentaje', text: '% Ganancia' },
     { val: 'precioProducto.precioLista', text: 'Precio Lista' },

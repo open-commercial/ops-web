@@ -32,7 +32,7 @@
           </ul>
         </td>
       </tr>
-      <tr><th scope="row">Venta x Cantidad</th><td>{{ producto.bulto }} {{ producto.nombreMedida }}</td></tr>
+      <tr><th scope="row">Venta x Cantidad</th><td>{{ producto.cantMinima }} {{ producto.nombreMedida }}</td></tr>
       <tr><th scope="row">Unidad de Medida</th><td>{{ producto.nombreMedida }}</td></tr>
       <tr><th scope="row">Precio de Costo</th><td>{{ producto.precioCosto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr><th scope="row">% Ganancia</th><td>{{ producto.gananciaPorcentaje | number:'1.0-2' }} %</td></tr>

@@ -9,8 +9,7 @@ export interface Producto {
   cantidadEnSucursalesDisponible?: Array<CantidadEnSucursal>;
   cantidadTotalEnSucursalesDisponible?: number;
   cantidadReservada?: number;
-  cantMinima?: number;
-  bulto: number;
+  cantMinima: number;
   idMedida?: number;
   nombreMedida?: string;
   precioCosto: number|string;
