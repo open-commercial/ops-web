@@ -33,6 +33,7 @@ import {Location} from '@angular/common';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {ProductosParaVerificarStock} from '../../models/productos-para-verificar-stock';
 import {ProductoFaltante} from '../../models/producto-faltante';
+import {Movimiento} from '../../models/movimiento';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -90,6 +91,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
   subscription: Subscription;
+
+  mov = Movimiento;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,

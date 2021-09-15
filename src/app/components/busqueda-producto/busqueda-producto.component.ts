@@ -5,6 +5,8 @@ import { ProductoModalComponent } from '../producto-modal/producto-modal.compone
 import { Producto } from '../../models/producto';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from '../../services/productos.service';
+import {Cliente} from '../../models/cliente';
+import {Movimiento} from '../../models/movimiento';
 
 @Component({
   selector: 'app-busqueda-producto',
@@ -40,6 +42,16 @@ export class BusquedaProductoComponent implements OnInit {
   @Output() seleccion = new EventEmitter<Producto>();
   @Output() directInputSeleccion = new EventEmitter<Producto>();
 
+  private pCliente: Cliente = null;
+  @Input()
+  set cliente(value: Cliente) { this.pCliente = value; }
+  get cliente(): Cliente { return this.pCliente; }
+
+  private pMovimiento: Movimiento = null;
+  @Input()
+  set movimiento(value: Movimiento) { this.pMovimiento = value; }
+  get movimiento(): Movimiento { return this.pMovimiento; }
+
   loadingProducto = false;
 
   constructor(modalConfig: NgbModalConfig,
@@ -67,6 +79,8 @@ export class BusquedaProductoComponent implements OnInit {
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
     modalRef.componentInstance.cantidadesInicialesPedido = this.pCantidadesInicialesPedido;
     modalRef.componentInstance.cantidadesActualesPedido = this.pCantidadesActualesPedido;
+    if (this.cliente) { modalRef.componentInstance.cliente = this.cliente; }
+    if (this.movimiento) { modalRef.componentInstance.movimiento = this.movimiento; }
     modalRef.componentInstance.idSucursal = this.idSucursal;
     modalRef.result.then((p: Producto) => {
         this.seleccion.emit(p);

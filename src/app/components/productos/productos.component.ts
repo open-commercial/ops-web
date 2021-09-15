@@ -134,6 +134,11 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       terminos.oferta = true;
     }
 
+    if (ps.listarSoloParaCatalogo) {
+      this.filterForm.get('listarSoloParaCatalogo').setValue(true);
+      terminos.listarSoloParaCatalogo = true;
+    }
+
     let ordenarPorVal = this.ordenarPorOptionsP.length ? this.ordenarPorOptionsP[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
@@ -157,6 +162,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       idProveedor: null,
       visibilidad: null,
       oferta: false,
+      listarSoloParaCatalogo: false,
       ordenarPor: '',
       sentido: '',
     });
@@ -169,6 +175,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
       idProveedor: null,
       visibilidad: null,
       oferta: false,
+      listarSoloParaCatalogo: false,
       ordenarPor: '',
       sentido: '',
     });
@@ -183,6 +190,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     if (values.idProveedor) { ret.idProveedor = values.idProveedor; }
     if (values.visibilidad) { ret.visibilidad = values.visibilidad; }
     if (values.oferta) { ret.oferta = values.oferta; }
+    if (values.listarSoloParaCatalogo) { ret.listarSoloParaCatalogo = values.listarSoloParaCatalogo; }
     if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
     if (values.sentido) { ret.sentido = values.sentido; }
 
@@ -214,6 +222,10 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
     if (values.oferta) {
       this.appliedFilters.push({ label: '', value: 'Solo Ofertas' });
+    }
+
+    if (values.listarSoloParaCatalogo) {
+      this.appliedFilters.push({ label: '', value: 'Solo Catálogo' });
     }
 
     setTimeout(() => {

@@ -8,6 +8,8 @@ import { BusquedaProductoCriteria } from '../../models/criterias/busqueda-produc
 import {Sucursal} from '../../models/sucursal';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {SucursalesService} from '../../services/sucursales.service';
+import {Cliente} from '../../models/cliente';
+import {Movimiento} from '../../models/movimiento';
 
 @Component({
   selector: 'app-producto-modal',
@@ -31,6 +33,9 @@ export class ProductoModalComponent implements OnInit {
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
   sucursal: Sucursal = null;
+
+  cliente: Cliente = null;
+  movimiento: Movimiento = null;
 
   private pIdSucursal: number = null;
   set idSucursal(value: number) {
@@ -69,7 +74,8 @@ export class ProductoModalComponent implements OnInit {
       descripcion: this.busqueda,
       pagina: this.page,
     };
-    this.productosService.buscar(criteria)
+
+    this.productosService.buscar(criteria, this.cliente ? this.cliente.idCliente : null, this.movimiento)
       .pipe(
         finalize(() => {
           this.loading = false;
