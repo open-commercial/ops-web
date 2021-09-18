@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './filtros-form.component.html',
   styleUrls: ['./filtros-form.component.scss']
 })
-export class FiltrosFormComponent implements OnInit {
+export class FiltrosFormComponent {
   private pform: FormGroup;
 
   @Input()
@@ -19,11 +19,6 @@ export class FiltrosFormComponent implements OnInit {
 
   @Output() filterBtnClick = new EventEmitter<void>();
   @Output() resetBtnClick = new EventEmitter<void>();
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
   filter() {
     this.filterBtnClick.emit();

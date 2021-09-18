@@ -8,13 +8,13 @@ import {NotasService} from '../../services/notas.service';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevaNotaDebitoSinRecibo} from '../../models/nueva-nota-debito-sin-recibo';
-import {NotaDebitoVentaModalComponent} from '../nota-debito-venta-modal/nota-debito-venta-modal.component';
+import {NotaDebitoVentaModalDirective} from '../nota-debito-venta-modal/nota-debito-venta-modal.directive';
 
 @Component({
   selector: 'app-nota-debito-venta-sin-recibo-modal',
-  templateUrl: '../nota-debito-venta-modal/nota-debito-venta-modal.component.html'
+  templateUrl: '../nota-debito-modal/nota-debito-modal.component.html'
 })
-export class NotaDebitoVentaSinReciboModalComponent extends NotaDebitoVentaModalComponent implements OnInit {
+export class NotaDebitoVentaSinReciboModalComponent extends NotaDebitoVentaModalDirective implements OnInit {
   constructor(public activeModal: NgbActiveModal,
               protected fb: FormBuilder,
               protected loadingOverlayService: LoadingOverlayService,
@@ -41,10 +41,10 @@ export class NotaDebitoVentaSinReciboModalComponent extends NotaDebitoVentaModal
     this.loadingOverlayService.activate();
     this.notasService.calcularNotaDebitoSinRecibo(nnd)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        nd => this.activeModal.close([nnd, nd]),
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
+      .subscribe({
+        next: nd => this.activeModal.close([nnd, nd]),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 }

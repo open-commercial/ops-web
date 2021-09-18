@@ -1,5 +1,4 @@
 import {NotaCredito} from '../../models/nota';
-import {Cliente} from '../../models/cliente';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../../services/notas.service';
@@ -7,15 +6,10 @@ import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import { OnInit, Directive } from '@angular/core';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
-import {ClientesService} from '../../services/clientes.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 @Directive()
-export default abstract class NotaCreditoVentaDetalleModalComponent implements OnInit {
+export default abstract class NotaCreditoDetalleModalDirective implements OnInit {
   notaCredito: NotaCredito;
-  idCliente: number;
-  cliente: Cliente;
   form: FormGroup;
   submitted = false;
   loading = false;
@@ -24,21 +18,13 @@ export default abstract class NotaCreditoVentaDetalleModalComponent implements O
                         protected fb: FormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
-                        protected mensajeService: MensajeService,
-                        protected clientesService: ClientesService) {}
+                        protected mensajeService: MensajeService) {}
   ngOnInit() {
     this.createForm();
-    if (!this.cliente && this.idCliente) {
-      this.loadingOverlayService.activate();
-      this.clientesService.getCliente(this.idCliente)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (c: Cliente) => this.cliente = c,
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        )
-      ;
-    }
+    this.getModel();
   }
+
+  abstract getModel();
 
   getTitle() {
     let title = 'Nueva Nota de Crédito ';

@@ -1,0 +1,22 @@
+<strong>Proveedor</strong>
+<table class="table table-bordered table-sm" *ngIf="proveedor">
+  <caption class="sr-only">Detalles de Cliente</caption>
+  <tbody class="thead-dark">
+  <tr>
+    <th scope="row" class="w-25">Nombre</th>
+    <td>{{ proveedor.razonSocial }}</td>
+  </tr>
+  <tr>
+    <th scope="row">Ubicación</th>
+    <td>{{ helper.formatUbicacion(proveedor.ubicacion) }}</td>
+  </tr>
+  <tr>
+    <th scope="row">Categoría IVA</th>
+    <td>{{ helper.categoriaIVALabel(proveedor.categoriaIVA) | titlecase }}</td>
+  </tr>
+  <tr>
+    <th scope="row">CUIT ó DNI</th>
+    <td>{{ proveedor.idFiscal }}</td>
+  </tr>
+  </tbody>
+</table>

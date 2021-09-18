@@ -1,0 +1,126 @@
+<div class="modal-header">
+  <h4 class="modal-title" *ngIf="notaCredito">{{ getTitle() }}</h4>
+</div>
+<div class="modal-body">
+  <div *ngIf="loading" class="text-center">
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+  </div>
+  <app-proveedor-detalle [proveedor]="proveedor" *ngIf="proveedor && !loading"></app-proveedor-detalle>
+  <div class="renglones">
+    <div class="renglon" *ngFor="let r of notaCredito.renglonesNotaCredito">
+      <div class="d-flex flex-row flex-wrap">
+        <span class="mr-2" *ngIf="r.codigoItem"><span class="font-weight-bold">Código: </span>{{ r.codigoItem }}</span>
+        <span *ngIf="r.descripcionItem"><span class="font-weight-bold">Descripción: </span>{{ r.descripcionItem }} <span *ngIf="r.medidaItem">({{ r.medidaItem }})</span></span>
+      </div>
+      <div class="d-flex flex-column flex-md-row">
+        <div class="mr-2"><span class="font-weight-bold">Cant: </span>{{ r.cantidad | number:'1.0-2' }}</div>
+        <div class="mr-2"><span class="font-weight-bold">P.U.: </span>{{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="mr-2" *ngIf="r.descuentoPorcentaje"><span class="font-weight-bold">% Desc.: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}</div>
+        <div class="flex-fill text-right"><span class="font-weight-bold">Importe </span>{{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}</div>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading">
+    <div class="form-group">
+      <label for="fecha">Fecha</label>
+      <div class="input-group">
+        <input class="form-control" readonly id="fecha" formControlName="fecha"
+               [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
+               [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          </button>
+          <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+            <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+          </button>
+        </div>
+      </div>
+      <div class="d-block invalid-feedback" *ngIf="submitted && f.fecha.errors">
+        <div *ngIf="f.fecha.errors.required">Requerido</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <label for="nroNota">Nº</label>
+          <input class="form-control" type="number" min="0" id="nroNota" formControlName="nroNota"
+                 [ngClass]="{ 'is-invalid': submitted && f.nroNota.errors }"/>
+          <div class="invalid-feedback" *ngIf="submitted && f.nroNota.errors">
+            <div *ngIf="f.nroNota.errors.required">Requerido</div>
+            <div *ngIf="f.nroNota.errors.min">Mínimo {{ f.nroNota.errors.min.min }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="form-group">
+          <label for="serie">Serie</label>
+          <input class="form-control" type="number" min="0" id="serie" formControlName="serie"
+                 [ngClass]="{ 'is-invalid': submitted && f.serie.errors }"/>
+          <div class="invalid-feedback" *ngIf="submitted && f.serie.errors">
+            <div *ngIf="f.serie.errors.required">Requerido</div>
+            <div *ngIf="f.serie.errors.min">Mínimo {{ f.serie.errors.min.min }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cae">CAE</label>
+      <input class="form-control" type="number" min="0" id="cae" formControlName="cae"
+             [ngClass]="{ 'is-invalid': submitted && f.cae.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.cae.errors">
+        <div *ngIf="f.cae.errors.required">Requerido</div>
+        <div *ngIf="f.cae.errors.min">Mínimo {{ f.cae.errors.min.min }}</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="motivo">Motivo</label>
+      <input type="text" class="form-control" id="motivo" formControlName="motivo"
+             [ngClass]="{ 'is-invalid': submitted && f.motivo.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.motivo.errors">
+        <div *ngIf="f.motivo.errors.required">Requerido</div>
+      </div>
+    </div>
+  </form>
+  <table class="table table-bordered table-sm" *ngIf="proveedor">
+    <caption class="sr-only">Resumen de Totales</caption>
+    <tbody class="thead-dark">
+    <tr>
+      <th scope="row" class="w-25">Subtotal</th>
+      <td>{{ notaCredito.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="w-25">% Descuento</th>
+      <td>{{ notaCredito.descuentoNeto | currency: 'ARS':'symbol':'1.0-2'  }} ({{ notaCredito.descuentoPorcentaje | number:'1.0-2' }} %)</td>
+    </tr>
+    <tr>
+      <th scope="row" class="w-25">% Recargo</th>
+      <td>{{ notaCredito.recargoNeto | currency: 'ARS':'symbol':'1.0-2'  }} ({{ notaCredito.recargoPorcentaje | number:'1.0-2' }} %)</td>
+    </tr>
+    <tr>
+      <th scope="row" class="w-25">Subtotal Bruto</th>
+      <td>{{ notaCredito.subTotalBruto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="w-25">IVA 10.5%</th>
+      <td>{{ notaCredito.iva105Neto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="w-25">IVA 21%</th>
+      <td>{{ notaCredito.iva21Neto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="w-25">Total</th>
+      <td>{{ notaCredito.total | currency: 'ARS':'symbol':'1.0-2'  }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!form.valid">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Aceptar
+  </button>
+</div>

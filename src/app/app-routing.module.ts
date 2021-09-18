@@ -133,7 +133,10 @@ const routes: Routes = [
           { path: '', component: NotasDebitoCompraComponent },
           { path: 'ver/:id', component: VerNotaComponent }
         ]
-      }
+      },
+      { path: 'proveedores',
+        loadChildren: () => import('./feature-modules/cuentas-corrientes-proveedor/cuentas-corrientes-proveedor.module')
+          .then(m => m.CuentasCorrientesProveedorModule) },
     ]
   },
   { path: '**', redirectTo: '' }

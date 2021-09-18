@@ -102,4 +102,14 @@ export class NotasService {
   crearNotaDebitoDeRecibo(nnddr: NuevaNotaDebitoDeRecibo): Observable<NotaDebito> {
     return this.http.post<NotaDebito>(this.urlNotaDebito, nnddr);
   }
+
+  getTiposDeNotaCreditoProveedorSucursal(idProveedor: number, idSucursal: number): Observable<TipoDeComprobante[]> {
+    const qs = HelperService.getQueryString({ idProveedor, idSucursal });
+    return this.http.get<TipoDeComprobante[]>(`${this.url}/proveedores/tipos/credito?${qs}`);
+  }
+
+  getTiposDeNotaDebitoProveedorSucursal(idProveedor: number, idSucursal: number): Observable<TipoDeComprobante[]> {
+    const qs = HelperService.getQueryString({ idProveedor, idSucursal });
+    return this.http.get<TipoDeComprobante[]>(`${this.url}/proveedores/tipos/debito?${qs}`);
+  }
 }

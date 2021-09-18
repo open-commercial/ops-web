@@ -9,7 +9,7 @@ import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import Big from 'big.js';
 import {NuevaNotaCreditoSinFactura} from '../../models/nueva-nota-credito-sin-factura';
-import NotaCreditoVentaDetalleModalComponent from '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal-component';
+import NotaCreditoVentaDetalleModalDirective from '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal-directive';
 import {ClientesService} from '../../services/clientes.service';
 
 Big.DP = 15;
@@ -17,9 +17,9 @@ Big.DP = 15;
 @Component({
   selector: 'app-nota-credito-venta-detalle-sin-factura-modal',
   templateUrl: '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal.component.html',
-  styleUrls: ['../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal.component.scss']
+  styleUrls: ['../nota-credito-detalle-modal/nota-credito-detalle-modal.component.scss']
 })
-export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCreditoVentaDetalleModalComponent implements OnInit {
+export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCreditoVentaDetalleModalDirective implements OnInit {
   nncsf: NuevaNotaCreditoSinFactura;
 
   constructor(public activeModal: NgbActiveModal,
@@ -41,10 +41,10 @@ export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCredito
     this.loadingOverlayService.activate();
     this.notasService.crearNotaCerditoSinFactura(this.nncsf)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (nc: NotaCredito) => this.activeModal.close(nc),
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
+      .subscribe({
+        next: (nc: NotaCredito) => this.activeModal.close(nc),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 }

@@ -2,7 +2,7 @@
   <div class="alert alert-danger">No fields template defined</div>
 </ng-template>
 
-<form (ngSubmit)="filter()" class="app-filtros-form border-bottom pt-0 pb-2 container-fluid" *ngIf="form">
+<form [formGroup]="form" (submit)="filter()" class="app-filtros-form border-bottom pt-0 pb-2 container-fluid" *ngIf="form">
   <ng-container *ngTemplateOutlet="fieldsTemplate ? fieldsTemplate : noFields">
   </ng-container>
   <ul class="text-right list-inline mb-0">

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import NotaCreditoVentaDetalleModalComponent from '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal-component';
+import NotaCreditoVentaDetalleModalDirective from '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal-directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../services/notas.service';
@@ -14,9 +14,9 @@ import {ClientesService} from '../../services/clientes.service';
 @Component({
   selector: 'app-nota-credito-venta-detalle-factura-modal',
   templateUrl: '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal.component.html',
-  styleUrls: ['../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal.component.scss']
+  styleUrls: ['../nota-credito-detalle-modal/nota-credito-detalle-modal.component.scss']
 })
-export class NotaCreditoVentaDetalleFacturaModalComponent extends NotaCreditoVentaDetalleModalComponent implements OnInit {
+export class NotaCreditoVentaDetalleFacturaModalComponent extends NotaCreditoVentaDetalleModalDirective implements OnInit {
 
   nncf: NuevaNotaCreditoDeFactura;
 

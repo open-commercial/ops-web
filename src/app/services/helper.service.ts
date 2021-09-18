@@ -35,6 +35,11 @@ export class HelperService {
     return [dateObj.day, dateObj.month, dateObj.year ].join('/');
   }
 
+  static getNgbDateFromDate(date: Date): NgbDate {
+    if (!date) { return null; }
+    return new NgbDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
+  }
+
   static formatNumFactura(nSerie: number, nFac: number) {
     const nSerieString = nSerie !== null && nSerie >= 0 ? ('000' + nSerie).slice(-4) : 'XXXX';
     const nFacString = nFac !== null && nFac >= 0 ? ('0000000' + nFac).slice(-8) : 'XXXXXXXX';

@@ -3,7 +3,7 @@ import { Ubicacion } from './ubicacion';
 
 export interface Proveedor {
   idProveedor: number;
-  nroProveedor: string;
+  nroProveedor?: string;
   razonSocial: string;
   categoriaIVA: CategoriaIVA;
   idFiscal: number;
@@ -13,6 +13,6 @@ export interface Proveedor {
   email: string;
   web: string;
   ubicacion: Ubicacion;
-  idEmpresa: number;
-  nombreEmpresa: string;
+  idEmpresa?: number;
+  nombreEmpresa?: string;
 }

@@ -23,4 +23,13 @@ export class ProveedoresService {
   getProveedor(idProveedor: number): Observable<Proveedor> {
     return this.http.get<Proveedor>(this.url + `/${idProveedor}`);
   }
+
+  guardarProveedor(proveedor: Proveedor): Observable<Proveedor> {
+    const action = proveedor.idProveedor ? 'put' : 'post';
+    return this.http[action]<Proveedor>(this.url, proveedor);
+  }
+
+  eliminarProveedor(idProveedor: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idProveedor}`);
+  }
 }

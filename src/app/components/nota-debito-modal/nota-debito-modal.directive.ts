@@ -5,20 +5,16 @@ import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {SucursalesService} from '../../services/sucursales.service';
 import {NotasService} from '../../services/notas.service';
-import {Cliente} from '../../models/cliente';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {HelperService} from '../../services/helper.service';
 
 @Directive()
-export abstract class NotaDebitoVentaModalComponent implements OnInit {
+export abstract class NotaDebitoModalDirective implements OnInit {
   form: FormGroup;
   submitted = false;
   loading = false;
 
   title = 'Nueva Nota de Débito';
-  cliente: Cliente;
   tiposDeComprobantes: TipoDeComprobante[] = [];
 
   helper = HelperService;
@@ -32,16 +28,7 @@ export abstract class NotaDebitoVentaModalComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.loading = true;
-    this.notasService.getTiposDeNotaDebitoClienteSucursal(
-      this.cliente.idCliente, this.sucursalesService.getIdSucursal()
-    )
-      .pipe(finalize(() => this.loading = false))
-      .subscribe(
-        data => this.tiposDeComprobantes = data,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
-    ;
+    this.getTiposDeComprobantes();
   }
 
   createForm() {
@@ -60,5 +47,6 @@ export abstract class NotaDebitoVentaModalComponent implements OnInit {
     }
   }
 
+  abstract getTiposDeComprobantes();
   abstract doSubmit();
 }

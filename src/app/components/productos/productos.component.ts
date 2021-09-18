@@ -240,7 +240,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
 
   eliminarProducto(producto: Producto) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
       return;
     }
 

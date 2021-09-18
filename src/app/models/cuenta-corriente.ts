@@ -1,4 +1,5 @@
 import { Cliente } from './cliente';
+import {Proveedor} from './proveedor';
 
 export interface CuentaCorriente {
   idCuentaCorriente: number;
@@ -10,4 +11,8 @@ export interface CuentaCorriente {
 
 export interface CuentaCorrienteCliente extends CuentaCorriente {
   cliente: Cliente;
+}
+
+export interface CuentaCorrienteProveedor extends CuentaCorriente {
+  proveedor: Proveedor;
 }

@@ -24,6 +24,7 @@ import {AuthService} from '../../services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {OPOption, OptionPickerModalComponent} from '../option-picker-modal/option-picker-modal.component';
 import { saveAs } from 'file-saver';
+import {HelperService} from '../../services/helper.service';
 
 @Component({
   selector: 'app-cuentas-corrientes-cliente',
@@ -58,6 +59,8 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
   sentidoAplicado = '';
   @ViewChild('ordernarPorCCC') ordenarPorCCCElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoCCC') sentidoCCCElement: FiltroOrdenamientoComponent;
+
+  helper = HelperService;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -292,7 +295,7 @@ export class CuentasCorrientesClienteComponent extends ListadoBaseComponent impl
 
   eliminarCliente(cliente: Cliente) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para eliminar clientes.', MensajeModalType.ERROR);
       return;
     }
 

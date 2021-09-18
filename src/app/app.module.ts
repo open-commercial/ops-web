@@ -11,22 +11,6 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgBoostrapModule } from './modules/ng-boostrap.module';
 
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import {
-  faBars, faCircleNotch, faFileInvoice, faFilter,
-  faSearch, faTrash, faCalendar, faPortrait,
-  faTimes, faCheck, faExclamationTriangle, faCashRegister,
-  faClipboardList, faPlus, faBarcode, faEdit,
-  faBoxOpen, faMinus, faStore, faUser,
-  faSignOutAlt, faInfoCircle, faQuestionCircle, faTimesCircle,
-  faFileSignature, faFileDownload, faChevronLeft, faIndustry ,
-  faSuitcase, faPen, faEnvelope, faLink,
-  faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
-  faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
-  faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
-  faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft
-} from '@fortawesome/free-solid-svg-icons';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
@@ -67,10 +51,6 @@ import { ProductosHomeComponent } from './components/productos-home/productos-ho
 import { ProductosComponent } from './components/productos/productos.component';
 import { VerProductoComponent } from './components/ver-producto/ver-producto.component';
 import { ProductoComponent } from './components/producto/producto.component';
-import { FiltroOrdenamientoComponent } from './components/filtro-ordenamiento/filtro-ordenamiento.component';
-import { FiltrosFormComponent } from './components/filtros-form/filtros-form.component';
-import { FiltrosAplicadosComponent } from './components/filtros-aplicados/filtros-aplicados.component';
-import { ListaComponent } from './components/lista/lista.component';
 import { TransportistaComponent } from './components/transportista/transportista.component';
 import { PagosComponent } from './components/pagos/pagos.component';
 import { TraspasosComponent } from './components/traspasos/traspasos.component';
@@ -78,7 +58,6 @@ import { TraspasosHomeComponent } from './components/traspasos-home/traspasos-ho
 import { VerTraspasoComponent } from './components/ver-traspaso/ver-traspaso.component';
 import { TraspasoComponent } from './components/traspaso/traspaso.component';
 import { ClienteInfoComponent } from './components/cliente-info/cliente-info.component';
-import { BatchActionsBoxComponent } from './components/batch-actions-box/batch-actions-box.component';
 import { ProductoMultiEditorComponent } from './components/producto-multi-editor/producto-multi-editor.component';
 import { CalculosPrecioFormComponent } from './components/calculos-precio-form/calculos-precio-form.component';
 import { CajasComponent } from './components/cajas/cajas.component';
@@ -94,7 +73,6 @@ import { RemitoComponent } from './components/remito/remito.component';
 import { CuentasCorrientesClienteComponent } from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
 import { CuentasCorrientesClienteHomeComponent } from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
 import { ClienteComponent } from './components/cliente/cliente.component';
-import { UbicacionFormFieldComponent } from './components/ubicacion-form-field/ubicacion-form-field.component';
 import { UsuarioFormComponent } from './components/usuario-form/usuario-form.component';
 import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
 import { OptionPickerModalComponent } from './components/option-picker-modal/option-picker-modal.component';
@@ -117,162 +95,140 @@ import { NotasCreditoCompraComponent } from './components/notas-credito-compra/n
 import { NotasCreditoCompraHomeComponent } from './components/notas-credito-compra-home/notas-credito-compra-home.component';
 import { NotasDebitoCompraHomeComponent } from './components/notas-debito-compra-home/notas-debito-compra-home.component';
 import { NotasDebitoCompraComponent } from './components/notas-debito-compra/notas-debito-compra.component';
+import {ShareModule} from './modules/share.module';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    SideNavComponent,
-    HomeComponent,
-    PedidosComponent,
-    ClienteFiltroComponent,
-    UsuarioFiltroComponent,
-    ProductoFiltroComponent,
-    RangoFechaFiltroComponent,
-    FacturasVentaComponent,
-    FacturasCompraComponent,
-    ProveedorFiltroComponent,
-    NavBarComponent,
-    PedidoComponent,
-    ProductoModalComponent,
-    BusquedaCuentaCorrienteClienteComponent,
-    CantidadProductoModalComponent,
-    CuentaCorrienteClienteModalComponent,
-    UbicacionFacturacionComponent,
-    UbicacionEnvioComponent,
-    UbicacionModalComponent,
-    EliminarRenglonPedidoModalComponent,
-    MensajeModalComponent,
-    PedidosHomeComponent,
-    VerPedidoComponent,
-    FacturaVentaComponent,
-    FacturasVentaHomeComponent,
-    ClienteModalComponent,
-    UsuarioModalComponent,
-    ProveedorModalComponent,
-    MensajeAsicronicoComponent,
-    ProductosHomeComponent,
-    ProductosComponent,
-    BusquedaProductoComponent,
-    DisponibilidadStockModalComponent,
-    VerFacturaComponent,
-    FacturasCompraHomeComponent,
-    LoadingOverlayComponent,
-    ProductosHomeComponent,
-    ProductosComponent,
-    VerProductoComponent,
-    ProductoComponent,
-    FiltroOrdenamientoComponent,
-    FiltrosFormComponent,
-    FiltrosAplicadosComponent,
-    ListaComponent,
-    TransportistaComponent,
-    PagosComponent,
-    TraspasosComponent,
-    TraspasosHomeComponent,
-    VerTraspasoComponent,
-    TraspasoComponent,
-    ClienteInfoComponent,
-    BatchActionsBoxComponent,
-    ProductoMultiEditorComponent,
-    CalculosPrecioFormComponent,
-    CajasComponent,
-    CajasHomeComponent,
-    MontoModalComponent,
-    VerCajaComponent,
-    MovimientoCajaComponent,
-    NuevoGastoModalComponent,
-    RemitosComponent,
-    RemitosHomeComponent,
-    VerRemitoComponent,
-    RemitoComponent,
-    CuentasCorrientesClienteComponent,
-    CuentasCorrientesClienteHomeComponent,
-    ClienteComponent,
-    UbicacionFormFieldComponent,
-    UsuarioFormComponent,
-    NewOrUpdateUsuarioModalComponent,
-    OptionPickerModalComponent,
-    CuentaCorrienteClienteComponent,
-    NotasDebitoVentaHomeComponent,
-    NotasDebitoVentaComponent,
-    NotasCreditoVentaHomeComponent,
-    NotasCreditoVentaComponent,
-    NotaCreditoVentaSinFacturaModalComponent,
-    NotaCreditoVentaDetalleSinFacturaModalComponent,
-    ClienteDetalleComponent,
-    NotaCreditoVentaFacturaModalComponent,
-    NotaCreditoVentaDetalleFacturaModalComponent,
-    NotaDebitoVentaSinReciboModalComponent,
-    NotaDebitoVentaReciboModalComponent,
-    NotaDebitoVentaDetalleSinReciboModalComponent,
-    NotaDebitoVentaDetalleReciboModalComponent,
-    VerNotaComponent,
-    NotasCreditoCompraComponent,
-    NotasCreditoCompraHomeComponent,
-    NotasDebitoCompraHomeComponent,
-    NotasDebitoCompraComponent,
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgSelectModule,
-    NgBoostrapModule,
-    FontAwesomeModule,
-    AppRoutingModule
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'es-AR' },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-  ],
-  entryComponents: [
-    ProductoModalComponent,
-    CantidadProductoModalComponent,
-    CuentaCorrienteClienteModalComponent,
-    UbicacionModalComponent,
-    EliminarRenglonPedidoModalComponent,
-    MensajeModalComponent,
-    ClienteModalComponent,
-    UsuarioModalComponent,
-    ProveedorModalComponent,
-    DisponibilidadStockModalComponent,
-    MontoModalComponent,
-    NuevoGastoModalComponent,
-    NewOrUpdateUsuarioModalComponent,
-    OptionPickerModalComponent,
-    NotaCreditoVentaSinFacturaModalComponent,
-    NotaCreditoVentaDetalleSinFacturaModalComponent,
-    NotaCreditoVentaFacturaModalComponent,
-    NotaCreditoVentaDetalleFacturaModalComponent,
-    NotaDebitoVentaSinReciboModalComponent,
-    NotaDebitoVentaReciboModalComponent,
-    NotaDebitoVentaDetalleSinReciboModalComponent,
-    NotaDebitoVentaDetalleReciboModalComponent,
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        SideNavComponent,
+        HomeComponent,
+        PedidosComponent,
+        ClienteFiltroComponent,
+        UsuarioFiltroComponent,
+        ProductoFiltroComponent,
+        RangoFechaFiltroComponent,
+        FacturasVentaComponent,
+        FacturasCompraComponent,
+        ProveedorFiltroComponent,
+        NavBarComponent,
+        PedidoComponent,
+        ProductoModalComponent,
+        BusquedaCuentaCorrienteClienteComponent,
+        CantidadProductoModalComponent,
+        CuentaCorrienteClienteModalComponent,
+        UbicacionFacturacionComponent,
+        UbicacionEnvioComponent,
+        UbicacionModalComponent,
+        EliminarRenglonPedidoModalComponent,
+        MensajeModalComponent,
+        PedidosHomeComponent,
+        VerPedidoComponent,
+        FacturaVentaComponent,
+        FacturasVentaHomeComponent,
+        ClienteModalComponent,
+        UsuarioModalComponent,
+        ProveedorModalComponent,
+        MensajeAsicronicoComponent,
+        ProductosHomeComponent,
+        ProductosComponent,
+        BusquedaProductoComponent,
+        DisponibilidadStockModalComponent,
+        VerFacturaComponent,
+        FacturasCompraHomeComponent,
+        LoadingOverlayComponent,
+        ProductosHomeComponent,
+        ProductosComponent,
+        VerProductoComponent,
+        ProductoComponent,
+        TransportistaComponent,
+        PagosComponent,
+        TraspasosComponent,
+        TraspasosHomeComponent,
+        VerTraspasoComponent,
+        TraspasoComponent,
+        ClienteInfoComponent,
+        ProductoMultiEditorComponent,
+        CalculosPrecioFormComponent,
+        CajasComponent,
+        CajasHomeComponent,
+        MontoModalComponent,
+        VerCajaComponent,
+        MovimientoCajaComponent,
+        NuevoGastoModalComponent,
+        RemitosComponent,
+        RemitosHomeComponent,
+        VerRemitoComponent,
+        RemitoComponent,
+        CuentasCorrientesClienteComponent,
+        CuentasCorrientesClienteHomeComponent,
+        ClienteComponent,
+        UsuarioFormComponent,
+        NewOrUpdateUsuarioModalComponent,
+        OptionPickerModalComponent,
+        CuentaCorrienteClienteComponent,
+        NotasDebitoVentaHomeComponent,
+        NotasDebitoVentaComponent,
+        NotasCreditoVentaHomeComponent,
+        NotasCreditoVentaComponent,
+        NotaCreditoVentaSinFacturaModalComponent,
+        NotaCreditoVentaDetalleSinFacturaModalComponent,
+        ClienteDetalleComponent,
+        NotaCreditoVentaFacturaModalComponent,
+        NotaCreditoVentaDetalleFacturaModalComponent,
+        NotaDebitoVentaSinReciboModalComponent,
+        NotaDebitoVentaReciboModalComponent,
+        NotaDebitoVentaDetalleSinReciboModalComponent,
+        NotaDebitoVentaDetalleReciboModalComponent,
+        VerNotaComponent,
+        NotasCreditoCompraComponent,
+        NotasCreditoCompraHomeComponent,
+        NotasDebitoCompraHomeComponent,
+        NotasDebitoCompraComponent,
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgSelectModule,
+        NgBoostrapModule,
+        AppRoutingModule,
+        FontAwesomeModule,
+        ShareModule
+    ],
+    providers: [
+        {provide: LOCALE_ID, useValue: 'es-AR'},
+        {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    ],
+    entryComponents: [
+        ProductoModalComponent,
+        CantidadProductoModalComponent,
+        CuentaCorrienteClienteModalComponent,
+        UbicacionModalComponent,
+        EliminarRenglonPedidoModalComponent,
+        MensajeModalComponent,
+        ClienteModalComponent,
+        UsuarioModalComponent,
+        ProveedorModalComponent,
+        DisponibilidadStockModalComponent,
+        MontoModalComponent,
+        NuevoGastoModalComponent,
+        NewOrUpdateUsuarioModalComponent,
+        OptionPickerModalComponent,
+        NotaCreditoVentaSinFacturaModalComponent,
+        NotaCreditoVentaDetalleSinFacturaModalComponent,
+        NotaCreditoVentaFacturaModalComponent,
+        NotaCreditoVentaDetalleFacturaModalComponent,
+        NotaDebitoVentaSinReciboModalComponent,
+        NotaDebitoVentaReciboModalComponent,
+        NotaDebitoVentaDetalleSinReciboModalComponent,
+        NotaDebitoVentaDetalleReciboModalComponent,
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor(library: FaIconLibrary) {
-    library.addIcons(
-      faBars, faCircleNotch, faFileInvoice, faFilter,
-      faSearch, faTrash, faCalendar, faEye,
-      faEyeSlash, faPortrait, faTimes, faCheck,
-      faExclamationTriangle, faCashRegister, faClipboardList, faPlus,
-      faBarcode, faEdit, faBoxOpen, faMinus,
-      faStore, faUser, faSignOutAlt, faInfoCircle,
-      faQuestionCircle, faTimesCircle, faFileSignature,
-      faFileDownload, faChevronLeft, faIndustry, faSuitcase,
-      faPen, faEnvelope, faLink, faFolderOpen,
-      faCopy, faArrowAltCircleDown, faExchangeAlt, faCheckSquare,
-      faLockOpen, faLock, faSyncAlt, faCoins,
-      faChevronDown, faChevronUp, faCheckSquare, faFileExport,
-      faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
-      faBalanceScaleLeft
-    );
-  }
-}
+export class AppModule {}

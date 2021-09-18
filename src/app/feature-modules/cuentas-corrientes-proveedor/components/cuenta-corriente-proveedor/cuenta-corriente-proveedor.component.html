@@ -1,0 +1,103 @@
+<div class="app-cuenta-corriente-cliente my-3" *ngIf="ccp">
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'book']"></fa-icon>
+      Cuenta Corriente: {{ ccp.proveedor.razonSocial }}
+    </h1>
+    <div class="text-right m-0">
+      <button class="btn btn-primary ml-2" (click)="nuevaNotaCredito()"
+              placement="left" ngbPopover="Nueva Nota de Crédito" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
+      </button>
+      <button class="btn btn-primary ml-2" (click)="nuevaNotaDebito()"
+              placement="left" ngbPopover="Nueva Nota de Débito" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <app-proveedor-detalle [proveedor]="ccp.proveedor"></app-proveedor-detalle>
+  <div class="text-right mx-2">
+    SALDO: <span class="font-weight-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+  </div>
+  <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
+                  [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
+                  *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
+
+  <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
+  <ng-template #actions let-r="r">
+    <!--<button class="btn btn-primary mr-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
+            (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
+      <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
+    </button>
+    <button class="btn btn-primary mr-2" type="button"
+            ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
+            (click)="crearNotaDebitoRecibo(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
+      <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
+    </button>-->
+    <button class="btn btn-primary mr-2" type="button"
+            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+    <button class="btn btn-primary mr-2" type="button"
+            ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+    </button>
+  </ng-template>
+
+  <div class="table-responsive" *ngIf="renglones.length">
+    <table class="table table-bordered table-sm">
+      <caption class="sr-only">Movimientos</caption>
+      <thead class="thead-dark">
+      <tr>
+        <th scope="col" class="w-100"></th>
+        <th scope="col">Debe</th>
+        <th scope="col">Haber</th>
+        <th scope="col">Saldo</th>
+        <th scope="col" class="d-none d-sm-table-cell"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-template ngFor let-r [ngForOf]="renglones">
+        <tr>
+          <td>
+            <div class="d-flex flex-row align-items-center flex-wrap">
+              <span class="badge badge-secondary mr-2">
+                <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ r.fecha | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+              <span class="badge badge-pill badge-light border border-dark mr-2 my-1">
+                {{ helper.tipoComprobanteLabel(r.tipoComprobante) }}
+              </span>
+              <span class="text-nowrap font-weight-bold">Nº {{ r.serie }}-{{ r.numero }}</span>
+            </div>
+            <div class="d-flex flex-row align-items-center flex-wrap">
+              <div class="mr-2"><span class="font-weight-bold">Suc: </span>{{ r.nombreSucursal }}</div>
+              <div class="mr-2" *ngIf="r.descripcion"><span class="font-weight-bold">Detalle: </span>{{ r.descripcion }}</div>
+            </div>
+          </td>
+          <td class="text-right">{{ r.monto > 0 ? (r.monto | currency:'ARS':'symbol':'1.2-2') : '' }}</td>
+          <td class="text-right">{{ r.monto < 0 ? (r.monto * -1 | currency:'ARS':'symbol':'1.2-2') : '' }}</td>
+          <td class="text-right" [class.table-success]="r.saldo.toFixed(2) > 0" [class.table-danger]="r.saldo.toFixed(2) < 0">
+            {{ r.saldo | currency:'ARS':'symbol':'1.2-2' }}
+          </td>
+          <td class="text-right d-none d-md-table-cell text-nowrap">
+            <ng-container [ngTemplateOutlet]="actions" [ngTemplateOutletContext]="{r:r}"></ng-container>
+          </td>
+        </tr>
+        <tr class="d-md-none">
+          <td colspan="4" class="text-right">
+            <ng-container [ngTemplateOutlet]="actions" [ngTemplateOutletContext]="{r:r}"></ng-container>
+          </td>
+        </tr>
+      </ng-template>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert alert-info lead font-italic" *ngIf="!loadingOverlayService.isActive() && renglones.length <= 0">Sin Movimientos.</div>
+  <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
+                  [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
+                  *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
+</div>
