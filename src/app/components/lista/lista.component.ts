@@ -14,6 +14,10 @@ export class ListaComponent implements OnInit {
 
   @Output() pageChange = new EventEmitter<number>();
 
+  private pSize = 25;
+  @Input() set size(value: number) { this.pSize = value; }
+  get size(): number { return this.pSize; }
+
   private pItems = [];
   @Input() set items(value: any[]) { this.pItems = value; }
   get items() { return this.pItems; }
