@@ -117,6 +117,7 @@ import { NotasCreditoCompraComponent } from './components/notas-credito-compra/n
 import { NotasCreditoCompraHomeComponent } from './components/notas-credito-compra-home/notas-credito-compra-home.component';
 import { NotasDebitoCompraHomeComponent } from './components/notas-debito-compra-home/notas-debito-compra-home.component';
 import { NotasDebitoCompraComponent } from './components/notas-debito-compra/notas-debito-compra.component';
+import { SelectableListComponent } from './components/selectable-list/selectable-list.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -214,6 +215,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     NotasCreditoCompraHomeComponent,
     NotasDebitoCompraHomeComponent,
     NotasDebitoCompraComponent,
+    SelectableListComponent,
   ],
   imports: [
     BrowserModule,

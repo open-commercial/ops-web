@@ -1,21 +1,9 @@
-@import "../../../variables";
-
-.productos {
-  .producto {
-    &.selected {
-      .info {
-        background: $primary-color;
-      }
-    }
-    .form-check-input {
-      width: 0;
-      height: 0;
-      opacity: 0;
-    }
+.producto {
     .img-container {
       padding: 0.5rem;
       width: 5rem;
-      height: 5rem;
+      height: auto;
+      background: white;
       img {
         object-fit: contain;
         max-width: 100%;
@@ -32,6 +20,5 @@
         text-decoration: line-through;
       }
     }
-  }
 }
 

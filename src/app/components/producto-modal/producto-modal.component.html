@@ -1,65 +1,61 @@
-<div class="modal-body d-flex flex-column p-2">
+<div class="modal-header p-2 flex-column">
   <div class="input-group">
-    <label class="sr-only" for="pmProducto"></label>
-    <input #searchInput [(ngModel)]="busqueda" autocomplete="off" type="search" class="form-control" id="pmProducto" placeholder="Buscar Producto..."
-           (keyup.enter)="buscar()" [readOnly]="clearLoading || loading">
+    <label class="sr-only" for="searchTerm"></label>
+    <input [(ngModel)]="searchTerm" autocomplete="off" type="search" class="form-control" id="searchTerm" [placeholder]="searchInputPlaceholder"
+           (keyup.enter)="search()" [readOnly]="clearLoading || loading">
     <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="buscar()" [disabled]="clearLoading || loading">
+      <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
         <fa-icon [icon]="['fas', 'search']"></fa-icon>
       </button>
     </div>
   </div>
   <div class="mt-2 px-1 small" *ngIf="sucursal">Sucursal origen: <strong>{{ sucursal.nombre }}</strong></div>
+</div>
+<div class="modal-body d-flex flex-column p-2">
   <div *ngIf="clearLoading" class="text-center mt-3">
-    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" size="3x"></fa-icon>
   </div>
-  <form (submit)="seleccionarProducto()" class="flex-fill mt-2" *ngIf="!clearLoading && productos.length">
-    <div class="productos">
-      <div *ngFor="let p of productos; let f = first;" [class.border-top]="f" class="producto form-check border-bottom p-0"
-           [class.selected]="p && productoSeleccionado && p.idProducto === productoSeleccionado.idProducto">
-        <label class="form-check-label d-block" for="p_{{ p.idProducto }}">
-          <input class="form-check-input" type="radio" name="productos" id="p_{{ p.idProducto }}" value="{{ p.idProducto }}" (focus)="select(p)">
-          <span class="d-flex flex-row align-items-center">
-            <span class="img-container flex-grow-0 flex-shrink-0 d-flex align-items-center">
-              <img [src]="p.urlImagen ? p.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
-            </span>
-            <span class="flex-fill d-flex flex-column p-2 info">
-              <span>
-                <span class="mr-2 codigo">{{ p.codigo }}</span>
-                <span *ngIf="p.oferta" class="badge badge-success">OFERTA {{ p.porcentajeBonificacionOferta }}%</span>
-                <span *ngIf="!p.oferta && productosService.estaBonificado(p)" class="badge badge-success">BONIF. {{ p.porcentajeBonificacionPrecio }}%</span>
-              </span>
-              <span class="mr-2"><strong>{{ p.descripcion }}</strong></span>
-              <span class="mr-2">
-                <span>Stock: <strong>{{ getCantidadDisponible(p) }} {{ p.nombreMedida }}</strong></span>
-                <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantDisponibleOtrasSucursales(p) }} {{ p.nombreMedida }}</span>
-                <span> - Reservado: {{ p.cantidadReservada }} {{ p.nombreMedida }}</span>
-              </span>
-              <span *ngIf="p.porcentajeBonificacionOferta || p.porcentajeBonificacionPrecio">
-                <span *ngIf="p.bulto > 1">Llevando {{ p.bulto }} o más&nbsp;</span>
-                <span class="precio bonificado">$ {{ p.precioBonificado | number:'1.0-2':'es-AR' }}</span>
-              </span>
-              <span class="precio" [class.tachado]="!(p.bulto > 1) && (p.porcentajeBonificacionOferta || p.porcentajeBonificacionPrecio)">
-                $ {{p.precioLista | number:'1.0-2':'es-AR'}}
-              </span>
-            </span>
+  <div class="flex-fill mt-2" *ngIf="!clearLoading && items.length">
+    <ng-template #itemTemplate let-item>
+      <div class="d-flex flex-row align-items-center producto">
+        <span class="img-container flex-grow-0 flex-shrink-0 d-flex align-items-center align-self-stretch">
+          <img [src]="item.urlImagen ? item.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
+        </span>
+        <span class="flex-fill d-flex flex-column p-2 info">
+          <span>
+            <span class="mr-2 codigo">{{ item.codigo }}</span>
+            <span *ngIf="item.oferta" class="badge badge-success">OFERTA {{ item.porcentajeBonificacionOferta }}%</span>
+            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
           </span>
-        </label>
+          <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
+          <span class="mr-2">
+            <span>Stock: <strong>{{ getCantidadDisponible(item) }} {{ item.nombreMedida }}</strong></span>
+            <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantDisponibleOtrasSucursales(item) }} {{ item.nombreMedida }}</span>
+            <span> - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}</span>
+          </span>
+          <span *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">
+            <span *ngIf="item.bulto > 1">Llevando {{ item.bulto }} o más&nbsp;</span>
+            <span class="precio bonificado">$ {{ item.precioBonificado | number:'1.0-2':'es-AR' }}</span>
+          </span>
+          <span class="precio" [class.tachado]="!(item.bulto > 1) && (item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio)">
+            $ {{item.precioLista | number:'1.0-2':'es-AR'}}
+          </span>
+        </span>
       </div>
-    </div>
+    </ng-template>
+    <app-selectable-list #selectableList [items]="items" [itemTemplate]="itemTemplate"
+                         (selectedItemChange)="setSelectedItem($event)" (selectedWithEnter)="selectWithEnter($event)" (lastElementKeyDown)="loadMore()"></app-selectable-list>
     <div class="text-center pt-2">
       <fa-icon class="spinner-primary" *ngIf="loading" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
       <button type="button" class="btn btn-primary" (click)="loadMore()" *ngIf="!loading && (page + 1) < totalPages">Mas resultados</button>
     </div>
-    <button class="sr-only" type="submit"></button>
-  </form>
+  </div>
 </div>
 <div class="modal-footer p-2">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()" [disabled]="loading || clearLoading">
     <fa-icon [icon]="['fas', 'times']"></fa-icon>&nbsp;Cancelar
   </button>
-  <button type="button" class="btn btn-primary" (click)="seleccionarProducto()" [disabled]="!productoSeleccionado || loading || clearLoading">
+  <button type="button" class="btn btn-primary" (click)="selectItem()" [disabled]="!selectedItem || loading || clearLoading">
     <fa-icon [icon]="['fas', 'check']"></fa-icon>&nbsp;Seleccionar
   </button>
 </div>
-
