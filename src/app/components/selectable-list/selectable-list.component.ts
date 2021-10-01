@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
+import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
 
 @Component({
   selector: 'app-selectable-list',
   templateUrl: './selectable-list.component.html',
   styleUrls: ['./selectable-list.component.scss']
 })
-export class SelectableListComponent implements OnInit {
+export class SelectableListComponent {
   @Input() itemTemplate: TemplateRef<any>;
 
   private pItems: any[] = [];
@@ -19,11 +19,6 @@ export class SelectableListComponent implements OnInit {
   @Output() selectedItemChange = new EventEmitter<any>();
   @Output() selectedWithEnter = new EventEmitter<any>();
   @Output() lastElementKeyDown = new EventEmitter<void>();
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
   focusInEvent(item) {
     this.selectedItem = item;
@@ -47,14 +42,12 @@ export class SelectableListComponent implements OnInit {
         }
         break;
       default:
-      // code block
     }
   }
 
   focusNextSibling(element) {
     const nextSibling = element.nextElementSibling;
     if (!nextSibling) {
-      // nextSibling = element.parentNode ? element.parentNode.firstElementChild : null;
       this.lastElementKeyDown.emit();
       return;
     }

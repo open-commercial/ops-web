@@ -16,13 +16,11 @@
   </div>
   <div class="flex-fill mt-2" *ngIf="!clearLoading && items.length">
     <ng-template #itemTemplate let-item>
-<!--      <div class="d-flex flex-row align-items-center">-->
-        <div class="flex-fill d-flex flex-column proveedor">
-          <span class="mr-2 numero">#{{ item.nroProveedor }}</span>
-          <span class="mr-2" *ngIf="item.idFiscal">CUIT {{ item.idFiscal }}</span>
-          <span class="mr-2 nombre"><strong>{{ item.razonSocial }}</strong></span>
-        </div>
-<!--      </div>-->
+      <div class="flex-fill d-flex flex-column proveedor">
+        <span class="mr-2 numero">#{{ item.nroProveedor }}</span>
+        <span class="mr-2" *ngIf="item.idFiscal">CUIT {{ item.idFiscal }}</span>
+        <span class="mr-2 nombre"><strong>{{ item.razonSocial }}</strong></span>
+      </div>
     </ng-template>
     <app-selectable-list #selectableList [items]="items" [itemTemplate]="itemTemplate"
                          (selectedItemChange)="setSelectedItem($event)" (selectedWithEnter)="selectWithEnter($event)" (lastElementKeyDown)="loadMore()"></app-selectable-list>
