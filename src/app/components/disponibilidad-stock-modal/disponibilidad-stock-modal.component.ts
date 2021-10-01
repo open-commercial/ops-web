@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductoFaltante } from '../../models/producto-faltante';
 
@@ -7,11 +7,8 @@ import { ProductoFaltante } from '../../models/producto-faltante';
   templateUrl: './disponibilidad-stock-modal.component.html',
   styleUrls: ['./disponibilidad-stock-modal.component.scss']
 })
-export class DisponibilidadStockModalComponent implements OnInit {
+export class DisponibilidadStockModalComponent {
   data: ProductoFaltante[] = [];
 
   constructor(public activeModal: NgbActiveModal) { }
-
-  ngOnInit() {
-  }
 }

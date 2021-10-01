@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 
 @Component({
@@ -6,7 +6,7 @@ import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss']
 })
-export class ListaComponent implements OnInit {
+export class ListaComponent {
   displayPage = 1;
 
   @Input() infoTemplate: TemplateRef<any>;
@@ -38,9 +38,6 @@ export class ListaComponent implements OnInit {
   get batchActionKey(): BatchActionKey { return this.pBatchActionKey; }
 
   constructor(private batchActionsService: BatchActionsService) { }
-
-  ngOnInit() {
-  }
 
   cambioDePagina(dPage) {
     this.pageChange.emit(dPage - 1);

@@ -18,8 +18,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-ver-caja',
-  templateUrl: './ver-caja.component.html',
-  styleUrls: ['./ver-caja.component.scss']
+  templateUrl: './ver-caja.component.html'
 })
 export class VerCajaComponent implements OnInit, OnDestroy {
   estado = EstadoCaja;
@@ -134,7 +133,6 @@ export class VerCajaComponent implements OnInit, OnDestroy {
   panelBeforeChange($event) {
     if ($event.panelId === 'panel-0') {
       $event.preventDefault();
-      return;
     }
   }
 
@@ -163,7 +161,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
                 err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
               )
             ;
-          }, () => {});
+          }, () => { /* This is intentional */ });
         },
         err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       )
@@ -193,7 +191,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
           err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         )
       ;
-    }, () => {});
+    }, () => { /* This is intentional */ });
   }
 
 

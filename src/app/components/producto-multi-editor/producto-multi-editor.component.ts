@@ -126,7 +126,6 @@ export class ProductoMultiEditorComponent implements OnInit {
 
     if (!checked && !valueControl.disabled) {
       valueControl.disable();
-      return;
     }
   }
 

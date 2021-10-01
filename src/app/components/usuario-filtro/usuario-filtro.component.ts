@@ -13,7 +13,6 @@ import {UFProfile} from '../usuario-form/usuario-form.component';
 @Component({
   selector: 'app-usuario-filtro',
   templateUrl: './usuario-filtro.component.html',
-  styleUrls: ['./usuario-filtro.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

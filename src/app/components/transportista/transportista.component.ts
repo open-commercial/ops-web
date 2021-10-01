@@ -6,7 +6,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'app-transportista',
   templateUrl: './transportista.component.html',
-  styleUrls: ['./transportista.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -22,8 +21,8 @@ export class TransportistaComponent implements OnInit, ControlValueAccessor {
 
   value;
   isDisabled: boolean;
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { return; };
+  onTouch = () => { return; };
 
   constructor(private transportistasService: TransportistasService) { }
 

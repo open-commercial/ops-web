@@ -192,8 +192,7 @@ export class TraspasoComponent implements OnInit {
       } else {
         this.addRenglonTraspasoForm(p, cantidad);
       }
-    }, () => {
-    });
+    }, () => { return; });
   }
 
   searchRenglonByIdProducto(idProducto: number): AbstractControl {
