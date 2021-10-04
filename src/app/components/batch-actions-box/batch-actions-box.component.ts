@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { BatchActionKey, BatchActionsService } from '../../services/batch-actions.service';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {MensajeService} from '../../services/mensaje.service';
@@ -16,7 +16,7 @@ export interface ActionConfiguration {
   templateUrl: './batch-actions-box.component.html',
   styleUrls: ['./batch-actions-box.component.scss']
 })
-export class BatchActionsBoxComponent implements OnInit {
+export class BatchActionsBoxComponent {
   private pBatchActionKey: BatchActionKey = null;
   @Input() set batchActionKey(value: BatchActionKey) { this.pBatchActionKey = value; }
   get batchActionKey(): BatchActionKey { return this.pBatchActionKey; }
@@ -29,9 +29,6 @@ export class BatchActionsBoxComponent implements OnInit {
 
   constructor(public batchActionsService: BatchActionsService,
               private mensajeService: MensajeService) { }
-
-  ngOnInit() {
-  }
 
   clearAll() {
     const msg = '¿Desea quitar todos los elementos de la selección?';

@@ -83,8 +83,8 @@ export class BusquedaProductoComponent implements OnInit {
     if (this.movimiento) { modalRef.componentInstance.movimiento = this.movimiento; }
     modalRef.componentInstance.idSucursal = this.idSucursal;
     modalRef.result.then((p: Producto) => {
-        this.seleccion.emit(p);
-    }, () => {});
+      this.seleccion.emit(p);
+    }, () => { return; });
   }
 
   ingresarProductoDirecto($event) {

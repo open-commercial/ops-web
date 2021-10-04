@@ -11,6 +11,7 @@
       bottom: 0;
       right: -16rem;
       transition: right .25s;
+      z-index: 2;
       &.opened {
         right: 0;
       }

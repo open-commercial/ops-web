@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Ubicacion} from '../../models/ubicacion';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {UbicacionModalComponent} from '../ubicacion-modal-component/ubicacion-modal.component';
@@ -10,10 +10,9 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-ubicacion-facturacion-component',
-  templateUrl: './ubicacion-facturacion.component.html',
-  styleUrls: ['./ubicacion-facturacion.component.scss']
+  templateUrl: './ubicacion-facturacion.component.html'
 })
-export class UbicacionFacturacionComponent implements OnInit {
+export class UbicacionFacturacionComponent {
   ubicacion: Ubicacion = null;
   updating = false;
 
@@ -34,8 +33,6 @@ export class UbicacionFacturacionComponent implements OnInit {
   constructor(private modalService: NgbModal,
               private clientesService: ClientesService,
               private mensajeService: MensajeService) { }
-
-  ngOnInit() {}
 
   private setUbicacion(c: Cliente) {
     this.ubicacion = c && c.ubicacionFacturacion ? c.ubicacionFacturacion : null;

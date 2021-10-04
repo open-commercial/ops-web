@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-remitos-home',
-  templateUrl: './remitos-home.component.html',
-  styleUrls: ['./remitos-home.component.scss']
+  templateUrl: './remitos-home.component.html'
 })
-export class RemitosHomeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class RemitosHomeComponent {
 }

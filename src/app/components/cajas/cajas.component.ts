@@ -178,7 +178,7 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
           }
         )
       ;
-    }, () => {});
+    }, () => { return; });
   }
 
   reabrirCaja(caja: Caja) {
@@ -200,7 +200,7 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
           }
         )
       ;
-    }, () => {});
+    }, () => { return; });
   }
 
   verCaja(caja: Caja) {
@@ -231,6 +231,6 @@ export class CajasComponent extends ListadoBaseComponent implements OnInit {
           )
         ;
       }
-    }, () => {});
+    }, () => { return; });
   }
 }

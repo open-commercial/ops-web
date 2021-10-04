@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class FiltroOrdenamientoComponent implements OnInit, ControlValueAccessor {
+export class FiltroOrdenamientoComponent implements ControlValueAccessor {
   value;
   isDisabled = false;
 
@@ -33,12 +33,8 @@ export class FiltroOrdenamientoComponent implements OnInit, ControlValueAccessor
   private pLabelId = '';
   get labelId() { return this.pLabelId; }
 
-  onChange = (_: any) => { };
-  onTouch = () => { };
-  constructor() { }
-
-  ngOnInit() {
-  }
+  onChange = (_: any) => { return; };
+  onTouch = () => { return; };
 
   select($event) {
     this.value = $event.target.value;

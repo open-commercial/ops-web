@@ -169,7 +169,6 @@ export class RemitoComponent implements OnInit, OnDestroy {
     }
     if (!checked && !cantidadControl.disabled) {
       cantidadControl.disable();
-      return;
     }
   }
 

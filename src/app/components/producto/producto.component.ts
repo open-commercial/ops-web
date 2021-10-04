@@ -317,7 +317,6 @@ export class ProductoComponent implements OnInit {
     ) {
       this.submitted = true;
       $event.preventDefault();
-      return;
     }
   }
 

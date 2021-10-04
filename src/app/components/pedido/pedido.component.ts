@@ -571,7 +571,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
   showCantidadModal(idProducto: number, addCantidad = false) {
     const control = this.searchRPInRenglones(idProducto);
     const cPrevia = control ? control.get('renglonPedido').value.cantidad : 0;
-
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.addCantidad = addCantidad;
     modalRef.componentInstance.cantidadesInicialesPedido = this.cantidadesInicialesPedido;

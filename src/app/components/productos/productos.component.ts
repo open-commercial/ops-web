@@ -275,7 +275,7 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
           )
         ;
       }
-    }, () => {});
+    }, () => { return; });
   }
 
   eliminarSeleccionados(ids: number[]) {

@@ -35,8 +35,8 @@ export class CalculosPrecioFormComponent implements ControlValueAccessor {
   @Input() set submitted(value: boolean) { this.pSubmitted = value; }
   get submitted(): boolean { return this.pSubmitted; }
 
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  onChange: any = () => { return; };
+  onTouched: any = () => { return; };
 
   constructor(private fb: FormBuilder) {
     this.createForm();

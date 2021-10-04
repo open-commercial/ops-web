@@ -31,8 +31,8 @@ export class PagosComponent implements OnInit, ControlValueAccessor {
 
   value = [];
   isDisabled: boolean;
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { return; };
+  onTouch = () => { return; };
 
   constructor(private formasDePagoService: FormasDePagoService) { }
 

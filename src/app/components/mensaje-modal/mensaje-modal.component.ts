@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
@@ -14,16 +14,13 @@ export enum MensajeModalType {
   templateUrl: './mensaje-modal.component.html',
   styleUrls: ['./mensaje-modal.component.scss']
 })
-export class MensajeModalComponent implements OnInit {
+export class MensajeModalComponent {
   mensaje = '';
   type = MensajeModalType.INFO;
   typeEnum = MensajeModalType;
 
   constructor(public activeModal: NgbActiveModal,
               private sanitaizer: DomSanitizer) { }
-
-  ngOnInit() {
-  }
 
   getSafeHtml(): SafeHtml {
     return this.sanitaizer.bypassSecurityTrustHtml(this.mensaje);
