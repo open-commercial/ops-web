@@ -1,19 +1,15 @@
-import {Directive, OnInit} from '@angular/core';
-import NotaCreditoDetalleModalDirective from '../../../../components/nota-credito-detalle-modal/nota-credito-detalle-modal-directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, Validators} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
-import {ProveedoresService} from '../../../../services/proveedores.service';
+import {NotaDebitoDetalleModalDirective} from '../../../../components/nota-debito-detalle-modal/nota-debito-detalle-modal.directive';
+import {Directive, OnInit} from '@angular/core';
 import {Proveedor} from '../../../../models/proveedor';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
 import {HelperService} from '../../../../services/helper.service';
 
 @Directive()
-export default abstract class NotaCreditoCompraDetalleModalDirective extends NotaCreditoDetalleModalDirective  implements OnInit {
-  idProveedor: number;
+export abstract class NotaDebitoCompraDetalleModalDirective extends NotaDebitoDetalleModalDirective implements OnInit {
   proveedor: Proveedor;
   helper = HelperService;
 
@@ -21,13 +17,12 @@ export default abstract class NotaCreditoCompraDetalleModalDirective extends Not
                         protected fb: FormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
-                        protected mensajeService: MensajeService,
-                        protected proveedoresService: ProveedoresService)  {
+                        protected mensajeService: MensajeService) {
     super(activeModal, fb, notasService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
-    super.ngOnInit();
+    this.createForm();
   }
 
   createForm() {
@@ -38,18 +33,5 @@ export default abstract class NotaCreditoCompraDetalleModalDirective extends Not
       cae: [0, [Validators.required, Validators.min(0)]],
       motivo: ['Devolución', Validators.required],
     });
-  }
-
-  getModel() {
-    if (!this.proveedor && this.idProveedor) {
-      this.loadingOverlayService.activate();
-      this.proveedoresService.getProveedor(this.idProveedor)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe({
-          next: (p: Proveedor) => this.proveedor = p,
-          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
-    }
   }
 }

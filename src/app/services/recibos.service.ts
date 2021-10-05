@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Recibo} from '../models/recibo';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,11 @@ export class RecibosService {
 
   constructor(private http: HttpClient) { }
 
-  getReporteRecibo(idRecibo: number) {
+  getRecibo(idRecibo: number): Observable<Recibo> {
+    return this.http.get<Recibo>(`${this.url}/${idRecibo}`);
+  }
+
+  getReporteRecibo(idRecibo: number): Observable<Blob> {
     return this.http.get(`${this.url}/${idRecibo}/reporte`, {responseType: 'blob'});
   }
 

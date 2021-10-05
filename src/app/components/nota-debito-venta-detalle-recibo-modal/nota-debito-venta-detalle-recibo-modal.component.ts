@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotaDebitoVentaDetalleModalComponent} from '../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.component';
+import {NotaDebitoVentaDetalleModalDirective} from '../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../services/notas.service';
@@ -15,7 +15,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
   templateUrl: '../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.component.html',
   styleUrls: ['../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.component.scss']
 })
-export class NotaDebitoVentaDetalleReciboModalComponent extends NotaDebitoVentaDetalleModalComponent implements OnInit {
+export class NotaDebitoVentaDetalleReciboModalComponent extends NotaDebitoVentaDetalleModalDirective implements OnInit {
   nnddr: NuevaNotaDebitoDeRecibo;
 
   constructor(public activeModal: NgbActiveModal,

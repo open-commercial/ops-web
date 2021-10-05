@@ -13,6 +13,7 @@ import { ProveedorComponent } from './components/proveedor/proveedor.component';
 import { NotaCreditoCompraSinFacturaModalComponent } from './components/nota-credito-compra-sin-factura-modal/nota-credito-compra-sin-factura-modal.component';
 import { NotaCreditoCompraDetalleSinFacturaModalComponent } from './components/nota-credito-compra-detalle-sin-factura-modal/nota-credito-compra-detalle -sin-factura-modal.component';
 import { NotaDebitoCompraSinReciboModalComponent } from './components/nota-debito-compra-sin-recibo-modal/nota-debito-compra-sin-recibo-modal.component';
+import { NotaDebitoCompraDetalleSinReciboModalComponent } from './components/nota-debito-compra-detalle-sin-recibo-modal/nota-debito-compra-detalle-sin-recibo-modal.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { NotaDebitoCompraSinReciboModalComponent } from './components/nota-debit
     NotaCreditoCompraSinFacturaModalComponent,
     NotaCreditoCompraDetalleSinFacturaModalComponent,
     NotaDebitoCompraSinReciboModalComponent,
+    NotaDebitoCompraDetalleSinReciboModalComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { NotaDebitoCompraSinReciboModalComponent } from './components/nota-debit
     NotaCreditoCompraSinFacturaModalComponent,
     NotaCreditoCompraDetalleSinFacturaModalComponent,
     NotaDebitoCompraSinReciboModalComponent,
+    NotaDebitoCompraDetalleSinReciboModalComponent,
   ],
 })
 export class CuentasCorrientesProveedorModule { }

@@ -24,6 +24,7 @@ import {
   NotaDebitoCompraSinReciboModalComponent
 } from '../nota-debito-compra-sin-recibo-modal/nota-debito-compra-sin-recibo-modal.component';
 import {NuevaNotaDebitoSinRecibo} from '../../../../models/nueva-nota-debito-sin-recibo';
+import {NotaDebitoCompraDetalleSinReciboModalComponent} from '../nota-debito-compra-detalle-sin-recibo-modal/nota-debito-compra-detalle-sin-recibo-modal.component';
 
 @Component({
   selector: 'app-cuenta-corriente-proveedor',
@@ -48,6 +49,9 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
 
   allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToCrearNota = false;
+
+  allowedRolesToVerDetalle: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO/*, Rol.VENDEDOR*/ ];
+  hasRoleToVerDetalle = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -82,6 +86,7 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     }
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
+    this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
   }
 
   volverAlListado() {
@@ -130,9 +135,9 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.result.then((data: [NuevaNotaCreditoSinFactura, NotaCredito]) => {
       const modalRef2 = this.modalService.open(NotaCreditoCompraDetalleSinFacturaModalComponent, {backdrop: 'static', size: 'lg'});
-      modalRef2.componentInstance.nncsf = data[0];
-      modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.proveedor = this.ccp.proveedor;
+      modalRef2.componentInstance.notaCredito = data[1];
+      modalRef2.componentInstance.nncsf = data[0];
       modalRef2.result.then(
         (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
         () => { return; }
@@ -150,13 +155,62 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.result
       .then((data: [NuevaNotaDebitoSinRecibo, NotaDebito]) => {
-        console.log(data);
+        const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleSinReciboModalComponent, {backdrop: 'static', size: 'lg'});
+        modalRef2.componentInstance.proveedor = this.ccp.proveedor;
+        modalRef2.componentInstance.notaDebito = data[1];
+        modalRef2.componentInstance.nndsr = data[0];
+        modalRef2.result.then(
+          (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
+          () => { return; }
+        );
       }, () => { return; })
     ;
   }
 
   verDetalle(r: RenglonCuentaCorriente) {
-    console.log(r);
+    if (!this.hasRoleToVerDetalle) {
+      this.mensajeService.msg('No posee permiso para ver el detalle de movimientos', MensajeModalType.ERROR);
+      return;
+    }
+
+    const notasDeDebito: TipoDeComprobante[] = [
+      TipoDeComprobante.NOTA_DEBITO_A, TipoDeComprobante.NOTA_DEBITO_B, TipoDeComprobante.NOTA_DEBITO_C,
+      TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO, TipoDeComprobante.NOTA_DEBITO_X, TipoDeComprobante.NOTA_DEBITO_Y,
+    ];
+
+    const notasDeCredito: TipoDeComprobante[] = [
+      TipoDeComprobante.NOTA_CREDITO_A, TipoDeComprobante.NOTA_CREDITO_B, TipoDeComprobante.NOTA_CREDITO_C,
+      TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO, TipoDeComprobante.NOTA_CREDITO_X, TipoDeComprobante.NOTA_CREDITO_Y,
+    ];
+
+    const facturas: TipoDeComprobante[] = [
+      TipoDeComprobante.FACTURA_A,
+      TipoDeComprobante.FACTURA_B,
+      TipoDeComprobante.FACTURA_C,
+      TipoDeComprobante.FACTURA_X,
+      TipoDeComprobante.FACTURA_Y,
+      TipoDeComprobante.PRESUPUESTO,
+    ];
+
+    if (notasDeDebito.indexOf(r.tipoComprobante) >= 0) {
+      this.router.navigate(['/notas-debito-compra/ver', r.idMovimiento]);
+      return;
+    }
+
+    if (notasDeCredito.indexOf(r.tipoComprobante) >= 0) {
+      this.router.navigate(['/notas-credito-compra/ver', r.idMovimiento]);
+      return;
+    }
+
+    if (facturas.indexOf(r.tipoComprobante) >= 0) {
+      this.router.navigate(['/facturas-compra/ver', r.idMovimiento]);
+      return;
+    }
+
+    if (r.tipoComprobante === TipoDeComprobante.RECIBO) {
+      this.router.navigate(['/recibos/ver', r.idMovimiento]);
+      return;
+    }
   }
 
   eliminar(r: RenglonCuentaCorriente) {

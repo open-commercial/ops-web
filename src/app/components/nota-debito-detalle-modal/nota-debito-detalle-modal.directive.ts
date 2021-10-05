@@ -1,17 +1,15 @@
 import {NotaDebito} from '../../models/nota';
-import {Cliente} from '../../models/cliente';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../../services/notas.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import { OnInit, Directive } from '@angular/core';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
+import {Directive, OnInit} from '@angular/core';
 
 @Directive()
-export abstract class NotaDebitoVentaDetalleModalComponent implements OnInit {
+export abstract class NotaDebitoDetalleModalDirective implements OnInit {
   notaDebito: NotaDebito;
-  cliente: Cliente;
   form: FormGroup;
   submitted = false;
   loading = false;
@@ -56,7 +54,7 @@ export abstract class NotaDebitoVentaDetalleModalComponent implements OnInit {
         break;
       default:
         throw new Error('El tipo de comprobante no es una nota de débito.');
-        // break;
+      // break;
     }
     return title;
   }

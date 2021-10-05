@@ -8,14 +8,14 @@ import {NotaDebito} from '../../models/nota';
 import {NuevaNotaDebitoSinRecibo} from '../../models/nueva-nota-debito-sin-recibo';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {NotaDebitoVentaDetalleModalComponent} from '../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.component';
+import {NotaDebitoVentaDetalleModalDirective} from '../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.directive';
 
 @Component({
   selector: 'app-nota-debito-venta-detalle-sin-recibo-modal',
   templateUrl: '../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.component.html',
   styleUrls: ['../nota-debito-venta-detalle-modal/nota-debito-venta-detalle-modal.component.scss']
 })
-export class NotaDebitoVentaDetalleSinReciboModalComponent extends NotaDebitoVentaDetalleModalComponent implements OnInit {
+export class NotaDebitoVentaDetalleSinReciboModalComponent extends NotaDebitoVentaDetalleModalDirective implements OnInit {
   nndsr: NuevaNotaDebitoSinRecibo;
 
   constructor(public activeModal: NgbActiveModal,

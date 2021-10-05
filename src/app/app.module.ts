@@ -97,6 +97,7 @@ import { NotasDebitoCompraHomeComponent } from './components/notas-debito-compra
 import { NotasDebitoCompraComponent } from './components/notas-debito-compra/notas-debito-compra.component';
 import {ShareModule} from './modules/share.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { VerReciboComponent } from './components/ver-recibo/ver-recibo.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -188,6 +189,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NotasCreditoCompraHomeComponent,
         NotasDebitoCompraHomeComponent,
         NotasDebitoCompraComponent,
+        VerReciboComponent,
     ],
     imports: [
         BrowserModule,

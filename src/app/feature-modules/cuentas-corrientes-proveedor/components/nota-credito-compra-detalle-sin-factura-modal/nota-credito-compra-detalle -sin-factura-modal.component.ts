@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import NotaCreditoCompraDetalleModalDirective from '../nota-credito-compra-detalle-modal/nota-credito-compra-detalle-modal-directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
 import {ProveedoresService} from '../../../../services/proveedores.service';
 import {NuevaNotaCreditoSinFactura} from '../../../../models/nueva-nota-credito-sin-factura';
-import {HelperService} from '../../../../services/helper.service';
 import {finalize} from 'rxjs/operators';
 import {NotaCredito} from '../../../../models/nota';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
@@ -19,7 +18,6 @@ import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-mod
 })
 export class NotaCreditoCompraDetalleSinFacturaModalComponent extends NotaCreditoCompraDetalleModalDirective implements OnInit {
   nncsf: NuevaNotaCreditoSinFactura;
-  helper = HelperService;
 
   constructor(public activeModal: NgbActiveModal,
               protected fb: FormBuilder,
@@ -32,18 +30,6 @@ export class NotaCreditoCompraDetalleSinFacturaModalComponent extends NotaCredit
 
   ngOnInit(): void {
     super.ngOnInit();
-  }
-
-  createForm() {
-    console.log(this.notaCredito, this.nncsf);
-
-    this.form = this.fb.group({
-      fecha: [this.helper.getNgbDateFromDate(new Date()), Validators.required],
-      nroNota: [0 , [Validators.required, Validators.min(0)]],
-      serie: [0 , [Validators.required, Validators.min(0)]],
-      cae: [0, [Validators.required, Validators.min(0)]],
-      motivo: ['Devolución', Validators.required],
-    });
   }
 
   doSubmit() {
