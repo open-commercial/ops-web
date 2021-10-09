@@ -37,7 +37,7 @@ export class NotaCreditoVentaDetalleFacturaModalComponent extends NotaCreditoVen
     const formValues = this.form.value;
     this.nncf.motivo = formValues.motivo;
     this.loadingOverlayService.activate();
-    this.notasService.crearNotaCerditoDeFactura(this.nncf)
+    this.notasService.crearNotaCreditoDeFactura(this.nncf)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (nc: NotaCredito) => this.activeModal.close(nc),

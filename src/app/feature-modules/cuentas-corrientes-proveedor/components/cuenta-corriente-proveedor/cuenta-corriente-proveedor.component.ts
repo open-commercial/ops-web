@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
-import {Location} from '@angular/common';
+import {DatePipe, Location} from '@angular/common';
 import {CuentasCorrientesService} from '../../../../services/cuentas-corrientes.service';
 import {finalize} from 'rxjs/operators';
 import {CuentaCorrienteProveedor} from '../../../../models/cuenta-corriente';
@@ -25,11 +25,18 @@ import {
 } from '../nota-debito-compra-sin-recibo-modal/nota-debito-compra-sin-recibo-modal.component';
 import {NuevaNotaDebitoSinRecibo} from '../../../../models/nueva-nota-debito-sin-recibo';
 import {NotaDebitoCompraDetalleSinReciboModalComponent} from '../nota-debito-compra-detalle-sin-recibo-modal/nota-debito-compra-detalle-sin-recibo-modal.component';
+import {NotaCreditoCompraFacturaModalComponent} from '../nota-credito-compra-factura-modal/nota-credito-compra-factura-modal.component';
+import {NuevaNotaCreditoDeFactura} from '../../../../models/nueva-nota-credito-de-factura';
+import {NotaCreditoCompraDetalleFacturaModalComponent} from '../nota-credito-compra-detalle-factura-modal/nota-credito-compra-detalle-factura-modal.component';
+import {NotaDebitoCompraReciboModalComponent} from '../nota-debito-compra-recibo-modal/nota-debito-compra-recibo-modal.component';
+import {NuevaNotaDebitoDeRecibo} from '../../../../models/nueva-nota-debito-de-recibo';
+import {NotaDebitoCompraDetalleReciboModalComponent} from '../nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
 
 @Component({
   selector: 'app-cuenta-corriente-proveedor',
   templateUrl: './cuenta-corriente-proveedor.component.html',
-  styleUrls: ['./cuenta-corriente-proveedor.component.scss']
+  styleUrls: ['./cuenta-corriente-proveedor.component.scss'],
+  providers: [DatePipe]
 })
 export class CuentaCorrienteProveedorComponent implements OnInit {
   ccp: CuentaCorrienteProveedor;
@@ -53,6 +60,19 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
   allowedRolesToVerDetalle: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO/*, Rol.VENDEDOR*/ ];
   hasRoleToVerDetalle = false;
 
+  tcParaNotasDeCredito: TipoDeComprobante[] = [
+    TipoDeComprobante.FACTURA_A,
+    TipoDeComprobante.FACTURA_B,
+    TipoDeComprobante.FACTURA_C,
+    TipoDeComprobante.FACTURA_X,
+    TipoDeComprobante.FACTURA_Y,
+    TipoDeComprobante.PRESUPUESTO,
+  ];
+
+  tcParaNotasDeDebito: TipoDeComprobante[] = [
+    TipoDeComprobante.RECIBO,
+  ];
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               public loadingOverlayService: LoadingOverlayService,
@@ -61,7 +81,8 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
               private cuentasCorrientesService: CuentasCorrientesService,
               private modalService: NgbModal,
               private authService: AuthService,
-              private notasService: NotasService) { }
+              private notasService: NotasService,
+              private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     if (this.route.snapshot.paramMap.has('id')) {
@@ -145,6 +166,41 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     }, () => { return; });
   }
 
+  crearNotaCreditoFactura(r: RenglonCuentaCorriente) {
+    if (this.tcParaNotasDeCredito.indexOf(r.tipoComprobante) < 0) {
+      this.mensajeService.msg('La operación no es aplicable al tipo de comprobante.', MensajeModalType.ERROR);
+      return;
+    }
+
+    if (!this.hasRoleToCrearNota) {
+      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      return;
+    }
+    this.doCrearNotaCreditoFactura(r);
+  }
+
+  doCrearNotaCreditoFactura(r: RenglonCuentaCorriente) {
+    const modalRef = this.modalService.open(NotaCreditoCompraFacturaModalComponent, { backdrop: 'static', size: 'lg' });
+    modalRef.componentInstance.idFactura = r.idMovimiento;
+    modalRef.componentInstance.title = [
+      r.tipoComprobante.toString().replace('_', ' '),
+      'Nº ' + r.serie + '-' + r.numero,
+      'del Proveedor ' + this.ccp.proveedor.razonSocial,
+      'con fecha ' + this.datePipe.transform(r.fecha, 'dd/MM/yyyy')
+    ].join(' ');
+    modalRef.result.then((data: [NuevaNotaCreditoDeFactura, NotaCredito]) => {
+      const modalRef2 = this.modalService.open(NotaCreditoCompraDetalleFacturaModalComponent, { backdrop: 'static', size: 'lg' });
+      modalRef2.componentInstance.nncf = data[0];
+      modalRef2.componentInstance.notaCredito = data[1];
+      modalRef2.componentInstance.proveedor = this.ccp.proveedor;
+      modalRef2.result.then(
+        (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
+        () => { return; }
+      );
+      // console.log(data);
+    }, () => { return; });
+  }
+
   nuevaNotaDebito() {
     if (!this.hasRoleToCrearNota) {
       this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
@@ -165,6 +221,36 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
         );
       }, () => { return; })
     ;
+  }
+
+  crearNotaDebitoRecibo(r: RenglonCuentaCorriente) {
+    if (this.tcParaNotasDeDebito.indexOf(r.tipoComprobante) < 0) {
+      this.mensajeService.msg('La operación no es aplicable al tipo de comprobante.', MensajeModalType.ERROR);
+      return;
+    }
+
+    if (!this.hasRoleToCrearNota) {
+      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.doCrearNotaDebitoRecibo(r);
+  }
+
+  doCrearNotaDebitoRecibo(r: RenglonCuentaCorriente) {
+    const modalRef = this.modalService.open(NotaDebitoCompraReciboModalComponent, { backdrop: 'static' });
+    modalRef.componentInstance.proveedor = this.ccp.proveedor;
+    modalRef.componentInstance.idRecibo = r.idMovimiento;
+    modalRef.result.then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
+      const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleReciboModalComponent, { backdrop: 'static'});
+      modalRef2.componentInstance.nndr = data[0];
+      modalRef2.componentInstance.notaDebito = data[1];
+      modalRef2.componentInstance.proveedor = this.ccp.proveedor;
+      modalRef2.result.then(
+        (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
+        () => { return; }
+      );
+    }, () => { return; });
   }
 
   verDetalle(r: RenglonCuentaCorriente) {

@@ -14,6 +14,10 @@ import { NotaCreditoCompraSinFacturaModalComponent } from './components/nota-cre
 import { NotaCreditoCompraDetalleSinFacturaModalComponent } from './components/nota-credito-compra-detalle-sin-factura-modal/nota-credito-compra-detalle -sin-factura-modal.component';
 import { NotaDebitoCompraSinReciboModalComponent } from './components/nota-debito-compra-sin-recibo-modal/nota-debito-compra-sin-recibo-modal.component';
 import { NotaDebitoCompraDetalleSinReciboModalComponent } from './components/nota-debito-compra-detalle-sin-recibo-modal/nota-debito-compra-detalle-sin-recibo-modal.component';
+import { NotaCreditoCompraFacturaModalComponent } from './components/nota-credito-compra-factura-modal/nota-credito-compra-factura-modal.component';
+import { NotaCreditoCompraDetalleFacturaModalComponent } from './components/nota-credito-compra-detalle-factura-modal/nota-credito-compra-detalle-factura-modal.component';
+import { NotaDebitoCompraReciboModalComponent } from './components/nota-debito-compra-recibo-modal/nota-debito-compra-recibo-modal.component';
+import { NotaDebitoCompraDetalleReciboModalComponent } from './components/nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,10 @@ import { NotaDebitoCompraDetalleSinReciboModalComponent } from './components/not
     NotaCreditoCompraDetalleSinFacturaModalComponent,
     NotaDebitoCompraSinReciboModalComponent,
     NotaDebitoCompraDetalleSinReciboModalComponent,
+    NotaCreditoCompraFacturaModalComponent,
+    NotaCreditoCompraDetalleFacturaModalComponent,
+    NotaDebitoCompraReciboModalComponent,
+    NotaDebitoCompraDetalleReciboModalComponent,
   ],
   imports: [
     CommonModule,

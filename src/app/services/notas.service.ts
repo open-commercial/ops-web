@@ -57,19 +57,19 @@ export class NotasService {
     return this.http.get<TipoDeComprobante[]>(`${this.url}/clientes/tipos/credito?${qs}`);
   }
 
-  calcularNotaCreditoSinFactura(nnc: NuevaNotaCreditoSinFactura): Observable<NotaCredito> {
-    return this.http.post<NotaCredito>(`${this.urlNotaCredito}/calculos-sin-factura`, nnc);
+  calcularNotaCreditoSinFactura(nncsf: NuevaNotaCreditoSinFactura): Observable<NotaCredito> {
+    return this.http.post<NotaCredito>(`${this.urlNotaCredito}/calculos-sin-factura`, nncsf);
   }
 
-  calcularNotaCreditoDeFactura(nnc: NuevaNotaCreditoDeFactura): Observable<NotaCredito> {
-    return this.http.post<NotaCredito>(`${this.urlNotaCredito}/calculos`, nnc);
+  calcularNotaCreditoDeFactura(nncf: NuevaNotaCreditoDeFactura): Observable<NotaCredito> {
+    return this.http.post<NotaCredito>(`${this.urlNotaCredito}/calculos`, nncf);
   }
 
-  crearNotaCerditoSinFactura(nncsf: NuevaNotaCreditoSinFactura): Observable<NotaCredito> {
+  crearNotaCreditoSinFactura(nncsf: NuevaNotaCreditoSinFactura): Observable<NotaCredito> {
     return this.http.post<NotaCredito>(`${this.urlNotaCredito}/sin-factura`, nncsf);
   }
 
-  crearNotaCerditoDeFactura(nncf: NuevaNotaCreditoDeFactura): Observable<NotaCredito> {
+  crearNotaCreditoDeFactura(nncf: NuevaNotaCreditoDeFactura): Observable<NotaCredito> {
     return this.http.post<NotaCredito>(`${this.urlNotaCredito}/factura`, nncf);
   }
 
@@ -91,16 +91,16 @@ export class NotasService {
     return this.http.post<NotaDebito>(`${this.urlNotaDebito}/calculos-sin-recibo`, nndsr);
   }
 
-  calcularNotaDebitoDeRecibo(nnddr: NuevaNotaDebitoDeRecibo): Observable<NotaDebito> {
-    return this.http.post<NotaDebito>(`${this.urlNotaDebito}/calculos`, nnddr);
+  calcularNotaDebitoDeRecibo(nndr: NuevaNotaDebitoDeRecibo): Observable<NotaDebito> {
+    return this.http.post<NotaDebito>(`${this.urlNotaDebito}/calculos`, nndr);
   }
 
   crearNotaDebitoSinRecibo(nndsr: NuevaNotaDebitoSinRecibo): Observable<NotaDebito> {
     return this.http.post<NotaDebito>(`${this.urlNotaDebito}/sin-recibo`, nndsr);
   }
 
-  crearNotaDebitoDeRecibo(nnddr: NuevaNotaDebitoDeRecibo): Observable<NotaDebito> {
-    return this.http.post<NotaDebito>(this.urlNotaDebito, nnddr);
+  crearNotaDebitoDeRecibo(nndr: NuevaNotaDebitoDeRecibo): Observable<NotaDebito> {
+    return this.http.post<NotaDebito>(this.urlNotaDebito, nndr);
   }
 
   getTiposDeNotaCreditoProveedorSucursal(idProveedor: number, idSucursal: number): Observable<TipoDeComprobante[]> {

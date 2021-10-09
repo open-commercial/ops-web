@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import NotaCreditoCompraDetalleModalDirective from '../nota-credito-compra-detalle-modal/nota-credito-compra-detalle-modal-directive';
+import {NuevaNotaCreditoDeFactura} from '../../../../models/nueva-nota-credito-de-factura';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
 import {ProveedoresService} from '../../../../services/proveedores.service';
-import {NuevaNotaCreditoSinFactura} from '../../../../models/nueva-nota-credito-sin-factura';
 import {finalize} from 'rxjs/operators';
 import {NotaCredito} from '../../../../models/nota';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
 
 @Component({
-  selector: 'app-nota-credito-compra-sin-factura-detalle-modal',
+  selector: 'app-nota-credito-compra-detalle-factura-modal',
   templateUrl: '../nota-credito-compra-detalle-modal/nota-credito-compra-detalle-modal.component.html',
   styleUrls: ['../../../../components/nota-credito-detalle-modal/nota-credito-detalle-modal.component.scss']
 })
-export class NotaCreditoCompraDetalleSinFacturaModalComponent extends NotaCreditoCompraDetalleModalDirective implements OnInit {
-  nncsf: NuevaNotaCreditoSinFactura;
+export class NotaCreditoCompraDetalleFacturaModalComponent extends NotaCreditoCompraDetalleModalDirective implements OnInit {
+  nncf: NuevaNotaCreditoDeFactura;
 
   constructor(public activeModal: NgbActiveModal,
               protected fb: FormBuilder,
@@ -34,8 +34,8 @@ export class NotaCreditoCompraDetalleSinFacturaModalComponent extends NotaCredit
 
   doSubmit() {
     const formValues = this.form.value;
-    this.nncsf.motivo = formValues.motivo;
-    this.nncsf.detalleCompra = {
+    this.nncf.motivo = formValues.motivo;
+    this.nncf.detalleCompra = {
       fecha: this.helper.getDateFromNgbDate(formValues.fecha),
       nroNota: formValues.nroNota,
       serie: formValues.serie,
@@ -43,7 +43,7 @@ export class NotaCreditoCompraDetalleSinFacturaModalComponent extends NotaCredit
     };
 
     this.loadingOverlayService.activate();
-    this.notasService.crearNotaCreditoSinFactura(this.nncsf)
+    this.notasService.crearNotaCreditoDeFactura(this.nncf)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: (nc: NotaCredito) => this.activeModal.close(nc),
