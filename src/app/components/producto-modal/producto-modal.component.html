@@ -34,10 +34,10 @@
             <span> - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}</span>
           </span>
           <span *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">
-            <span *ngIf="item.bulto > 1">Llevando {{ item.bulto }} o más&nbsp;</span>
+            <span *ngIf="item.cantMinima > 1">Llevando {{ item.cantMinima }} o más&nbsp;</span>
             <span class="precio bonificado">$ {{ item.precioBonificado | number:'1.0-2':'es-AR' }}</span>
           </span>
-          <span class="precio" [class.tachado]="!(item.bulto > 1) && (item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio)">
+          <span class="precio" [class.tachado]="!(item.cantMinima > 1) && (item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio)">
             $ {{item.precioLista | number:'1.0-2':'es-AR'}}
           </span>
         </span>
