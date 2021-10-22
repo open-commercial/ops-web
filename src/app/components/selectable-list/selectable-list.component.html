@@ -1,0 +1,10 @@
+<ng-template #noItemTemplate>
+  <span class="font-italic">(No item template defined)</span>
+</ng-template>
+<ul class="app-selectable-list" *ngIf="items.length">
+  <li *ngFor="let item of items; let i=index;" tabindex="0" [class.selected]="item === selectedItem"
+      (focusin)="focusInEvent(item)" (keydown)="keyDownEvent($event)">
+    <ng-container *ngTemplateOutlet="(itemTemplate ? itemTemplate : noItemTemplate) ; context:{ $implicit: item, index: i }"></ng-container>
+  </li>
+</ul>
+

@@ -35,6 +35,8 @@
               (directInputSeleccion)="directInputSeleccionProducto($event)"
               [cantidadesInicialesPedido]="cantidadesInicialesPedido"
               [cantidadesActualesPedido]="cantidadesActualesPedido"
+              [cliente]="form.get('ccc').value.cliente ? form.get('ccc').value.cliente : null"
+              [movimiento]="mov.VENTA"
             ></app-busqueda-producto>
             <div class="table-responsive">
               <table class="table table-bordered table-sm">

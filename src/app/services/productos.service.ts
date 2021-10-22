@@ -12,6 +12,7 @@ import { CantidadEnSucursal } from '../models/cantidad-en-sucursal';
 import { SucursalesService } from './sucursales.service';
 import { NuevoProducto } from '../models/nuevo-producto';
 import {ProductosParaActualizar} from '../models/productos-para-actualizar';
+import {Movimiento} from '../models/movimiento';
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +25,15 @@ export class ProductosService {
   constructor(private http: HttpClient,
               private sucursalesService: SucursalesService) {}
 
-  buscar(criteria: BusquedaProductoCriteria): Observable<Pagination> {
+  buscar(criteria: BusquedaProductoCriteria, idCliente: number = null, movimiento: Movimiento = null): Observable<Pagination> {
+    const qsObj: {[k: string]: any} = {};
+    if (idCliente) { qsObj.idCliente = idCliente; }
+    if (movimiento) { qsObj.movimiento = movimiento; }
+    const qs = HelperService.getQueryString(qsObj);
+
     const idSucursal = this.sucursalesService.getIdSucursal();
-    return this.http.post<Pagination>(this.urlBusqueda + `/sucursales/${idSucursal}`, criteria);
+    const url = `${this.urlBusqueda}/sucursales/${idSucursal}` + (qs ? '?' + qs : '');
+    return this.http.post<Pagination>(url , criteria);
   }
 
   getProducto(idProducto: number): Observable<Producto> {

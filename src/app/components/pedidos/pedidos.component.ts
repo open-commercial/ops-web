@@ -263,7 +263,7 @@ export class PedidosComponent extends ListadoBaseComponent implements OnInit {
           )
         ;
       }
-    }, () => {});
+    }, () => { return; });
   }
 
   editarPedido(pedido: Pedido) {

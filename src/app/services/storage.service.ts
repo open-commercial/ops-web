@@ -15,7 +15,6 @@ export enum StorageKeys {
 })
 export class StorageService {
   private ls = new SecureLS({ encodingType: 'aes' });
-  constructor() { }
 
   getItem(key: string) {
     return this.ls.get(key);

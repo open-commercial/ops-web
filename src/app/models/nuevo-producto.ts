@@ -15,6 +15,7 @@ export interface NuevoProducto {
   precioLista: number|string;
   ilimitado?: boolean;
   publico: boolean;
+  paraCatalogo: boolean;
   fechaUltimaModificacion?: Date | number;
   nota: string;
   fechaVencimiento: Date | number;

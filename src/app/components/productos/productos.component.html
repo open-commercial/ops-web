@@ -60,6 +60,16 @@
               </label>
             </div>
           </div>
+          <div class="form-group">
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="listarSoloParaCatalogo" formControlName="listarSoloParaCatalogo">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="false"> Todos
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="true"> Solo Catálogo
+              </label>
+            </div>
+          </div>
           <div class="card card-body bg-light mb-3">
             <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorP" [values]="ordenarPorOptionsP" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorP></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoP" [values]="sentidoOptionsP" [label]="'Sentido'" formControlName="sentido" #sentidoP></app-filtro-ordenamiento>
@@ -125,7 +135,7 @@
         </li>
       </ul>
     </ng-template>
-    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
+    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
   </div>
 </div>

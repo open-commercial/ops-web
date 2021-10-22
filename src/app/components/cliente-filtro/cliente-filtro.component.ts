@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
@@ -18,20 +18,18 @@ import { ClienteModalComponent } from '../cliente-modal/cliente-modal.component'
     }
   ]
 })
-export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
+export class ClienteFiltroComponent implements ControlValueAccessor {
   loading = false;
   cliente: Cliente = null;
 
   value;
   isDisabled = false;
 
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { return; };
+  onTouch = () => { return; };
 
   constructor(public clientesService: ClientesService,
               private modalService: NgbModal) { }
-
-  ngOnInit() {}
 
   private setCliente(c: Cliente, applyChange = true) {
     this.cliente = c;
@@ -46,7 +44,7 @@ export class ClienteFiltroComponent implements OnInit, ControlValueAccessor {
     const modalRef = this.modalService.open(ClienteModalComponent, {scrollable: true});
     modalRef.result.then((c: Cliente) => {
       this.setCliente(c);
-    }, () => {});
+    }, () => { return; });
   }
 
   clearValue() {

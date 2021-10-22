@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-pedidos-home',
-  templateUrl: './pedidos-home.component.html',
-  styleUrls: ['./pedidos-home.component.scss']
+  templateUrl: './pedidos-home.component.html'
 })
-export class PedidosHomeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class PedidosHomeComponent {
 }

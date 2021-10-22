@@ -10,4 +10,5 @@ export interface BusquedaProductoCriteria {
   pagina: number;
   ordenarPor?: string;
   sentido?: string;
+  listarSoloParaCatalogo?: boolean;
 }

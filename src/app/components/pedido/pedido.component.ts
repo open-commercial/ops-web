@@ -33,6 +33,7 @@ import {Location} from '@angular/common';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {ProductosParaVerificarStock} from '../../models/productos-para-verificar-stock';
 import {ProductoFaltante} from '../../models/producto-faltante';
+import {Movimiento} from '../../models/movimiento';
 
 enum OpcionEnvio {
   RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
@@ -90,6 +91,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   cantidadesActualesPedido: { [idProducto: number]: number } = {};
 
   subscription: Subscription;
+
+  mov = Movimiento;
 
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
@@ -568,7 +571,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
   showCantidadModal(idProducto: number, addCantidad = false) {
     const control = this.searchRPInRenglones(idProducto);
     const cPrevia = control ? control.get('renglonPedido').value.cantidad : 0;
-
     const modalRef = this.modalService.open(CantidadProductoModalComponent);
     modalRef.componentInstance.addCantidad = addCantidad;
     modalRef.componentInstance.cantidadesInicialesPedido = this.cantidadesInicialesPedido;

@@ -122,6 +122,7 @@ export class ProductoComponent implements OnInit {
       cantidadEnSucursal: this.fb.array([]),
       cantMinima: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]],
       publico: false,
+      paraCatalogo: false,
       fechaVencimiento: null,
       nota: [null, Validators.maxLength(250)],
       imagen: null,
@@ -145,6 +146,7 @@ export class ProductoComponent implements OnInit {
       );
       this.form.get('cantMinima').setValue(this.producto.cantMinima);
       this.form.get('publico').setValue(this.producto.publico);
+      this.form.get('paraCatalogo').setValue(!!this.producto.paraCatalogo);
 
       if (this.producto.fechaVencimiento) {
         const fv = moment(this.producto.fechaVencimiento);
@@ -245,6 +247,7 @@ export class ProductoComponent implements OnInit {
       porcentajeBonificacionPrecio: formValues.calculosPrecio.porcentajeBonificacionPrecio.toString(),
       precioLista: formValues.calculosPrecio.precioLista.toString(),
       publico: formValues.publico,
+      paraCatalogo: formValues.paraCatalogo,
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
       imagen: formValues.imagen,
@@ -276,6 +279,7 @@ export class ProductoComponent implements OnInit {
       cantidadEnSucursales: auxCes,
       cantMinima: this.hasRolToEditCantidades ? formValues.cantMinima : this.producto.cantMinima,
       publico: formValues.publico,
+      paraCatalogo: formValues.paraCatalogo,
       precioCosto: formValues.calculosPrecio.precioCosto.toString(),
       gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),
       gananciaNeto: formValues.calculosPrecio.gananciaNeto.toString(),
@@ -313,7 +317,6 @@ export class ProductoComponent implements OnInit {
     ) {
       this.submitted = true;
       $event.preventDefault();
-      return;
     }
   }
 

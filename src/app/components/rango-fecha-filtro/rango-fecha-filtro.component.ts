@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
@@ -14,7 +14,7 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
     }
   ]
 })
-export class RangoFechaFiltroComponent implements OnInit, ControlValueAccessor {
+export class RangoFechaFiltroComponent implements ControlValueAccessor {
   private pLabel = 'Fecha';
 
   fromDate: NgbDate;
@@ -23,16 +23,12 @@ export class RangoFechaFiltroComponent implements OnInit, ControlValueAccessor {
   value = { desde: null, hasta: null };
   isDisabled: boolean;
 
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { return; };
+  onTouch = () => { return; };
 
   @Input()
   set label(label: string) { this.pLabel = label; }
   get label() { return this.pLabel; }
-
-  constructor() {}
-
-  ngOnInit() {}
 
   registerOnChange(fn: any): void {
     this.onChange = fn;

@@ -23,6 +23,7 @@ export interface Producto {
   nombreRubro?: string;
   ilimitado?: boolean;
   publico: boolean;
+  paraCatalogo: boolean;
   oferta: boolean;
   porcentajeBonificacionOferta: number|string;
   porcentajeBonificacionPrecio: number|string;
