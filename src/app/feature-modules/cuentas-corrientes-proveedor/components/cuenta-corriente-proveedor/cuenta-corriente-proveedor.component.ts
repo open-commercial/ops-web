@@ -197,7 +197,6 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
         (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
         () => { return; }
       );
-      // console.log(data);
     }, () => { return; });
   }
 
@@ -295,7 +294,6 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
 
     if (r.tipoComprobante === TipoDeComprobante.RECIBO) {
       this.router.navigate(['/recibos/ver', r.idMovimiento]);
-      return;
     }
   }
 

@@ -14,8 +14,7 @@ import {AuthService} from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-proveedor',
-  templateUrl: './proveedor.component.html',
-  styleUrls: ['./proveedor.component.scss']
+  templateUrl: './proveedor.component.html'
 })
 export class ProveedorComponent implements OnInit {
   proveedor: Proveedor = null;
