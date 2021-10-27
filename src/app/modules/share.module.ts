@@ -19,7 +19,8 @@ import {
   faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
   faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
-  faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft, faTruck
+  faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
+  faTruck, faFileInvoiceDollar
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -65,7 +66,7 @@ export class ShareModule {
       faLockOpen, faLock, faSyncAlt, faCoins,
       faChevronDown, faChevronUp, faCheckSquare, faFileExport,
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
-      faBalanceScaleLeft, faTruck
+      faBalanceScaleLeft, faTruck, faFileInvoiceDollar
     );
   }
 }
