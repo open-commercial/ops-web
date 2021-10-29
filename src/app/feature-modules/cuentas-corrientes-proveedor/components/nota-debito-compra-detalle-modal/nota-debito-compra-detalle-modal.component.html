@@ -40,23 +40,23 @@
     <div class="row">
       <div class="col-4">
         <div class="form-group">
-          <label for="nroNota">Nº</label>
-          <input class="form-control" type="number" min="0" id="nroNota" formControlName="nroNota"
-                 [ngClass]="{ 'is-invalid': submitted && f.nroNota.errors }"/>
-          <div class="invalid-feedback" *ngIf="submitted && f.nroNota.errors">
-            <div *ngIf="f.nroNota.errors.required">Requerido</div>
-            <div *ngIf="f.nroNota.errors.min">Mínimo {{ f.nroNota.errors.min.min }}</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="form-group">
           <label for="serie">Serie</label>
           <input class="form-control" type="number" min="0" id="serie" formControlName="serie"
                  [ngClass]="{ 'is-invalid': submitted && f.serie.errors }"/>
           <div class="invalid-feedback" *ngIf="submitted && f.serie.errors">
             <div *ngIf="f.serie.errors.required">Requerido</div>
             <div *ngIf="f.serie.errors.min">Mínimo {{ f.serie.errors.min.min }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="form-group">
+          <label for="nroNota">Nº</label>
+          <input class="form-control" type="number" min="0" id="nroNota" formControlName="nroNota"
+                 [ngClass]="{ 'is-invalid': submitted && f.nroNota.errors }"/>
+          <div class="invalid-feedback" *ngIf="submitted && f.nroNota.errors">
+            <div *ngIf="f.nroNota.errors.required">Requerido</div>
+            <div *ngIf="f.nroNota.errors.min">Mínimo {{ f.nroNota.errors.min.min }}</div>
           </div>
         </div>
       </div>

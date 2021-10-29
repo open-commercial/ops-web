@@ -1,4 +1,5 @@
 import {TipoDeComprobante} from './tipo-de-comprobante';
+import {DetalleCompra} from './detalle-compra';
 
 export interface NuevaNotaDebitoSinRecibo {
   idCliente?: number;
@@ -7,4 +8,5 @@ export interface NuevaNotaDebitoSinRecibo {
   motivo: string;
   gastoAdministrativo: number;
   tipoDeComprobante: TipoDeComprobante;
+  detalleCompra?: DetalleCompra;
 }

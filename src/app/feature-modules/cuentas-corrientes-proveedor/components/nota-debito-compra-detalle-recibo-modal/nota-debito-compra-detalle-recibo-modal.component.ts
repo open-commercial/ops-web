@@ -28,6 +28,12 @@ export class NotaDebitoCompraDetalleReciboModalComponent extends NotaDebitoCompr
   doSubmit() {
     const formValues = this.form.value;
     this.nndr.motivo = formValues.motivo;
+    this.nndr.detalleCompra = {
+      fecha: this.helper.getDateFromNgbDate(formValues.fecha),
+      nroNota: formValues.nroNota,
+      serie: formValues.serie,
+      cae: formValues.cae,
+    };
     this.loadingOverlayService.activate();
     this.notasService.crearNotaDebitoDeRecibo(this.nndr)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
