@@ -12,6 +12,7 @@
       right: -16rem;
       z-index: 2;
       transition: right .25s;
+      z-index: 2;
       &.opened {
         right: 0;
       }

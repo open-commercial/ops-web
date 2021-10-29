@@ -2,8 +2,7 @@ export interface NuevoProducto {
   codigo: string;
   descripcion: string;
   cantidadEnSucursal: { [key: number]: number };
-  cantMinima?: number;
-  bulto: number;
+  cantMinima: number;
   precioCosto: number|string;
   gananciaPorcentaje: number|string;
   gananciaNeto: number|string;
@@ -16,6 +15,7 @@ export interface NuevoProducto {
   precioLista: number|string;
   ilimitado?: boolean;
   publico: boolean;
+  paraCatalogo: boolean;
   fechaUltimaModificacion?: Date | number;
   nota: string;
   fechaVencimiento: Date | number;

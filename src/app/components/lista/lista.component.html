@@ -20,6 +20,6 @@
   </div>
 </div>
 
-<ngb-pagination [pageSize]="25" [collectionSize]="totalElements" [(page)]="displayPage"
+<ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
                 [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="cambioDePagina($event)"
                 *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>

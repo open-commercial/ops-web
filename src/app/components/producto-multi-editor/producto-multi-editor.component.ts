@@ -95,6 +95,7 @@ export class ProductoMultiEditorComponent implements OnInit {
       idRubro: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
       idMedida: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
       publico: this.fb.group({ check: false, value: [{ value: false, disabled: true }] }),
+      paraCatalogo: this.fb.group({ check: false, value: [{ value: false, disabled: true }] }),
       calculosPrecio: this.fb.group({ check: false, value: [{ value: CalculosPrecio.getEmtpyValues(), disabled: true }] }),
       cantidadVentaMinima: this.fb.group({
         check: [{ value: this.hasRolToEditCantidades, disabled: true }],
@@ -161,6 +162,9 @@ export class ProductoMultiEditorComponent implements OnInit {
       }
       if (formValues.publico.check) {
         ppa.publico = formValues.publico.value;
+      }
+      if (formValues.paraCatalogo.check) {
+        ppa.paraCatalogo = formValues.paraCatalogo.value;
       }
       if (formValues.calculosPrecio.check) {
         const cp: CalculosPrecioValues = formValues.calculosPrecio.value;

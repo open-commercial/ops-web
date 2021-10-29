@@ -1,15 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-facturas-venta-home',
-  templateUrl: './facturas-venta-home.component.html',
-  styleUrls: ['./facturas-venta-home.component.scss']
+  templateUrl: './facturas-venta-home.component.html'
 })
-export class FacturasVentaHomeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class FacturasVentaHomeComponent {
 }

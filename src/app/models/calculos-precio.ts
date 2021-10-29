@@ -57,8 +57,6 @@ export class CalculosPrecio {
     return instance;
   }
 
-  constructor() {}
-
   set precioCosto(value: Big) {
     this.pPrecioCosto = value;
     this.calcularGananciaNeto();
@@ -161,7 +159,6 @@ export class CalculosPrecio {
 
   set oferta(value: boolean) {
     this.pOferta = value;
-    // this.calcularPrecioOferta();
   }
   get oferta(): boolean { return this.pOferta; }
 
@@ -170,7 +167,6 @@ export class CalculosPrecio {
     this.calcularPrecioOferta();
   }
   get porcentajeBonificacionOferta(): Big {
-    // return this.pOferta ? this.pPorcentajeBonificacionOferta : new Big(0);
     return this.pPorcentajeBonificacionOferta;
   }
   protected calcularporcentajeBonificacionOferta() {
@@ -184,7 +180,6 @@ export class CalculosPrecio {
     this.calcularporcentajeBonificacionOferta();
   }
   get precioOferta(): Big {
-    // return this.pOferta ? this.pPrecioOferta : new Big(0);
     return this.pPrecioOferta;
   }
   protected calcularPrecioOferta() {

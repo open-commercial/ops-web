@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Proveedor } from '../../models/proveedor';
@@ -9,7 +9,6 @@ import { ProveedorModalComponent } from '../proveedor-modal/proveedor-modal.comp
 @Component({
   selector: 'app-proveedor-filtro',
   templateUrl: './proveedor-filtro.component.html',
-  styleUrls: ['./proveedor-filtro.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -23,19 +22,17 @@ import { ProveedorModalComponent } from '../proveedor-modal/proveedor-modal.comp
     }
   ]
 })
-export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor, Validator {
+export class ProveedorFiltroComponent implements ControlValueAccessor, Validator {
   loading = false;
   proveedor: Proveedor = null;
 
   value;
   isDisabled: boolean;
-  onChange = (_: any) => { };
-  onTouch = () => { };
+  onChange = (_: any) => { return; };
+  onTouch = () => { return; };
 
   constructor(public proveedoresService: ProveedoresService,
               private modalService: NgbModal) { }
-
-  ngOnInit() { }
 
   setProveedor(p: Proveedor, applyChange = true) {
     this.proveedor = p;
@@ -50,7 +47,7 @@ export class ProveedorFiltroComponent implements OnInit, ControlValueAccessor, V
     const modalRef = this.modalService.open(ProveedorModalComponent, {scrollable: true});
     modalRef.result.then((p: Proveedor) => {
       this.setProveedor(p);
-    }, (reason) => {});
+    }, () => { return; });
   }
 
   clearValue() {

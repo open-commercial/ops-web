@@ -18,8 +18,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-ver-caja',
-  templateUrl: './ver-caja.component.html',
-  styleUrls: ['./ver-caja.component.scss']
+  templateUrl: './ver-caja.component.html'
 })
 export class VerCajaComponent implements OnInit, OnDestroy {
   estado = EstadoCaja;

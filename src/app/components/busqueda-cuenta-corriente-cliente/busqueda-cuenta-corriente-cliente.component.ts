@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CuentaCorrienteClienteModalComponent } from '../cuenta-corriente-cliente-modal/cuenta-corriente-cliente-modal.component';
@@ -9,7 +9,7 @@ import { HelperService } from '../../services/helper.service';
   templateUrl: './busqueda-cuenta-corriente-cliente.component.html',
   styleUrls: ['./busqueda-cuenta-corriente-cliente.component.scss']
 })
-export class BusquedaCuentaCorrienteClienteComponent implements OnInit {
+export class BusquedaCuentaCorrienteClienteComponent {
   private pReadOnly = false;
   private pCcc: CuentaCorrienteCliente = null;
   helper = HelperService;
@@ -26,14 +26,12 @@ export class BusquedaCuentaCorrienteClienteComponent implements OnInit {
 
   constructor(private modalService: NgbModal) { }
 
-  ngOnInit() {}
-
   showCccModal() {
     const modalRef = this.modalService.open(CuentaCorrienteClienteModalComponent, { scrollable: true });
     modalRef.result.then((ccc: CuentaCorrienteCliente) => {
       this.ccc = ccc;
       this.select.emit(this.ccc);
-    }, (reason) => {});
+    }, () => { return; });
   }
 
   clearCcc() { this.ccc = null; }

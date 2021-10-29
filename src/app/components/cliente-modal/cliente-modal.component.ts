@@ -1,75 +1,22 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { finalize } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
-import { HelperService } from '../../services/helper.service';
-import { Cliente } from '../../models/cliente';
 import { ClientesService } from '../../services/clientes.service';
+import { ItemSelectionModalDirective } from '../../directives/busqueda-modal/item-selection-modal.directive';
+import { Observable } from 'rxjs';
+import { Pagination } from '../../models/pagination';
 
 @Component({
   selector: 'app-cliente-modal',
-  templateUrl: './cliente-modal.component.html',
-  styleUrls: ['./cliente-modal.component.scss']
+  templateUrl: './cliente-modal.component.html'
 })
-export class ClienteModalComponent {
-  clientes: Cliente[] = [];
-  clearLoading = false;
-  loading = false;
-  busqueda = '';
-  clienteSeleccionado: Cliente = null;
-  helper = HelperService;
-
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
-
-  @ViewChild('searchInput') searchInput: ElementRef;
-
+export class ClienteModalComponent extends ItemSelectionModalDirective {
   constructor(public activeModal: NgbActiveModal,
-              private clientesService: ClientesService) { }
-
-  getClientes(clearResults = false) {
-    this.page += 1;
-    if (clearResults) {
-      this.clearLoading = true;
-      this.page = 0;
-      this.clientes = [];
-    } else {
-      this.loading = true;
-    }
-
-    this.clientesService.getClientes(this.busqueda, this.page)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.clearLoading = false;
-        })
-      )
-      .subscribe((p: Pagination) => {
-        p.content.forEach((e) => this.clientes.push(e));
-        this.totalElements = p.totalElements;
-        this.totalPages = p.totalPages;
-        this.size = p.size;
-      })
-    ;
+              private clientesService: ClientesService) {
+    super(activeModal);
+    this.searchInputPlaceholder = 'Buscar Cliente...';
   }
 
-  buscar() {
-    this.getClientes(true);
-  }
-
-  loadMore() {
-    this.getClientes();
-  }
-
-  select(c: Cliente) {
-    this.clienteSeleccionado = c;
-  }
-
-  seleccionarCliente() {
-    if (this.clienteSeleccionado) {
-      this.activeModal.close(this.clienteSeleccionado);
-    }
+  getItemsObservable(): Observable<Pagination> {
+    return this.clientesService.getClientes(this.searchTerm, this.page);
   }
 }

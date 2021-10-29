@@ -108,12 +108,12 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="bulto">Venta por cantidad</label>
-            <input type="number" min="1" class="form-control text-right" id="bulto" required formControlName="bulto"
-                   [ngClass]="{ 'is-invalid': submitted && f.bulto.errors }">
-            <div class="invalid-feedback" *ngIf="submitted && f.bulto.errors">
-              <div *ngIf="f.bulto.errors.required">Requerido</div>
-              <div *ngIf="f.bulto.errors.min">Mínimo {{ f.bulto.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+            <label for="cantMinima">Venta por cantidad</label>
+            <input type="number" min="1" class="form-control text-right" id="cantMinima" required formControlName="cantMinima"
+                   [ngClass]="{ 'is-invalid': submitted && f.cantMinima.errors }">
+            <div class="invalid-feedback" *ngIf="submitted && f.cantMinima.errors">
+              <div *ngIf="f.cantMinima.errors.required">Requerido</div>
+              <div *ngIf="f.cantMinima.errors.min">Mínimo {{ f.cantMinima.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
             </div>
           </div>
         </ng-template>
@@ -130,6 +130,17 @@
                   </label>
                   <label ngbButtonLabel class="btn-outline-secondary flex-fill">
                     <input ngbButton type="radio" [value]="false"> Privado
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="para-catalogo">Para Catálogo</label>
+                <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="para-catalogo" formControlName="paraCatalogo">
+                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                    <input ngbButton type="radio" [value]="true"> Sí
+                  </label>
+                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                    <input ngbButton type="radio" [value]="false"> No
                   </label>
                 </div>
               </div>

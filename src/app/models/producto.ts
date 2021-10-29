@@ -9,8 +9,7 @@ export interface Producto {
   cantidadEnSucursalesDisponible?: Array<CantidadEnSucursal>;
   cantidadTotalEnSucursalesDisponible?: number;
   cantidadReservada?: number;
-  cantMinima?: number;
-  bulto: number;
+  cantMinima: number;
   idMedida?: number;
   nombreMedida?: string;
   precioCosto: number|string;
@@ -24,6 +23,7 @@ export interface Producto {
   nombreRubro?: string;
   ilimitado?: boolean;
   publico: boolean;
+  paraCatalogo: boolean;
   oferta: boolean;
   porcentajeBonificacionOferta: number|string;
   porcentajeBonificacionPrecio: number|string;

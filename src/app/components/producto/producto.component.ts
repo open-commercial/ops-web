@@ -120,8 +120,9 @@ export class ProductoComponent implements OnInit {
       idRubro: [null, Validators.required],
       calculosPrecio: [CalculosPrecio.getEmtpyValues(), Validators.required],
       cantidadEnSucursal: this.fb.array([]),
-      bulto: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]],
+      cantMinima: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]],
       publico: false,
+      paraCatalogo: false,
       fechaVencimiento: null,
       nota: [null, Validators.maxLength(250)],
       imagen: null,
@@ -130,7 +131,7 @@ export class ProductoComponent implements OnInit {
 
   initializeForm() {
     if (this.hasRolToEditCantidades) {
-      this.form.get('bulto').enable();
+      this.form.get('cantMinima').enable();
     }
     if (this.producto) {
       this.form.get('idProducto').setValue(this.producto.idProducto);
@@ -143,8 +144,9 @@ export class ProductoComponent implements OnInit {
       this.producto.cantidadEnSucursales.forEach(
         ces => this.addCantidadEnSucursal(ces.idSucursal, ces.nombreSucursal, ces.cantidad)
       );
-      this.form.get('bulto').setValue(this.producto.bulto);
+      this.form.get('cantMinima').setValue(this.producto.cantMinima);
       this.form.get('publico').setValue(this.producto.publico);
+      this.form.get('paraCatalogo').setValue(!!this.producto.paraCatalogo);
 
       if (this.producto.fechaVencimiento) {
         const fv = moment(this.producto.fechaVencimiento);
@@ -233,7 +235,7 @@ export class ProductoComponent implements OnInit {
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
       cantidadEnSucursal: auxCes,
-      bulto: this.hasRolToEditCantidades ? formValues.bulto : 1,
+      cantMinima: this.hasRolToEditCantidades ? formValues.cantMinima : 1,
       precioCosto: formValues.calculosPrecio.precioCosto.toString(),
       gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),
       gananciaNeto: formValues.calculosPrecio.gananciaNeto.toString(),
@@ -245,6 +247,7 @@ export class ProductoComponent implements OnInit {
       porcentajeBonificacionPrecio: formValues.calculosPrecio.porcentajeBonificacionPrecio.toString(),
       precioLista: formValues.calculosPrecio.precioLista.toString(),
       publico: formValues.publico,
+      paraCatalogo: formValues.paraCatalogo,
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
       imagen: formValues.imagen,
@@ -274,8 +277,9 @@ export class ProductoComponent implements OnInit {
       codigo: formValues.codigo,
       descripcion: formValues.descripcion,
       cantidadEnSucursales: auxCes,
-      bulto: this.hasRolToEditCantidades ? formValues.bulto : this.producto.bulto,
+      cantMinima: this.hasRolToEditCantidades ? formValues.cantMinima : this.producto.cantMinima,
       publico: formValues.publico,
+      paraCatalogo: formValues.paraCatalogo,
       precioCosto: formValues.calculosPrecio.precioCosto.toString(),
       gananciaPorcentaje: formValues.calculosPrecio.gananciaPorcentaje.toString(),
       gananciaNeto: formValues.calculosPrecio.gananciaNeto.toString(),
@@ -360,8 +364,8 @@ export class ProductoComponent implements OnInit {
 
   isCantidadesPanelValid(): boolean {
     let isValid = this.form.get('cantidadEnSucursal').valid;
-    if (this.form.get('bulto').enabled) {
-      isValid = isValid && this.form.get('bulto').valid;
+    if (this.form.get('cantMinima').enabled) {
+      isValid = isValid && this.form.get('cantMinima').valid;
     }
     return isValid;
   }

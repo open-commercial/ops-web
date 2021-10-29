@@ -11,4 +11,5 @@ export interface ProductosParaActualizar {
   porcentajeBonificacionPrecio?: number|string;
   porcentajeBonificacionOferta?: number|string;
   publico?: boolean;
+  paraCatalogo?: boolean;
 }

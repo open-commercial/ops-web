@@ -1,0 +1,21 @@
+@import "../../../variables";
+
+ul.app-selectable-list {
+  cursor: pointer;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  li {
+    padding: 0.5rem;
+    border-bottom: 1px solid #aaaaab;
+    &:first-child {
+      border-top: 1px solid #aaaaab;
+    }
+    &:focus {
+      outline: 3px solid #a7c9f1;
+    }
+    &.selected {
+      background: $primary-color;
+    }
+  }
+}

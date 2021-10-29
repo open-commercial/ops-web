@@ -94,6 +94,27 @@
           </div>
         </td>
       </tr>
+      <tr formGroupName="paraCatalogo">
+        <td class="align-middle">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="idParaCatalogoCheck" formControlName="check" (change)="checkChange('paraCatalogo', $event)">
+            <label class="custom-control-label" for="idParaCatalogoCheck"><span class="sr-only">Activo el campo Para Catálogo</span></label>
+          </div>
+        </td>
+        <td class="align-middle">
+          <div class="form-group mb-0">
+            <label for="para-catalogo">Para Catálogo</label>
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="para-catalogo" formControlName="value">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="true"> Sí
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="false"> No
+              </label>
+            </div>
+          </div>
+        </td>
+      </tr>
       <tr formGroupName="calculosPrecio">
         <td class="align-middle">
           <div class="custom-control custom-checkbox">

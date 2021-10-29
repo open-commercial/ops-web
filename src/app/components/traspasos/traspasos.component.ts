@@ -23,8 +23,7 @@ import {ProductosService} from '../../services/productos.service';
 
 @Component({
   selector: 'app-traspasos',
-  templateUrl: './traspasos.component.html',
-  styleUrls: ['./traspasos.component.scss']
+  templateUrl: './traspasos.component.html'
 })
 export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
   ordenarPorOptionsT = [

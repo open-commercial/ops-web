@@ -1,21 +1,11 @@
 @import "../../../variables";
 
-.proveedores {
-  .proveedor {
-    &.selected {
-      .info {
-        background: $primary-color;
-      }
-    }
-
-    .form-check-input {
-      width: 0;
-      height: 0;
-      opacity: 0;
-    }
-
-    .numero {
-      font-size: 12px;
-    }
+.proveedor {
+  .numero {
+    font-size: 12px;
+  }
+  .nombre {
+    font-size: 1.2em;
+    font-style: italic;
   }
 }

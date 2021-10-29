@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Ubicacion} from '../../models/ubicacion';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {UbicacionModalComponent} from '../ubicacion-modal-component/ubicacion-modal.component';
@@ -10,10 +10,9 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-ubicacion-envio-component',
-  templateUrl: './ubicacion-envio.component.html',
-  styleUrls: ['./ubicacion-envio.component.scss']
+  templateUrl: './ubicacion-envio.component.html'
 })
-export class UbicacionEnvioComponent implements OnInit {
+export class UbicacionEnvioComponent {
   ubicacion: Ubicacion = null;
   updating = false;
 
@@ -34,8 +33,6 @@ export class UbicacionEnvioComponent implements OnInit {
   constructor(private modalService: NgbModal,
               private clientesService: ClientesService,
               private mensajeService: MensajeService) { }
-
-  ngOnInit() {}
 
   private setUbicacion(c: Cliente) {
     this.ubicacion = c && c.ubicacionEnvio ? c.ubicacionEnvio : null;
@@ -60,7 +57,7 @@ export class UbicacionEnvioComponent implements OnInit {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           }
         );
-    }, () => {});
+    }, () => { return; });
   }
 
   getUbicacionStr() {

@@ -41,7 +41,7 @@ import { FacturasVentaHomeComponent } from './components/facturas-venta-home/fac
 import { ClienteModalComponent } from './components/cliente-modal/cliente-modal.component';
 import { UsuarioModalComponent } from './components/usuario-modal/usuario-modal.component';
 import { ProveedorModalComponent } from './components/proveedor-modal/proveedor-modal.component';
-import { MensajeAsicronicoComponent } from './components/mensaje-asicronico/mensaje-asicronico.component';
+import { MensajeAsincronicoComponent } from './components/mensaje-asincronico/mensaje-asincronico.component';
 import { BusquedaProductoComponent } from './components/busqueda-producto/busqueda-producto.component';
 import { DisponibilidadStockModalComponent } from './components/disponibilidad-stock-modal/disponibilidad-stock-modal.component';
 import { VerFacturaComponent } from './components/ver-factura/ver-factura.component';
@@ -98,6 +98,7 @@ import { NotasDebitoCompraComponent } from './components/notas-debito-compra/not
 import {ShareModule} from './modules/share.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { VerReciboComponent } from './components/ver-recibo/ver-recibo.component';
+import { SelectableListComponent } from './components/selectable-list/selectable-list.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -133,7 +134,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ClienteModalComponent,
         UsuarioModalComponent,
         ProveedorModalComponent,
-        MensajeAsicronicoComponent,
+        MensajeAsincronicoComponent,
         ProductosHomeComponent,
         ProductosComponent,
         BusquedaProductoComponent,
@@ -188,7 +189,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NotasCreditoCompraComponent,
         NotasCreditoCompraHomeComponent,
         NotasDebitoCompraHomeComponent,
-        NotasDebitoCompraComponent,
+        NotasDebitoCompraComponent,SelectableListComponent,
         VerReciboComponent,
     ],
     imports: [
