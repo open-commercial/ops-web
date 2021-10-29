@@ -189,7 +189,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NotasCreditoCompraComponent,
         NotasCreditoCompraHomeComponent,
         NotasDebitoCompraHomeComponent,
-        NotasDebitoCompraComponent,SelectableListComponent,
+        NotasDebitoCompraComponent,
+        SelectableListComponent,
         VerReciboComponent,
     ],
     imports: [
