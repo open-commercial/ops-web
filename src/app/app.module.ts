@@ -100,7 +100,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { VerReciboComponent } from './components/ver-recibo/ver-recibo.component';
 import { SelectableListComponent } from './components/selectable-list/selectable-list.component';
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
-import { NuevoRenglonFacturaModalComponent } from './components/calculo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
+import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 

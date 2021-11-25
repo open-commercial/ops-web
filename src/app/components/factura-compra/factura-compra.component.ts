@@ -11,7 +11,7 @@ import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {HelperService} from '../../services/helper.service';
 import {RenglonFactura} from '../../models/renglon-factura';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NuevoRenglonFacturaModalComponent} from '../calculo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
+import {NuevoRenglonFacturaModalComponent} from '../nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
 import {Subscription} from 'rxjs';
@@ -241,7 +241,6 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   }
 
   refreshRenglones(tc: TipoDeComprobante) {
-    // if (this.firstLoading) { return; }
     if (this.renglones.length) {
       const renglones: NuevoRenglonFactura[] = this.renglones.controls.map(rForm => {
         const rf: RenglonFactura = rForm.get('renglonFactura').value;
@@ -269,8 +268,6 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   }
 
   refreshResultados() {
-    // if (this.firstLoading) { return; }
-
     const tc = this.form.get('tipoDeComprobante').value;
     if (!tc) { return false; }
 
@@ -299,9 +296,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
       tipoDeComprobante: tc,
     };
 
-    // this.loadingOverlayService.activate();
     this.facturasService.calcularResultadosFactura(nrf)
-      // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: res => this.resultados = res,
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),

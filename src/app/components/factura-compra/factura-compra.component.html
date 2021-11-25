@@ -129,9 +129,6 @@
             </div>
           </td>
           <td class="text-nowrap">
-            <!--<button class="btn btn-secondary">
-              <fa-icon [icon]="['fas', 'pencil']"></fa-icon>
-            </button>-->
             <button class="btn btn-danger" (click)="removeRenglon(i)">
               <fa-icon [icon]="['fas', 'trash']"></fa-icon>
             </button>
@@ -192,20 +189,13 @@
         <th scope="row">Total</th>
         <td class="w-100" colspan="2">{{ this.resultados.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
-      <!--
-            <tr>
-              <th scope="row" class="w-25">Subtotal</th>
-              <td>{{ notaCredito.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
-            </tr>
-      -->
       </tbody>
     </table>
     <hr>
     <div class="text-right">
-      <button type="submit" class="btn btn-primary"> <!--  [disabled]="!form.valid" -->
+      <button type="submit" class="btn btn-primary">
         <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
       </button>
     </div>
-
   </form>
 </div>
