@@ -1,0 +1,211 @@
+<div class="app-factura-compra my-3">
+  <div class="d-flex flex-row justify-content-end align-items-center mb-2">
+    <h1 class="h3 pr-2 mb-0 flex-fill text-truncate">
+      <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Nueva Factura de Compra
+    </h1>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2 card card-body bg-light" *ngIf="form">
+    <div class="form-group">
+      <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
+      <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProveedor.errors">
+        <div *ngIf="f.idProveedor.errors.required">Requerido</div>
+      </div>
+      <label for="tipoDeComprobante">Tipo de Factura</label>
+      <select class="form-control" id="tipoDeComprobante" formControlName="tipoDeComprobante"
+              [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
+        <option *ngFor="let tc of tiposDeComprobantes" [value]="tc">{{ helper.tipoComprobanteLabel(tc) }}</option>
+      </select>
+      <div class="invalid-feedback" *ngIf="submitted && f.tipoDeComprobante.errors">
+        <div *ngIf="f.tipoDeComprobante.errors.required">Requerido</div>
+      </div>
+    </div>
+    <app-transportista formControlName="idTransportista"></app-transportista>
+    <div class="row">
+      <div class="col-md-6">
+        <span>Nº de Factura</span>
+        <div class="border rounded p-2 mb-3">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="numSerie">Serie</label>
+                <input class="form-control" type="number" min="0" id="numSerie" formControlName="numSerie"
+                       [ngClass]="{ 'is-invalid': submitted && f.numSerie.errors }"/>
+                <div class="invalid-feedback" *ngIf="submitted && f.numSerie.errors">
+                  <div *ngIf="f.numSerie.errors.required">Requerido</div>
+                  <div *ngIf="f.numSerie.errors.min">Mínimo {{ f.numSerie.errors.min.min }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="form-group">
+                <label for="numFactura">Nº</label>
+                <input class="form-control" type="number" min="0" id="numFactura" formControlName="numFactura"
+                       [ngClass]="{ 'is-invalid': submitted && f.numFactura.errors }"/>
+                <div class="invalid-feedback" *ngIf="submitted && f.numFactura.errors">
+                  <div *ngIf="f.numFactura.errors.required">Requerido</div>
+                  <div *ngIf="f.numFactura.errors.min">Mínimo {{ f.numFactura.errors.min.min }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="fecha">Fecha de Factura</label>
+          <div class="input-group">
+            <input class="form-control" readonly id="fecha" formControlName="fecha"
+                   [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
+                   [showWeekNumbers]="false" ngbDatepicker #dff="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
+                <fa-icon [icon]="['fas', 'times']"></fa-icon>
+              </button>
+              <button class="btn btn-outline-secondary" (click)="dff.open()" type="button">
+                <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+              </button>
+            </div>
+          </div>
+          <div class="d-block invalid-feedback" *ngIf="submitted && f.fecha.errors">
+            <div *ngIf="f.fecha.errors.required">Requerido</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="fechaVencimiento">Fecha de Vencimiento</label>
+          <div class="input-group">
+            <input class="form-control" readonly id="fechaVencimiento" formControlName="fechaVencimiento"
+                   [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
+                   [showWeekNumbers]="false" ngbDatepicker #dfv="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
+                <fa-icon [icon]="['fas', 'times']"></fa-icon>
+              </button>
+              <button class="btn btn-outline-secondary" (click)="dfv.open()" type="button">
+                <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row align-items-center p-2">
+      <h2 class="h5">Renglones</h2>
+      <button type="button" class="ml-2 btn btn-secondary" (click)="showNuevoReglonFacturaModal()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+    <table class="table table-sm table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="w-100">Producto</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody formArrayName="renglones">
+        <tr *ngFor="let r of renglones.controls; index as i" [formGroupName]="i.toString()" class="renglon">
+          <td>
+            <div class="d-flex flex-column flex-lg-row">
+              <div class="flex-fill">
+                <span class="codigo">{{ r.get('renglonFactura').value.codigoItem }}</span>
+                <div class="descripcion">{{ r.get('renglonFactura').value.descripcionItem }}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-nowrap">
+                  {{ r.get('renglonFactura').value.cantidad | number:'1.0-2' }}
+                  {{ r.get('renglonFactura').value.medidaItem }}&nbsp;X&nbsp;{{ r.get('renglonFactura').value.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
+                  <span *ngIf="r.get('renglonFactura').value.bonificacionPorcentaje">
+                    - {{ r.get('renglonFactura').value.bonificacionNeta | currency: 'ARS':'symbol':'1.0-2'}}
+                    ({{ r.get('renglonFactura').value.bonificacionPorcentaje }}% bonif)
+                  </span>
+                </div>
+                <div class="precio">
+                  {{ r.get('renglonFactura').value.importe | currency: 'ARS':'symbol':'1.0-2' }}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="text-nowrap">
+            <!--<button class="btn btn-secondary">
+              <fa-icon [icon]="['fas', 'pencil']"></fa-icon>
+            </button>-->
+            <button class="btn btn-danger" (click)="removeRenglon(i)">
+              <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group mt-3">
+      <label for="observaciones">Observaciones</label>
+      <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
+    </div>
+    <table class="table table-bordered table-sm">
+      <caption class="sr-only">Resumen de Totales</caption>
+      <tbody class="thead-dark">
+      <tr>
+        <th scope="row">Subtotal</th>
+        <td class="w-100" colspan="2">{{ this.resultados.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr class="form-group">
+        <th scope="row" class="text-nowrap"><label for="descuentoPorcentaje" class="mb-0">Descuento</label></th>
+        <td class="w-50">
+          <div class="d-flex flex-row align-items-center">
+            <input type="number" min="0" class="form-control" id="descuentoPorcentaje" formControlName="descuentoPorcentaje"
+                   [ngClass]="{ 'is-invalid': submitted && f.descuentoPorcentaje.errors }"><span class="ml-2">%</span>
+          </div>
+          <div class="invalid-feedback" *ngIf="submitted && f.descuentoPorcentaje.errors">
+            <div *ngIf="f.descuentoPorcentaje.errors.min">Mínimo {{ f.descuentoPorcentaje.errors.min.min }}</div>
+          </div>
+        </td>
+        <td>{{ this.resultados.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr class="form-group">
+        <th scope="row"><label for="recargoPorcentaje" class="mb-0">Recargo</label></th>
+        <td class="w-50">
+          <div class="d-flex flex-row align-items-center">
+            <input type="number" min="0" class="form-control" id="recargoPorcentaje" formControlName="recargoPorcentaje"
+                   [ngClass]="{ 'is-invalid': submitted && f.recargoPorcentaje.errors }"><span class="ml-2">%</span>
+          </div>
+          <div class="invalid-feedback" *ngIf="submitted && f.recargoPorcentaje.errors">
+            <div *ngIf="f.recargoPorcentaje.errors.min">Mínimo {{ f.recargoPorcentaje.errors.min.min }}</div>
+          </div>
+        </td>
+        <td>{{ this.resultados.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-nowrap">Subtotal Bruto</th>
+        <td class="w-100" colspan="2">{{ this.resultados.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-nowrap">IVA 10.5%</th>
+        <td class="w-100" colspan="2">{{ this.resultados.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-nowrap">IVA 21%</th>
+        <td class="w-100" colspan="2">{{ this.resultados.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Total</th>
+        <td class="w-100" colspan="2">{{ this.resultados.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
+      </tr>
+      <!--
+            <tr>
+              <th scope="row" class="w-25">Subtotal</th>
+              <td>{{ notaCredito.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+      -->
+      </tbody>
+    </table>
+    <hr>
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary"> <!--  [disabled]="!form.valid" -->
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
+    </div>
+
+  </form>
+</div>

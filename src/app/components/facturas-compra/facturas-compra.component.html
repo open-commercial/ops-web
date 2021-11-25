@@ -1,7 +1,10 @@
 <div class="app-facturas-compra">
-  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
-    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Compra</h1>
-    <div class="text-right m-0">
+  <div class="d-flex flex-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas Compras</h1>
+    <div class="text-right m-0 text-nowrap">
+      <button type="button" class="btn btn-primary ml-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasCompraFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"

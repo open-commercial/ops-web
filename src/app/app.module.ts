@@ -99,6 +99,8 @@ import {ShareModule} from './modules/share.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { VerReciboComponent } from './components/ver-recibo/ver-recibo.component';
 import { SelectableListComponent } from './components/selectable-list/selectable-list.component';
+import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
+import { NuevoRenglonFacturaModalComponent } from './components/calculo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -192,6 +194,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NotasDebitoCompraComponent,
         SelectableListComponent,
         VerReciboComponent,
+        FacturaCompraComponent,
+        NuevoRenglonFacturaModalComponent,
     ],
     imports: [
         BrowserModule,
@@ -232,6 +236,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NotaDebitoVentaReciboModalComponent,
         NotaDebitoVentaDetalleSinReciboModalComponent,
         NotaDebitoVentaDetalleReciboModalComponent,
+        NuevoRenglonFacturaModalComponent,
     ],
     bootstrap: [AppComponent]
 })
