@@ -5,8 +5,7 @@ import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
 
 @Component({
   selector: 'app-nuevo-renglon-factura-modal',
-  templateUrl: './nuevo-renglon-factura-modal.component.html',
-  styleUrls: ['./nuevo-renglon-factura-modal.component.scss']
+  templateUrl: './nuevo-renglon-factura-modal.component.html'
 })
 export class NuevoRenglonFacturaModalComponent implements OnInit {
   form: FormGroup;
