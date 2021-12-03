@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -10,7 +10,7 @@ import {debounceTime, finalize} from 'rxjs/operators';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {HelperService} from '../../services/helper.service';
 import {RenglonFactura} from '../../models/renglon-factura';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAccordion, NgbAccordionConfig, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NuevoRenglonFacturaModalComponent} from '../nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
@@ -22,6 +22,8 @@ import {StorageKeys, StorageService} from '../../services/storage.service';
 import {NuevaFacturaCompra} from '../../models/nueva-factura-compra';
 import {SucursalesService} from '../../services/sucursales.service';
 import {Rol} from '../../models/rol';
+import {Proveedor} from '../../models/proveedor';
+import {Transportista} from '../../models/transportista';
 
 @Component({
   selector: 'app-factura-compra',
@@ -31,6 +33,7 @@ import {Rol} from '../../models/rol';
 export class FacturaCompraComponent implements OnInit, OnDestroy {
   form: FormGroup;
   submitted = false;
+  saving = false;
   helper = HelperService;
 
   tiposDeComprobantes: TipoDeComprobante[] = [];
@@ -51,11 +54,17 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   allowedRolesToCrearFactura: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToCrearFactura = false;
 
+  @ViewChild('accordion') accordion: NgbAccordion;
+
+  proveedorSeleccionado: Proveedor;
+  transportistaSeleccionado: Transportista;
+
   constructor(private fb: FormBuilder,
               private route: ActivatedRoute,
               private router: Router,
               private loadingOverlayService: LoadingOverlayService,
               private modalService: NgbModal,
+              accordionConfig: NgbAccordionConfig,
               private mensajeService: MensajeService,
               private location: Location,
               private authService: AuthService,
@@ -63,6 +72,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
               private facturasService: FacturasService,
               private sucursalesService: SucursalesService,
               private facturasCompraService: FacturasCompraService) {
+    accordionConfig.type = 'dark';
     this.subscription = new Subscription();
   }
 
@@ -87,7 +97,10 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
     this.loadingOverlayService.activate();
     this.facturasCompraService.getTiposDeComprobante(idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(data => this.tiposDeComprobantes = data)
+      .subscribe(data => {
+        this.tiposDeComprobantes = data;
+        if (data.length) { this.form.get('tipoDeComprobante').setValue(data[0]); }
+      })
     ;
   }
 
@@ -112,7 +125,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
       idTransportista: null,
       numSerie: [0, [Validators.required, Validators.min(0)]],
       numFactura: [0, [Validators.required, Validators.min(0)]],
-      fecha: ['', Validators.required],
+      fecha: [this.helper.getNgbDateFromDate(new Date()), Validators.required],
       fechaVencimiento: null,
       renglones: this.fb.array([], [Validators.required]),
       observaciones: '',
@@ -121,7 +134,9 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
     });
 
     this.subscription.add(this.form.valueChanges
-      .subscribe(value => this.storageService.setItem(StorageKeys.FACTURA_COMPRA_NUEVA, value))
+      .subscribe(value => {
+        this.storageService.setItem(StorageKeys.FACTURA_COMPRA_NUEVA, value);
+      })
     );
 
     this.subscription.add(this.form.get('idProveedor').valueChanges
@@ -181,6 +196,15 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
 
     const modalRef = this.modalService.open(NuevoRenglonFacturaModalComponent, { backdrop: 'static', size: 'lg' });
     modalRef.result.then((nrf: NuevoRenglonFactura) => {
+      const rf = this.searchInRenglones(nrf.idProducto);
+      if (rf) {
+        this.mensajeService.msg(
+          `Ya está cargado el producto "${rf.descripcionItem}" en los renglones de la factura.` ,
+          MensajeModalType.ERROR
+        );
+        return;
+      }
+
       this.loadingOverlayService.activate();
       this.facturasCompraService.calcularRenglones([nrf], tc)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
@@ -200,8 +224,77 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   }
 
   removeRenglon(i: number) {
-    this.renglones.controls.splice(i, 1);
-    this.refreshResultados();
+    const rf: RenglonFactura = this.renglones.at(i).get('renglonFactura').value;
+    this.mensajeService.msg(`Est seguro de eliminar "${rf.descripcionItem}" de los renglones de la factura.`, MensajeModalType.CONFIRM)
+      .then(result => {
+        if (result) {
+          this.renglones.removeAt(i);
+          this.refreshResultados();
+        }
+      })
+    ;
+  }
+
+  replaceRenglon(i: number, rf: RenglonFactura) {
+    this.renglones.at(i).get('renglonFactura').setValue(rf);
+  }
+
+  showEditReglonFacturaModal(i: number) {
+    if (!this.checkProveedorYTipoComprobante()) {
+      return;
+    }
+
+    const tc = this.form.get('tipoDeComprobante').value;
+    const rf: RenglonFactura = this.renglones.at(i).get('renglonFactura').value;
+
+    const modalRef = this.modalService.open(NuevoRenglonFacturaModalComponent, { backdrop: 'static', size: 'lg' });
+    modalRef.componentInstance.nrf = { idProducto: rf.idProductoItem, cantidad: rf.cantidad, bonificacion: rf.bonificacionPorcentaje };
+    modalRef.result.then((nrf: NuevoRenglonFactura) => {
+      this.loadingOverlayService.activate();
+      this.facturasCompraService.calcularRenglones([nrf], tc)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe({
+          next: (data: RenglonFactura[]) => {
+            this.replaceRenglon(i, data[0]);
+            this.refreshResultados();
+          },
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }, () => { return; });
+  }
+
+  searchInRenglones(idProducto: number): RenglonFactura {
+    const aux = this.renglones.controls.filter(r => {
+      const rf: RenglonFactura = r.get('renglonFactura').value;
+      return rf.idProductoItem === idProducto;
+    });
+    return aux.length ? aux[0].get('renglonFactura').value : null;
+  }
+
+  panelBeforeChange($event) {
+    if (this.saving) {
+      $event.preventDefault();
+      return;
+    }
+    if (this.accordion.activeIds.indexOf($event.panelId) >= 0) {
+      $event.preventDefault();
+    }
+  }
+
+  proveedorChange(p: Proveedor) {
+    this.proveedorSeleccionado = p;
+  }
+
+  getDatosFactura() {
+    const numSerie = this.form.get('numSerie') ? this.form.get('numSerie').value : 0;
+    const numFactura = this.form.get('numFactura') ? this.form.get('numFactura').value : 0;
+    const res = this.helper.formatNumFactura(numSerie, numFactura);
+    return res && (numSerie + numFactura > 0) ? ': ' + res : '';
+  }
+
+  transportistaChange(t: Transportista) {
+    this.transportistaSeleccionado = t;
   }
 
   submit() {
@@ -211,7 +304,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
       const nfc: NuevaFacturaCompra = {
         idSucursal: this.sucursalesService.getIdSucursal(),
         idProveedor: formValues.idProveedor,
-        idTransportista: Number(formValues.idTransportista),
+        idTransportista: formValues.idTransportista ? Number(formValues.idTransportista) : null,
         numSerie: formValues.numSerie,
         numFactura: formValues.numFactura,
         fecha: this.helper.getDateFromNgbDate(formValues.fecha),
@@ -230,10 +323,18 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
       };
 
       this.loadingOverlayService.activate();
+      this.saving = true;
       this.facturasCompraService.guardarFacturaCompa(nfc)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .pipe(finalize(() => {
+          this.loadingOverlayService.deactivate();
+          this.saving = false;
+        }))
         .subscribe({
-          next: () => { this.clearLSData(); this.volverAlListado(); },
+          next: () => {
+            this.mensajeService.msg('La factura se guardó correctamente.', MensajeModalType.INFO);
+            this.clearLSData();
+            this.volverAlListado();
+          },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

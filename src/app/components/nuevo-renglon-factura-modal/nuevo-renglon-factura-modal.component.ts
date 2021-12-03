@@ -11,6 +11,8 @@ import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
 export class NuevoRenglonFacturaModalComponent implements OnInit {
   form: FormGroup;
   submitted = false;
+  nrf: NuevoRenglonFactura;
+
   constructor(private fb: FormBuilder,
               public activeModal: NgbActiveModal) { }
 
@@ -20,9 +22,9 @@ export class NuevoRenglonFacturaModalComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      idProducto: [null, Validators.required],
-      cantidad: [1, [Validators.required, Validators.min(1)]],
-      bonificacion: [0, Validators.min(0)],
+      idProducto: [(this.nrf && this.nrf.idProducto ? this.nrf.idProducto : null), Validators.required],
+      cantidad: [(this.nrf && this.nrf.cantidad ? this.nrf.cantidad : 1), [Validators.required, Validators.min(1)]],
+      bonificacion: [(this.nrf && this.nrf.bonificacion ? this.nrf.bonificacion : 0), Validators.min(0)],
     });
   }
 

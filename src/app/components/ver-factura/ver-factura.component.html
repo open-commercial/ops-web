@@ -32,6 +32,10 @@
       <tr *ngIf="factura.type === 'FacturaCompra'">
         <th scope="row">Proveedor</th><td>{{ factura.razonSocialProveedor }}</td>
       </tr>
+      <tr *ngIf="factura.nombreTransportista">
+        <th scope="row" class="w-25">Transportista</th>
+        <td>{{ factura.nombreTransportista }}</td>
+      </tr>
       <tr><th scope="row">Fecha Factura</th><td>{{ factura.fecha | date:'dd/MM/yyyy' }}</td></tr>
       <tr *ngIf="factura.type === 'FacturaCompra'">
         <th scope="row">Fecha de Alta</th><td>{{ factura.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -83,15 +87,6 @@
       <tr>
         <th scope="row">Total</th>
         <td>{{ factura.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      </tbody>
-    </table>
-    <table class="table table-bordered" *ngIf="factura.nombreTransportista">
-      <caption class="sr-only">Información adicional Factura</caption>
-      <tbody>
-      <tr>
-        <th scope="row" class="w-25">Transportista</th>
-        <td>{{ factura.nombreTransportista }}</td>
       </tr>
       </tbody>
     </table>
