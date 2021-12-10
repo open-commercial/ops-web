@@ -143,7 +143,7 @@
             <thead>
             <tr>
               <th scope="col" class="w-100">Producto</th>
-              <th scope="col"></th>
+              <th scope="col" class="text-center">&nbsp;&nbsp;Acciones&nbsp;&nbsp;</th>
             </tr>
             </thead>
             <tbody formArrayName="renglones">
@@ -170,10 +170,10 @@
                 </div>
               </td>
               <td class="text-nowrap">
-                <button class="btn btn-success" (click)="showEditReglonFacturaModal(i)">
+                <button type="button" class="btn btn-success" (click)="showEditReglonFacturaModal(i)">
                   <fa-icon [icon]="['fas', 'edit']"></fa-icon>
                 </button>
-                <button class="btn btn-danger ml-2" (click)="removeRenglon(i)">
+                <button type="button" class="btn btn-danger ml-2" (click)="removeRenglon(i)">
                   <fa-icon [icon]="['fas', 'trash']"></fa-icon>
                 </button>
               </td>

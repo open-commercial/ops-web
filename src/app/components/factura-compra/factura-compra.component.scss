@@ -1,4 +1,11 @@
+:host ::ng-deep {
+  .accordion > .card {
+    overflow: unset !important;
+  }
+}
+
 .app-factura-compra {
+
   .renglon {
     .img-container {
       background-color: white;
