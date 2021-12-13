@@ -1,0 +1,33 @@
+:host ::ng-deep {
+  .accordion > .card {
+    overflow: unset !important;
+  }
+}
+
+.app-factura-compra {
+
+  .renglon {
+    .img-container {
+      background-color: white;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      width: 6rem;
+      height: 5rem;
+      img  {
+        object-fit: contain;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+    .codigo {
+      font-size: 12px;
+    }
+    .precio {
+      font-weight: bold;
+    }
+  }
+  table th, table td {
+    vertical-align: middle;
+  }
+}

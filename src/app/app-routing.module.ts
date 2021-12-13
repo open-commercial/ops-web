@@ -45,6 +45,7 @@ import {NotasCreditoCompraComponent} from './components/notas-credito-compra/not
 import {NotasDebitoCompraHomeComponent} from './components/notas-debito-compra-home/notas-debito-compra-home.component';
 import {NotasDebitoCompraComponent} from './components/notas-debito-compra/notas-debito-compra.component';
 import {VerReciboComponent} from './components/ver-recibo/ver-recibo.component';
+import {FacturaCompraComponent} from './components/factura-compra/factura-compra.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -69,7 +70,8 @@ const routes: Routes = [
       { path: 'facturas-compra', component: FacturasCompraHomeComponent,
         children: [
           { path: '', component: FacturasCompraComponent },
-          { path: 'ver/:id', component: VerFacturaComponent }
+          { path: 'ver/:id', component: VerFacturaComponent },
+          { path: 'nuevo', component: FacturaCompraComponent },
         ]
       },
       { path: 'productos', component: ProductosHomeComponent,

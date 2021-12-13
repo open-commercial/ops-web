@@ -1,7 +1,10 @@
 <div class="app-facturas-compra">
-  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
-    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Compra</h1>
-    <div class="text-right m-0">
+  <div class="d-flex flex-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas Compras</h1>
+    <div class="text-right m-0 text-nowrap">
+      <button type="button" class="btn btn-primary ml-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasCompraFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
@@ -54,6 +57,9 @@
   <div class="facturas my-2">
     <ng-template #info let-item let-i="index" id="infoFC">
       <div class="d-flex flex-row flex-wrap">
+        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </span>
         <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
           {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
@@ -68,13 +74,12 @@
         </span>
       </div>
       <div class="px-2 flex-fill">
-        <span class="dato"><span class="column-name">Fecha Factura:&nbsp;</span><span class="column-data">{{ item.fecha | date:'dd/MM/yyyy' }}</span></span>
-        <span class="dato"><span class="column-name">Fecha de Alta:&nbsp;</span><span class="column-data">{{ item.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</span></span>
-        <br>
         <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ item.razonSocialProveedor }}</span></span>
         <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
         <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
         <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+        <br>
+        <span class="dato"><span class="column-name">Fecha de Alta:&nbsp;</span><span class="column-data">{{ item.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</span></span>
       </div>
     </ng-template>
     <ng-template #actions let-item id="actionsFC">

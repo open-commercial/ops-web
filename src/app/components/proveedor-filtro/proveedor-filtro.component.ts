@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import {Component, EventEmitter, forwardRef, Output} from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Proveedor } from '../../models/proveedor';
@@ -28,6 +28,9 @@ export class ProveedorFiltroComponent implements ControlValueAccessor, Validator
 
   value;
   isDisabled: boolean;
+
+  @Output() objectChange = new EventEmitter<Proveedor>();
+
   onChange = (_: any) => { return; };
   onTouch = () => { return; };
 
@@ -37,6 +40,7 @@ export class ProveedorFiltroComponent implements ControlValueAccessor, Validator
   setProveedor(p: Proveedor, applyChange = true) {
     this.proveedor = p;
     this.value = p ? p.idProveedor : null;
+    this.objectChange.emit(p);
     if (applyChange) {
       this.onTouch();
       this.onChange(this.value);
