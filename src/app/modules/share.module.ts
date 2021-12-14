@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
 import {FiltrosAplicadosComponent} from '../components/filtros-aplicados/filtros-aplicados.component';
 import {FiltrosFormComponent} from '../components/filtros-form/filtros-form.component';
+import {MensajeAsincronicoComponent} from '../components/mensaje-asincronico/mensaje-asincronico.component';
 import {UbicacionFormFieldComponent} from '../components/ubicacion-form-field/ubicacion-form-field.component';
 import {ListaComponent} from '../components/lista/lista.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -34,6 +35,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     BatchActionsBoxComponent,
     ListaComponent,
     UbicacionFormFieldComponent,
+    MensajeAsincronicoComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +50,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     BatchActionsBoxComponent,
     ListaComponent,
     UbicacionFormFieldComponent,
+    MensajeAsincronicoComponent,
   ]
 })
 export class ShareModule {
