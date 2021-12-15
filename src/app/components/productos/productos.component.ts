@@ -142,7 +142,11 @@ export class ProductosComponent extends ListadoBaseComponent implements OnInit {
     let ordenarPorVal = this.ordenarPorOptionsP.length ? this.ordenarPorOptionsP[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
+    terminos.ordenarPor = [];
+    terminos.ordenarPor.push(ordenarPorVal);
+    if (['proveedor.razonSocial', 'rubro.nombre'].indexOf(ordenarPorVal) >= 0) {
+      terminos.ordenarPor.push('descripcion');
+    }
 
     const sentidoVal = ps.sentido ? ps.sentido : 'ASC';
     this.filterForm.get('sentido').setValue(sentidoVal);
