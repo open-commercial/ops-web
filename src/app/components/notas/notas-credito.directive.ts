@@ -1,5 +1,5 @@
 import { OnInit, Directive } from '@angular/core';
-import {NotasComponent} from './notas.component';
+import {NotasDirective} from './notas.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -20,7 +20,7 @@ import {ProveedoresService} from '../../services/proveedores.service';
 import {Movimiento} from '../../models/movimiento';
 
 @Directive()
-export abstract class NotasCreditoComponent extends NotasComponent implements OnInit {
+export abstract class NotasCreditoDirective extends NotasDirective implements OnInit {
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotasCreditoComponent} from '../notas/notas-credito.component';
+import {NotasCreditoDirective} from '../notas/notas-credito.directive';
 import {Movimiento} from '../../models/movimiento';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -18,7 +18,7 @@ import {ProveedoresService} from '../../services/proveedores.service';
   templateUrl: './notas-credito-compra.component.html',
   styleUrls: ['./notas-credito-compra.component.scss']
 })
-export class NotasCreditoCompraComponent extends NotasCreditoComponent implements OnInit {
+export class NotasCreditoCompraComponent extends NotasCreditoDirective implements OnInit {
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,

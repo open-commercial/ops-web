@@ -4,7 +4,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {FormBuilder} from '@angular/forms';
-import {NotasDebitoComponent} from '../notas/notas-debito.component';
+import {NotasDebitoDirective} from '../notas/notas-debito.directive';
 import {ClientesService} from '../../services/clientes.service';
 import {UsuariosService} from '../../services/usuarios.service';
 import {AuthService} from '../../services/auth.service';
@@ -18,7 +18,7 @@ import {ProveedoresService} from '../../services/proveedores.service';
   templateUrl: './notas-debito-venta.component.html',
   styleUrls: ['./notas-debito-venta.component.scss']
 })
-export class NotasDebitoVentaComponent extends NotasDebitoComponent implements OnInit {
+export class NotasDebitoVentaComponent extends NotasDebitoDirective implements OnInit {
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
