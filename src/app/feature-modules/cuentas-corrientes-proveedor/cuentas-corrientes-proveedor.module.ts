@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { CuentasCorrientesProveedorRoutingModule } from './cuentas-corrientes-proveedor-routing.module';
 import { CuentasCorrientesProveedorComponent } from './components/cuentas-corrientes-proveedor/cuentas-corrientes-proveedor.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgBoostrapModule } from '../../modules/ng-boostrap.module';
 import { ShareModule } from '../../modules/share.module';
 import { CuentaCorrienteProveedorComponent } from './components/cuenta-corriente-proveedor/cuenta-corriente-proveedor.component';
 import { ProveedorDetalleComponent } from './components/proveedor-detalle/proveedor-detalle.component';
@@ -36,11 +33,8 @@ import { NotaDebitoCompraDetalleReciboModalComponent } from './components/nota-d
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    FontAwesomeModule,
-    NgBoostrapModule,
+    ShareModule,
     CuentasCorrientesProveedorRoutingModule,
-    ShareModule
   ],
   entryComponents: [
     NotaCreditoCompraSinFacturaModalComponent,

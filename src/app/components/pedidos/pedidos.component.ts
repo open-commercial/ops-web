@@ -23,14 +23,14 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { ProductosService } from '../../services/productos.service';
 import { StorageKeys, StorageService } from '../../services/storage.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import { ListadoBaseComponent } from '../listado-base.component';
+import { ListadoBaseDirective } from '../listado-base.directive';
 
 @Component({
   selector: 'app-pedidos',
   templateUrl: './pedidos.component.html',
   styleUrls: ['./pedidos.component.scss']
 })
-export class PedidosComponent extends ListadoBaseComponent implements OnInit {
+export class PedidosComponent extends ListadoBaseDirective implements OnInit {
   estado = EstadoPedido;
   rol = Rol;
   usuario: Usuario;

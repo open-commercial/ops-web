@@ -21,14 +21,19 @@ import {
   faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
-  faTruck, faFileInvoiceDollar
+  faTruck, faFileInvoiceDollar, faHandHoldingUsd
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {UsuarioFiltroComponent} from '../components/usuario-filtro/usuario-filtro.component';
+import {RangoFechaFiltroComponent} from '../components/rango-fecha-filtro/rango-fecha-filtro.component';
+import {GastoFormComponent} from '../components/gasto-form/gasto-form.component';
 
 @NgModule({
   declarations: [
+    UsuarioFiltroComponent,
+    RangoFechaFiltroComponent,
     FiltroOrdenamientoComponent,
     FiltrosAplicadosComponent,
     FiltrosFormComponent,
@@ -36,14 +41,22 @@ import {ReactiveFormsModule} from '@angular/forms';
     ListaComponent,
     UbicacionFormFieldComponent,
     MensajeAsincronicoComponent,
+    GastoFormComponent,
   ],
   imports: [
     CommonModule,
     NgBoostrapModule,
     FontAwesomeModule,
+    FormsModule,
     ReactiveFormsModule,
   ],
   exports: [
+    FormsModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    NgBoostrapModule,
+    UsuarioFiltroComponent,
+    RangoFechaFiltroComponent,
     FiltroOrdenamientoComponent,
     FiltrosAplicadosComponent,
     FiltrosFormComponent,
@@ -51,6 +64,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     ListaComponent,
     UbicacionFormFieldComponent,
     MensajeAsincronicoComponent,
+    GastoFormComponent,
   ]
 })
 export class ShareModule {
@@ -69,7 +83,8 @@ export class ShareModule {
       faLockOpen, faLock, faSyncAlt, faCoins,
       faChevronDown, faChevronUp, faCheckSquare, faFileExport,
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
-      faBalanceScaleLeft, faTruck, faFileInvoiceDollar
+      faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
+      faHandHoldingUsd
     );
   }
 }

@@ -1,0 +1,100 @@
+<div class="app-gastos">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'hand-holding-usd']" rotate="180"></fa-icon> Gastos
+    </h1>
+    <div class="text-right m-0">
+      <button class="btn btn-primary ml-2 my-1" routerLink="/gastos/nuevo" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="gastosCollapse"
+              [class.bg-white]="!isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="gastosCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
+        <div class="col-xl-6">
+          <app-usuario-filtro></app-usuario-filtro>
+          <div class="p-3 mb-3 bg-white rounded border">
+            <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
+          </div>
+          <div class="form-group">
+            <label for="concepto">Concepto</label>
+            <input type="text" class="form-control" id="concepto" formControlName="concepto">
+          </div>
+        </div>
+        <div class="col-xl-6">
+          <div class="form-group">
+            <label for="nroGasto">Nº de Gasto:</label>
+            <input type="number" min="0" class="form-control" id="nroGasto" formControlName="nroGasto">
+          </div>
+          <div class="form-group">
+            <label for="idFormaDePago">Forma de Pago</label>
+            <select class="form-control" id="idFormaDePago" formControlName="idFormaDePago">
+              <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
+            </select>
+          </div>
+          <div class="px-3 pt-3 pb-0 border bg-light mb-3">
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorG" [values]="ordenarPorOptionsG" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorG></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoG" [values]="sentidoOptionsG" [label]="'Sentido'" formControlName="sentido" #sentidoG></app-filtro-ordenamiento>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <div class="gastos">
+    <ng-template #info let-item>
+      <div class="flex-fill">
+        <div>
+          <span class="badge badge-dark mr-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha }}</span>
+          <span class="badge badge-secondary">#{{ item.nroGasto }}</span>
+        </div>
+        <div class="d-flex flex-column flex-md-row">
+          <div class="flex-fill d-flex flex-row flex-wrap mr-2">
+            <div class="mr-2">
+              <span class="font-weight-bold">Usuario:&nbsp;</span>
+              <span class="font-italic">{{ item.nombreUsuario }}</span>
+            </div>
+            <div class="mr-2">
+              <span class="font-weight-bold">Forma de Pago:&nbsp;</span>
+              <span class="font-italic">{{ item.nombreFormaDePago }}</span>
+            </div>
+            <div>
+              <span class="font-weight-bold">Concepto:&nbsp;</span>
+              <span class="font-italic">{{ item.concepto }}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-weight-bold">Monto:&nbsp;</span>
+            <span class="font-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verGasto(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarGasto(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+  </div>
+
+</div>

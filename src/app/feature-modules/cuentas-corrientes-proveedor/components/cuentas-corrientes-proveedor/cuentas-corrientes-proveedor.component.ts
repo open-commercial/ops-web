@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoBaseComponent} from '../../../../components/listado-base.component';
+import {ListadoBaseDirective} from '../../../../components/listado-base.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../../../services/sucursales.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
@@ -26,7 +26,7 @@ import {ProveedoresService} from '../../../../services/proveedores.service';
   templateUrl: './cuentas-corrientes-proveedor.component.html',
   styleUrls: ['./cuentas-corrientes-proveedor.component.scss']
 })
-export class CuentasCorrientesProveedorComponent extends ListadoBaseComponent implements OnInit {
+export class CuentasCorrientesProveedorComponent extends ListadoBaseDirective implements OnInit {
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
 
@@ -123,16 +123,6 @@ export class CuentasCorrientesProveedorComponent extends ListadoBaseComponent im
       ordenarPor: '',
       sentido: '',
     });
-  }
-
-  resetFilterForm() {
-    this.filterForm.reset({
-      nroONom: '',
-      idProvincia: null,
-      idLocalidad: null,
-      ordenarPor: '',
-      sentido: '',
-    });
 
     this.filterForm.get('idProvincia').valueChanges
       .subscribe(value => {
@@ -151,6 +141,16 @@ export class CuentasCorrientesProveedorComponent extends ListadoBaseComponent im
         ;
       })
     ;
+  }
+
+  resetFilterForm() {
+    this.filterForm.reset({
+      nroONom: '',
+      idProvincia: null,
+      idLocalidad: null,
+      ordenarPor: '',
+      sentido: '',
+    });
   }
 
   getAppliedFilters() {

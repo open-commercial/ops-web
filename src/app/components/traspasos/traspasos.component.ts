@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ListadoBaseComponent } from '../listado-base.component';
+import { ListadoBaseDirective } from '../listado-base.directive';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SucursalesService } from '../../services/sucursales.service';
 import { FormBuilder } from '@angular/forms';
@@ -25,7 +25,7 @@ import {ProductosService} from '../../services/productos.service';
   selector: 'app-traspasos',
   templateUrl: './traspasos.component.html'
 })
-export class TraspasosComponent extends ListadoBaseComponent implements OnInit {
+export class TraspasosComponent extends ListadoBaseDirective implements OnInit {
   ordenarPorOptionsT = [
     { val: 'fechaDeAlta', text: 'Fecha' },
     { val: 'nroTraspaso', text: 'Nº Traspaso' },

@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoBaseComponent} from '../listado-base.component';
+import {ListadoBaseDirective} from '../listado-base.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -31,7 +31,7 @@ import {HelperService} from '../../services/helper.service';
   templateUrl: './cuentas-corrientes-cliente.component.html',
   styleUrls: ['./cuentas-corrientes-cliente.component.scss']
 })
-export class CuentasCorrientesClienteComponent extends ListadoBaseComponent implements OnInit {
+export class CuentasCorrientesClienteComponent extends ListadoBaseDirective implements OnInit {
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
 

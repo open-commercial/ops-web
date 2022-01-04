@@ -1,5 +1,5 @@
 import { OnInit, ViewChild, Directive } from '@angular/core';
-import {ListadoBaseComponent} from '../listado-base.component';
+import {ListadoBaseDirective} from '../listado-base.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -29,7 +29,7 @@ import {ProveedoresService} from '../../services/proveedores.service';
 
 /** NO ES COMPONENT YA QUE ES UNA CLASE ABSTRACTA */
 @Directive()
-export abstract class NotasComponent extends ListadoBaseComponent implements OnInit {
+export abstract class NotasDirective extends ListadoBaseDirective implements OnInit {
   rol = Rol;
   ordenarPorOptionsN = [];
 
