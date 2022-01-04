@@ -10,8 +10,7 @@ import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-gasto',
-  templateUrl: './gasto.component.html',
-  styleUrls: ['./gasto.component.scss']
+  templateUrl: './gasto.component.html'
 })
 export class GastoComponent implements OnInit {
 
@@ -28,7 +27,9 @@ export class GastoComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: value => { if (!value) {
-          this.mensajeService.msg('La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR),
+          this.mensajeService.msg(
+            'La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR
+          );
           this.volverAlListado();
         }},
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
@@ -44,7 +45,7 @@ export class GastoComponent implements OnInit {
     this.location.back();
   }
 
-  onGastoSaved(gasto: Gasto) {
+  onGastoSaved() {
     this.volverAlListado();
   }
 }

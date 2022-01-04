@@ -12,8 +12,7 @@ import {Gasto} from '../../models/gasto';
 
 @Component({
   selector: 'app-gasto-form',
-  templateUrl: './gasto-form.component.html',
-  styleUrls: ['./gasto-form.component.scss']
+  templateUrl: './gasto-form.component.html'
 })
 export class GastoFormComponent implements OnInit {
   loading = false;

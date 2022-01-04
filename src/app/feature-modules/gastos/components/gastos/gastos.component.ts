@@ -24,8 +24,7 @@ import {Gasto} from '../../../../models/gasto';
 
 @Component({
   selector: 'app-gastos',
-  templateUrl: './gastos.component.html',
-  styleUrls: ['./gastos.component.scss']
+  templateUrl: './gastos.component.html'
 })
 export class GastosComponent extends ListadoBaseDirective implements OnInit {
   allowedRolesToSee: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
