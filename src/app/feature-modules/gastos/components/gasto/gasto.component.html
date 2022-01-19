@@ -5,10 +5,10 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'hand-holding-usd']" rotate="180"></fa-icon> Nuevo Gasto
+      <fa-icon [icon]="['fas', 'hand-holding-usd']"  [rotate]="180.0"></fa-icon> Nuevo Gasto
     </h1>
   </div>
-  <app-gasto-form (gastoSaved)="onGastoSaved($event)" #gastoForm></app-gasto-form>
+  <app-gasto-form (gastoSaved)="onGastoSaved()" #gastoForm></app-gasto-form>
   <div class="text-right">
     <button type="submit" class="btn btn-primary" (click)="submit()">
       <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar

@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Gasto} from '../../../../models/gasto';
 import {GastoFormComponent} from '../../../../components/gasto-form/gasto-form.component';
 import {CajasService} from '../../../../services/cajas.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
