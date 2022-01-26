@@ -21,6 +21,7 @@ import {FormaDePago} from '../../../../models/forma-de-pago';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
 import {FiltroOrdenamientoComponent} from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
 import {Gasto} from '../../../../models/gasto';
+import {CajasService} from '../../../../services/cajas.service';
 
 @Component({
   selector: 'app-gastos',
@@ -62,6 +63,7 @@ export class GastosComponent extends ListadoBaseDirective implements OnInit {
               private gastosService: GastosService,
               private usuariosService: UsuariosService,
               private formasDePagoService: FormasDePagoService,
+              private cajasService: CajasService,
               ) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
@@ -225,6 +227,22 @@ export class GastosComponent extends ListadoBaseDirective implements OnInit {
     if (values.idFormaDePago) { ret.idFormaDePago = values.idFormaDePago; }
 
     return ret;
+  }
+
+  nuevoGasto() {
+    this.cajasService.estaAbiertaLaCaja()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: value => {
+          if (value) {
+            this.router.navigate(['/gastos/nuevo']);
+          } else {
+            this.mensajeService.msg('La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR);
+          }
+        },
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
   }
 
   verGasto(g: Gasto) {

@@ -12,7 +12,7 @@ import {Location} from '@angular/common';
   templateUrl: './gasto.component.html'
 })
 export class GastoComponent implements OnInit {
-
+  checkingCajaAbierta = false;
   @ViewChild('gastoForm') gastoForm: GastoFormComponent;
 
   constructor(private location: Location,
@@ -21,6 +21,7 @@ export class GastoComponent implements OnInit {
               private mensajeService: MensajeService) { }
 
   ngOnInit() {
+    this.checkingCajaAbierta = true;
     this.loadingOverlayService.activate();
     this.cajasService.estaAbiertaLaCaja()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
@@ -28,10 +29,16 @@ export class GastoComponent implements OnInit {
         next: value => { if (!value) {
           this.mensajeService.msg(
             'La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR
-          );
-          this.volverAlListado();
+          ).then(() => {
+            this.volverAlListado();
+            this.checkingCajaAbierta = false;
+          });
         }},
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.checkingCajaAbierta = false;
+          this.volverAlListado();
+        },
       })
     ;
   }

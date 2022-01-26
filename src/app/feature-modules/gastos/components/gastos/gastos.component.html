@@ -4,7 +4,7 @@
       <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
     </h1>
     <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" routerLink="/gastos/nuevo" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
+      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" (click)="nuevoGasto()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
