@@ -30,10 +30,7 @@ export class GastoComponent implements OnInit {
           if (!value) {
             this.mensajeService.msg(
               'La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR
-            ).then(() => {
-              this.volverAlListado();
-              this.checkingCajaAbierta = false;
-            });
+            ).then(() => this.volverAlListado());
           } else {
             this.checkingCajaAbierta = false;
           }
