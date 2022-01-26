@@ -26,14 +26,18 @@ export class GastoComponent implements OnInit {
     this.cajasService.estaAbiertaLaCaja()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: value => { if (!value) {
-          this.mensajeService.msg(
-            'La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR
-          ).then(() => {
-            this.volverAlListado();
+        next: value => {
+          if (!value) {
+            this.mensajeService.msg(
+              'La operación solicitada no se puede realizar. La caja se encuentra cerrada', MensajeModalType.ERROR
+            ).then(() => {
+              this.volverAlListado();
+              this.checkingCajaAbierta = false;
+            });
+          } else {
             this.checkingCajaAbierta = false;
-          });
-        }},
+          }
+        },
         error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.checkingCajaAbierta = false;
