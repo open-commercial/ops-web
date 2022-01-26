@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ListadoBaseComponent} from '../listado-base.component';
+import {ListadoBaseDirective} from '../listado-base.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -27,7 +27,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
   templateUrl: './cajas.component.html',
   styleUrls: ['./cajas.component.scss']
 })
-export class CajasComponent extends ListadoBaseComponent implements OnInit {
+export class CajasComponent extends ListadoBaseDirective implements OnInit {
   estado = EstadoCaja;
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];

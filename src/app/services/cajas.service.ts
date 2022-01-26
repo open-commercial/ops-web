@@ -63,4 +63,9 @@ export class CajasService {
   getSaldoQueAfectaCaja(idCaja: number): Observable<number> {
     return this.http.get<number>(`${this.url}/${idCaja}/saldo-afecta-caja`);
   }
+
+  estaAbiertaLaCaja(): Observable<boolean> {
+    const idSucursal = this.sucursalesService.getIdSucursal();
+    return this.http.get<boolean>(`${this.url}/sucursales/${idSucursal}/ultima-caja-abierta`);
+  }
 }

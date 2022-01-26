@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Gasto} from '../models/gasto';
 import {NuevoGasto} from '../models/nuevo-gasto';
+import {BusquedaGastoCriteria} from '../models/criterias/busqueda-gasto-criteria';
+import {Pagination} from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,10 @@ export class GastosService {
   urlBusqueda = this.url + '/busqueda/criteria';
 
   constructor(private http: HttpClient) { }
+
+  buscar(criteria: BusquedaGastoCriteria): Observable<Pagination> {
+    return this.http.post<Pagination>(this.urlBusqueda, criteria);
+  }
 
   getGasto(idGasto: number): Observable<Gasto> {
     return this.http.get<Gasto>(`${this.url}/${idGasto}`);

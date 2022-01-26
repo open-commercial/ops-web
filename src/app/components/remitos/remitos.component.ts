@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoBaseComponent} from '../listado-base.component';
+import {ListadoBaseDirective} from '../listado-base.directive';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../models/pagination';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -29,7 +29,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
   templateUrl: './remitos.component.html',
   styleUrls: ['./remitos.component.scss']
 })
-export class RemitosComponent extends ListadoBaseComponent implements OnInit {
+export class RemitosComponent extends ListadoBaseDirective implements OnInit {
 
   ordenarPorOptionsR = [
     { val: 'fecha', text: 'Fecha Remito' },

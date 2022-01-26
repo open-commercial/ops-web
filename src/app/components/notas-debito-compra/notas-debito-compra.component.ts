@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Movimiento} from '../../models/movimiento';
-import {NotasDebitoComponent} from '../notas/notas-debito.component';
+import {NotasDebitoDirective} from '../notas/notas-debito.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -18,7 +18,7 @@ import {ProveedoresService} from '../../services/proveedores.service';
   templateUrl: './notas-debito-compra.component.html',
   styleUrls: ['./notas-debito-compra.component.scss']
 })
-export class NotasDebitoCompraComponent extends NotasDebitoComponent implements OnInit {
+export class NotasDebitoCompraComponent extends NotasDebitoDirective implements OnInit {
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,

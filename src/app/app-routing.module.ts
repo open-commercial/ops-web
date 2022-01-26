@@ -144,7 +144,12 @@ const routes: Routes = [
       },
       { path: 'proveedores',
         loadChildren: () => import('./feature-modules/cuentas-corrientes-proveedor/cuentas-corrientes-proveedor.module')
-          .then(m => m.CuentasCorrientesProveedorModule) },
+          .then(m => m.CuentasCorrientesProveedorModule)
+      },
+      { path: 'gastos',
+        loadChildren: () => import('./feature-modules/gastos/gastos.module')
+          .then(m => m.GastosModule)
+      },
     ]
   },
   { path: '**', redirectTo: '' }

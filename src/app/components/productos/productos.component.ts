@@ -15,7 +15,7 @@ import {ProductosService} from '../../services/productos.service';
 import {combineLatest, Observable} from 'rxjs';
 import {Proveedor} from '../../models/proveedor';
 import {ProveedoresService} from '../../services/proveedores.service';
-import {ListadoBaseComponent} from '../listado-base.component';
+import {ListadoBaseDirective} from '../listado-base.directive';
 import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
@@ -28,7 +28,7 @@ import {Sucursal} from '../../models/sucursal';
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.scss']
 })
-export class ProductosComponent extends ListadoBaseComponent implements OnInit {
+export class ProductosComponent extends ListadoBaseDirective implements OnInit {
   isBatchActionsBoxCollapsed = true;
   ordenarPorOptionsP = [
     { val: 'descripcion', text: 'Descripción' },

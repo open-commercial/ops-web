@@ -10,7 +10,7 @@ import { LoadingOverlayService } from '../services/loading-overlay.service';
 import { MensajeService } from '../services/mensaje.service';
 
 @Directive()
-export abstract class ListadoBaseComponent implements OnInit, OnDestroy {
+export abstract class ListadoBaseDirective implements OnInit, OnDestroy {
   items = [];
   isFiltersCollapsed = true;
 
