@@ -150,6 +150,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/gastos/gastos.module')
           .then(m => m.GastosModule)
       },
+      { path: 'recibos-venta',
+        loadChildren: () => import('./feature-modules/recibos-venta/recibos-venta.module')
+          .then(m => m.RecibosVentaModule)
+      },
     ]
   },
   { path: '**', redirectTo: '' }
