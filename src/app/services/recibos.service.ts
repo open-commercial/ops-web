@@ -3,6 +3,8 @@ import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Recibo} from '../models/recibo';
+import {BusquedaReciboCriteria} from '../models/criterias/busqueda-recibo-criteria';
+import {Pagination} from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,10 @@ export class RecibosService {
   urlBusqueda = this.url + '/busqueda/criteria';
 
   constructor(private http: HttpClient) { }
+
+  buscar(criteria: BusquedaReciboCriteria): Observable<Pagination> {
+    return this.http.post<Pagination>(this.urlBusqueda, criteria);
+  }
 
   getRecibo(idRecibo: number): Observable<Recibo> {
     return this.http.get<Recibo>(`${this.url}/${idRecibo}`);

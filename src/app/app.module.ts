@@ -14,7 +14,6 @@ import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
 import localeEsAR from '@angular/common/locales/es-AR';
 import localeEsARExtra from '@angular/common/locales/extra/es-AR';
-import { ClienteFiltroComponent } from './components/cliente-filtro/cliente-filtro.component';
 import { ProductoFiltroComponent } from './components/producto-filtro/producto-filtro.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
@@ -106,7 +105,6 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     SideNavComponent,
     HomeComponent,
     PedidosComponent,
-    ClienteFiltroComponent,
     ProductoFiltroComponent,
     FacturasVentaComponent,
     FacturasCompraComponent,

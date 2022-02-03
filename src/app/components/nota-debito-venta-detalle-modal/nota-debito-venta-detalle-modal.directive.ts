@@ -4,7 +4,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../../services/notas.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import { OnInit, Directive } from '@angular/core';
+import {Directive, OnInit} from '@angular/core';
 import {NotaDebitoDetalleModalDirective} from '../nota-debito-detalle-modal/nota-debito-detalle-modal.directive';
 
 @Directive()

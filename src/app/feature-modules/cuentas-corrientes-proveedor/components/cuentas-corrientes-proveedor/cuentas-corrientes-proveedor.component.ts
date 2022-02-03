@@ -108,7 +108,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoBaseDirective im
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;
 
-    const sentidoVal = ps.sentido ? ps.sentido : 'ASC';
+    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
     this.filterForm.get('sentido').setValue(sentidoVal);
     terminos.sentido = sentidoVal;
 
