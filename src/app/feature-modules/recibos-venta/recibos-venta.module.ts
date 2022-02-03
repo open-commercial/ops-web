@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { RecibosVentaRoutingModule } from './recibos-venta-routing.module';
 import { RecibosVentaComponent } from './componentes/recibos-venta.component';
+import {ShareModule} from '../../modules/share.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { RecibosVentaComponent } from './componentes/recibos-venta.component';
   ],
   imports: [
     CommonModule,
-    RecibosVentaRoutingModule
+    RecibosVentaRoutingModule,
+    ShareModule
   ]
 })
 export class RecibosVentaModule { }

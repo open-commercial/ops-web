@@ -137,6 +137,15 @@ export class GastosComponent extends ListadoBaseDirective implements OnInit {
       terminos.idFormaDePago = idFormaDePago;
     }
 
+    let ordenarPorVal = this.ordenarPorOptionsG.length ? this.ordenarPorOptionsG[0].val : '';
+    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
+    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
+    terminos.ordenarPor = ordenarPorVal;
+
+    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
+    this.filterForm.get('sentido').setValue(sentidoVal);
+    terminos.sentido = sentidoVal;
+
     return terminos;
   }
 
@@ -225,6 +234,9 @@ export class GastosComponent extends ListadoBaseDirective implements OnInit {
     if (values.concepto) { ret.concepto = values.concepto; }
     if (values.nroGasto) { ret.nroGasto = values.nroGasto; }
     if (values.idFormaDePago) { ret.idFormaDePago = values.idFormaDePago; }
+
+    if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
+    if (values.sentido) { ret.sentido = values.sentido; }
 
     return ret;
   }

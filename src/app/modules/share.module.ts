@@ -29,10 +29,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UsuarioFiltroComponent} from '../components/usuario-filtro/usuario-filtro.component';
 import {RangoFechaFiltroComponent} from '../components/rango-fecha-filtro/rango-fecha-filtro.component';
 import {GastoFormComponent} from '../components/gasto-form/gasto-form.component';
+import {ClienteFiltroComponent} from '../components/cliente-filtro/cliente-filtro.component';
 
 @NgModule({
   declarations: [
     UsuarioFiltroComponent,
+    ClienteFiltroComponent,
     RangoFechaFiltroComponent,
     FiltroOrdenamientoComponent,
     FiltrosAplicadosComponent,
@@ -56,6 +58,7 @@ import {GastoFormComponent} from '../components/gasto-form/gasto-form.component'
     FontAwesomeModule,
     NgBoostrapModule,
     UsuarioFiltroComponent,
+    ClienteFiltroComponent,
     RangoFechaFiltroComponent,
     FiltroOrdenamientoComponent,
     FiltrosAplicadosComponent,

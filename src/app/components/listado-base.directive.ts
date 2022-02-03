@@ -78,18 +78,18 @@ export abstract class ListadoBaseDirective implements OnInit, OnDestroy {
         this.loadingOverlayService.deactivate();
         this.searching = false;
       }))
-      .subscribe(
-        (p: Pagination) => {
+      .subscribe({
+        next: (p: Pagination) => {
           this.items = p.content;
           this.totalElements = p.totalElements;
           this.totalPages = p.totalPages;
           this.size = p.size;
         },
-        err => {
+        error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.items = [];
         }
-      )
+      })
     ;
   }
 

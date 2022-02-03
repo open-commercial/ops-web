@@ -36,10 +36,10 @@ export class NotaDebitoVentaDetalleSinReciboModalComponent extends NotaDebitoVen
     this.loadingOverlayService.activate();
     this.notasService.crearNotaDebitoSinRecibo(this.nndsr)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (nd: NotaDebito) => this.activeModal.close(nd),
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
+      .subscribe({
+        next: (nd: NotaDebito) => this.activeModal.close(nd),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 }

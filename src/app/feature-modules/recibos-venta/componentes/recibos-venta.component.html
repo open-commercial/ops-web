@@ -1,1 +1,122 @@
-<p>recibos-venta works!</p>
+<div class="app-recibos-venta my-3">
+  <div class="d-flex flex-row">
+    <h1 class="h3 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos de Venta
+    </h1>
+    <div class="text-right m-0">
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="recibosVentaCollapse"
+              [class.bg-white]="!isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="recibosVentaCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
+        <div class="col-xl-6">
+          <div class="p-3 mb-3 bg-white rounded border">
+            <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
+          </div>
+          <div class="form-group">
+            <label>Nº Recibo </label>
+            <div class="row">
+              <div class="col-4">
+                <label class="sr-only" for="num-serie">Nº de serie</label>
+                <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
+              </div>
+              <div class="col-8">
+                <label class="sr-only" for="num-recibo">Nº de Recibo</label>
+                <input type="text" class="form-control" id="num-recibo" formControlName="numRecibo">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="concepto">Concepto</label>
+            <input type="text" class="form-control" id="concepto" formControlName="concepto">
+          </div>
+          <div class="form-group">
+            <label for="idFormaDePago">Forma de Pago</label>
+            <select class="form-control" id="idFormaDePago" formControlName="idFormaDePago">
+              <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-xl-6">
+          <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
+          <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
+          <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
+          <div class="px-3 pt-3 pb-0 border bg-light mb-3">
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorRV" [values]="ordenarPorOptionsRV" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorRV></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoRV" [values]="sentidoOptionsRV" [label]="'Sentido'" formControlName="sentido" #sentidoRV></app-filtro-ordenamiento>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <div class="recibos-venta">
+    <ng-template #info let-item>
+      <div class="flex-fill">
+        <div>
+          <span class="badge badge-dark mr-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha }}</span>
+          <span class="badge badge-secondary">#{{ helper.formatNumFactura(item.numSerie, item.numRecibo) }}</span>
+        </div>
+      </div>
+      <div class="d-flex flex-column flex-md-row mt-2">
+        <div class="w-100 mr-2">
+          <div class="mr-2">
+            <span class="font-weight-bold">Cliente:&nbsp;</span>
+            <span class="font-italic">{{ item.nombreFiscalCliente }}</span>
+          </div>
+          <div class="mr-2">
+            <span class="font-weight-bold">Usuario:&nbsp;</span>
+            <span class="font-italic">{{ item.nombreUsuario }}</span>
+          </div>
+          <div class="mr-2" *ngIf="item.nombreViajante">
+            <span class="font-weight-bold">Viajante:&nbsp;</span>
+            <span class="font-italic">{{ item.nombreViajante }}</span>
+          </div>
+        </div>
+        <div class="w-100 mr-2">
+          <div class="flex-fill d-flex flex-row flex-wrap mr-2">
+            <span class="font-weight-bold">Forma de Pago:&nbsp;</span>
+            <span class="font-italic">{{ item.nombreFormaDePago }}</span>
+          </div>
+          <div class="flex-fill d-flex flex-row flex-wrap align-items-center mr-2">
+            <span class="font-weight-bold">Monto:&nbsp;</span>
+            <span class="font-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+          </div>
+          <div class="flex-fill d-flex flex-row flex-wrap mr-2">
+            <span class="font-weight-bold">Concepto:&nbsp;</span>
+            <span class="font-italic">{{ item.concepto }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verRecibo(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="hasRoleToCrearNota">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Crear Nota de Débito" placement="left" triggers="mouseenter:mouseleave" (click)="crearNotaDeDebitoRecibo(item)">
+            <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="hasRoleToDelete">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarRecibo(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { OnInit, Directive } from '@angular/core';
+import {Directive, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -28,9 +28,7 @@ export abstract class NotaDebitoVentaModalDirective extends NotaDebitoModalDirec
 
   getTiposDeComprobantes() {
     this.loading = true;
-    this.notasService.getTiposDeNotaDebitoClienteSucursal(
-      this.cliente.idCliente, this.sucursalesService.getIdSucursal()
-    )
+    this.notasService.getTiposDeNotaDebitoClienteSucursal(this.cliente.idCliente, this.sucursalesService.getIdSucursal())
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: data => this.tiposDeComprobantes = data,

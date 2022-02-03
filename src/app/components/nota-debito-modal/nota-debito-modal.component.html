@@ -23,7 +23,7 @@
     </div>
   </form>
 </div>
-<div class="modal-footer">
+<div class="modal-footer" *ngIf="form">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
     <fa-icon [icon]="['fas', 'times']"></fa-icon> Cancelar
   </button>
