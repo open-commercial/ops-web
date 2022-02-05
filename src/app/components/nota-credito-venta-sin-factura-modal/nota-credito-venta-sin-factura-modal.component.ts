@@ -9,7 +9,7 @@ import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevaNotaCreditoSinFactura} from '../../models/nueva-nota-credito-sin-factura';
 import {Cliente} from '../../models/cliente';
-import {NotaCreditoSinFacturaModalDirective} from '../nota-credito-sin-factura-modal/nota-credito-sin-factura-modal.directive';
+import {NotaCreditoSinFacturaModalDirective} from '../../directives/nota-credito-sin-factura-modal.directive';
 
 @Component({
   selector: 'app-nota-credito-venta-sin-factura-modal',

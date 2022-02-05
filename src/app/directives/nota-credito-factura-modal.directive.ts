@@ -1,13 +1,13 @@
 import {Directive, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {NotasService} from '../../services/notas.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {FacturasService} from '../../services/facturas.service';
-import {NuevaNotaCreditoDeFactura} from '../../models/nueva-nota-credito-de-factura';
+import {NotasService} from '../services/notas.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
+import {FacturasService} from '../services/facturas.service';
+import {NuevaNotaCreditoDeFactura} from '../models/nueva-nota-credito-de-factura';
 import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
 
 const noneSelected = (): ValidatorFn => {
   return (control: FormArray): ValidationErrors | null => {

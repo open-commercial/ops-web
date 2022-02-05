@@ -3,7 +3,7 @@ import {NuevaNotaDebitoSinRecibo} from '../../../../models/nueva-nota-debito-sin
 import {finalize} from 'rxjs/operators';
 import {NotaDebito} from '../../../../models/nota';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {NotaDebitoCompraDetalleModalDirective} from '../nota-debito-compra-detalle-modal/nota-debito-compra-detalle-modal.directive';
+import {NotaDebitoCompraDetalleModalDirective} from '../../../../directives/nota-debito-compra-detalle-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';

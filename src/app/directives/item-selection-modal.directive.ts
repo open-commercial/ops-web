@@ -1,8 +1,8 @@
 import {Directive, ViewChild} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs/operators';
-import { Pagination } from '../../models/pagination';
-import { SelectableListComponent } from '../../components/selectable-list/selectable-list.component';
+import { Pagination } from '../models/pagination';
+import { SelectableListComponent } from '../components/selectable-list/selectable-list.component';
 import { Observable } from 'rxjs';
 
 @Directive()

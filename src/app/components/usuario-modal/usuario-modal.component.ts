@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UsuariosService} from '../../services/usuarios.service';
 import {Rol} from '../../models/rol';
-import {ItemSelectionModalDirective} from '../../directives/busqueda-modal/item-selection-modal.directive';
+import {ItemSelectionModalDirective} from '../../directives/item-selection-modal.directive';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../models/pagination';
 

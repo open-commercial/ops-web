@@ -5,7 +5,7 @@ import {NotasService} from '../../services/notas.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {FacturasService} from '../../services/facturas.service';
-import {NotaCreditoFacturaModalDirective} from '../nota-credito-factura-modal/nota-credito-factura-modal.directive';
+import {NotaCreditoFacturaModalDirective} from '../../directives/nota-credito-factura-modal.directive';
 
 @Component({
   selector: 'app-nota-credito-venta-factura-modal',

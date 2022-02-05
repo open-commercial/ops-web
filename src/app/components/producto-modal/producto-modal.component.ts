@@ -10,7 +10,7 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { SucursalesService} from '../../services/sucursales.service';
 import { Cliente } from '../../models/cliente';
 import { Movimiento } from '../../models/movimiento';
-import { ItemSelectionModalDirective } from '../../directives/busqueda-modal/item-selection-modal.directive';
+import { ItemSelectionModalDirective } from '../../directives/item-selection-modal.directive';
 import { Observable } from 'rxjs';
 
 @Component({

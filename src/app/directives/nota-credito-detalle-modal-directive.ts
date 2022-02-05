@@ -1,11 +1,11 @@
-import {NotaCredito} from '../../models/nota';
+import {NotaCredito} from '../models/nota';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {NotasService} from '../../services/notas.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
+import {NotasService} from '../services/notas.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
 import { OnInit, Directive } from '@angular/core';
-import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
+import {TipoDeComprobante} from '../models/tipo-de-comprobante';
 
 @Directive()
 export default abstract class NotaCreditoDetalleModalDirective implements OnInit {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotasCreditoDirective} from '../notas/notas-credito.directive';
+import {NotasCreditoDirective} from '../../directives/notas-credito.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';

@@ -1,15 +1,15 @@
 import {Directive, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NotasService} from '../../services/notas.service';
-import {SucursalesService} from '../../services/sucursales.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {HelperService} from '../../services/helper.service';
-import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
-import {NuevaNotaCreditoSinFactura} from '../../models/nueva-nota-credito-sin-factura';
+import {NotasService} from '../services/notas.service';
+import {SucursalesService} from '../services/sucursales.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
+import {HelperService} from '../services/helper.service';
+import {TipoDeComprobante} from '../models/tipo-de-comprobante';
+import {NuevaNotaCreditoSinFactura} from '../models/nueva-nota-credito-sin-factura';
 import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
 
 @Directive()
 export abstract class NotaCreditoSinFacturaModalDirective implements OnInit {

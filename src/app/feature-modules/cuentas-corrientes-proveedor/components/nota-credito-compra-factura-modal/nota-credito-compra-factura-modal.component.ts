@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotaCreditoFacturaModalDirective} from '../../../../components/nota-credito-factura-modal/nota-credito-factura-modal.directive';
+import {NotaCreditoFacturaModalDirective} from '../../../../directives/nota-credito-factura-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';

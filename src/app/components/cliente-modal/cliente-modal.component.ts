@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClientesService } from '../../services/clientes.service';
-import { ItemSelectionModalDirective } from '../../directives/busqueda-modal/item-selection-modal.directive';
+import { ItemSelectionModalDirective } from '../../directives/item-selection-modal.directive';
 import { Observable } from 'rxjs';
 import { Pagination } from '../../models/pagination';
 

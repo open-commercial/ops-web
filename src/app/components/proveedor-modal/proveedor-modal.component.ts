@@ -3,7 +3,7 @@ import { Observable} from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Pagination } from '../../models/pagination';
-import { ItemSelectionModalDirective } from '../../directives/busqueda-modal/item-selection-modal.directive';
+import { ItemSelectionModalDirective } from '../../directives/item-selection-modal.directive';
 
 @Component({
   selector: 'app-proveedor-modal',
