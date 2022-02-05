@@ -1,32 +1,32 @@
 import {Component, OnInit} from '@angular/core';
-import {RecibosDirective} from '../../../directives/recibos.directive';
-import {Recibo} from '../../../models/recibo';
-import {Movimiento} from '../../../models/movimiento';
+import {RecibosDirective} from '../../../../directives/recibos.directive';
+import {Recibo} from '../../../../models/recibo';
+import {Movimiento} from '../../../../models/movimiento';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../../services/sucursales.service';
-import {LoadingOverlayService} from '../../../services/loading-overlay.service';
-import {MensajeService} from '../../../services/mensaje.service';
+import {SucursalesService} from '../../../../services/sucursales.service';
+import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
+import {MensajeService} from '../../../../services/mensaje.service';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {RecibosService} from '../../../services/recibos.service';
-import {FormasDePagoService} from '../../../services/formas-de-pago.service';
-import {ClientesService} from '../../../services/clientes.service';
-import {UsuariosService} from '../../../services/usuarios.service';
-import {AuthService} from '../../../services/auth.service';
-import {ConfiguracionesSucursalService} from '../../../services/configuraciones-sucursal.service';
-import {NotasService} from '../../../services/notas.service';
+import {RecibosService} from '../../../../services/recibos.service';
+import {FormasDePagoService} from '../../../../services/formas-de-pago.service';
+import {ClientesService} from '../../../../services/clientes.service';
+import {UsuariosService} from '../../../../services/usuarios.service';
+import {AuthService} from '../../../../services/auth.service';
+import {ConfiguracionesSucursalService} from '../../../../services/configuraciones-sucursal.service';
+import {NotasService} from '../../../../services/notas.service';
 import {Observable} from 'rxjs';
-import {Cliente} from '../../../models/cliente';
+import {Cliente} from '../../../../models/cliente';
 import {finalize, map} from 'rxjs/operators';
 import {
   NotaDebitoVentaReciboModalComponent
-} from '../../../components/nota-debito-venta-recibo-modal/nota-debito-venta-recibo-modal.component';
-import {NuevaNotaDebitoDeRecibo} from '../../../models/nueva-nota-debito-de-recibo';
-import {NotaDebito} from '../../../models/nota';
+} from '../../../../components/nota-debito-venta-recibo-modal/nota-debito-venta-recibo-modal.component';
+import {NuevaNotaDebitoDeRecibo} from '../../../../models/nueva-nota-debito-de-recibo';
+import {NotaDebito} from '../../../../models/nota';
 import {
   NotaDebitoVentaDetalleReciboModalComponent
-} from '../../../components/nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
-import {MensajeModalType} from '../../../components/mensaje-modal/mensaje-modal.component';
+} from '../../../../components/nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
+import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-recibos-venta',
@@ -42,14 +42,14 @@ export class RecibosVentaComponent extends RecibosDirective implements OnInit {
               protected modalService: NgbModal,
               protected recibosService: RecibosService,
               protected formasDePagoService: FormasDePagoService,
-              protected clientesService: ClientesService,
               protected usuariosService: UsuariosService,
               protected authService: AuthService,
               protected configuracionesSucursalService: ConfiguracionesSucursalService,
-              protected notasService: NotasService) {
+              protected notasService: NotasService,
+              private clientesService: ClientesService) {
     super(
       route, router, sucursalesService, loadingOverlayService, mensajeService,
-      fb, modalService, recibosService, formasDePagoService, clientesService, usuariosService,
+      fb, modalService, recibosService, formasDePagoService, usuariosService,
       authService, configuracionesSucursalService, notasService
     );
   }
@@ -77,6 +77,7 @@ export class RecibosVentaComponent extends RecibosDirective implements OnInit {
     super.createFilterForm();
     this.filterForm.addControl('idCliente', new FormControl(null));
   }
+
   resetFilterForm() {
     super.resetFilterForm();
     this.filterForm.get('idCliente').setValue(null);

@@ -154,6 +154,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/recibos-venta/recibos-venta.module')
           .then(m => m.RecibosVentaModule)
       },
+      { path: 'recibos-compra',
+        loadChildren: () => import('./feature-modules/recibos-compra/recibos-compra.module')
+          .then(m => m.RecibosCompraModule)
+      },
     ]
   },
   { path: '**', redirectTo: '' }

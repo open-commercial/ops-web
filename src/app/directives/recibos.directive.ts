@@ -8,7 +8,6 @@ import {FormBuilder} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RecibosService} from '../services/recibos.service';
 import {FormasDePagoService} from '../services/formas-de-pago.service';
-import {ClientesService} from '../services/clientes.service';
 import {UsuariosService} from '../services/usuarios.service';
 import {AuthService} from '../services/auth.service';
 import {ConfiguracionesSucursalService} from '../services/configuraciones-sucursal.service';
@@ -44,14 +43,14 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
   formasDePago: FormaDePago[] = [];
 
 
-  ordenarPorOptionsRV = [
+  ordenarPorOptionsR = [
     { val: 'fecha', text: 'Fecha Recibo' },
     { val: 'concepto', text: 'Concepto' },
     { val: 'idFormaDePago', text: 'Forma de Pago' },
     { val: 'monto', text: 'Monto' },
   ];
 
-  sentidoOptionsRV = [
+  sentidoOptionsR = [
     { val: 'DESC', text: 'Descendente' },
     { val: 'ASC', text: 'Ascendente' },
   ];
@@ -60,8 +59,8 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordenarPorRV') ordenarPorRVElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoRV') sentidoRVElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordenarPorR') ordenarPorRElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoR') sentidoRElement: FiltroOrdenamientoComponent;
 
   tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
     TipoDeComprobante.NOTA_CREDITO_A,
@@ -81,7 +80,6 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
                         protected modalService: NgbModal,
                         protected recibosService: RecibosService,
                         protected formasDePagoService: FormasDePagoService,
-                        protected clientesService: ClientesService,
                         protected usuariosService: UsuariosService,
                         protected authService: AuthService,
                         protected configuracionesSucursalService: ConfiguracionesSucursalService,
@@ -170,7 +168,7 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
       terminos.idViajante = Number(ps.idViajante);
     }
 
-    let ordenarPorVal = this.ordenarPorOptionsRV.length ? this.ordenarPorOptionsRV[0].val : '';
+    let ordenarPorVal = this.ordenarPorOptionsR.length ? this.ordenarPorOptionsR[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;

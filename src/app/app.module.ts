@@ -17,7 +17,6 @@ import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 import { ProductoFiltroComponent } from './components/producto-filtro/producto-filtro.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
-import { ProveedorFiltroComponent } from './components/proveedor-filtro/proveedor-filtro.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { ProductoModalComponent } from './components/producto-modal/producto-modal.component';
@@ -108,7 +107,6 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     ProductoFiltroComponent,
     FacturasVentaComponent,
     FacturasCompraComponent,
-    ProveedorFiltroComponent,
     NavBarComponent,
     PedidoComponent,
     ProductoModalComponent,
