@@ -8,7 +8,7 @@
       <fa-icon [icon]="['fas', 'book']"></fa-icon>
       Cuenta Corriente: {{ ccc.cliente.nombreFiscal + (ccc.cliente.nombreFantasia ? ' (' + ccc.cliente.nombreFantasia + ')' : '')}}
     </h1>
-    <div class="text-right m-0">
+    <div class="text-right m-0 text-nowrap">
       <button class="btn btn-primary ml-2" (click)="nuevaNotaCredito()" *ngIf="hasRoleToCrearNota"
               placement="left" ngbPopover="Nueva Nota de Crédito" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
@@ -17,7 +17,12 @@
               placement="left" ngbPopover="Nueva Nota de Débito" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
       </button>
-      <button class="btn btn-primary ml-2" (click)="exportar()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
+      <button class="btn btn-primary ml-2" (click)="nuevoRecibo()" *ngIf="hasRoleToCrearRecibo"
+              placement="left" ngbPopover="Nuevo Recibo" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon>
+      </button>
+      <button class="btn btn-primary ml-2" (click)="exportar()"
+              placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
       </button>
     </div>

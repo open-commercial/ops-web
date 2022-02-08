@@ -8,7 +8,7 @@ import {NotasService} from '../../services/notas.service';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {NuevaNotaDebitoSinRecibo} from '../../models/nueva-nota-debito-sin-recibo';
-import {NotaDebitoVentaModalDirective} from '../nota-debito-venta-modal/nota-debito-venta-modal.directive';
+import {NotaDebitoVentaModalDirective} from '../../directives/nota-debito-venta-modal.directive';
 
 @Component({
   selector: 'app-nota-debito-venta-sin-recibo-modal',

@@ -1,15 +1,15 @@
 import {Directive, OnInit} from '@angular/core';
-import NotaCreditoDetalleModalDirective from '../../../../components/nota-credito-detalle-modal/nota-credito-detalle-modal-directive';
+import NotaCreditoDetalleModalDirective from './nota-credito-detalle-modal-directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, Validators} from '@angular/forms';
-import {NotasService} from '../../../../services/notas.service';
-import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
-import {MensajeService} from '../../../../services/mensaje.service';
-import {ProveedoresService} from '../../../../services/proveedores.service';
-import {Proveedor} from '../../../../models/proveedor';
+import {NotasService} from '../services/notas.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
+import {ProveedoresService} from '../services/proveedores.service';
+import {Proveedor} from '../models/proveedor';
 import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {HelperService} from '../../../../services/helper.service';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
+import {HelperService} from '../services/helper.service';
 
 @Directive()
 export default abstract class NotaCreditoCompraDetalleModalDirective extends NotaCreditoDetalleModalDirective  implements OnInit {

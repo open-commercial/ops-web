@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NotaDebitoCompraDetalleModalDirective} from '../nota-debito-compra-detalle-modal/nota-debito-compra-detalle-modal.directive';
+import {NotaDebitoCompraDetalleModalDirective} from '../../../../directives/nota-debito-compra-detalle-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';

@@ -1,23 +1,23 @@
 import { OnInit, Directive } from '@angular/core';
 import {NotasDirective} from './notas.directive';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../services/sucursales.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {ClientesService} from '../../services/clientes.service';
+import {SucursalesService} from '../services/sucursales.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
+import {ClientesService} from '../services/clientes.service';
 import {FormBuilder} from '@angular/forms';
-import {UsuariosService} from '../../services/usuarios.service';
-import {AuthService} from '../../services/auth.service';
-import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
-import {NotasService} from '../../services/notas.service';
+import {UsuariosService} from '../services/usuarios.service';
+import {AuthService} from '../services/auth.service';
+import {ConfiguracionesSucursalService} from '../services/configuraciones-sucursal.service';
+import {NotasService} from '../services/notas.service';
 import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
 import {Observable} from 'rxjs';
-import {Pagination} from '../../models/pagination';
-import {BusquedaNotaCriteria} from '../../models/criterias/busqueda-nota-criteria';
-import {Nota} from '../../models/nota';
-import {ProveedoresService} from '../../services/proveedores.service';
-import {Movimiento} from '../../models/movimiento';
+import {Pagination} from '../models/pagination';
+import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
+import {Nota} from '../models/nota';
+import {ProveedoresService} from '../services/proveedores.service';
+import {Movimiento} from '../models/movimiento';
 
 @Directive()
 export abstract class NotasCreditoDirective extends NotasDirective implements OnInit {

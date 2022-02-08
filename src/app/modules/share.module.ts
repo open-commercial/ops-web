@@ -30,11 +30,15 @@ import {UsuarioFiltroComponent} from '../components/usuario-filtro/usuario-filtr
 import {RangoFechaFiltroComponent} from '../components/rango-fecha-filtro/rango-fecha-filtro.component';
 import {GastoFormComponent} from '../components/gasto-form/gasto-form.component';
 import {ClienteFiltroComponent} from '../components/cliente-filtro/cliente-filtro.component';
+import {ProveedorFiltroComponent} from '../components/proveedor-filtro/proveedor-filtro.component';
+import { ReciboClienteModalComponent } from '../components/recibo-cliente-modal/recibo-cliente-modal.component';
+import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
 
 @NgModule({
   declarations: [
     UsuarioFiltroComponent,
     ClienteFiltroComponent,
+    ProveedorFiltroComponent,
     RangoFechaFiltroComponent,
     FiltroOrdenamientoComponent,
     FiltrosAplicadosComponent,
@@ -44,6 +48,8 @@ import {ClienteFiltroComponent} from '../components/cliente-filtro/cliente-filtr
     UbicacionFormFieldComponent,
     MensajeAsincronicoComponent,
     GastoFormComponent,
+    ReciboClienteModalComponent,
+    ReciboProveedorModalComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +65,7 @@ import {ClienteFiltroComponent} from '../components/cliente-filtro/cliente-filtr
     NgBoostrapModule,
     UsuarioFiltroComponent,
     ClienteFiltroComponent,
+    ProveedorFiltroComponent,
     RangoFechaFiltroComponent,
     FiltroOrdenamientoComponent,
     FiltrosAplicadosComponent,

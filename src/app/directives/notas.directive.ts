@@ -1,35 +1,35 @@
 import { OnInit, ViewChild, Directive } from '@angular/core';
-import {ListadoBaseDirective} from '../listado-base.directive';
+import {ListadoDirective} from './listado.directive';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../services/sucursales.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
+import {SucursalesService} from '../services/sucursales.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
 import {Observable} from 'rxjs';
-import {Pagination} from '../../models/pagination';
-import {BusquedaNotaCriteria} from '../../models/criterias/busqueda-nota-criteria';
+import {Pagination} from '../models/pagination';
+import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
 import {FormBuilder} from '@angular/forms';
 import * as moment from 'moment';
-import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
-import {HelperService} from '../../services/helper.service';
+import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
+import {HelperService} from '../services/helper.service';
 import {finalize, map} from 'rxjs/operators';
-import {Usuario} from '../../models/usuario';
-import {UsuariosService} from '../../services/usuarios.service';
-import {Rol} from '../../models/rol';
-import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {Cliente} from '../../models/cliente';
-import {ClientesService} from '../../services/clientes.service';
-import {Movimiento} from '../../models/movimiento';
-import {AuthService} from '../../services/auth.service';
-import {Nota} from '../../models/nota';
-import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
-import {NotasService} from '../../services/notas.service';
-import {Proveedor} from '../../models/proveedor';
-import {ProveedoresService} from '../../services/proveedores.service';
+import {Usuario} from '../models/usuario';
+import {UsuariosService} from '../services/usuarios.service';
+import {Rol} from '../models/rol';
+import {TipoDeComprobante} from '../models/tipo-de-comprobante';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
+import {Cliente} from '../models/cliente';
+import {ClientesService} from '../services/clientes.service';
+import {Movimiento} from '../models/movimiento';
+import {AuthService} from '../services/auth.service';
+import {Nota} from '../models/nota';
+import {ConfiguracionesSucursalService} from '../services/configuraciones-sucursal.service';
+import {NotasService} from '../services/notas.service';
+import {Proveedor} from '../models/proveedor';
+import {ProveedoresService} from '../services/proveedores.service';
 
 /** NO ES COMPONENT YA QUE ES UNA CLASE ABSTRACTA */
 @Directive()
-export abstract class NotasDirective extends ListadoBaseDirective implements OnInit {
+export abstract class NotasDirective extends ListadoDirective implements OnInit {
   rol = Rol;
   ordenarPorOptionsN = [];
 

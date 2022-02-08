@@ -4,7 +4,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {FormBuilder} from '@angular/forms';
-import {NotasDebitoDirective} from '../notas/notas-debito.directive';
+import {NotasDebitoDirective} from '../../directives/notas-debito.directive';
 import {ClientesService} from '../../services/clientes.service';
 import {UsuariosService} from '../../services/usuarios.service';
 import {AuthService} from '../../services/auth.service';

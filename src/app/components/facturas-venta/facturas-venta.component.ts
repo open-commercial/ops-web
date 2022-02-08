@@ -24,7 +24,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {MensajeService} from '../../services/mensaje.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
-import {ListadoBaseDirective} from '../listado-base.directive';
+import {ListadoDirective} from '../../directives/listado.directive';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {ActionConfiguration} from '../batch-actions-box/batch-actions-box.component';
 import {NotaCreditoVentaFacturaModalComponent} from '../nota-credito-venta-factura-modal/nota-credito-venta-factura-modal.component';
@@ -42,7 +42,7 @@ import {NotasService} from '../../services/notas.service';
   styleUrls: ['./facturas-venta.component.scss'],
   providers: [DatePipe]
 })
-export class FacturasVentaComponent extends ListadoBaseDirective implements OnInit {
+export class FacturasVentaComponent extends ListadoDirective implements OnInit {
   rol = Rol;
   tiposDeComprobanteFV = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },

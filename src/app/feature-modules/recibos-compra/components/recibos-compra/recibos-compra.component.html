@@ -1,18 +1,18 @@
-<div class="app-recibos-venta my-3">
+<div class="app-recibos-compra my-3">
   <div class="d-flex flex-row">
     <h1 class="h3 flex-fill text-truncate">
-      <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos de Venta
+      <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos de Compra
     </h1>
     <div class="text-right m-0">
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
-              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="recibosVentaCollapse"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="recibosCompraCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
-  <div id="recibosVentaCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+  <div id="recibosCompraCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-xl-6">
@@ -44,12 +44,12 @@
           </div>
         </div>
         <div class="col-xl-6">
-          <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
+          <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
           <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
           <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
           <div class="px-3 pt-3 pb-0 border bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorRV" [values]="ordenarPorOptionsRV" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorRV></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoRV" [values]="sentidoOptionsRV" [label]="'Sentido'" formControlName="sentido" #sentidoRV></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorRV" [values]="ordenarPorOptionsR" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorR></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoRV" [values]="sentidoOptionsR" [label]="'Sentido'" formControlName="sentido" #sentidoR></app-filtro-ordenamiento>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
-  <div class="recibos-venta">
+  <div class="recibos-compra">
     <ng-template #info let-item>
       <div class="flex-fill">
         <div>
@@ -69,8 +69,8 @@
       <div class="d-flex flex-column flex-md-row mt-2">
         <div class="w-100 mr-2">
           <div class="mr-2">
-            <span class="font-weight-bold">Cliente:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreFiscalCliente }}</span>
+            <span class="font-weight-bold">Proveedor:&nbsp;</span>
+            <span class="font-italic">{{ item.razonSocialProveedor }}</span>
           </div>
           <div class="mr-2">
             <span class="font-weight-bold">Usuario:&nbsp;</span>

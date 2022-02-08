@@ -17,7 +17,7 @@ import { Proveedor } from '../../models/proveedor';
 import { FacturaCompra } from '../../models/factura-compra';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
-import { ListadoBaseDirective } from '../listado-base.directive';
+import { ListadoDirective } from '../../directives/listado.directive';
 import { MensajeService } from '../../services/mensaje.service';
 
 @Component({
@@ -25,7 +25,7 @@ import { MensajeService } from '../../services/mensaje.service';
   templateUrl: './facturas-compra.component.html',
   styleUrls: ['./facturas-compra.component.scss']
 })
-export class FacturasCompraComponent extends ListadoBaseDirective implements OnInit {
+export class FacturasCompraComponent extends ListadoDirective implements OnInit {
   tiposDeComprobantesFC = [
     { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
     { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },

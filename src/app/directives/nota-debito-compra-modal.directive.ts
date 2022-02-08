@@ -1,14 +1,14 @@
-import {NotaDebitoModalDirective} from '../../../../components/nota-debito-modal/nota-debito-modal.directive';
+import {NotaDebitoModalDirective} from './nota-debito-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder} from '@angular/forms';
-import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
-import {MensajeService} from '../../../../services/mensaje.service';
-import {SucursalesService} from '../../../../services/sucursales.service';
-import {NotasService} from '../../../../services/notas.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
+import {SucursalesService} from '../services/sucursales.service';
+import {NotasService} from '../services/notas.service';
 import {Directive, OnInit} from '@angular/core';
-import {Proveedor} from '../../../../models/proveedor';
+import {Proveedor} from '../models/proveedor';
 import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
 
 @Directive()
 export abstract class NotaDebitoCompraModalDirective extends NotaDebitoModalDirective implements OnInit {

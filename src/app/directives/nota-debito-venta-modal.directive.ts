@@ -1,14 +1,14 @@
 import {Directive, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {SucursalesService} from '../../services/sucursales.service';
-import {NotasService} from '../../services/notas.service';
-import {Cliente} from '../../models/cliente';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
+import {SucursalesService} from '../services/sucursales.service';
+import {NotasService} from '../services/notas.service';
+import {Cliente} from '../models/cliente';
 import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {NotaDebitoModalDirective} from '../nota-debito-modal/nota-debito-modal.directive';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
+import {NotaDebitoModalDirective} from './nota-debito-modal.directive';
 
 @Directive()
 export abstract class NotaDebitoVentaModalDirective extends NotaDebitoModalDirective implements OnInit {

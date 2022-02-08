@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Movimiento} from '../../models/movimiento';
-import {NotasDebitoDirective} from '../notas/notas-debito.directive';
+import {NotasDebitoDirective} from '../../directives/notas-debito.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';

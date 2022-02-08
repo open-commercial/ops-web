@@ -31,6 +31,8 @@ import {NotaCreditoCompraDetalleFacturaModalComponent} from '../nota-credito-com
 import {NotaDebitoCompraReciboModalComponent} from '../nota-debito-compra-recibo-modal/nota-debito-compra-recibo-modal.component';
 import {NuevaNotaDebitoDeRecibo} from '../../../../models/nueva-nota-debito-de-recibo';
 import {NotaDebitoCompraDetalleReciboModalComponent} from '../nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
+import {ReciboProveedorModalComponent} from '../../../../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
+import {RecibosService} from '../../../../services/recibos.service';
 
 @Component({
   selector: 'app-cuenta-corriente-proveedor',
@@ -60,6 +62,9 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
   allowedRolesToVerDetalle: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO/*, Rol.VENDEDOR*/ ];
   hasRoleToVerDetalle = false;
 
+  allowedRolesToCrearRecibo: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  hasRoleToCrearRecibo = false;
+
   tcParaNotasDeCredito: TipoDeComprobante[] = [
     TipoDeComprobante.FACTURA_A,
     TipoDeComprobante.FACTURA_B,
@@ -73,6 +78,14 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     TipoDeComprobante.RECIBO,
   ];
 
+  comprobantesQuePuedenEliminarse: TipoDeComprobante[] = [
+    TipoDeComprobante.NOTA_CREDITO_A, TipoDeComprobante.NOTA_CREDITO_B, TipoDeComprobante.NOTA_CREDITO_C,
+    TipoDeComprobante.NOTA_CREDITO_X, TipoDeComprobante.NOTA_CREDITO_Y, TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO,
+    TipoDeComprobante.NOTA_DEBITO_A, TipoDeComprobante.NOTA_DEBITO_B, TipoDeComprobante.NOTA_DEBITO_C,
+    TipoDeComprobante.NOTA_DEBITO_X, TipoDeComprobante.NOTA_DEBITO_Y, TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO,
+    TipoDeComprobante.RECIBO
+  ];
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               public loadingOverlayService: LoadingOverlayService,
@@ -82,6 +95,7 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
               private modalService: NgbModal,
               private authService: AuthService,
               private notasService: NotasService,
+              private recibosService: RecibosService,
               private datePipe: DatePipe) { }
 
   ngOnInit(): void {
@@ -108,6 +122,7 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
+    this.hasRoleToCrearRecibo = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearRecibo);
   }
 
   volverAlListado() {
@@ -297,22 +312,23 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     }
   }
 
+  elComprobanteSePuedeEliminar(tipoComprobante: TipoDeComprobante): boolean {
+    return this.comprobantesQuePuedenEliminarse.indexOf(tipoComprobante) >= 0;
+  }
+
   eliminar(r: RenglonCuentaCorriente) {
     if (!this.hasRoleToDelete) {
       this.mensajeService.msg('No posee permiso para eliminar movimientos', MensajeModalType.ERROR);
       return;
     }
 
-    const notas: TipoDeComprobante[] = [
-      TipoDeComprobante.NOTA_CREDITO_A, TipoDeComprobante.NOTA_CREDITO_B, TipoDeComprobante.NOTA_CREDITO_C,
-      TipoDeComprobante.NOTA_CREDITO_X, TipoDeComprobante.NOTA_CREDITO_Y, TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO,
-      TipoDeComprobante.NOTA_DEBITO_A, TipoDeComprobante.NOTA_DEBITO_B, TipoDeComprobante.NOTA_DEBITO_C,
-      TipoDeComprobante.NOTA_DEBITO_X, TipoDeComprobante.NOTA_DEBITO_Y, TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO,
-    ];
-
     let obvs: Observable<void> = null;
-    if (notas.indexOf(r.tipoComprobante) >= 0) {
-      obvs = this.notasService.eliminar(r.idMovimiento);
+    if (this.elComprobanteSePuedeEliminar(r.tipoComprobante)) {
+      if (r.tipoComprobante === TipoDeComprobante.RECIBO) {
+        obvs = this.recibosService.eliminarRecibo(r.idMovimiento);
+      } else {
+        obvs = this.notasService.eliminar(r.idMovimiento);
+      }
     }
 
     if (obvs) {
@@ -338,5 +354,18 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     } else {
       throw new Error('La Nota no posee id');
     }
+  }
+
+  nuevoRecibo() {
+    if (!this.hasRoleToCrearRecibo) {
+      this.mensajeService.msg('No posee permiso para crear recibos.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const modalRef = this.modalService.open(ReciboProveedorModalComponent, { backdrop: 'static' });
+    const saldo = (this.ccp.saldo < 0 ? Number(this.ccp.saldo.toFixed(2).replace(',', '')) : 0) * -1;
+    modalRef.componentInstance.proveedor = this.ccp.proveedor;
+    modalRef.componentInstance.saldo = saldo;
+    modalRef.result.then(() => this.loadPage(1), () => { return; });
   }
 }

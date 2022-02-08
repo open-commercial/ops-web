@@ -1,47 +1,35 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoBaseDirective} from '../../../components/listado-base.directive';
+import {Directive, OnInit, ViewChild} from '@angular/core';
+import {ListadoDirective} from './listado.directive';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../../services/sucursales.service';
-import {LoadingOverlayService} from '../../../services/loading-overlay.service';
-import {MensajeService} from '../../../services/mensaje.service';
-import {Observable} from 'rxjs';
-import {Pagination} from '../../../models/pagination';
+import {SucursalesService} from '../services/sucursales.service';
+import {LoadingOverlayService} from '../services/loading-overlay.service';
+import {MensajeService} from '../services/mensaje.service';
 import {FormBuilder} from '@angular/forms';
-import {RecibosService} from '../../../services/recibos.service';
-import {BusquedaReciboCriteria} from '../../../models/criterias/busqueda-recibo-criteria';
-import {Movimiento} from '../../../models/movimiento';
-import * as moment from 'moment';
-import {HelperService} from '../../../services/helper.service';
-import {FormaDePago} from '../../../models/forma-de-pago';
-import {finalize, map} from 'rxjs/operators';
-import {MensajeModalType} from '../../../components/mensaje-modal/mensaje-modal.component';
-import {FormasDePagoService} from '../../../services/formas-de-pago.service';
-import {Cliente} from '../../../models/cliente';
-import {Usuario} from '../../../models/usuario';
-import {ClientesService} from '../../../services/clientes.service';
-import {UsuariosService} from '../../../services/usuarios.service';
-import {FiltroOrdenamientoComponent} from '../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
-import {Rol} from '../../../models/rol';
-import {Recibo} from '../../../models/recibo';
-import {AuthService} from '../../../services/auth.service';
-import {
-  NotaDebitoVentaReciboModalComponent
-} from '../../../components/nota-debito-venta-recibo-modal/nota-debito-venta-recibo-modal.component';
-import {NuevaNotaDebitoDeRecibo} from '../../../models/nueva-nota-debito-de-recibo';
-import {Nota, NotaDebito} from '../../../models/nota';
-import {
-  NotaDebitoVentaDetalleReciboModalComponent
-} from '../../../components/nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {TipoDeComprobante} from '../../../models/tipo-de-comprobante';
-import {ConfiguracionesSucursalService} from '../../../services/configuraciones-sucursal.service';
-import {NotasService} from '../../../services/notas.service';
+import {RecibosService} from '../services/recibos.service';
+import {FormasDePagoService} from '../services/formas-de-pago.service';
+import {UsuariosService} from '../services/usuarios.service';
+import {AuthService} from '../services/auth.service';
+import {ConfiguracionesSucursalService} from '../services/configuraciones-sucursal.service';
+import {NotasService} from '../services/notas.service';
+import {Rol} from '../models/rol';
+import {HelperService} from '../services/helper.service';
+import {FormaDePago} from '../models/forma-de-pago';
+import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
+import {TipoDeComprobante} from '../models/tipo-de-comprobante';
+import {finalize, map} from 'rxjs/operators';
+import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
+import {BusquedaReciboCriteria} from '../models/criterias/busqueda-recibo-criteria';
+import {Movimiento} from '../models/movimiento';
+import * as moment from 'moment';
+import {Observable} from 'rxjs';
+import {Pagination} from '../models/pagination';
+import {Usuario} from '../models/usuario';
+import {Recibo} from '../models/recibo';
+import {Nota} from '../models/nota';
 
-@Component({
-  selector: 'app-recibos-venta',
-  templateUrl: './recibos-venta.component.html'
-})
-export class RecibosVentaComponent extends ListadoBaseDirective implements OnInit {
+@Directive()
+export abstract class RecibosDirective extends ListadoDirective implements OnInit {
   allowedRolesToSee: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
   hasRoleToSee = false;
 
@@ -54,14 +42,15 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
   helper = HelperService;
   formasDePago: FormaDePago[] = [];
 
-  ordenarPorOptionsRV = [
+
+  ordenarPorOptionsR = [
     { val: 'fecha', text: 'Fecha Recibo' },
     { val: 'concepto', text: 'Concepto' },
     { val: 'idFormaDePago', text: 'Forma de Pago' },
     { val: 'monto', text: 'Monto' },
   ];
 
-  sentidoOptionsRV = [
+  sentidoOptionsR = [
     { val: 'DESC', text: 'Descendente' },
     { val: 'ASC', text: 'Ascendente' },
   ];
@@ -70,8 +59,8 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordenarPorRV') ordenarPorRVElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoRV') sentidoRVElement: FiltroOrdenamientoComponent;
+  @ViewChild('ordenarPorR') ordenarPorRElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoR') sentidoRElement: FiltroOrdenamientoComponent;
 
   tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
     TipoDeComprobante.NOTA_CREDITO_A,
@@ -82,22 +71,24 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
     TipoDeComprobante.NOTA_DEBITO_C,
   ];
 
-  constructor(protected route: ActivatedRoute,
-              protected router: Router,
-              protected sucursalesService: SucursalesService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService,
-              private fb: FormBuilder,
-              private modalService: NgbModal,
-              private recibosService: RecibosService,
-              private formasDePagoService: FormasDePagoService,
-              private clientesService: ClientesService,
-              private usuariosService: UsuariosService,
-              private authService: AuthService,
-              private configuracionesSucursalService: ConfiguracionesSucursalService,
-              private notasService: NotasService) {
+  protected constructor(protected route: ActivatedRoute,
+                        protected router: Router,
+                        protected sucursalesService: SucursalesService,
+                        protected loadingOverlayService: LoadingOverlayService,
+                        protected mensajeService: MensajeService,
+                        protected fb: FormBuilder,
+                        protected modalService: NgbModal,
+                        protected recibosService: RecibosService,
+                        protected formasDePagoService: FormasDePagoService,
+                        protected usuariosService: UsuariosService,
+                        protected authService: AuthService,
+                        protected configuracionesSucursalService: ConfiguracionesSucursalService,
+                        protected notasService: NotasService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
+
+  abstract getMovimiento(): Movimiento;
+  abstract doCrearNotaDebitoRecibo(r: Recibo);
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -105,7 +96,7 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     if (!this.hasRoleToSee) {
-      this.mensajeService.msg('No tiene permiso para ver el listado de recibos de venta.');
+      this.mensajeService.msg('No tiene permiso para ver el listado de recibos de ' + this.getMovimiento() + '.');
       this.router.navigate(['/']);
     }
     this.getFormasDePago();
@@ -124,7 +115,7 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
 
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaReciboCriteria = {
-      movimiento: Movimiento.VENTA,
+      movimiento: this.getMovimiento(),
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
@@ -177,7 +168,7 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
       terminos.idViajante = Number(ps.idViajante);
     }
 
-    let ordenarPorVal = this.ordenarPorOptionsRV.length ? this.ordenarPorOptionsRV[0].val : '';
+    let ordenarPorVal = this.ordenarPorOptionsR.length ? this.ordenarPorOptionsR[0].val : '';
     if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
     this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
     terminos.ordenarPor = ordenarPorVal;
@@ -200,7 +191,6 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
       numRecibo: null,
       concepto: '',
       idFormaDePago: null,
-      idCliente: null,
       idUsuario: null,
       idViajante: null,
       ordenarPor: '',
@@ -215,7 +205,6 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
       numRecibo: null,
       concepto: '',
       idFormaDePago: null,
-      idCliente: null,
       idUsuario: null,
       idViajante: null,
       ordenarPor: '',
@@ -258,10 +247,6 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
       this.appliedFilters.push({ label: 'Concepto', value: values.concepto });
     }
 
-    if (values.idCliente) {
-      this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
-    }
-
     if (values.idUsuario) {
       this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
@@ -276,11 +261,6 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
         this.appliedFilters.push({ label: 'Forma de Pago',  value: aux[0].nombre });
       }
     }
-
-  }
-
-  getClienteInfoAsync(id: number): Observable<string> {
-    return this.clientesService.getCliente(id).pipe(map((c: Cliente) => c.nombreFiscal));
   }
 
   getUsuarioInfoAsync(id: number): Observable<string> {
@@ -303,7 +283,6 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
     if (values.numRecibo) { ret.numFactura = values.numRecibo; }
     if (values.concepto) { ret.concepto = values.concepto; }
     if (values.idFormaDePago) { ret.idFormaDePago = values.idFormaDePago; }
-    if (values.idCliente) { ret.idCliente = values.idCliente; }
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
     if (values.idViajante) { ret.idViajante = values.idViajante; }
 
@@ -328,9 +307,10 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
       if (result) {
         this.loadingOverlayService.activate();
         this.recibosService.eliminarRecibo(r.idRecibo)
-          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          // No hay pipe finalize por el reload
+          // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
-            next: () => this.loadPage(this.page),
+            next: () => location.reload(),
             error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
           })
         ;
@@ -347,70 +327,17 @@ export class RecibosVentaComponent extends ListadoBaseDirective implements OnIni
     this.doCrearNotaDebitoRecibo(r);
   }
 
-  doCrearNotaDebitoRecibo(r: Recibo) {
-    this.loadingOverlayService.activate();
-    this.clientesService.getCliente(r.idCliente)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: (c: Cliente) => {
-          const modalRef = this.modalService.open(NotaDebitoVentaReciboModalComponent, { backdrop: 'static' });
-          modalRef.componentInstance.cliente = c;
-          modalRef.componentInstance.idRecibo = r.idRecibo;
-          modalRef.result
-            .then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
-              const modalRef2 = this.modalService.open(NotaDebitoVentaDetalleReciboModalComponent, { backdrop: 'static', size: 'lg' });
-              modalRef2.componentInstance.nnddr = data[0];
-              modalRef2.componentInstance.notaDebito = data[1];
-              modalRef2.componentInstance.cliente = c;
-              modalRef2.result.then(
-                (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-                () => { return; }
-              );
-            }, () => { return; })
-          ;
-        },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      });
-  }
-
-  private showNotaCreationSuccessMessage(nota: Nota, message: string) {
+  protected showNotaCreationSuccessMessage(nota: Nota, message: string, callback: () => void = () => { return; }) {
     if (nota.idNota) {
       this.mensajeService.msg(message, MensajeModalType.INFO).then(
         () => {
           if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
-            this.doAutorizar(nota.idNota, () => this.loadPage(1));
-          } else {
-            this.loadPage(1);
+            callback();
           }
         }
       );
     } else {
       throw new Error('La Nota no posee id');
     }
-  }
-
-  doAutorizar(idNota: number, callback = () => { return; }) {
-    this.loadingOverlayService.activate();
-    this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: habilitada => {
-          if (habilitada) {
-            this.loadingOverlayService.activate();
-            this.notasService.autorizar(idNota)
-              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe({
-                next: () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
-                  .then(() => callback()),
-                error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-                  .then(() => callback()),
-              })
-            ;
-          } else {
-            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
-          }
-        },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      });
   }
 }

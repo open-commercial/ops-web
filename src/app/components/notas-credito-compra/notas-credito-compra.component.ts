@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {NotasCreditoDirective} from '../notas/notas-credito.directive';
+import {NotasCreditoDirective} from '../../directives/notas-credito.directive';
 import {Movimiento} from '../../models/movimiento';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';

@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoBaseDirective} from '../../../../components/listado-base.directive';
+import {ListadoDirective} from '../../../../directives/listado.directive';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../../../models/pagination';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -27,7 +27,7 @@ import {CajasService} from '../../../../services/cajas.service';
   selector: 'app-gastos',
   templateUrl: './gastos.component.html'
 })
-export class GastosComponent extends ListadoBaseDirective implements OnInit {
+export class GastosComponent extends ListadoDirective implements OnInit {
   allowedRolesToSee: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToSee = false;
 

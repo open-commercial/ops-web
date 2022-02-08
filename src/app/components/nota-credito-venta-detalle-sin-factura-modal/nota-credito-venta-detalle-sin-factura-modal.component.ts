@@ -9,7 +9,7 @@ import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import Big from 'big.js';
 import {NuevaNotaCreditoSinFactura} from '../../models/nueva-nota-credito-sin-factura';
-import NotaCreditoVentaDetalleModalDirective from '../nota-credito-venta-detalle-modal/nota-credito-venta-detalle-modal-directive';
+import NotaCreditoVentaDetalleModalDirective from '../../directives/nota-credito-venta-detalle-modal-directive';
 import {ClientesService} from '../../services/clientes.service';
 
 Big.DP = 15;
