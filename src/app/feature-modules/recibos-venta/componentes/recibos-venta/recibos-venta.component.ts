@@ -121,7 +121,7 @@ export class RecibosVentaComponent extends RecibosDirective implements OnInit {
               modalRef2.componentInstance.cliente = c;
               modalRef2.result.then(
                 (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.', () => {
-                  this.doAutorizar(nota.idNota, () => this.loadPage(1));
+                  this.doAutorizar(nota.idNota);
                 }),
                 () => { return; }
               );

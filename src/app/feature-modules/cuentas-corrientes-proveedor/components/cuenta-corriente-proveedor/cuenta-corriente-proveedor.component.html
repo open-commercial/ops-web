@@ -17,6 +17,10 @@
               placement="left" ngbPopover="Nueva Nota de Débito" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
       </button>
+      <button class="btn btn-primary ml-2" (click)="nuevoRecibo()" *ngIf="hasRoleToCrearRecibo"
+              placement="left" ngbPopover="Nuevo Recibo" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon>
+      </button>
     </div>
   </div>
   <app-proveedor-detalle [proveedor]="ccp.proveedor"></app-proveedor-detalle>
@@ -42,7 +46,7 @@
             ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
       <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
-    <button class="btn btn-primary mr-2" type="button"
+    <button class="btn btn-primary mr-2" type="button" *ngIf="hasRoleToDelete && elComprobanteSePuedeEliminar(r.tipoComprobante)"
             ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
       <fa-icon [icon]="['fas', 'trash']"></fa-icon>
     </button>

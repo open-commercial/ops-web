@@ -307,9 +307,10 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
       if (result) {
         this.loadingOverlayService.activate();
         this.recibosService.eliminarRecibo(r.idRecibo)
-          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          // No hay pipe finalize por el reload
+          // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
-            next: () => this.loadPage(this.page),
+            next: () => location.reload(),
             error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
           })
         ;
@@ -332,8 +333,6 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
         () => {
           if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
             callback();
-          } else {
-            this.loadPage(1);
           }
         }
       );

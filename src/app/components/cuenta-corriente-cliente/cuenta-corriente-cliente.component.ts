@@ -37,6 +37,7 @@ import {NotaDebitoVentaDetalleSinReciboModalComponent} from '../nota-debito-vent
 import {NotaDebitoVentaDetalleReciboModalComponent} from '../nota-debito-venta-detalle-recibo-modal/nota-debito-venta-detalle-recibo-modal.component';
 import {HelperService} from '../../services/helper.service';
 import {SucursalesService} from '../../services/sucursales.service';
+import {ReciboClienteModalComponent} from '../recibo-cliente-modal/recibo-cliente-modal.component';
 
 @Component({
   selector: 'app-cuenta-corriente-cliente',
@@ -69,6 +70,9 @@ export class CuentaCorrienteClienteComponent implements OnInit {
 
   allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToCrearNota = false;
+
+  allowedRolesToCrearRecibo: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  hasRoleToCrearRecibo = false;
 
   tcParaNotasDeCredito: TipoDeComprobante[] = [
     TipoDeComprobante.FACTURA_A,
@@ -135,6 +139,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     this.hasRoleToAutorizar = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToAutorizar);
     this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
+    this.hasRoleToCrearRecibo = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearRecibo);
   }
 
   getRenglones() {
@@ -497,5 +502,18 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     } else {
       throw new Error('La Nota no posee id');
     }
+  }
+
+  nuevoRecibo() {
+    if (!this.hasRoleToCrearRecibo) {
+      this.mensajeService.msg('No posee permiso para crear recibos.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const modalRef = this.modalService.open(ReciboClienteModalComponent, { backdrop: 'static' });
+    const saldo = (this.ccc.saldo < 0 ? Number(this.ccc.saldo.toFixed(2).replace(',', '')) : 0) * -1;
+    modalRef.componentInstance.cliente = this.ccc.cliente;
+    modalRef.componentInstance.saldo = saldo;
+    modalRef.result.then(() => this.loadPage(1), () => { return; });
   }
 }

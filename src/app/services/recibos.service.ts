@@ -31,4 +31,12 @@ export class RecibosService {
   eliminarRecibo(idRecibo: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${idRecibo}`);
   }
+
+  guardarReciboCliente(recibo: Recibo): Observable<Recibo> {
+    return this.http.post<Recibo>(`${this.url}/clientes`, recibo);
+  }
+
+  guardarReciboProveedor(recibo: Recibo): Observable<Recibo> {
+    return this.http.post<Recibo>(`${this.url}/proveedores`, recibo);
+  }
 }

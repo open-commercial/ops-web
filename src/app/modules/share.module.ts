@@ -31,6 +31,8 @@ import {RangoFechaFiltroComponent} from '../components/rango-fecha-filtro/rango-
 import {GastoFormComponent} from '../components/gasto-form/gasto-form.component';
 import {ClienteFiltroComponent} from '../components/cliente-filtro/cliente-filtro.component';
 import {ProveedorFiltroComponent} from '../components/proveedor-filtro/proveedor-filtro.component';
+import { ReciboClienteModalComponent } from '../components/recibo-cliente-modal/recibo-cliente-modal.component';
+import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import {ProveedorFiltroComponent} from '../components/proveedor-filtro/proveedor
     UbicacionFormFieldComponent,
     MensajeAsincronicoComponent,
     GastoFormComponent,
+    ReciboClienteModalComponent,
+    ReciboProveedorModalComponent,
   ],
   imports: [
     CommonModule,
