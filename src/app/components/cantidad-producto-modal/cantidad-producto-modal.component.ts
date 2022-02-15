@@ -56,7 +56,7 @@ export class CantidadProductoModalComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      cantidad: [this.cantidad, [Validators.required, Validators.min(1)]]
+      cantidad: [this.cantidad, [Validators.required, Validators.min(0.1)]]
     });
     this.form.get('cantidad').valueChanges.subscribe(() => this.stockVerificado = false);
   }
