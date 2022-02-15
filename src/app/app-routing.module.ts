@@ -158,6 +158,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/recibos-compra/recibos-compra.module')
           .then(m => m.RecibosCompraModule)
       },
+      { path: 'transportistas',
+        loadChildren: () => import('./feature-modules/transportistas/transportistas.module')
+          .then(m => m.TransportistasModule)
+      },
     ]
   },
   { path: '**', redirectTo: '' }

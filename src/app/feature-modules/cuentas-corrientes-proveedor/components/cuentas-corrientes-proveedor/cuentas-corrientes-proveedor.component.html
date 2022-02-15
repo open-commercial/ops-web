@@ -79,22 +79,22 @@
     </ng-template>
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block">
-      <li class="list-inline-item">
-        <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.proveedor)">
-          <fa-icon [icon]="['fas', 'book']"></fa-icon>
-        </button>
-      </li>
-      <li class="list-inline-item">
-        <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProveedor(item.proveedor)">
-          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-        </button>
-      </li>
-      <li class="list-inline-item">
-        <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProveedor(item.proveedor)">
-          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-        </button>
-      </li>
-    </ul>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.proveedor)">
+            <fa-icon [icon]="['fas', 'book']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProveedor(item.proveedor)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProveedor(item.proveedor)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
     </ng-template>
     <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
