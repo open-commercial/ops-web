@@ -5,7 +5,8 @@ import { TransportistaComponent } from './components/transportista/transportista
 
 const routes: Routes = [
   { path: '', component: TransportistasComponent },
-  { path: 'nuevo', component: TransportistaComponent }
+  { path: 'nuevo', component: TransportistaComponent },
+  { path: 'editar/:id', component: TransportistaComponent },
 ];
 
 @NgModule({

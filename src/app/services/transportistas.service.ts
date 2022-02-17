@@ -27,6 +27,11 @@ export class TransportistasService {
     return this.http.get<Transportista>(`${this.url}/${idTransportista}`);
   }
 
+  guardarTransportista(transportista: Transportista): Observable<Transportista> {
+    const action = transportista.idTransportista ? 'put' : 'post';
+    return this.http[action]<Transportista>(`${this.url}`, transportista);
+  }
+
   eliminarTransportista(idTransportista: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${idTransportista}`);
   }

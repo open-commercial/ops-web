@@ -166,8 +166,22 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
     return aux.length ? aux[0].nombre : '';
   }
 
+  crearTransportista() {
+    if (!this.hasRoleToCrear) {
+      this.mensajeService.msg('No posee permiso para dar de alta un transportistas', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/transportistas/nuevo']);
+  }
+
   editarTransportista(t: Transportista) {
-    // to do
+    if (!this.hasRoleToEdit) {
+      this.mensajeService.msg('No posee permiso para editar datos del transportistas', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/transportistas/editar', t.idTransportista]);
   }
 
   eliminarTransportista(t: Transportista) {
@@ -176,15 +190,20 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
       return;
     }
 
-    this.loadingOverlayService.activate();
-    this.transportistasService.eliminarTransportista(t.idTransportista)
-      .subscribe({
-        next: () => location.reload(),
-        error: err => {
-          this.loadingOverlayService.deactivate();
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-        }
-      })
-    ;
+    const msg = `¿Está seguro que desea eliminar el transportista?`;
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.transportistasService.eliminarTransportista(t.idTransportista)
+          .subscribe({
+            next: () => location.reload(),
+            error: err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            }
+          })
+        ;
+      }
+    });
   }
 }

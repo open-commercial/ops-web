@@ -4,7 +4,8 @@
       <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportistas
     </h1>
     <div class="text-right m-0 text-nowrap">
-      <button class="btn btn-primary ml-2 my-1" routerLink="/transportistas/nuevo" ngbPopover="Nuevo Transportista" triggers="mouseenter:mouseleave" placement="left">
+      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Transportista" triggers="mouseenter:mouseleave" placement="left"
+              (click)="crearTransportista()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
@@ -62,7 +63,7 @@
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block">
         <li class="list-inline-item" *ngIf="hasRoleToEdit">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarTransportista(item.proveedor)">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarTransportista(item)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
