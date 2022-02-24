@@ -125,52 +125,6 @@ export class GastosComponent extends ListadoDirective implements OnInit {
     };
 
     return HelperService.paramsToTerminos<BusquedaGastoCriteria>(ps, config , terminos);
-
-    // const idUsuario = Number(ps.idUsuario) || null;
-    // if (idUsuario) {
-    //   terminos.idUsuario = idUsuario;
-    // }
-    //
-    // if (ps.fechaDesde || ps.fechaHasta) {
-    //   const aux = { desde: null, hasta: null };
-    //
-    //   if (ps.fechaDesde) {
-    //     const d = moment.unix(ps.fechaDesde).local();
-    //     aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-    //     terminos.fechaDesde = d.toDate();
-    //   }
-    //
-    //   if (ps.fechaHasta) {
-    //     const h = moment.unix(ps.fechaHasta).local();
-    //     aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-    //     terminos.fechaHasta = h.toDate();
-    //   }
-    // }
-    //
-    // if (ps.concepto) {
-    //   terminos.concepto = ps.concepto;
-    // }
-    //
-    // const nroGasto = Number(ps.nroGasto) || null;
-    // if (ps.nroGasto) {
-    //   terminos.nroGasto = nroGasto;
-    // }
-    //
-    // const idFormaDePago = Number(ps.idFormaDePago) || null;
-    // if (idFormaDePago) {
-    //   terminos.idFormaDePago = idFormaDePago;
-    // }
-    //
-    // let ordenarPorVal = this.ordenArray.length ? this.ordenArray[0].val : '';
-    // if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    // this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    // terminos.ordenarPor = ordenarPorVal;
-    //
-    // const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    // this.filterForm.get('sentido').setValue(sentidoVal);
-    // terminos.sentido = sentidoVal;
-    //
-    // return terminos;
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {

@@ -91,47 +91,6 @@ export class TraspasosComponent extends ListadoDirective implements OnInit {
     };
 
     return HelperService.paramsToTerminos<BusquedaTraspasoCriteria>(ps, config , terminos);
-
-    // if (ps.nroTraspaso) {
-    //   terminos.nroTraspaso = ps.nroTraspaso;
-    // }
-    //
-    // if (ps.nroPedido) {
-    //   terminos.nroPedido = ps.nroPedido;
-    // }
-    //
-    // if (ps.idProducto && !isNaN(ps.idProducto)) {
-    //   terminos.idProducto = Number(ps.idProducto);
-    // }
-    //
-    // if (ps.idUsuario && !isNaN(ps.idUsuario)) {
-    //   terminos.idUsuario = Number(ps.idUsuario);
-    // }
-    //
-    // if (ps.fechaDesde || ps.fechaHasta) {
-    //   const aux = { desde: null, hasta: null };
-    //
-    //   if (ps.fechaDesde) {
-    //     const d = moment.unix(ps.fechaDesde).local();
-    //     aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-    //     terminos.fechaDesde = d.toDate();
-    //   }
-    //
-    //   if (ps.fechaHasta) {
-    //     const h = moment.unix(ps.fechaHasta).local();
-    //     aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-    //     terminos.fechaHasta = h.toDate();
-    //   }
-    // }
-    //
-    // let ordenarPorVal = this.ordenArray.length ? this.ordenArray[0].val : '';
-    // if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    // terminos.ordenarPor = ordenarPorVal;
-    //
-    // const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    // terminos.sentido = sentidoVal;
-    //
-    // return terminos;
   }
 
   createFilterForm() {
