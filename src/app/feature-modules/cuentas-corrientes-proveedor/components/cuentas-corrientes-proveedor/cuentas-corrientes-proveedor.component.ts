@@ -32,13 +32,13 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
 
   helper = HelperService;
 
-  ordenarPorOptionsCCP = [
+  ordenArray = [
     { val: 'proveedor.razonSocial', text: 'Razón Social' },
     { val: 'saldo', text: 'Saldo C/C' },
     { val: 'fechaUltimoMovimiento', text: 'Último Movimiento C/C' },
   ];
 
-  sentidoOptionsCCP = [
+  sentidoArray = [
     { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
   ];
@@ -83,34 +83,24 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
   }
 
   getTerminosFromQueryParams(ps) {
-    const terminos: BusquedaCuentaCorrienteProveedorCriteria = {
+    let terminos: BusquedaCuentaCorrienteProveedorCriteria = {
       pagina: this.page,
     };
 
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      idProvincia: { checkNaN: true },
+      idLocalidad: { checkNaN: true },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
+
+    terminos = HelperService.paramsToTerminos<BusquedaCuentaCorrienteProveedorCriteria>(ps, config , terminos);
+
     if (ps.nroONom) {
-      this.filterForm.get('nroONom').setValue(ps.nroONom);
       terminos.nroProveedor = ps.nroONom;
       terminos.razonSocial = ps.nroONom;
     }
-
-    if (ps.idProvincia) {
-      this.filterForm.get('idProvincia').setValue(ps.idProvincia);
-      terminos.idProvincia = ps.idProvincia;
-    }
-
-    if (ps.idLocalidad) {
-      this.filterForm.get('idLocalidad').setValue(ps.idLocalidad);
-      terminos.idLocalidad = ps.idLocalidad;
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsCCP.length ? this.ordenarPorOptionsCCP[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
 
     return terminos;
   }

@@ -53,40 +53,38 @@ export class CajasComponent extends ListadoDirective implements OnInit {
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
   }
 
+
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaCajaCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
 
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
+    const config = {
+      idUsuarioApertura: { checkNaN: true },
+      idUsuarioCierre: { checkNaN: true },
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+    };
 
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.idUsuarioApertura && !isNaN(ps.idUsuarioApertura)) {
-      this.filterForm.get('idUsuarioApertura').setValue(Number(ps.idUsuarioApertura));
-      terminos.idUsuarioApertura = Number(ps.idUsuarioApertura);
-    }
-
-    if (ps.idUsuarioCierre && !isNaN(ps.idUsuarioCierre)) {
-      this.filterForm.get('idUsuarioCierre').setValue(Number(ps.idUsuarioCierre));
-      terminos.idUsuarioCierre = Number(ps.idUsuarioCierre);
-    }
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaCajaCriteria>(ps, config , terminos);
   }
 
   createFilterForm() {

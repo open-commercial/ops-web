@@ -30,7 +30,7 @@ import {Sucursal} from '../../models/sucursal';
 })
 export class ProductosComponent extends ListadoDirective implements OnInit {
   isBatchActionsBoxCollapsed = true;
-  ordenarPorOptionsP = [
+  ordenArray = [
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
     { val: 'cantidadProducto.cantidadTotalEnSucursales', text: 'Total Sucursales' },
@@ -43,7 +43,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     { val: 'rubro.nombre', text: 'Rubro' },
   ];
 
-  sentidoOptionsP = [
+  sentidoArray = [
     { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
   ];
@@ -108,50 +108,39 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     };
 
     if (ps.codODes) {
-      this.filterForm.get('codODes').setValue(ps.codODes);
       terminos.codigo = ps.codODes;
       terminos.descripcion = ps.codODes;
     }
 
     if (ps.idRubro && !isNaN(ps.idRubro)) {
-      this.filterForm.get('idRubro').setValue(Number(ps.idRubro));
       terminos.idRubro = Number(ps.idRubro);
     }
 
     if (ps.idProveedor && !isNaN(ps.idProveedor)) {
-      this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));
       terminos.idProveedor = Number(ps.idProveedor);
     }
 
     if (this.visibilidades.indexOf(ps.visibilidad) >= 0) {
-      this.filterForm.get('visibilidad').setValue(ps.visibilidad);
       if (ps.visibilidad === 'públicos') { terminos.publico = true; }
       if (ps.visibilidad === 'privados') { terminos.publico = false; }
     }
 
     if (ps.oferta) {
-      this.filterForm.get('oferta').setValue(true);
       terminos.oferta = true;
     }
 
     if (ps.listarSoloParaCatalogo) {
-      this.filterForm.get('listarSoloParaCatalogo').setValue(true);
       terminos.listarSoloParaCatalogo = true;
     }
 
-    let ordenarPorVal = this.ordenarPorOptionsP.length ? this.ordenarPorOptionsP[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const ordenarPorVal = ps.ordenarPor ? ps.ordenarPor : orden;
     terminos.ordenarPor = [];
     terminos.ordenarPor.push(ordenarPorVal);
     if (['proveedor.razonSocial', 'rubro.nombre'].indexOf(ordenarPorVal) >= 0) {
       terminos.ordenarPor.push('descripcion');
     }
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'ASC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
+    terminos.sentido = ps.sentido ? ps.sentido : sentido;
     return terminos;
   }
 

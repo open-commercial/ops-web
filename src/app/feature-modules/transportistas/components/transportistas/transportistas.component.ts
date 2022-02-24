@@ -68,22 +68,12 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
       pagina: this.page,
     };
 
-    if (ps.nombre) {
-      this.filterForm.get('nombre').setValue(ps.nombre);
-      terminos.nombre = ps.nombre;
-    }
+    const config = {
+      idProvincia: { checkNaN: true },
+      idLocalidad: { checkNaN: true },
+    };
 
-    if (ps.idProvincia) {
-      this.filterForm.get('idProvincia').setValue(ps.idProvincia);
-      terminos.idProvincia = ps.idProvincia;
-    }
-
-    if (ps.idLocalidad) {
-      this.filterForm.get('idLocalidad').setValue(ps.idLocalidad);
-      terminos.idLocalidad = ps.idLocalidad;
-    }
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaTransportistaCriteria>(ps, config , terminos);
   }
 
   createFilterForm() {

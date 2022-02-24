@@ -72,61 +72,39 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
     this.hasRolToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaPedidoCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
 
-    if (ps.idCliente && !isNaN(ps.idCliente)) {
-      this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
-      terminos.idCliente = Number(ps.idCliente);
-    }
+    const config = {
+      idCliente: { checkNaN: true },
+      idUsuario: { checkNaN: true },
+      idProducto: { checkNaN: true },
+      idViajante: { checkNaN: true },
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+    };
 
-    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
-      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
-      terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.idProducto && !isNaN(ps.idProducto)) {
-      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
-      terminos.idProducto = Number(ps.idProducto);
-    }
-
-    if (ps.idViajante && !isNaN(ps.idViajante)) {
-      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
-      terminos.idViajante = Number(ps.idViajante);
-    }
-
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.estadoPedido) {
-      this.filterForm.get('estadoPedido').setValue(ps.estadoPedido);
-      terminos.estadoPedido = ps.estadoPedido;
-    }
-
-    if (ps.nroPedido) {
-      this.filterForm.get('nroPedido').setValue(ps.nroPedido);
-      terminos.nroPedido = ps.nroPedido;
-    }
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaPedidoCriteria>(ps, config , terminos);
   }
 
   createFilterForm() {

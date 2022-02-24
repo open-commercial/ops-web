@@ -31,15 +31,15 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 })
 export class RemitosComponent extends ListadoDirective implements OnInit {
 
-  ordenarPorOptionsR = [
+  ordenArray = [
     { val: 'fecha', text: 'Fecha Remito' },
     { val: 'transportista.nombre', text: 'Transportista' },
     { val: 'costoDeEnvio', text: 'Costo' },
   ];
 
-  sentidoOptionsR = [
-    { val: 'ASC', text: 'Ascendente' },
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -73,65 +73,43 @@ export class RemitosComponent extends ListadoDirective implements OnInit {
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaRemitoCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
 
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      serieRemito: { checkNaN: true },
+      nroRemito: { checkNaN: true },
+      idTransportista: { checkNaN: true },
+      idUsuario: { checkNaN: true },
+      idCliente: { checkNaN: true },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
 
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.serieRemito) {
-      this.filterForm.get('serieRemito').setValue(Number(ps.serieRemito));
-      terminos.serieRemito = Number(ps.serieRemito);
-    }
-
-    if (ps.nroRemito) {
-      this.filterForm.get('nroRemito').setValue(Number(ps.nroRemito));
-      terminos.nroRemito = Number(ps.nroRemito);
-    }
-
-    if (ps.idTransportista && !isNaN(ps.idTransportista)) {
-      this.filterForm.get('idTransportista').setValue(Number(ps.idTransportista));
-      terminos.idTransportista = Number(ps.idTransportista);
-    }
-
-    if (ps.idUsuario) {
-      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
-      terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.idCliente) {
-      this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
-      terminos.idCliente = Number(ps.idCliente);
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsR.length ? this.ordenarPorOptionsR[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaRemitoCriteria>(ps, config , terminos);
   }
 
   createFilterForm() {
