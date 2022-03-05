@@ -19,4 +19,8 @@ export class FormasDePagoService {
   getFormaDePagoPredeterminada(): Observable<FormaDePago> {
     return this.http.get<FormaDePago>(this.url + '/predeterminada');
   }
+
+  setFormaDePagoPredeterminada(idFormaDePago: number): Observable<void> {
+    return this.http.put<void>(`${this.url}/predeterminada/${idFormaDePago}`, {});
+  }
 }

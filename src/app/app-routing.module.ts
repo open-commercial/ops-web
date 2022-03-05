@@ -158,6 +158,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/recibos-compra/recibos-compra.module')
           .then(m => m.RecibosCompraModule)
       },
+      { path: 'formas-de-pago',
+        loadChildren: () => import('./feature-modules/formas-de-pago/formas-de-pago.module')
+          .then(m => m.FormasDePagoModule)
+      },
     ]
   },
   { path: '**', redirectTo: '' }
