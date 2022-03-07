@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ListadoDirective} from '../../../../directives/listado.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../../../services/sucursales.service';
@@ -7,70 +7,51 @@ import {MensajeService} from '../../../../services/mensaje.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../../../models/pagination';
 import {FormBuilder} from '@angular/forms';
+import {TransportistasService} from '../../../../services/transportistas.service';
+import {BusquedaTransportistaCriteria} from '../../../../models/criterias/busqueda-transportista-criteria';
 import {Provincia} from '../../../../models/provincia';
 import {Localidad} from '../../../../models/localidad';
-import {BusquedaCuentaCorrienteProveedorCriteria} from '../../../../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
+import {UbicacionesService} from '../../../../services/ubicaciones.service';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {UbicacionesService} from '../../../../services/ubicaciones.service';
-import {FiltroOrdenamientoComponent} from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
-import {CuentasCorrientesService} from '../../../../services/cuentas-corrientes.service';
-import {Proveedor} from '../../../../models/proveedor';
-import {HelperService} from '../../../../services/helper.service';
 import {Rol} from '../../../../models/rol';
 import {AuthService} from '../../../../services/auth.service';
-import {ProveedoresService} from '../../../../services/proveedores.service';
+import {Transportista} from '../../../../models/transportista';
+import {HelperService} from '../../../../services/helper.service';
 
 @Component({
-  selector: 'app-cuentas-corrientes-proveedor',
-  templateUrl: './cuentas-corrientes-proveedor.component.html',
-  styleUrls: ['./cuentas-corrientes-proveedor.component.scss']
+  selector: 'app-transportistas',
+  templateUrl: './transportistas.component.html',
 })
-export class CuentasCorrientesProveedorComponent extends ListadoDirective implements OnInit {
+export class TransportistasComponent extends ListadoDirective implements OnInit {
+  allowedRolesToCrear: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  hasRoleToCrear = false;
+  allowedRolesToEdit: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  hasRoleToEdit = false;
+  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  hasRoleToDelete = false;
+
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
 
   helper = HelperService;
-
-  ordenArray = [
-    { val: 'proveedor.razonSocial', text: 'Razón Social' },
-    { val: 'saldo', text: 'Saldo C/C' },
-    { val: 'fechaUltimoMovimiento', text: 'Último Movimiento C/C' },
-  ];
-
-  sentidoArray = [
-    { val: 'ASC', text: 'Ascendente' },
-    { val: 'DESC', text: 'Descendente' },
-  ];
-
-  ordenarPorAplicado = '';
-  sentidoAplicado = '';
-  @ViewChild('ordernarPorCCP') ordenarPorCCPElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoCCP') sentidoCCPElement: FiltroOrdenamientoComponent;
-
-  allowedRolesToSee: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
-  hasRoleToSee = false;
-
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               private fb: FormBuilder,
-              private ubicacionesService: UbicacionesService,
-              private cuentasCorrientesService: CuentasCorrientesService,
-              private proveedoresService: ProveedoresService,
-              private authService: AuthService) {
+              private transportistasService: TransportistasService,
+              private authService: AuthService,
+              private ubicacionesService: UbicacionesService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
-    if (!this.hasRoleToSee) {
-      this.mensajeService.msg('No tiene permiso para ver el listado de proveedores.');
-      this.router.navigate(['/']);
-    }
+    this.hasRoleToCrear = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrear);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
 
     this.loadingOverlayService.activate();
     this.ubicacionesService.getProvincias()
@@ -83,35 +64,23 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
   }
 
   getTerminosFromQueryParams(ps) {
-    let terminos: BusquedaCuentaCorrienteProveedorCriteria = {
+    const terminos: BusquedaTransportistaCriteria = {
       pagina: this.page,
     };
 
-    const { orden, sentido } = this.getDefaultOrdenYSentido();
     const config = {
       idProvincia: { checkNaN: true },
       idLocalidad: { checkNaN: true },
-      ordenarPor: { defaultValue: orden },
-      sentido: { defaultValue: sentido },
     };
 
-    terminos = HelperService.paramsToTerminos<BusquedaCuentaCorrienteProveedorCriteria>(ps, config , terminos);
-
-    if (ps.nroONom) {
-      terminos.nroProveedor = ps.nroONom;
-      terminos.razonSocial = ps.nroONom;
-    }
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaTransportistaCriteria>(ps, config , terminos);
   }
 
   createFilterForm() {
     this.filterForm = this.fb.group({
-      nroONom: '',
+      nombre: '',
       idProvincia: null,
       idLocalidad: null,
-      ordenarPor: '',
-      sentido: '',
     });
 
     this.filterForm.get('idProvincia').valueChanges
@@ -135,11 +104,9 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
 
   resetFilterForm() {
     this.filterForm.reset({
-      nroONom: '',
+      nombre: '',
       idProvincia: null,
       idLocalidad: null,
-      ordenarPor: '',
-      sentido: '',
     });
   }
 
@@ -147,21 +114,18 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     const values = this.filterForm.value;
     this.appliedFilters = [];
 
-    if (values.nroONom) {
-      this.appliedFilters.push({ label: 'Nº de Proveedor/Nombre', value: values.nroONom });
+    if (values.nombre) {
+      this.appliedFilters.push({ label: 'Nombre', value: values.nombre });
     }
 
     setTimeout(() => {
       if (values.idProvincia) {
-        this.appliedFilters.push({ label: 'Provincia', value: this.getNombreProvincia(values.idProvincia) });
+        this.appliedFilters.push({label: 'Provincia', value: this.getNombreProvincia(values.idProvincia)});
       }
 
       if (values.idLocalidad) {
-        this.appliedFilters.push({ label: 'Localidad', value: this.getNombreLocalidad(values.idLocalidad) });
+        this.appliedFilters.push({label: 'Localidad', value: this.getNombreLocalidad(values.idLocalidad)});
       }
-
-      this.ordenarPorAplicado = this.ordenarPorCCPElement ? this.ordenarPorCCPElement.getTexto() : '';
-      this.sentidoAplicado = this.sentidoCCPElement ? this.sentidoCCPElement.getTexto() : '';
     }, 500);
   }
 
@@ -169,17 +133,15 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     const values = this.filterForm.value;
     const ret: {[k: string]: any} = {};
 
-    if (values.nroONom) { ret.nroONom = values.nroONom; }
+    if (values.nombre) { ret.nombre = values.nombre; }
     if (values.idProvincia) { ret.idProvincia = values.idProvincia; }
     if (values.idLocalidad) { ret.idLocalidad = values.idLocalidad; }
-    if (values.ordenarPor) { ret.ordenarPor = values.ordenarPor; }
-    if (values.sentido) { ret.sentido = values.sentido; }
 
     return ret;
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
-    return this.cuentasCorrientesService.buscarCuentasCorrientesProveedores(terminos as BusquedaCuentaCorrienteProveedorCriteria);
+    return this.transportistasService.buscar(terminos as BusquedaTransportistaCriteria);
   }
 
   getNombreProvincia(idProvincia: string): string {
@@ -194,22 +156,35 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     return aux.length ? aux[0].nombre : '';
   }
 
-  irACtaCte(p: Proveedor) {
-    this.router.navigate(['proveedores/cuenta-corriente', p.idProveedor]);
+  crearTransportista() {
+    if (!this.hasRoleToCrear) {
+      this.mensajeService.msg('No posee permiso para dar de alta un transportistas', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/transportistas/nuevo']);
   }
 
-  editarProveedor(p: Proveedor) {
-    this.router.navigate(['/proveedores/editar', p.idProveedor]);
+  editarTransportista(t: Transportista) {
+    if (!this.hasRoleToEdit) {
+      this.mensajeService.msg('No posee permiso para editar datos del transportistas', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/transportistas/editar', t.idTransportista]);
   }
 
-  eliminarProveedor(p: Proveedor) {
-    const msg = `¿Está seguro que desea eliminar el proveedor: "${p.razonSocial}"?`;
+  eliminarTransportista(t: Transportista) {
+    if (!this.hasRoleToDelete) {
+      this.mensajeService.msg('No posee permiso para eliminar transportistas', MensajeModalType.ERROR);
+      return;
+    }
 
+    const msg = `¿Está seguro que desea eliminar el transportista?`;
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
-        this.proveedoresService.eliminarProveedor(p.idProveedor)
-          // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
+        this.transportistasService.eliminarTransportista(t.idTransportista)
           .subscribe({
             next: () => location.reload(),
             error: err => {

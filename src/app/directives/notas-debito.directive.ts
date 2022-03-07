@@ -46,10 +46,10 @@ export abstract class NotasDebitoDirective extends NotasDirective implements OnI
     this.loadingOverlayService.activate();
     this.notasService.getTiposDeNotaDebitoSucursal(this.sucursalesService.getIdSucursal())
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        tipos => this.tiposNota = tipos,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: tipos => this.tiposNota = tipos,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 

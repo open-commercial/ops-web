@@ -36,8 +36,8 @@
           <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
           <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorT" [values]="ordenarPorOptionsT" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorT></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoT" [values]="sentidoOptionsT" [label]="'Sentido'" formControlName="sentido" #sentidoT></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorT" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorT></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoT" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoT></app-filtro-ordenamiento>
           </div>
         </div>
       </div>

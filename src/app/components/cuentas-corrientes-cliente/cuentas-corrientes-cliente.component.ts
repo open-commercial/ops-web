@@ -35,7 +35,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
 
-  ordenarPorOptionsCCC = [
+  ordenArray = [
     { val: 'cliente.nombreFiscal', text: 'R. Social o Nombre' },
     { val: 'cliente.fechaAlta', text: 'Fecha Alta' },
     { val: 'cliente.nombreFantasia', text: 'Nombre Fantasía' },
@@ -43,7 +43,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     { val: 'fechaUltimoMovimiento', text: 'Fecha último Movimiento' },
   ];
 
-  sentidoOptionsCCC = [
+  sentidoArray = [
     { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
   ];
@@ -85,51 +85,34 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     this.loadingOverlayService.activate();
     this.ubicacionesService.getProvincias()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        provincias => this.provincias = provincias,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
+      .subscribe({
+        next: provincias => this.provincias = provincias,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 
   getTerminosFromQueryParams(ps) {
-    const terminos: BusquedaCuentaCorrienteClienteCriteria = {
+    let terminos: BusquedaCuentaCorrienteClienteCriteria = {
       pagina: this.page
     };
 
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      idViajante: { checkNaN: true },
+      idProvincia: { checkNaN: true },
+      idLocalidad: { checkNaN: true },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
+
+    terminos = HelperService.paramsToTerminos<BusquedaCuentaCorrienteClienteCriteria>(ps, config , terminos);
+
     if (ps.nroONom) {
-      this.filterForm.get('nroONom').setValue(ps.nroONom);
       terminos.nroDeCliente = ps.nroONom;
       terminos.nombreFantasia = ps.nroONom;
       terminos.nombreFiscal = ps.nroONom;
     }
-
-    if (ps.idViajante) {
-      if (ps.idViajante && !isNaN(ps.idViajante)) {
-        const idViajante = Number(ps.idViajante);
-        this.filterForm.get('idViajante').setValue(idViajante);
-        terminos.idViajante = Number(idViajante);
-      }
-    }
-
-    if (ps.idProvincia) {
-      this.filterForm.get('idProvincia').setValue(ps.idProvincia);
-      terminos.idProvincia = ps.idProvincia;
-    }
-
-    if (ps.idLocalidad) {
-      this.filterForm.get('idLocalidad').setValue(ps.idLocalidad);
-      terminos.idLocalidad = ps.idLocalidad;
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsCCC.length ? this.ordenarPorOptionsCCC[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
 
     return terminos;
   }

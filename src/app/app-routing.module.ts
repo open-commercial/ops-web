@@ -162,6 +162,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/formas-de-pago/formas-de-pago.module')
           .then(m => m.FormasDePagoModule)
       },
+      { path: 'transportistas',
+        loadChildren: () => import('./feature-modules/transportistas/transportistas.module')
+          .then(m => m.TransportistasModule)
+      }
     ]
   },
   { path: '**', redirectTo: '' }

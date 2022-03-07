@@ -42,15 +42,14 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
   helper = HelperService;
   formasDePago: FormaDePago[] = [];
 
-
-  ordenarPorOptionsR = [
+  ordenArray = [
     { val: 'fecha', text: 'Fecha Recibo' },
     { val: 'concepto', text: 'Concepto' },
     { val: 'idFormaDePago', text: 'Forma de Pago' },
     { val: 'monto', text: 'Monto' },
   ];
 
-  sentidoOptionsR = [
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
     { val: 'ASC', text: 'Ascendente' },
   ];
@@ -113,6 +112,23 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
     ;
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaReciboCriteria = {
       movimiento: this.getMovimiento(),
@@ -120,64 +136,18 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
       pagina: this.page,
     };
 
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      idFormaDePago: { checkNaN: true },
+      idUsuario: { checkNaN: true },
+      idViajante: { checkNaN: true },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
 
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.numSerie) {
-      this.filterForm.get('numSerie').setValue(ps.numSerie);
-      terminos.numSerie = Number(ps.numSerie);
-    }
-
-    if (ps.numRecibo) {
-      this.filterForm.get('numRecibo').setValue(ps.numRecibo);
-      terminos.numRecibo = Number(ps.numRecibo);
-    }
-
-    if (ps.concepto) {
-      this.filterForm.get('concepto').setValue(ps.concepto);
-      terminos.concepto = ps.concepto;
-    }
-
-    if (ps.idFormaDePago && !isNaN(ps.idFormaDePago)) {
-      this.filterForm.get('idFormaDePago').setValue(ps.idFormaDePago);
-      terminos.idFormaDePago = ps.idFormaDePago;
-    }
-
-    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
-      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
-      terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.idViajante && !isNaN(ps.idViajante)) {
-      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
-      terminos.idViajante = Number(ps.idViajante);
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsR.length ? this.ordenarPorOptionsR[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaReciboCriteria>(ps, config , terminos);
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
@@ -261,6 +231,11 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
         this.appliedFilters.push({ label: 'Forma de Pago',  value: aux[0].nombre });
       }
     }
+
+    setTimeout(() => {
+      this.ordenarPorAplicado = this.ordenarPorRElement ? this.ordenarPorRElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoRElement ? this.sentidoRElement.getTexto() : '';
+    }, 500);
   }
 
   getUsuarioInfoAsync(id: number): Observable<string> {
@@ -280,7 +255,7 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
     }
 
     if (values.numSerie) { ret.numSerie = values.numSerie; }
-    if (values.numRecibo) { ret.numFactura = values.numRecibo; }
+    if (values.numRecibo) { ret.numRecibo = values.numRecibo; }
     if (values.concepto) { ret.concepto = values.concepto; }
     if (values.idFormaDePago) { ret.idFormaDePago = values.idFormaDePago; }
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }

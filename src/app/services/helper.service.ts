@@ -75,4 +75,62 @@ export class HelperService {
   static categoriaIVALabel(ci: CategoriaIVA) {
     return ci.toString().replace(/_/g, ' ');
   }
+
+  static addParamToTerminos<T>(
+    terminos: T | {}, name: string, value: any,
+    config: { defaultValue?: any, checkNaN?: boolean, callback?: (v: any) => any } = {}
+  ) {
+    const defaultValue = config.defaultValue || null;
+    const checkNaN = config.checkNaN || false;
+    const callback = config.callback || ((v) => v);
+
+    if (!value) {
+      if (!!defaultValue) { terminos[name] = defaultValue; }
+      return;
+    }
+    if (checkNaN) {
+      if (isNaN(value)) { return; }
+      value = Number(value);
+    }
+    terminos[name] = callback(value);
+  }
+
+  static paramsToTerminos<T>(
+    params: { [key: string]: string },
+    config: { [key: string]: { name?: string, defaultValue?: any, checkNaN?: boolean, callback?: (v: any) => any }},
+    initialValue: T | {},
+  ): T {
+    const output = initialValue || {};
+    for (const k in params) {
+      if (params.hasOwnProperty(k)) {
+        const c = config[k] || null;
+        if (c) {
+          const name = c.name || k;
+          const value = params[k];
+          const defaultValue = c.defaultValue || null;
+          const checkNaN = c.checkNaN || false;
+          const callback = c.callback || ((v) => v);
+          HelperService.addParamToTerminos<T>(output, name, value, { defaultValue, checkNaN, callback });
+        } else {
+          HelperService.addParamToTerminos<T>(output, k, params[k]);
+        }
+      }
+    }
+
+    // set defaults
+    for (const k in config) {
+      if (config.hasOwnProperty(k) && !!config[k].defaultValue) {
+        if (!output.hasOwnProperty(k)) {
+          output[k] = config[k].defaultValue;
+        }
+      }
+    }
+
+    return output as T;
+  }
+
+  static timestampToDate: (v: number) => Date = (v) => {
+    const d = moment.unix(v).local();
+    return d.toDate();
+  }
 }

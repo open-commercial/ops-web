@@ -6,5 +6,5 @@ export interface Transportista {
   ubicacion: Ubicacion;
   web: string;
   telefono: string;
-  eliminado: boolean;
+  eliminado?: boolean;
 }

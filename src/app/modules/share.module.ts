@@ -22,7 +22,7 @@ import {
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
-  faMoneyBillWave,
+  faMoneyBillWave, faTruckMoving
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -95,7 +95,7 @@ export class ShareModule {
       faChevronDown, faChevronUp, faCheckSquare, faFileExport,
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
-      faHandHoldingUsd, faMoneyBillWave
+      faHandHoldingUsd, faMoneyBillWave, faTruckMoving
     );
   }
 }

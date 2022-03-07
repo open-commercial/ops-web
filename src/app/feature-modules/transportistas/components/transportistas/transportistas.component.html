@@ -1,0 +1,80 @@
+<div class="app-transportistas my-3">
+  <div class="d-flex flex-row">
+    <h1 class="h3 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportistas
+    </h1>
+    <div class="text-right m-0 text-nowrap">
+      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Transportista" triggers="mouseenter:mouseleave" placement="left"
+              (click)="crearTransportista()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="transportistasCollapse"
+              [class.bg-white]="!isFiltersCollapsed"
+              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="transportistasCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+      <div [formGroup]="filterForm">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" formControlName="nombre">
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="idProvincia">Provincia</label>
+              <select class="form-control" id="idProvincia" formControlName="idProvincia">
+                <option></option>
+                <option *ngFor="let p of provincias" [value]="p.idProvincia">{{ p.nombre }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="idLocalidad">Localidad</label>
+              <select class="form-control" id="idLocalidad" formControlName="idLocalidad">
+                <option *ngFor="let l of localidades" [value]="l.idLocalidad">{{ l.nombre }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"></app-filtros-aplicados>
+  <div class="transportistas">
+    <ng-template #info let-item>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="lead font-italic font-weight-bold">{{ item.nombre }}</div>
+          <div><span class="font-weight-bold">Dir.: </span>{{ helper.formatUbicacion(item.ubicacion) }}</div>
+        </div>
+        <div class="col-md-6">
+          <div><span class="font-weight-bold">Teléfono: </span>{{ item.telefono }}</div>
+          <div><span class="font-weight-bold">Web: </span>{{ item.web }}</div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item" *ngIf="hasRoleToEdit">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarTransportista(item)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="hasRoleToDelete">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarTransportista(item)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+  </div>
+</div>

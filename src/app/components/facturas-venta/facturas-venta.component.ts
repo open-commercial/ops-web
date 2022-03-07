@@ -52,15 +52,15 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
     { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
-  ordenarPorOptionsFV = [
+  ordenArray = [
     { val: 'fecha', text: 'Fecha' },
     { val: 'cliente.nombreFiscal', text: 'Cliente' },
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptionsFV = [
-    { val: 'ASC', text: 'Ascendente' },
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -123,80 +123,42 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaFacturaVentaCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
 
-    if (ps.idCliente && !isNaN(ps.idCliente)) {
-      this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
-      terminos.idCliente = Number(ps.idCliente);
-    }
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      idCliente: { checkNaN: true },
+      idUsuario: { checkNaN: true },
+      idProducto: { checkNaN: true },
+      idViajante: { checkNaN: true },
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
 
-    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
-      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
-      terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.idProducto && !isNaN(ps.idProducto)) {
-      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
-      terminos.idProducto = Number(ps.idProducto);
-    }
-
-    if (ps.idViajante && !isNaN(ps.idViajante)) {
-      this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
-      terminos.idViajante = Number(ps.idViajante);
-    }
-
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.tipoComprobante) {
-      this.filterForm.get('tipoComprobante').setValue(ps.tipoComprobante);
-      terminos.tipoComprobante = ps.tipoComprobante;
-    }
-
-    if (ps.nroPedido) {
-      this.filterForm.get('nroPedido').setValue(ps.nroPedido);
-      terminos.nroPedido = ps.nroPedido;
-    }
-
-    if (ps.numSerie) {
-      this.filterForm.get('numSerie').setValue(ps.numSerie);
-      terminos.numSerie = Number(ps.numSerie);
-    }
-
-    if (ps.numFactura) {
-      this.filterForm.get('numFactura').setValue(ps.numFactura);
-      terminos.numFactura = Number(ps.numFactura);
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsFV.length ? this.ordenarPorOptionsFV[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaFacturaVentaCriteria>(ps, config , terminos);
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
