@@ -101,4 +101,35 @@
       </a>
     </li>
   </ul>
+  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;STOCK</h2>
+  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/productos" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/traspasos" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos
+      </a>
+    </li>
+  </ul>
+  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;ADMINISTRACIÓN</h2>
+  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/cajas" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Cajas
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/gastos" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/formas-de-pago" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'money-bill-wave']"></fa-icon> Formas de Pago
+      </a>
+    </li>
+  </ul>
 </div>
