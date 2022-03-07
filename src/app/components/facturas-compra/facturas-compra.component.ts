@@ -34,16 +34,16 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
     { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
   ];
 
-  ordenarPorOptionsFC = [
-    { val: 'fecha', text: 'Fecha Factura' },
+  ordenArray = [
     { val: 'fechaAlta', text: 'Fecha de Alta' },
+    { val: 'fecha', text: 'Fecha Factura' },
     { val: 'proveedor.razonSocial', text: 'Proveedor' },
     { val: 'total', text: 'Total' },
   ];
 
-  sentidoOptionsFC = [
-    { val: 'ASC', text: 'Ascendente' },
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   helper = HelperService;
@@ -69,83 +69,53 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
     super.ngOnInit();
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    let aux = { desde: null, hasta: null };
+    if (ps.fechaFacturaDesde) {
+      const d = moment.unix(ps.fechaFacturaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaFacturaHasta) {
+      const h = moment.unix(ps.fechaFacturaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+    this.filterForm.get('rangoFechaFactura').setValue(aux);
+
+    aux = { desde: null, hasta: null };
+    if (ps.fechaAltaDesde) {
+      const d = moment.unix(ps.fechaAltaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaAltaHasta) {
+      const h = moment.unix(ps.fechaAltaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+    this.filterForm.get('rangoFechaAlta').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaFacturaCompraCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
 
-    if (ps.idProveedor && !isNaN(ps.idProveedor)) {
-      this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));
-      terminos.idProveedor = Number(ps.idProveedor);
-    }
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      idProveedor: { checkNaN: true },
+      idProducto: { checkNaN: true },
+      fechaFacturaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaFacturaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaAltaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaAltaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
 
-    if (ps.idProducto && !isNaN(ps.idProducto)) {
-      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
-      terminos.idProducto = Number(ps.idProducto);
-    }
-
-    if (ps.fechaFacturaDesde || ps.fechaFacturaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaFacturaDesde) {
-        const d = moment.unix(ps.fechaFacturaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaFacturaDesde = d.toDate();
-      }
-
-      if (ps.fechaFacturaHasta) {
-        const h = moment.unix(ps.fechaFacturaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaFacturaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFechaFactura').setValue(aux);
-    }
-
-    if (ps.fechaAltaDesde || ps.fechaAltaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaAltaDesde) {
-        const d = moment.unix(ps.fechaAltaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaAltaDesde = d.toDate();
-      }
-
-      if (ps.fechaAltaHasta) {
-        const h = moment.unix(ps.fechaAltaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaAltaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFechaAlta').setValue(aux);
-    }
-
-    if (ps.tipoComprobante) {
-      this.filterForm.get('tipoComprobante').setValue(ps.tipoComprobante);
-      terminos.tipoComprobante = ps.tipoComprobante;
-    }
-
-    if (ps.numSerie) {
-      this.filterForm.get('numSerie').setValue(ps.numSerie);
-      terminos.numSerie = Number(ps.numSerie);
-    }
-
-    if (ps.numFactura) {
-      this.filterForm.get('numFactura').setValue(ps.numFactura);
-      terminos.numFactura = Number(ps.numFactura);
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsFC.length ? this.ordenarPorOptionsFC[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaFacturaCompraCriteria>(ps, config, terminos);
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {

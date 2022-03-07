@@ -1,0 +1,33 @@
+<div class="app-transportista">
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> {{ transportista ? transportista.nombre : 'Nuevo Transportista' }}
+    </h1>
+  </div>
+  <form (ngSubmit)="submit()" [formGroup]="form" class="card card-body bg-light mt-2" *ngIf="form">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre" id="nombre"
+             [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }">
+      <div class="invalid-feedback" *ngIf="submitted && f.nombre.errors">
+        <div *ngIf="f.nombre.errors.required">Requerido</div>
+      </div>
+    </div>
+    <app-ubicacion-form-field id="ubicacion" label="Ubicación" formControlName="ubicacion"></app-ubicacion-form-field>
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input type="url" class="form-control" id="telefono" formControlName="telefono">
+    </div>
+    <div class="form-group">
+      <label for="web">Página Web</label>
+      <input type="url" class="form-control" id="web" formControlName="web">
+    </div>
+    <div class="text-right">
+      <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+  </form>
+</div>

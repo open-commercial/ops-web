@@ -36,16 +36,16 @@ export class GastosComponent extends ListadoDirective implements OnInit {
 
   formasDePago: FormaDePago[] = [];
 
-  ordenarPorOptionsG = [
+  ordenArray = [
     { val: 'fecha', text: 'Fecha Gasto' },
     { val: 'concepto', text: 'Concepto' },
     { val: 'idFormaDePago', text: 'Forma de Pago' },
     { val: 'monto', text: 'Monto' },
   ];
 
-  sentidoOptionsG = [
-    { val: 'ASC', text: 'Ascendente' },
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -90,63 +90,41 @@ export class GastosComponent extends ListadoDirective implements OnInit {
     ;
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaGastoCriteria = {
       idSucursal: Number(this.sucursalesService.getIdSucursal()),
       pagina: this.page,
     };
 
-    const idUsuario = Number(ps.idUsuario) || null;
-    if (idUsuario) {
-      this.filterForm.get('idUsuario').setValue(idUsuario);
-      terminos.idUsuario = idUsuario;
-    }
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      idUsuario: { checkNaN: true },
+      nroGasto: { checkNaN: true },
+      idFormaDePago: { checkNaN: true },
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
 
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.concepto) {
-      this.filterForm.get('concepto').setValue(ps.concepto);
-      terminos.concepto = ps.concepto;
-    }
-
-    const nroGasto = Number(ps.nroGasto) || null;
-    if (ps.nroGasto) {
-      this.filterForm.get('nroGasto').setValue(nroGasto);
-      terminos.nroGasto = nroGasto;
-    }
-
-    const idFormaDePago = Number(ps.idFormaDePago) || null;
-    if (idFormaDePago) {
-      this.filterForm.get('idFormaDePago').setValue(idFormaDePago);
-      terminos.idFormaDePago = idFormaDePago;
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsG.length ? this.ordenarPorOptionsG[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaGastoCriteria>(ps, config , terminos);
   }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
@@ -211,6 +189,11 @@ export class GastosComponent extends ListadoDirective implements OnInit {
         this.appliedFilters.push({ label: 'Forma de Pago',  value: aux[0].nombre });
       }
     }
+
+    setTimeout(() => {
+      this.ordenarPorAplicado = this.ordenarPorGElement ? this.ordenarPorGElement.getTexto() : '';
+      this.sentidoAplicado = this.sentidoGElement ? this.sentidoGElement.getTexto() : '';
+    }, 500);
   }
 
   getUsuarioInfoAsync(id: number): Observable<string> {

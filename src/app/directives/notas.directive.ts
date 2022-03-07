@@ -31,11 +31,11 @@ import {ProveedoresService} from '../services/proveedores.service';
 @Directive()
 export abstract class NotasDirective extends ListadoDirective implements OnInit {
   rol = Rol;
-  ordenarPorOptionsN = [];
+  ordenArray = [];
 
-  sentidoOptionsN = [
-    { val: 'ASC', text: 'Ascendente' },
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -94,21 +94,37 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
   }
 
   fillOrdenarPorOptions() {
-    this.ordenarPorOptionsN.push({ val: 'fecha', text: 'Fecha' });
+    this.ordenArray.push({ val: 'fecha', text: 'Fecha' });
 
     if (this.getMovimiento() === Movimiento.VENTA) {
-      this.ordenarPorOptionsN.push({ val: 'cliente.idCliente', text: 'Cliente' });
+      this.ordenArray.push({ val: 'cliente.idCliente', text: 'Cliente' });
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
-      this.ordenarPorOptionsN.push({ val: 'proveedor.razonSocial', text: 'Proveedor' });
+      this.ordenArray.push({ val: 'proveedor.razonSocial', text: 'Proveedor' });
     }
 
-    this.ordenarPorOptionsN.push({ val: 'total', text: 'Total' });
+    this.ordenArray.push({ val: 'total', text: 'Total' });
   }
 
   abstract getTiposDeNotasSucursal();
   abstract getMovimiento(): Movimiento;
+
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
 
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaNotaCriteria = {
@@ -117,72 +133,26 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
       movimiento: this.getMovimiento(),
     };
 
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config: { [key: string]: { name?: string, defaultValue?: any, checkNaN?: boolean, callback?: (v: any) => any }} = {
+      idUsuario: { checkNaN: true },
+      idViajante: { checkNaN: true },
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      tipoNota: { name: 'tipoComprobante' },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
+
     if (this.getMovimiento() === Movimiento.VENTA) {
-      if (ps.idCliente && !isNaN(ps.idCliente)) {
-        this.filterForm.get('idCliente').setValue(Number(ps.idCliente));
-        terminos.idCliente = Number(ps.idCliente);
-      }
-      if (ps.idViajante && !isNaN(ps.idViajante)) {
-        this.filterForm.get('idViajante').setValue(Number(ps.idViajante));
-        terminos.idViajante = Number(ps.idViajante);
-      }
+      config.idCliente = { checkNaN: true };
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
-      if (ps.idProveedor && !isNaN(ps.idProveedor)) {
-        this.filterForm.get('idProveedor').setValue(Number(ps.idProveedor));
-        terminos.idProveedor = Number(ps.idProveedor);
-      }
+      config.idProveedor = { checkNaN: true };
     }
 
-    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
-      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
-      terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    if (ps.tipoNota) {
-      this.filterForm.get('tipoNota').setValue(ps.tipoNota);
-      terminos.tipoComprobante = ps.tipoNota;
-    }
-
-    if (ps.numSerie) {
-      this.filterForm.get('numSerie').setValue(ps.numSerie);
-      terminos.numSerie = Number(ps.numSerie);
-    }
-
-    if (ps.numNota) {
-      this.filterForm.get('numNota').setValue(ps.numNota);
-      terminos.numNota = Number(ps.numNota);
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsN.length ? this.ordenarPorOptionsN[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaNotaCriteria>(ps, config , terminos);
   }
 
   abstract getItemsObservableMethod(terminos): Observable<Pagination>;
@@ -191,8 +161,9 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
     const controlsConfigs: { [key: string]: any } = {
       idUsuario: null,
       rangoFecha: null,
+      idViajante: null,
       tipoNota: null,
-      numSerie: null,
+      numSerie: '',
       numNota: '',
       ordenarPor: null,
       sentido: null,
@@ -200,7 +171,6 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
 
     if (this.getMovimiento() === Movimiento.VENTA) {
       controlsConfigs.idCliente = null;
-      controlsConfigs.idViajante = null;
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -213,6 +183,7 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
   resetFilterForm() {
     const value: { [key: string]: any } = {
       idUsuario: null,
+      idViajante: null,
       rangoFecha: null,
       tipoNota: null,
       numSerie: null,
@@ -223,7 +194,6 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
 
     if (this.getMovimiento() === Movimiento.VENTA) {
       value.idCliente = null;
-      value.idViajante = null;
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -241,9 +211,6 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
       if (values.idCliente) {
         this.appliedFilters.push({ label: 'Cliente', value: values.idCliente, asyncFn: this.getClienteInfoAsync(values.idCliente) });
       }
-      if (values.idViajante) {
-        this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
-      }
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -258,6 +225,9 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
       this.appliedFilters.push({ label: 'Usuario', value: values.idUsuario, asyncFn: this.getUsuarioInfoAsync(values.idUsuario) });
     }
 
+    if (values.idViajante) {
+      this.appliedFilters.push({ label: 'Viajante', value: values.idViajante, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
+    }
 
     if (values.rangoFecha && values.rangoFecha.desde) {
       this.appliedFilters.push({
@@ -315,7 +285,6 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
 
     if (this.getMovimiento() === Movimiento.VENTA) {
       if (values.idCliente) { ret.idCliente = values.idCliente; }
-      if (values.idViajante) { ret.idViajante = values.idViajante; }
     }
 
     if (this.getMovimiento() === Movimiento.COMPRA) {
@@ -323,6 +292,7 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
     }
 
     if (values.idUsuario) { ret.idUsuario = values.idUsuario; }
+    if (values.idViajante) { ret.idViajante = values.idViajante; }
     if (values.rangoFecha && values.rangoFecha.desde) {
       ret.fechaDesde = this.helper.getUnixDateFromNgbDate(values.rangoFecha.desde); }
     if (values.rangoFecha && values.rangoFecha.hasta) {

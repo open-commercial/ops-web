@@ -26,16 +26,16 @@ import {ProductosService} from '../../services/productos.service';
   templateUrl: './traspasos.component.html'
 })
 export class TraspasosComponent extends ListadoDirective implements OnInit {
-  ordenarPorOptionsT = [
-    { val: 'fechaDeAlta', text: 'Fecha' },
+  ordenArray = [
+    { val: 'fechaDeAlta', text: 'Fecha Traspaso' },
     { val: 'nroTraspaso', text: 'Nº Traspaso' },
     { val: 'idSucursalOrigen', text: 'Sucursal Origen' },
     { val: 'idSucursalDestino', text: 'Sucursal Destino' },
   ];
 
-  sentidoOptionsT = [
-    { val: 'ASC', text: 'Ascendente' },
+  sentidoArray = [
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -59,59 +59,38 @@ export class TraspasosComponent extends ListadoDirective implements OnInit {
     super.ngOnInit();
   }
 
+  populateFilterForm(ps) {
+    super.populateFilterForm(ps);
+
+    const aux = { desde: null, hasta: null };
+    if (ps.fechaDesde) {
+      const d = moment.unix(ps.fechaDesde).local();
+      aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
+    }
+
+    if (ps.fechaHasta) {
+      const h = moment.unix(ps.fechaHasta).local();
+      aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
+    }
+
+    this.filterForm.get('rangoFecha').setValue(aux);
+  }
+
   getTerminosFromQueryParams(ps) {
     const terminos: BusquedaTraspasoCriteria = {
       pagina: this.page,
     };
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    const config = {
+      idProducto: { checkNaN: true },
+      idUsuario: { checkNaN: true },
+      fechaDesde: { checkNaN: true, callback: HelperService.timestampToDate },
+      fechaHasta: { checkNaN: true, callback: HelperService.timestampToDate },
+      ordenarPor: { defaultValue: orden },
+      sentido: { defaultValue: sentido },
+    };
 
-    if (ps.nroTraspaso) {
-      this.filterForm.get('nroTraspaso').setValue(ps.nroTraspaso);
-      terminos.nroTraspaso = ps.nroTraspaso;
-    }
-
-    if (ps.nroPedido) {
-      this.filterForm.get('nroPedido').setValue(ps.nroPedido);
-      terminos.nroPedido = ps.nroPedido;
-    }
-
-    if (ps.idProducto && !isNaN(ps.idProducto)) {
-      this.filterForm.get('idProducto').setValue(Number(ps.idProducto));
-      terminos.idProducto = Number(ps.idProducto);
-    }
-
-    if (ps.idUsuario && !isNaN(ps.idUsuario)) {
-      this.filterForm.get('idUsuario').setValue(Number(ps.idUsuario));
-      terminos.idUsuario = Number(ps.idUsuario);
-    }
-
-    if (ps.fechaDesde || ps.fechaHasta) {
-      const aux = { desde: null, hasta: null };
-
-      if (ps.fechaDesde) {
-        const d = moment.unix(ps.fechaDesde).local();
-        aux.desde = { year: d.year(), month: d.month() + 1, day: d.date() };
-        terminos.fechaDesde = d.toDate();
-      }
-
-      if (ps.fechaHasta) {
-        const h = moment.unix(ps.fechaHasta).local();
-        aux.hasta = { year: h.year(), month: h.month() + 1, day: h.date() };
-        terminos.fechaHasta = h.toDate();
-      }
-
-      this.filterForm.get('rangoFecha').setValue(aux);
-    }
-
-    let ordenarPorVal = this.ordenarPorOptionsT.length ? this.ordenarPorOptionsT[0].val : '';
-    if (ps.ordenarPor) { ordenarPorVal = ps.ordenarPor; }
-    this.filterForm.get('ordenarPor').setValue(ordenarPorVal);
-    terminos.ordenarPor = ordenarPorVal;
-
-    const sentidoVal = ps.sentido ? ps.sentido : 'DESC';
-    this.filterForm.get('sentido').setValue(sentidoVal);
-    terminos.sentido = sentidoVal;
-
-    return terminos;
+    return HelperService.paramsToTerminos<BusquedaTraspasoCriteria>(ps, config , terminos);
   }
 
   createFilterForm() {

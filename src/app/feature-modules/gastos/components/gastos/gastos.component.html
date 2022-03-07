@@ -40,8 +40,8 @@
             </select>
           </div>
           <div class="px-3 pt-3 pb-0 border bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorG" [values]="ordenarPorOptionsG" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorG></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoG" [values]="sentidoOptionsG" [label]="'Sentido'" formControlName="sentido" #sentidoG></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorG" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorG></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoG" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoG></app-filtro-ordenamiento>
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@
     <ng-template #info let-item>
       <div class="flex-fill">
         <div>
-          <span class="badge badge-dark mr-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha }}</span>
+          <span class="badge badge-dark mr-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
           <span class="badge badge-secondary">#{{ item.nroGasto }}</span>
         </div>
         <div class="d-flex flex-column flex-md-row">

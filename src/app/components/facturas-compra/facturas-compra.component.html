@@ -44,8 +44,8 @@
           <app-rango-fecha-filtro formControlName="rangoFechaFactura" [label]="'Fecha Factura'"></app-rango-fecha-filtro>
           <app-rango-fecha-filtro formControlName="rangoFechaAlta" [label]="'Fecha Alta'"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorFC" [values]="ordenarPorOptionsFC" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoOptionsFC" [label]="'Sentido'" formControlName="sentido" #sentidoFC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorFC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoFC></app-filtro-ordenamiento>
           </div>
         </div>
       </div>

@@ -26,6 +26,9 @@ export abstract class ListadoDirective implements OnInit, OnDestroy {
 
   searching = false;
 
+  ordenArray: { val: string, text: string }[] = [];
+  sentidoArray: { val: string, text: string }[] = [];
+
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
                         protected sucursalesService: SucursalesService,
@@ -40,6 +43,30 @@ export abstract class ListadoDirective implements OnInit, OnDestroy {
   abstract getAppliedFilters();
   abstract getFormValues();
   abstract getItemsObservableMethod(terminos): Observable<Pagination>;
+
+  protected getDefaultOrdenYSentido(): { orden: string, sentido: string }
+  {
+    const ret = { orden: '', sentido: ''};
+    if (this.ordenArray.length) {
+      ret.orden = this.ordenArray[0].val;
+    }
+    if (this.sentidoArray.length) {
+      ret.sentido = this.sentidoArray[0].val;
+    }
+
+    return ret;
+  }
+
+  populateFilterForm(params) {
+    this.filterForm.patchValue(params);
+    const { orden, sentido } = this.getDefaultOrdenYSentido();
+    if (!params.ordenarPor && this.filterForm.get('ordenarPor')) {
+      this.filterForm.get('ordenarPor').setValue(orden);
+    }
+    if (!params.sentido && this.filterForm.get('sentido')) {
+      this.filterForm.get('sentido').setValue(sentido);
+    }
+  }
 
   ngOnInit(): void {
     this.createFilterForm();
@@ -57,6 +84,7 @@ export abstract class ListadoDirective implements OnInit, OnDestroy {
     this.page = isNaN(p) || p < 1 ? 0 : (p - 1);
 
     this.resetFilterForm();
+    this.populateFilterForm(ps);
     const terminos = this.getTerminosFromQueryParams(ps);
     this.fetchItems(terminos);
   }
