@@ -4,24 +4,6 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;ADMINISTRACIÓN</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/cajas" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Cajas
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/gastos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/transportistas" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportistas
-      </a>
-    </li>
-  </ul>
   <h2 *ngIf="tieneRolAdminOEncargado"><span class="label">&nbsp;COMPRAS</span></h2>
   <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
     <li class="nav-item">
@@ -47,19 +29,6 @@
     <li class="nav-item">
       <a class="nav-link" routerLink="/recibos-compra" routerLinkActive="active" (click)="optionClick()">
         <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos
-      </a>
-    </li>
-  </ul>
-  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;STOCK</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/productos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/traspasos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos
       </a>
     </li>
   </ul>
@@ -124,6 +93,11 @@
     <li class="nav-item">
       <a class="nav-link" routerLink="/gastos" routerLinkActive="active" (click)="optionClick()">
         <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/transportistas" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportistas
       </a>
     </li>
     <li class="nav-item">
