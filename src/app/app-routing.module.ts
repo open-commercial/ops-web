@@ -46,6 +46,7 @@ import {NotasDebitoCompraHomeComponent} from './components/notas-debito-compra-h
 import {NotasDebitoCompraComponent} from './components/notas-debito-compra/notas-debito-compra.component';
 import {VerReciboComponent} from './components/ver-recibo/ver-recibo.component';
 import {FacturaCompraComponent} from './components/factura-compra/factura-compra.component';
+import {ConfiguracionComponent} from './components/configuracion/configuracion.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -141,6 +142,9 @@ const routes: Routes = [
         children: [
           { path: 'ver/:id', component: VerReciboComponent },
         ]
+      },
+      {
+        path: 'configuracion', component: ConfiguracionComponent,
       },
       { path: 'proveedores',
         loadChildren: () => import('./feature-modules/cuentas-corrientes-proveedor/cuentas-corrientes-proveedor.module')
