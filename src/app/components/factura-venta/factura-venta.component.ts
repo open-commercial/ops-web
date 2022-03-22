@@ -27,6 +27,9 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
 import { Transportista } from '../../models/transportista';
 import {Subscription} from 'rxjs';
+import {Usuario} from '../../models/usuario';
+import {AuthService} from '../../services/auth.service';
+import {Rol} from '../../models/rol';
 
 
 @Component({
@@ -71,6 +74,8 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
 
+  usuario: Usuario = null;
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -87,7 +92,8 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
               private storageService: StorageService,
               private productosService: ProductosService,
               private pedidosService: PedidosService,
-              public loadingOverlayService: LoadingOverlayService) {
+              public loadingOverlayService: LoadingOverlayService,
+              public authService: AuthService) {
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
     modalConfig.keyboard = false;
@@ -96,7 +102,16 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createFrom();
-    this.verificarPedido();
+    this.loadingOverlayService.activate();
+    this.authService.getLoggedInUsuario()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: (u: Usuario) => {
+          this.usuario = u;
+          this.verificarPedido();
+        }
+      })
+    ;
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes()));
   }
 
@@ -259,7 +274,16 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
     }
 
     this.form.get('observaciones').setValue(data.observaciones ? data.observaciones : '');
-    this.form.get('descuento').setValue(data.descuento ? data.descuento : 0);
+
+    if (data.ccc && this.usuario &&
+      !(this.usuario.idUsuario === data.ccc.cliente.idCredencial && this.usuario.roles.indexOf(Rol.VENDEDOR) >= 0)
+    ) {
+      this.form.get('descuento').setValue(data.descuento ? data.descuento : 0);
+    } else {
+      this.form.get('descuento').setValue(0);
+      this.form.get('descuento').disable();
+    }
+
     this.form.get('recargo').setValue(data.recargo ? data.recargo : 0);
     this.form.get('idTransportista').setValue(data.idTransportista ? Number(data.idTransportista) : null);
     this.form.get('idPedido').setValue(data.idPedido ? Number(data.idPedido) : null);

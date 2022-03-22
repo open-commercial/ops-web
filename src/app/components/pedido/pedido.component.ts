@@ -341,6 +341,10 @@ export class PedidoComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.form.get('ccc').valueChanges.subscribe({
+      next: () => this.toggleDescuento()
+    });
+
     this.form.valueChanges.subscribe(v => this.storageService.setItem(this.localStorageKey, v));
 
     const data = this.getDataForForm();
@@ -788,6 +792,18 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   esSucursalSeleccionadaPuntoDeRetiro() {
     return !!this.sucursales.filter(s => s.idSucursal === this.sucursalesService.getIdSucursal()).length;
+  }
+
+  toggleDescuento() {
+    const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
+    const canEditDescuento = ccc && this.usuario
+      && !(this.usuario.idUsuario === ccc.cliente.idCredencial && this.usuario.roles.indexOf(Rol.VENDEDOR) >= 0);
+    if (canEditDescuento) {
+      this.form.get('descuento').enable();
+    } else {
+      this.form.get('descuento').setValue(0);
+      this.form.get('descuento').disable();
+    }
   }
 }
 
