@@ -1,0 +1,120 @@
+<div class="app-configuracion my-3">
+  <div class="d-flex flex-row">
+    <h1 class="h3 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'cog']"></fa-icon> Configuración de sucursal
+    </h1>
+  </div>
+  <p>La siguiente configuración se aplica a la sucursal seleccionada<span *ngIf="sucursal"> ({{ this.sucursal.nombre}})</span>: </p>
+  <form class="border p-3 rounded" [formGroup]="form" (submit)="submit()" *ngIf="form">
+    <div class="row">
+      <div class="col-xl-6 mb-2">
+        <div class="card">
+          <div class="card-header">Reportes</div>
+          <div class="card-body">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="usarFacturaVentaPreImpresa" formControlName="usarFacturaVentaPreImpresa">
+              <label class="form-check-label" for="usarFacturaVentaPreImpresa">Usar Facturas pre Impresas</label>
+            </div>
+            <div class="form-group">
+              <label for="cantidadMaximaDeRenglonesEnFactura">Cantidad Máxima de renglones</label>
+              <input type="number" min="100" class="form-control" id="cantidadMaximaDeRenglonesEnFactura" formControlName="cantidadMaximaDeRenglonesEnFactura"
+                     [ngClass]="{ 'is-invalid': submitted && f.cantidadMaximaDeRenglonesEnFactura.errors }">
+              <div class="invalid-feedback" *ngIf="submitted && f.cantidadMaximaDeRenglonesEnFactura.errors">
+                <div *ngIf="f.cantidadMaximaDeRenglonesEnFactura.errors.required">Requerido</div>
+                <div *ngIf="f.cantidadMaximaDeRenglonesEnFactura.errors.min">Mínimo {{ f.cantidadMaximaDeRenglonesEnFactura.errors.min.min | number:'1.0-2' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 mb-2">
+        <div class="card">
+          <div class="card-header">Factura Electrónica</div>
+          <div class="card-body">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="facturaElectronicaHabilitada" formControlName="facturaElectronicaHabilitada">
+              <label class="form-check-label" for="facturaElectronicaHabilitada">Usar AFIP Factura Electrónica</label>
+            </div>
+            <div class="form-group">
+              <label for="certificadoAfip">Certificado Digital Afip <span *ngIf="configuracion && configuracion.existeCertificado" class="text-success font-weight-bold">(Cargado)</span></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="certificadoAfip" lang="es" (change)="fileChange($event)" [disabled]="disabledInputFile">
+                <label class="custom-file-label" for="certificadoAfip" #fileInputLabel>Seleccionar certificado...</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="firmanteCertificadoAfip">Firmante Certificado</label>
+              <input type="text" id="firmanteCertificadoAfip" class="form-control" formControlName="firmanteCertificadoAfip"
+                     [ngClass]="{ 'is-invalid': submitted && f.firmanteCertificadoAfip.errors }">
+              <div class="invalid-feedback" *ngIf="submitted && f.firmanteCertificadoAfip.errors">
+                <div *ngIf="f.firmanteCertificadoAfip.errors.required">Requerido</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="passwordCertificadoAfip">Contraseña Certificado</label>
+              <input type="password" class="form-control" id="passwordCertificadoAfip" formControlName="passwordCertificadoAfip">
+            </div>
+            <div class="form-group">
+              <label for="nroPuntoDeVentaAfip">Punto de venta Nº</label>
+              <input type="number" min="1" class="form-control" id="nroPuntoDeVentaAfip" formControlName="nroPuntoDeVentaAfip"
+                     [ngClass]="{ 'is-invalid': submitted && f.nroPuntoDeVentaAfip.errors }">
+              <div class="invalid-feedback" *ngIf="submitted && f.nroPuntoDeVentaAfip.errors">
+                <div *ngIf="f.nroPuntoDeVentaAfip.errors.required">Requerido</div>
+                <div *ngIf="f.nroPuntoDeVentaAfip.errors.min">Mínimo {{ f.nroPuntoDeVentaAfip.errors.min.min | number:'1.0-2' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 mb-2">
+        <div class="card">
+          <div class="card-header">Envíos</div>
+          <div class="card-body">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="puntoDeRetiro" formControlName="puntoDeRetiro">
+              <label class="form-check-label" for="puntoDeRetiro">Usar como punto de retiro</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 mb-2">
+        <div class="card">
+          <div class="card-header">Pedidos</div>
+          <div class="card-body">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="predeterminada" formControlName="predeterminada">
+              <label class="form-check-label" for="predeterminada">Usar como predeterminada</label>
+            </div>
+            <div class="form-group">
+              <label for="vencimientoCorto">Tiempo de vida corto (horas)</label>
+              <input type="number" min="1" class="form-control" id="vencimientoCorto" formControlName="vencimientoCorto"
+                     [ngClass]="{ 'is-invalid': submitted && f.vencimientoCorto.errors }">
+              <div class="invalid-feedback" *ngIf="submitted && f.vencimientoCorto.errors">
+                <div *ngIf="f.vencimientoCorto.errors.required">Requerido</div>
+                <div *ngIf="f.vencimientoCorto.errors.min">Mínimo {{ f.vencimientoCorto.errors.min.min | number:'1.0-2' }}</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vencimientoLargo">Tiempo de vida largo (horas)</label>
+              <input type="number" min="1" class="form-control" id="vencimientoLargo" formControlName="vencimientoLargo"
+                     [ngClass]="{ 'is-invalid': submitted && f.vencimientoLargo.errors }">
+              <div class="invalid-feedback" *ngIf="submitted && f.vencimientoLargo.errors">
+                <div *ngIf="f.vencimientoLargo.errors.required">Requerido</div>
+                <div *ngIf="f.vencimientoLargo.errors.min">Mínimo {{ f.vencimientoLargo.errors.min.min | number:'1.0-2' }}</div>
+              </div>
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="comparteStock" formControlName="comparteStock">
+              <label class="form-check-label" for="comparteStock">Comparte Stock</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-right">
+      <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+  </form>
+</div>

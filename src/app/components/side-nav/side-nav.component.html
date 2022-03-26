@@ -4,7 +4,15 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <h2 *ngIf="tieneRolAdminOEncargado"><span class="label">&nbsp;COMPRAS</span></h2>
+  <h2 *ngIf="tieneRolAdministrador">&nbsp;SISTEMA</h2>
+  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdministrador">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/configuracion" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'cog']"></fa-icon> Configuración
+      </a>
+    </li>
+  </ul>
+  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;COMPRAS</h2>
   <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
     <li class="nav-item">
       <a class="nav-link" routerLink="/facturas-compra" routerLinkActive="active" (click)="optionClick()">
