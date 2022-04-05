@@ -286,7 +286,10 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
           // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => location.reload(),
-            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            error: err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            }
           })
         ;
       }

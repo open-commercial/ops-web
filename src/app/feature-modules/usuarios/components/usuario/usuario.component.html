@@ -1,0 +1,17 @@
+<div class="app-usuario">
+  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver atras" triggers="mouseenter:mouseleave"
+         (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'user']"></fa-icon> Usuario
+    </h1>
+  </div>
+  <div class="bg-light border rounded p-3" *ngIf="!loading">
+    <app-usuario-form [usuario]="usuario" (userSaved)="onUserSaved()" [(saving)]="saving" #usuarioForm></app-usuario-form>
+    <div class="text-right">
+      <button class="btn btn-primary" type="button" [disabled]="saving" (click)="submit()">Guardar</button>
+    </div>
+  </div>
+</div>

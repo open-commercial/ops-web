@@ -169,9 +169,14 @@ const routes: Routes = [
       { path: 'transportistas',
         loadChildren: () => import('./feature-modules/transportistas/transportistas.module')
           .then(m => m.TransportistasModule)
-      }
+      },
+      { path: 'usuarios',
+        loadChildren: () => import('./feature-modules/usuarios/usuarios.module')
+          .then(m => m.UsuariosModule)
+      },
     ]
   },
+
   { path: '**', redirectTo: '' }
 ];
 

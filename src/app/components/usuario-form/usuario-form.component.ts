@@ -47,13 +47,21 @@ export class UsuarioFormComponent implements OnInit {
 
   @Output() userSaved = new EventEmitter<Usuario>();
 
+  @Input() saving: boolean = false;
+  @Output() savingChange = new EventEmitter<boolean>();
+
   constructor(private fb: FormBuilder,
               private usuariosService: UsuariosService,
-              private loadingOverlay: LoadingOverlayService,
+              private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService) { }
 
   ngOnInit() {
     this.createForm();
+  }
+
+  setSaving(state: boolean) {
+    this.saving = state;
+    this.savingChange.emit(this.saving);
   }
 
   createForm() {
@@ -65,7 +73,7 @@ export class UsuarioFormComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      roles: [],
+      roles: [[], Validators.required],
     }, { validators: repeatedPasswordValidator });
 
     this.applyDataAndProflie();
@@ -109,12 +117,17 @@ export class UsuarioFormComponent implements OnInit {
         : this.usuariosService.createUsuario(usuario)
       ;
 
+      this.setSaving(true);
+      this.loadingOverlayService.activate();
       obvs
-        .pipe(finalize(() => this.loadingOverlay.deactivate()))
-        .subscribe(
-          u => this.userSaved.emit(u),
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+        .pipe(finalize(() => {
+          this.setSaving(false);
+          this.loadingOverlayService.deactivate();
+        }))
+        .subscribe({
+          next: u => this.userSaved.emit(u),
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        })
       ;
     }
   }

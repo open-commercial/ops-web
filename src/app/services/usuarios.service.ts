@@ -27,6 +27,10 @@ export class UsuariosService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
+  buscar(criteria: BusquedaUsuarioCriteria): Observable<Pagination> {
+    return this.http.post<Pagination>(this.urlBusqueda, criteria);
+  }
+
   getUsuario(id: number|string): Observable<Usuario> {
     return this.http.get<Usuario>(this.url + '/' + id);
   }
@@ -41,5 +45,9 @@ export class UsuariosService {
 
   setSucursalPredeterminadaDeUsuario(idUsuario: number, idSucursal: number): Observable<void> {
     return this.http.put<void>(this.url + `/${idUsuario}/sucursales/${idSucursal}`, null);
+  }
+
+  eliminarUsuario(idUsuario: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idUsuario}`);
   }
 }
