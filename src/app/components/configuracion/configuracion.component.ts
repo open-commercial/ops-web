@@ -15,8 +15,7 @@ import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-configuracion',
-  templateUrl: './configuracion.component.html',
-  styleUrls: ['./configuracion.component.scss']
+  templateUrl: './configuracion.component.html'
 })
 export class ConfiguracionComponent implements OnInit, OnDestroy {
   form: FormGroup;

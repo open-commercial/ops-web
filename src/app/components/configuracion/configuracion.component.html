@@ -38,7 +38,7 @@
             <div class="form-group">
               <label for="certificadoAfip">Certificado Digital Afip <span *ngIf="configuracion && configuracion.existeCertificado" class="text-success font-weight-bold">(Cargado)</span></label>
               <div class="custom-file">
-                <input type="file" class="custom-file-input" id="certificadoAfip" lang="es" (change)="fileChange($event)" [disabled]="disabledInputFile">
+                <input type="file" class="custom-file-input" id="certificadoAfip" lang="es" accept=".p12" (change)="fileChange($event)" [disabled]="disabledInputFile">
                 <label class="custom-file-label" for="certificadoAfip" #fileInputLabel>Seleccionar certificado...</label>
               </div>
             </div>
