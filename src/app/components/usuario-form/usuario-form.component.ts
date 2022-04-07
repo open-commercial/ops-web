@@ -66,7 +66,7 @@ export class UsuarioFormComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      habilitado: true,
+      habilitado: null,
       username: ['', Validators.required],
       password: '',
       repetir_password: '',
@@ -103,7 +103,7 @@ export class UsuarioFormComponent implements OnInit {
 
       const usuario: Usuario = {
         idUsuario: this.pUsuario ? this.pUsuario.idUsuario : null,
-        habilitado: formValues.habilitado ? formValues.habilitado : this.pUsuario.habilitado,
+        habilitado: !!formValues.habilitado,
         username: formValues.username,
         nombre: formValues.nombre,
         apellido: formValues.apellido,
