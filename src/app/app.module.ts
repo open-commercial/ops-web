@@ -66,7 +66,7 @@ import { RemitoComponent } from './components/remito/remito.component';
 import { CuentasCorrientesClienteComponent } from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
 import { CuentasCorrientesClienteHomeComponent } from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
 import { ClienteComponent } from './components/cliente/cliente.component';
-import { UsuarioFormComponent } from './components/usuario-form/usuario-form.component';
+
 import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
 import { OptionPickerModalComponent } from './components/option-picker-modal/option-picker-modal.component';
 import { CuentaCorrienteClienteComponent } from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
@@ -159,7 +159,6 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
     CuentasCorrientesClienteComponent,
     CuentasCorrientesClienteHomeComponent,
     ClienteComponent,
-    UsuarioFormComponent,
     NewOrUpdateUsuarioModalComponent,
     OptionPickerModalComponent,
     CuentaCorrienteClienteComponent,

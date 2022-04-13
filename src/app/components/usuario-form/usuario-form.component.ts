@@ -47,25 +47,33 @@ export class UsuarioFormComponent implements OnInit {
 
   @Output() userSaved = new EventEmitter<Usuario>();
 
+  @Input() saving: boolean = false;
+  @Output() savingChange = new EventEmitter<boolean>();
+
   constructor(private fb: FormBuilder,
               private usuariosService: UsuariosService,
-              private loadingOverlay: LoadingOverlayService,
+              private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService) { }
 
   ngOnInit() {
     this.createForm();
   }
 
+  setSaving(state: boolean) {
+    this.saving = state;
+    this.savingChange.emit(this.saving);
+  }
+
   createForm() {
     this.form = this.fb.group({
-      habilitado: true,
+      habilitado: null,
       username: ['', Validators.required],
       password: '',
       repetir_password: '',
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      roles: [],
+      roles: [[], Validators.required],
     }, { validators: repeatedPasswordValidator });
 
     this.applyDataAndProflie();
@@ -95,7 +103,7 @@ export class UsuarioFormComponent implements OnInit {
 
       const usuario: Usuario = {
         idUsuario: this.pUsuario ? this.pUsuario.idUsuario : null,
-        habilitado: formValues.habilitado ? formValues.habilitado : this.pUsuario.habilitado,
+        habilitado: !!formValues.habilitado,
         username: formValues.username,
         nombre: formValues.nombre,
         apellido: formValues.apellido,
@@ -109,12 +117,17 @@ export class UsuarioFormComponent implements OnInit {
         : this.usuariosService.createUsuario(usuario)
       ;
 
+      this.setSaving(true);
+      this.loadingOverlayService.activate();
       obvs
-        .pipe(finalize(() => this.loadingOverlay.deactivate()))
-        .subscribe(
-          u => this.userSaved.emit(u),
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+        .pipe(finalize(() => {
+          this.setSaving(false);
+          this.loadingOverlayService.deactivate();
+        }))
+        .subscribe({
+          next: u => this.userSaved.emit(u),
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        })
       ;
     }
   }
