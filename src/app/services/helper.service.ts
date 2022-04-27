@@ -37,7 +37,8 @@ export class HelperService {
 
   static getNgbDateFromDate(date: Date): NgbDate {
     if (!date) { return null; }
-    return new NgbDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    const md = moment(date);
+    return new NgbDate(md.year(), md.month() + 1, md.date());
   }
 
   static formatNumFactura(nSerie: number, nFac: number) {

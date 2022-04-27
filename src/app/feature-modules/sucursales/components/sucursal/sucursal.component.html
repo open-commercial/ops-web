@@ -1,0 +1,119 @@
+<div class="app-sucursal">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 flex-fill text-truncate">
+      <a class="btn fake-cursor" placement="right" ngbPopover="Volver atras" triggers="mouseenter:mouseleave"
+        (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+      </a>
+      <fa-icon [icon]="['fas', 'store']"></fa-icon> {{ this.sucursal ? ('Sucursal: ' + sucursal.nombre) : 'Nueva Sucursal' }}
+    </h1>
+  </div>
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading" class="bg-white border rounded p-3">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" formControlName="nombre"
+              [ngClass]="{ 'is-invalid': submitted && (f.nombre.errors) }">
+          <div class="invalid-feedback" *ngIf="submitted && f.nombre.errors">
+            <div *ngIf="f.nombre.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="lema">Lema</label>
+          <input type="text" class="form-control" id="lema" formControlName="lema">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="categoriaIVA">Condición IVA</label>
+          <select class="form-control" id="categoriaIVA" formControlName="categoriaIVA"
+              [ngClass]="{ 'is-invalid': submitted && (f.categoriaIVA.errors) }">
+            <option *ngFor="let ci of categoriasIVA" [value]="ci.value">{{ ci.text }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="submitted && f.categoriaIVA.errors">
+            <div *ngIf="f.categoriaIVA.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="idFiscal">CUIT</label>
+          <input type="text" class="form-control" id="idFiscal" formControlName="idFiscal">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="ingresosBrutos">Ingresos Brutos</label>
+          <input type="text" class="form-control" id="ingresosBrutos" formControlName="ingresosBrutos">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="fechaVencimiento">Inicio de Actividad</label>
+          <div class="input-group">
+            <input class="form-control" readonly id="fechaInicioActividad" formControlName="fechaInicioActividad"
+                    [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
+                    [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaInicioActividad').setValue(null)">
+                <fa-icon [icon]="['fas', 'times']"></fa-icon>
+              </button>
+              <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+                <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" class="form-control" id="email" formControlName="email"
+              [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.email.errors">
+            <div *ngIf="f.email.errors.required">Requerido</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="text" class="form-control" id="telefono" formControlName="telefono">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <app-ubicacion-form-field id="ubicacion" label="Ubicación" formControlName="ubicacion"></app-ubicacion-form-field>
+        <div class="custom-error-message error-message-fix" *ngIf="submitted && f.ubicacion.errors">
+          <div *ngIf="f.ubicacion.errors.required">Requerido</div>
+        </div>
+      </div>
+      <div class="col-md-6 text-center">
+        <label for="image-file mr-2">Imagen</label>
+        <button type="button" class="btn btn-link text-danger" *ngIf="imageDataUrl && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear()">
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+        </button>
+        <br>
+        <div class="d-inline-block mb-3">
+          <div class="preview" (click)="imageFile.click()">
+            <img [src]="imageDataUrl" alt="" *ngIf="imageDataUrl">
+            <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="!imageDataUrl" style="color: rgb(134, 134, 134);"></fa-icon>
+          </div>
+        </div>
+        <input id="image-file" type="file" class="d-none" accept="image/jpeg, image/png" #imageFile (change)="imageChange($event)" />
+      </div>
+    </div>
+    <div class="text-right">
+      <button class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+  {{ this.form.valid | json }}
+</div>

@@ -49,4 +49,17 @@ export class SucursalesService {
   getSucursal(idSucursal): Observable<Sucursal> {
     return this.http.get<Sucursal>(`${this.url}/${idSucursal}`);
   }
+
+  guardarSucursal(sucursal: Sucursal): Observable<Sucursal|void> {
+    const method = sucursal.idSucursal ? 'put' : 'post';
+    return this.http[method]<Sucursal|void>(this.url, sucursal);
+  }
+
+  eliminarSucursal(idSucursal: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idSucursal}`);
+  }
+
+  uploadLogo(idSucursal: number, logo: number[]): Observable<string> {
+    return this.http.post<string>(`${this.url}/${idSucursal}/logo`, logo);
+  }
 }

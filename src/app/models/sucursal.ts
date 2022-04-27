@@ -3,18 +3,18 @@ import { CategoriaIVA } from './categoria-iva';
 import {ConfiguracionSucursal} from './configuracion-sucursal';
 
 export interface Sucursal {
-  idSucursal: number;
+  idSucursal?: number;
   nombre: string;
-  lema: string;
+  lema?: string;
   categoriaIVA: CategoriaIVA;
-  idFiscal: number;
-  ingresosBrutos: number;
-  fechaInicioActividad: Date;
+  idFiscal?: number;
+  ingresosBrutos?: number;
+  fechaInicioActividad?: Date;
   email: string;
-  telefono: string;
-  ubicacion: Ubicacion;
-  detalleUbicacion: string;
-  logo: string;
-  eliminada: boolean;
-  configuracionSucursal: ConfiguracionSucursal;
+  telefono?: string;
+  ubicacion?: Ubicacion;
+  detalleUbicacion?: string;
+  logo?: string;
+  eliminada?: boolean;
+  configuracionSucursal?: ConfiguracionSucursal;
 }

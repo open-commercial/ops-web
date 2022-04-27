@@ -7,7 +7,7 @@ import {MensajeAsincronicoComponent} from '../components/mensaje-asincronico/men
 import {UbicacionFormFieldComponent} from '../components/ubicacion-form-field/ubicacion-form-field.component';
 import {ListaComponent} from '../components/lista/lista.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash, faImage } from '@fortawesome/free-regular-svg-icons';
 import {
   faBars, faCircleNotch, faFileInvoice, faFilter,
   faSearch, faTrash, faCalendar, faPortrait,
@@ -96,7 +96,7 @@ export class ShareModule {
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
-      faCog
+      faCog, faImage
     );
   }
 }

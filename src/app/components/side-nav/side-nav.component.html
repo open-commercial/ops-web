@@ -11,6 +11,11 @@
         <fa-icon [icon]="['fas', 'cog']"></fa-icon> Configuración
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/sucursales" routerLinkActive="active" (click)="optionClick()">
+        <fa-icon [icon]="['fas', 'store']"></fa-icon> Sucursales
+      </a>
+    </li>
   </ul>
   <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;COMPRAS</h2>
   <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
