@@ -1,3 +1,4 @@
+import { NuevaSucursal } from './../models/nueva-sucursal';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -50,9 +51,12 @@ export class SucursalesService {
     return this.http.get<Sucursal>(`${this.url}/${idSucursal}`);
   }
 
-  guardarSucursal(sucursal: Sucursal): Observable<Sucursal|void> {
-    const method = sucursal.idSucursal ? 'put' : 'post';
-    return this.http[method]<Sucursal|void>(this.url, sucursal);
+  persistSucursal(sucursal: NuevaSucursal): Observable<Sucursal> {
+    return this.http.post<Sucursal>(this.url, sucursal);
+  }
+
+  updateSucursal(sucursal: Sucursal): Observable<void> {
+    return this.http.put<void>(this.url, sucursal);
   }
 
   eliminarSucursal(idSucursal: number): Observable<void> {

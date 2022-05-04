@@ -1,9 +1,7 @@
-import {Ubicacion} from './ubicacion';
+import { Ubicacion } from './ubicacion';
 import { CategoriaIVA } from './categoria-iva';
-import {ConfiguracionSucursal} from './configuracion-sucursal';
 
-export interface Sucursal {
-  idSucursal?: number;
+export interface NuevaSucursal {
   nombre: string;
   lema?: string;
   categoriaIVA: CategoriaIVA;
@@ -13,9 +11,5 @@ export interface Sucursal {
   email: string;
   telefono?: string;
   ubicacion: Ubicacion;
-  detalleUbicacion?: string;
   imagen?: number[];
-  logo?: string;
-  eliminada?: boolean;
-  configuracionSucursal?: ConfiguracionSucursal;
 }

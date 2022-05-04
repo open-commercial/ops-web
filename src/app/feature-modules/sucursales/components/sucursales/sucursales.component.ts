@@ -57,4 +57,27 @@ export class SucursalesComponent implements OnInit {
 
     this.router.navigate(['/sucursales/editar', sucursal.idSucursal]);
   }
+
+  eliminarSucursal(sucursal: Sucursal) {
+    if (!this.hasRoleToAdministrarSucursales) {
+      this.mensajeService.msg('No tiene permisos para eliminar sucursales', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = 'Está seguro de eliminar la sucursal seleccionada?';
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate()
+        this.sucursalesService.eliminarSucursal(sucursal.idSucursal)
+          .subscribe({
+            next: () => location.reload(),
+            error: err => {
+              this.loadingOverlayService.deactivate();
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            },
+          })
+        ;
+      }
+    });
+  }
 }

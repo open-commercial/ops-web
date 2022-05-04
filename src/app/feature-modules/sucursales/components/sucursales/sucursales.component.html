@@ -14,10 +14,15 @@
       <div class="flex-fill lead">
         {{ s.nombre }}
       </div>
-      <ul class="list-inline mb-0 text-right">
+      <ul class="list-inline mb-0 text-right" *ngIf="hasRoleToAdministrarSucursales">
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarSucursal(s)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarSucursal(s)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>
         </li>
       </ul>

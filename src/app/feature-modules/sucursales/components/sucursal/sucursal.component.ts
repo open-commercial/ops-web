@@ -1,3 +1,4 @@
+import { NuevaSucursal } from './../../../../models/nueva-sucursal';
 import { HelperService } from './../../../../services/helper.service';
 import { CategoriaIVA } from './../../../../models/categoria-iva';
 import { Sucursal } from './../../../../models/sucursal';
@@ -10,7 +11,6 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MensajeService } from 'src/app/services/mensaje.service';
 import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal.component';
-import { faThemeisle } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-sucursal',
@@ -99,64 +99,56 @@ export class SucursalComponent implements OnInit {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      this.doSubmit();
+      const formValues = this.form.value;
+      const sucursal: NuevaSucursal|Sucursal = {
+        nombre: formValues.nombre,
+        categoriaIVA: formValues.categoriaIVA,
+        email: formValues.email,
+        ubicacion: formValues.ubicacion
+      };
+
+      if (formValues.lema) { sucursal.lema = formValues.lema; }
+      if (formValues.idFiscal) { sucursal.idFiscal = formValues.idFiscal; }
+      if (formValues.ingresosBrutos) { sucursal.ingresosBrutos = formValues.ingresosBrutos; }
+      if (formValues.fechaInicioActividad) {
+        sucursal.fechaInicioActividad = HelperService.getDateFromNgbDate(formValues.fechaInicioActividad);
+      }
+      if (formValues.telefono) { sucursal.telefono = formValues.telefono; }
+      if (this.imageData && this.imageData.length > 0) {
+        sucursal.imagen = this.imageData;
+      }
+
+      if (this.sucursal) {
+        this.doUpdate(sucursal as Sucursal);
+      } else {
+        this.doPersist(sucursal as NuevaSucursal);
+      }
     }
   }
 
-  doSubmit() {
-    const formValues = this.form.value;
-
-    const sucursal: Sucursal = {
-      nombre: formValues.nombre,
-      categoriaIVA: formValues.categoriaIVA,
-      email: formValues.email
-    };
-
-    if (this.sucursal && this.sucursal.idSucursal) { sucursal.idSucursal = this.sucursal.idSucursal}
-    if (this.sucursal && this.sucursal.logo) { sucursal.logo = this.sucursal.logo; }
-    if (formValues.lema) { sucursal.lema = formValues.lema; }
-    if (formValues.idFiscal) { sucursal.idFiscal = formValues.idFiscal; }
-    if (formValues.ingresosBrutos) { sucursal.ingresosBrutos = formValues.ingresosBrutos; }
-    if (formValues.fechaInicioActividad) {
-      sucursal.fechaInicioActividad = HelperService.getDateFromNgbDate(formValues.fechaInicioActividad);
-    }
-    if (formValues.telefono) { sucursal.telefono = formValues.telefono; }
-    if (formValues.ubicacion) { sucursal.ubicacion = formValues.ubicacion; }
-
+  doPersist(sucursal: NuevaSucursal) {
     this.loadingOverlayService.activate();
-    this.sucursalesService.guardarSucursal(sucursal)
+    this.sucursalesService.persistSucursal(sucursal)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        // si es post devuelve la sucursal pero si es put no devuelve nada.
-        next: (suc: Sucursal|void) => {
-          const s = suc ? suc : this.sucursal;
-          if (this.imageDataUrl && s && s.logo !== this.imageDataUrl && this.imageData.length > 0) {
-            this.sucursalesService.uploadLogo(s.idSucursal, this.imageData)
-              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe({
-                next: (logoUrl: string) => {
-                  s.logo = logoUrl;
-                  this.loadingOverlayService.deactivate();
-                  this.mensajeService.msg('Los datos de la sucursal se guardaron en forma exitosa.', MensajeModalType.INFO)
-                    .then(() => location.replace('/sucursales'));
-                },
-                error: err => {
-                  this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-                }
-              })
-            ;
-          } else {
-            this.loadingOverlayService.deactivate();
-            this.mensajeService.msg('Los datos de la sucursal se guardaron en forma exitosa.', MensajeModalType.INFO)
-              .then(() => location.replace('/sucursales'));
-          }
-        },
-        error: err => {
-          this.loadingOverlayService.deactivate()
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        }
+        next: () => this.mensajeService.msg('La sucursal se dió alta en forma exitosa.', MensajeModalType.INFO)
+          .then(() => location.replace('/sucursales')),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
     ;
+  }
 
+  doUpdate(sucursal: Sucursal) {
+    sucursal.idSucursal = this.sucursal.idSucursal;
+    this.loadingOverlayService.activate();
+    this.sucursalesService.updateSucursal(sucursal)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: () => this.mensajeService.msg('Los datos de la sucursal se actualizaron en forma exitosa.', MensajeModalType.INFO)
+        .then(() => location.replace('/sucursales')),
+      error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
+    ;
   }
 
   imageChange($event) {
