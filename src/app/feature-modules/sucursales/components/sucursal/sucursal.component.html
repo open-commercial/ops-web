@@ -97,15 +97,17 @@
         </div>
       </div>
       <div class="col-md-6 text-center">
-        <label for="image-file mr-2">Imagen</label>
+        <label for="image-file mr-2">
+          Imagen<br>(click para seleccionar...)
+        </label>
         <button type="button" class="btn btn-link text-danger" *ngIf="imageDataUrl && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear()">
           <fa-icon [icon]="['fas', 'trash']"></fa-icon>
         </button>
         <br>
         <div class="d-inline-block mb-3">
           <div class="preview" (click)="imageFile.click()">
-            <img [src]="imageDataUrl" alt="" *ngIf="imageDataUrl">
-            <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="!imageDataUrl" style="color: rgb(134, 134, 134);"></fa-icon>
+            <img [src]="imageDataUrl ? imageDataUrl : sucursal.logo" alt="" *ngIf="imageDataUrl || (sucursal && sucursal.logo)">
+            <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="!imageDataUrl && !(sucursal && sucursal.logo)" style="color: rgb(134, 134, 134);"></fa-icon>
           </div>
         </div>
         <input id="image-file" type="file" class="d-none" accept="image/jpeg, image/png" #imageFile (change)="imageChange($event)" />

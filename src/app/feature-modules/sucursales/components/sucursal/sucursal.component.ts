@@ -170,12 +170,7 @@ export class SucursalComponent implements OnInit {
   }
 
   imageClear() {
+    this.imageDataUrl = '';
     this.imageData = [];
-    this.imageDataUrl = this.sucursal ? this.sucursal.logo : '';
-  }
-
-  getImageUrl(): string {
-    const url = this.sucursal ? this.sucursal.logo : this.imageDataUrl;
-    return url;
   }
 }
