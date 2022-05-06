@@ -100,7 +100,7 @@
         <label for="image-file mr-2">
           Imagen<br>(click para seleccionar...)
         </label>
-        <button type="button" class="btn btn-link text-dark" *ngIf="imageDataUrl && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear(imageFile)">
+        <button type="button" class="btn btn-link text-dark" *ngIf="imageDataUrl && !eliminarImagen && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear(imageFile)">
           <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
         </button>
         <br>
