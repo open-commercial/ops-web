@@ -100,14 +100,18 @@
         <label for="image-file mr-2">
           Imagen<br>(click para seleccionar...)
         </label>
-        <button type="button" class="btn btn-link text-danger" *ngIf="imageDataUrl && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear()">
-          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+        <button type="button" class="btn btn-link text-dark" *ngIf="imageDataUrl && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear(imageFile)">
+          <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
         </button>
         <br>
         <div class="d-inline-block mb-3">
           <div class="preview" (click)="imageFile.click()">
-            <img [src]="imageDataUrl ? imageDataUrl : sucursal.logo" alt="" *ngIf="imageDataUrl || (sucursal && sucursal.logo)">
-            <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="!imageDataUrl && !(sucursal && sucursal.logo)" style="color: rgb(134, 134, 134);"></fa-icon>
+            <img [src]="imageDataUrl ? imageDataUrl : sucursal.logo" alt="" *ngIf="!eliminarImagen && (imageDataUrl || (sucursal && sucursal.logo))">
+            <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="eliminarImagen || (!imageDataUrl && !(sucursal && sucursal.logo))" style="color: rgb(134, 134, 134);"></fa-icon>
+          </div>
+          <div class="form-group form-check" *ngIf="sucursal && sucursal.logo">
+            <input type="checkbox" class="form-check-input" id="eliminar-imagen" (change)="eliminarImagenChange($event)">
+            <label class="form-check-label" for="eliminar-imagen">Eliminar Imagen</label>
           </div>
         </div>
         <input id="image-file" type="file" class="d-none" accept="image/jpeg, image/png" #imageFile (change)="imageChange($event)" />

@@ -34,6 +34,8 @@ export class SucursalComponent implements OnInit {
     { value: CategoriaIVA.MONOTRIBUTO, text: 'Monotributo'},
   ];
 
+  eliminarImagen = false;
+
   constructor(private fb: FormBuilder,
               private route: ActivatedRoute,
               private locaction: Location,
@@ -114,7 +116,10 @@ export class SucursalComponent implements OnInit {
         sucursal.fechaInicioActividad = HelperService.getDateFromNgbDate(formValues.fechaInicioActividad);
       }
       if (formValues.telefono) { sucursal.telefono = formValues.telefono; }
-      if (this.imageData && this.imageData.length > 0) {
+
+      if (this.eliminarImagen) {
+        sucursal.imagen = null;
+      } else if (this.imageData && this.imageData.length > 0) {
         sucursal.imagen = this.imageData;
       }
 
@@ -169,8 +174,13 @@ export class SucursalComponent implements OnInit {
     readerDataUrl.readAsDataURL(file);
   }
 
-  imageClear() {
+  imageClear(imageFile) {
     this.imageDataUrl = '';
     this.imageData = [];
+    imageFile.value = '';
+  }
+
+  eliminarImagenChange($event) {
+    this.eliminarImagen = $event.target.checked;
   }
 }
