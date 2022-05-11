@@ -110,7 +110,7 @@
             <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="eliminarImagen || (!imageDataUrl && !(sucursal && sucursal.logo))" style="color: rgb(134, 134, 134);"></fa-icon>
           </div>
           <div class="form-group form-check" *ngIf="sucursal && sucursal.logo">
-            <input type="checkbox" class="form-check-input" id="eliminar-imagen" (change)="eliminarImagenChange($event)">
+            <input type="checkbox" class="form-check-input" id="eliminar-imagen" (change)="eliminarImagenChange($event)" [checked]="eliminarImagen">
             <label class="form-check-label" for="eliminar-imagen">Eliminar Imagen</label>
           </div>
         </div>
