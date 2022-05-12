@@ -363,7 +363,7 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     }
 
     const modalRef = this.modalService.open(ReciboProveedorModalComponent, { backdrop: 'static' });
-    const saldo = (this.ccp.saldo < 0 ? Number(this.ccp.saldo.toFixed(2).replace(',', '')) : 0) * -1;
+    const saldo = (this.saldo < 0 ? Number(this.saldo.toFixed(2).replace(',', '')) : 0) * -1;
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.componentInstance.saldo = saldo;
     modalRef.result.then(() => this.loadPage(1), () => { return; });
