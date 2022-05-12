@@ -7,7 +7,7 @@ import { LoadingOverlayService } from './../../../../services/loading-overlay.se
 import { SucursalesService } from './../../../../services/sucursales.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MensajeService } from 'src/app/services/mensaje.service';
 import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal.component';
