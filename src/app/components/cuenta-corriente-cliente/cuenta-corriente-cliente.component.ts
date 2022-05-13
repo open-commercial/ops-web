@@ -511,7 +511,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     }
 
     const modalRef = this.modalService.open(ReciboClienteModalComponent, { backdrop: 'static' });
-    const saldo = (this.ccc.saldo < 0 ? Number(this.ccc.saldo.toFixed(2).replace(',', '')) : 0) * -1;
+    const saldo = (this.saldo < 0 ? Number(this.saldo.toFixed(2).replace(',', '')) : 0) * -1;
     modalRef.componentInstance.cliente = this.ccc.cliente;
     modalRef.componentInstance.saldo = saldo;
     modalRef.result.then(() => this.loadPage(1), () => { return; });

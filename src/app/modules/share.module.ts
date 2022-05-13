@@ -22,7 +22,7 @@ import {
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
-  faMoneyBillWave, faTruckMoving, faCog, faUndoAlt
+  faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -34,6 +34,7 @@ import {ClienteFiltroComponent} from '../components/cliente-filtro/cliente-filtr
 import {ProveedorFiltroComponent} from '../components/proveedor-filtro/proveedor-filtro.component';
 import { ReciboClienteModalComponent } from '../components/recibo-cliente-modal/recibo-cliente-modal.component';
 import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
+import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-mo
     GastoFormComponent,
     ReciboClienteModalComponent,
     ReciboProveedorModalComponent,
+    UsuarioFormComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-mo
     UbicacionFormFieldComponent,
     MensajeAsincronicoComponent,
     GastoFormComponent,
+    UsuarioFormComponent,
   ]
 })
 export class ShareModule {
@@ -96,7 +99,7 @@ export class ShareModule {
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
-      faCog, faImage, faUndoAlt
+      faCog, faImage, faUndoAlt, faUsers
     );
   }
 }
