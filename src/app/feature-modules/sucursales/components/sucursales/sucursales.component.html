@@ -1,0 +1,31 @@
+<div class="app-sucursales">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'store']"></fa-icon> Sucursales
+    </h1>
+    <div class="text-right m-0">
+      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Sucursal" triggers="mouseenter:mouseleave" placement="left" (click)="nuevaSucursal()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div class="sucursales">
+    <div *ngFor="let s of sucursales" class="d-flex flex-column flex-md-row align-items-md-center border-bottom py-2">
+      <div class="flex-fill lead">
+        {{ s.nombre }}
+      </div>
+      <ul class="list-inline mb-0 text-right" *ngIf="hasRoleToAdministrarSucursales">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarSucursal(s)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarSucursal(s)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

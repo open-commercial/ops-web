@@ -7,7 +7,7 @@ import {MensajeAsincronicoComponent} from '../components/mensaje-asincronico/men
 import {UbicacionFormFieldComponent} from '../components/ubicacion-form-field/ubicacion-form-field.component';
 import {ListaComponent} from '../components/lista/lista.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash, faImage } from '@fortawesome/free-regular-svg-icons';
 import {
   faBars, faCircleNotch, faFileInvoice, faFilter,
   faSearch, faTrash, faCalendar, faPortrait,
@@ -22,7 +22,7 @@ import {
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
-  faMoneyBillWave, faTruckMoving, faCog, faUsers
+  faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -99,7 +99,7 @@ export class ShareModule {
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
-      faCog, faUsers
+      faCog, faImage, faUndoAlt, faUsers
     );
   }
 }

@@ -1,3 +1,4 @@
+import { NuevaSucursal } from './../models/nueva-sucursal';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -48,5 +49,21 @@ export class SucursalesService {
 
   getSucursal(idSucursal): Observable<Sucursal> {
     return this.http.get<Sucursal>(`${this.url}/${idSucursal}`);
+  }
+
+  persistSucursal(sucursal: NuevaSucursal): Observable<Sucursal> {
+    return this.http.post<Sucursal>(this.url, sucursal);
+  }
+
+  updateSucursal(sucursal: Sucursal): Observable<void> {
+    return this.http.put<void>(this.url, sucursal);
+  }
+
+  eliminarSucursal(idSucursal: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idSucursal}`);
+  }
+
+  uploadLogo(idSucursal: number, logo: number[]): Observable<string> {
+    return this.http.post<string>(`${this.url}/${idSucursal}/logo`, logo);
   }
 }

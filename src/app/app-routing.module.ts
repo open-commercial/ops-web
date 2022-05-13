@@ -170,6 +170,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/transportistas/transportistas.module')
           .then(m => m.TransportistasModule)
       },
+      { path: 'sucursales',
+        loadChildren: () => import('./feature-modules/sucursales/sucursales.module')
+          .then(m => m.SucursalesModule)
+      },
       { path: 'usuarios',
         loadChildren: () => import('./feature-modules/usuarios/usuarios.module')
           .then(m => m.UsuariosModule)
