@@ -1,0 +1,31 @@
+<div class="app-rubros">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'cubes']"></fa-icon> Rubros
+    </h1>
+    <div class="text-right m-0">
+      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Rubro" triggers="mouseenter:mouseleave" placement="left" (click)="nuevoRubro()">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div class="rubros bg-light border rounded">
+    <div *ngFor="let r of rubros; index as i" class="d-flex flex-md-row align-items-center rubro p-2" [ngClass]="{'border-bottom': i !== rubros.length - 1}">
+      <div class="flex-fill">
+        <span class="lead">{{ r.nombre }}</span>
+      </div>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarRubro(r)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarRubro(r)">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

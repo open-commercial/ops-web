@@ -178,9 +178,12 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/usuarios/usuarios.module')
           .then(m => m.UsuariosModule)
       },
+      { path: 'rubros',
+        loadChildren: () => import('./feature-modules/rubros/rubros.module')
+          .then(m => m.RubrosModule)
+      },
     ]
   },
-
   { path: '**', redirectTo: '' }
 ];
 
