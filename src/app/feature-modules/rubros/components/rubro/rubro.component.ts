@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { HelperService } from './../../../../services/helper.service';
 import { AuthService } from './../../../../services/auth.service';
 import { Rol } from './../../../../models/rol';
@@ -34,7 +35,7 @@ export class RubroComponent implements OnInit {
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private location: Location,
-              public helper: HelperService,
+              public sanitizer: DomSanitizer,
               private authService: AuthService,
               private rubrosService: RubrosService) { }
 

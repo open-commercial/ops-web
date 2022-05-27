@@ -1,4 +1,3 @@
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Injectable } from '@angular/core';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Ubicacion } from '../models/ubicacion';
@@ -134,11 +133,5 @@ export class HelperService {
   static timestampToDate: (v: number) => Date = (v) => {
     const d = moment.unix(v).local();
     return d.toDate();
-  }
-
-  constructor(private sanitizer: DomSanitizer) {}
-
-  getSafeHtml(html: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }

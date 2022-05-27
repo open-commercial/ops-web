@@ -1,8 +1,8 @@
 
-#svg-container {
-  width: 100%;
-  min-height: 3rem;
-  display: inline-flex;
+div#svg-container {
+  width: 10rem;
+  height: 10rem;
+  display: flex;
   flex-direction: row;
   align-items: center;
   padding: 1rem;
