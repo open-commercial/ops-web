@@ -1,0 +1,79 @@
+<div class="app-localidades">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'map-marked-alt']"></fa-icon> Localidades
+    </h1>
+    <div class="text-right m-0">
+      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+        [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="localidadesCollapse"
+        [class.bg-white]="!isFiltersCollapsed"
+        ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+      <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div id="localidadesCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+    <ng-template #filterFormFields>
+      <div class="row" [formGroup]="filterForm">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre">
+          </div>
+          <div class="form-group">
+            <label for="nombreProvincia">Provincia</label>
+            <select class="form-control" id="nombreProvincia" formControlName="nombreProvincia">
+              <option value=""></option>
+              <option *ngFor="let p of provincias" [value]="p.nombre">{{ p.nombre }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="envioGratuito" formControlName="envioGratuito">
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="null"> Todos
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="false"> Envío NO Gratuito
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
+                <input ngbButton type="radio" [value]="true"> Envío Gratuito
+              </label>
+            </div>
+          </div>
+          <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorL" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorL></app-filtro-ordenamiento>
+          <app-filtro-ordenamiento id="filtroOrdenamientoSentidoL" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoL></app-filtro-ordenamiento>
+        </div>
+      </div>
+    </ng-template>
+    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+  </div>
+  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <div class="localidades">
+    <ng-template #info let-item>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="lead font-weight-bold">{{ item.nombre }}</div>
+          <div class="font-italic">{{ item.nombreProvincia }}</div>
+        </div>
+        <div class="col-md-6">
+          <span class="badge badge-success" *ngIf="item.envioGratuito">Envío Gratuito</span>
+          <div><span class="font-weight-bold">Costo de Envío: </span>{{ item.costoEnvio | currency:'ARS':'symbol':'1.0-2' }}</div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #actions let-item>
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item">
+          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarLocalidad(item)">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+  </div>
+  <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+</div>

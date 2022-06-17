@@ -1,0 +1,45 @@
+<div class="app-localidad" *ngIf="localidad">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 m-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'map-marked-alt']"></fa-icon> Localidad: {{ localidad.nombre }}
+    </h1>
+    <div class="text-right m-0"></div>
+  </div>
+  <form [formGroup]="form" (submit)="submit()" *ngIf="form && localidad" class="p-3 bg-white border rounded">
+    <div class="form-group">
+      <label for="codigoPostal">Código postal</label>
+      <input class="form-control" type="text" id="codigoPostal" formControlName="codigoPostal">
+    </div>
+    <table class="table table-bordered table-sm" *ngIf="localidad">
+      <caption class="sr-only">Datos de la Localidad</caption>
+      <tbody class="thead-dark">
+        <tr>
+          <th scope="row" class="w-25">Nombre</th>
+          <td>{{ localidad.nombre }}</td>
+        </tr>
+        <tr>
+          <th scope="row" class="w-25">Provincia</th>
+          <td>{{ localidad.nombreProvincia }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="envioGratuito" formControlName="envioGratuito">
+      <label class="form-check-label" for="envioGratuito">Envío Gratuito</label>
+    </div>
+    <div class="form-group">
+      <label for="costoEnvio">Costo de envío</label>
+      <input class="form-control" type="number" id="costoEnvio" formControlName="costoEnvio"
+          [ngClass]="{ 'is-invalid': submitted && f.costoEnvio.errors }">
+        <div class="invalid-feedback" *ngIf="submitted && f.costoEnvio.errors">
+          <div *ngIf="f.costoEnvio.errors.required">Requerido</div>
+          <div *ngIf="f.costoEnvio.errors.min">Mínimo {{ f.costoEnvio.errors.min.min | currency:'ARS':'symbol':'1.0-2' }}</div>
+        </div>
+    </div>
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary">
+        Guardar
+      </button>
+    </div>
+  </form>
+</div>
