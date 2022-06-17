@@ -14,14 +14,12 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
 
 @Component({
   selector: 'app-rubro',
-  templateUrl: './rubro.component.html',
-  styleUrls: ['./rubro.component.scss'],
+  templateUrl: './rubro.component.html'
 })
 export class RubroComponent implements OnInit {
   form: FormGroup;
   rubro: Rubro;
   submitted = false;
-  svgHtml = '';
 
   allowedRolesToCreate = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCreate = false;
@@ -80,8 +78,6 @@ export class RubroComponent implements OnInit {
       nombre: ['', Validators.required],
       imagenHtml: '',
     });
-
-    this.form.get('imagenHtml').valueChanges.subscribe(value => this.svgHtml = value);
   }
 
   get f() { return this.form.controls; }

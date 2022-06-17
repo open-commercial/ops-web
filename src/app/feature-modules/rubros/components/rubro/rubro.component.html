@@ -8,23 +8,22 @@
     Rubro{{ rubro ? (': ' + rubro.nombre) : ''}}
   </h1>
   <form [formGroup]="form" (submit)="submit()" *ngIf="form" class="border rounded bg-light p-3">
-    <div class="form-group">
-      <label for="nombre">Nombre</label>
-      <input type="text" class="form-control" id="nombre" formControlName="nombre"
-          [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }">
-      <div class="invalid-feedback" *ngIf="submitted && f.nombre.errors">
-        <div *ngIf="f.nombre.errors.required">Requerido</div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" formControlName="nombre"
+              [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.nombre.errors">
+            <div *ngIf="f.nombre.errors.required">Requerido</div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <div class="form-group">
           <label for="imagenHtml">Imagen (html)</label>
           <textarea class="form-control" id="observaciones" rows="5" formControlName="imagenHtml"></textarea>
         </div>
-      </div>
-      <div class="col-md-4 text-center">
-        <div id="svg-container" [innerHTML]="sanitizer.bypassSecurityTrustHtml(svgHtml)"></div>
       </div>
     </div>
     <div class="text-right">
