@@ -66,7 +66,7 @@
     </ng-template>
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item">
+        <li class="list-inline-item" *ngIf="hasRoleToManageLocalidades">
           <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarLocalidad(item)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>

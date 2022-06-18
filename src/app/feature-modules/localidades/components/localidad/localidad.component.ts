@@ -1,6 +1,8 @@
+import { AuthService } from './../../../../services/auth.service';
+import { Rol } from './../../../../models/rol';
 import { Localidad } from './../../../../models/localidad';
 import { finalize } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UbicacionesService } from './../../../../services/ubicaciones.service';
 import { MensajeService } from 'src/app/services/mensaje.service';
 import { LoadingOverlayService } from './../../../../services/loading-overlay.service';
@@ -19,16 +21,26 @@ export class LocalidadComponent implements OnInit {
   submitted = false;
   localidad: Localidad;
 
+  allowedRolesToEdit = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToEdit = false;
 
   constructor(private route: ActivatedRoute,
               private location: Location,
               private fb: FormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
+              private authService: AuthService,
               private ubicacionService: UbicacionesService) { }
 
   ngOnInit(): void {
     this.createForm();
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    if (!this.hasRoleToEdit) {
+      this.mensajeService.msg('Ud. no tiene permisos para editar localidades.', MensajeModalType.ERROR);
+      this.volverAlListado();
+      return;
+    }
+
     if (this.route.snapshot.paramMap.has('id')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
       this.loadingOverlayService.activate();

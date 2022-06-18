@@ -1,3 +1,5 @@
+import { AuthService } from './../../../../services/auth.service';
+import { Rol } from './../../../../models/rol';
 import { Localidad } from '../../../../models/localidad';
 import { FiltroOrdenamientoComponent } from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
 import { finalize } from 'rxjs/operators';
@@ -34,6 +36,10 @@ export class LocalidadesComponent extends ListadoDirective implements OnInit {
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
+
+  allowedRolesToManageLocalidades = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToManageLocalidades = false;
+
   @ViewChild('ordenarPorL') ordenarPorLElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoL') sentidoLElement: FiltroOrdenamientoComponent;
   constructor(protected route: ActivatedRoute,
@@ -41,6 +47,7 @@ export class LocalidadesComponent extends ListadoDirective implements OnInit {
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
+              private authService: AuthService,
               private fb: FormBuilder,
               private ubicacionesService: UbicacionesService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService)
@@ -48,6 +55,12 @@ export class LocalidadesComponent extends ListadoDirective implements OnInit {
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.hasRoleToManageLocalidades = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToManageLocalidades)
+    if (!this.hasRoleToManageLocalidades) {
+      this.mensajeService.msg('Ud. no tiene permisos para administrar localidades.');
+      this.router.navigate(['']);
+      return;
+    }
     this.loadingOverlayService.activate();
     this.ubicacionesService.getProvincias()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
