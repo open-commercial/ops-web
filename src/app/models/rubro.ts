@@ -1,5 +1,6 @@
 export interface Rubro {
-  idRubro: number;
+  idRubro?: number;
   nombre: string;
-  eliminado: boolean;
+  eliminado?: boolean;
+  imagenHtml: string;
 }
