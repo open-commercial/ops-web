@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Transportista} from '../../../../models/transportista';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {TransportistasService} from '../../../../services/transportistas.service';
 import {finalize} from 'rxjs/operators';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
@@ -18,7 +18,6 @@ export class TransportistaComponent implements OnInit {
   form: FormGroup;
   submitted = false;
   constructor(private route: ActivatedRoute,
-              private router: Router,
               private fb: FormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               private location: Location,

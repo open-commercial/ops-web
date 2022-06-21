@@ -19,4 +19,13 @@ export class RubrosService {
   getRubro(idRubro: number): Observable<Rubro> {
     return this.http.get<Rubro>(this.url + `/${idRubro}`);
   }
+
+  guardarRubo(r: Rubro): Observable<Rubro|void> {
+    const method = r.idRubro ? 'put': 'post';
+    return this.http[method]<Rubro|void>(this.url, r);
+  }
+
+  eliminarRubro(idRubro: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idRubro}`);
+  }
 }
