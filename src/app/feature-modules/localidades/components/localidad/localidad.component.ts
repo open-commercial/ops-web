@@ -91,7 +91,7 @@ export class LocalidadComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: () => {
-            this.mensajeService.msg('Los datos de la localidad han sido guardados con éxito.');
+            this.mensajeService.msg('Los datos de la localidad han sido guardados con éxito.', MensajeModalType.INFO);
             this.volverAlListado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
