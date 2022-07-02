@@ -8,7 +8,7 @@ import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, Observable } from 'rxjs';
-import { MedidaService } from '../../services/medida.service';
+import { MedidasService } from '../../services/medidas.service';
 import { RubrosService } from '../../services/rubros.service';
 import { Medida } from '../../models/medida';
 import { Rubro } from '../../models/rubro';
@@ -55,7 +55,7 @@ export class ProductoComponent implements OnInit {
   constructor(accordionConfig: NgbAccordionConfig,
               private route: ActivatedRoute,
               private router: Router,
-              private medidaService: MedidaService,
+              private medidasService: MedidasService,
               private rubrosService: RubrosService,
               private productosService: ProductosService,
               private loadingOverlayService: LoadingOverlayService,
@@ -71,7 +71,7 @@ export class ProductoComponent implements OnInit {
     this.createForm();
 
     const obvs: Observable<any>[] = [
-      this.medidaService.getMedidas(),
+      this.medidasService.getMedidas(),
       this.rubrosService.getRubros(),
       this.sucursalesService.getSucursales(),
     ];
