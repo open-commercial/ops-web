@@ -7,7 +7,7 @@ import { Medida } from '../models/medida';
 @Injectable({
   providedIn: 'root'
 })
-export class MedidaService {
+export class MedidasService {
 
   url = environment.apiUrl + '/api/v1/medidas';
 
@@ -15,5 +15,18 @@ export class MedidaService {
 
   getMedidas(): Observable<Medida[]> {
     return this.http.get<Medida[]>(this.url);
+  }
+
+  getMedida(idMedida: number): Observable<Medida> {
+    return this.http.get<Medida>(`${this.url}/${idMedida}`);
+  }
+
+  guardarMedida(medida: Medida): Observable<Medida|void> {
+    const method = medida.idMedida ? 'put' : 'post';
+    return this.http[method]<Medida|void>(this.url, medida);
+  }
+
+  eliminarMedida(idMedida: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${idMedida}`);
   }
 }

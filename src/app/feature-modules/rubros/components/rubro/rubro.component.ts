@@ -44,6 +44,7 @@ export class RubroComponent implements OnInit {
     if (this.route.snapshot.paramMap.has('id')) {
       if (!this.hasRoleToUpdate) {
         this.mensajeService.msg('Ud. no tiene permisos para editar rubros.', MensajeModalType.ERROR);
+        this.volverAlListado();
         return;
       }
 
@@ -65,6 +66,7 @@ export class RubroComponent implements OnInit {
     } else {
       if (!this.hasRoleToCreate) {
         this.mensajeService.msg('Ud. no tiene permisos para crear rubros.', MensajeModalType.ERROR);
+        this.volverAlListado();
       }
     }
   }
