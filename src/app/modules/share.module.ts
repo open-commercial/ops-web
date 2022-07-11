@@ -22,7 +22,7 @@ import {
   faChevronDown, faChevronUp, faFileExport, faMapMarkerAlt,
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
-  faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers,
+  faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers, faMapMarkedAlt,
   faCubes, faRulerCombined
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
@@ -100,7 +100,8 @@ export class ShareModule {
       faMapMarkerAlt, faUserCheck, faBook, faBalanceScaleRight,
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
-      faCog, faImage, faUndoAlt, faUsers, faCubes, faRulerCombined
+      faCog, faImage, faUndoAlt, faUsers, faMapMarkedAlt, 
+      faCubes, faRulerCombined
     );
   }
 }

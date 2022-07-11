@@ -125,11 +125,13 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       if (ps.visibilidad === 'privados') { terminos.publico = false; }
     }
 
-    if (ps.oferta) {
+    if (ps.oferta === 'true') {
+      this.filterForm.get('oferta').setValue(true);
       terminos.oferta = true;
     }
 
-    if (ps.listarSoloParaCatalogo) {
+    if (ps.listarSoloParaCatalogo == 'true') {
+      this.filterForm.get('listarSoloParaCatalogo').setValue(true);
       terminos.listarSoloParaCatalogo = true;
     }
 
