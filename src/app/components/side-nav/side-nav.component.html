@@ -1,135 +1,30 @@
 <div class="side-nav">
-  <div class="text-right mb-2 d-lg-none">
+  <div class="text-right mb-2">
     <button class="btn btn-primary mr-2" (click)="optionClick()">
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <h2 *ngIf="tieneRolAdministrador">&nbsp;SISTEMA</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdministrador">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/configuracion" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'cog']"></fa-icon> Configuración
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/sucursales" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'store']"></fa-icon> Sucursales
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/usuarios" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'users']"></fa-icon> Usuarios
-      </a>
-    </li>
-  </ul>
-  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;COMPRAS</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/facturas-compra" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/proveedores" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedores
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/notas-credito-compra" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon> Notas de Crédito
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/notas-debito-compra" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon> Notas de Débito
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/recibos-compra" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos
-      </a>
-    </li>
-  </ul>
-  <h2>&nbsp;VENTAS</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/pedidos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedidos
-      </a>
-    </li>
-    <li class="nav-item" *ngIf="tieneRolAdminOEncargado || tieneRolVendedor">
-      <a class="nav-link" routerLink="/facturas-venta" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas
-      </a>
-    </li>
-    <li class="nav-item" *ngIf="tieneRolAdminOEncargado || tieneRolVendedor">
-      <a class="nav-link" routerLink="/remitos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'file-export']"></fa-icon> Remitos
-      </a>
-    </li>
-    <li class="nav-item" *ngIf="tieneRolAdminOEncargado">
-      <a class="nav-link" routerLink="/clientes" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'portrait']"></fa-icon> Clientes
-      </a>
-    </li>
-    <li class="nav-item" *ngIf="tieneRolAdminOEncargado || tieneRolVendedor">
-      <a class="nav-link" routerLink="/notas-credito-venta" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon> Notas de Crédito
-      </a>
-    </li>
-    <li class="nav-item" *ngIf="tieneRolAdminOEncargado || tieneRolVendedor">
-      <a class="nav-link" routerLink="/notas-debito-venta" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon> Notas de Débito
-      </a>
-    </li>
-    <li class="nav-item" *ngIf="tieneRolAdminOEncargado || tieneRolVendedor">
-      <a class="nav-link" routerLink="/recibos-venta" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos
-      </a>
-    </li>
-  </ul>
-  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;STOCK</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/productos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/traspasos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos
-      </a>
-    </li>
-  </ul>
-  <h2 *ngIf="tieneRolAdminOEncargado">&nbsp;ADMINISTRACIÓN</h2>
-  <ul class="nav flex-column nav-pills mt-0 mb-2" *ngIf="tieneRolAdminOEncargado">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/cajas" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Cajas
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/gastos" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/transportistas" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportistas
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/formas-de-pago" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'money-bill-wave']"></fa-icon> Formas de Pago
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/localidades" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'map-marked-alt']"></fa-icon> Localidades
-      </a>
-      <a class="nav-link" routerLink="/rubros" routerLinkActive="active" (click)="optionClick()">
-        <fa-icon [icon]="['fas', 'cubes']"></fa-icon> Rubros
-      </a>
-    </li>
-  </ul>
+  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId">
+    <ng-template ngFor let-m [ngForOf]="menuData">
+      <ngb-panel [id]="m.id" *ngIf="m.show">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <span>{{ m.seccion }}</span>
+          </span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <ul class="nav flex-column nav-pills" *ngIf="m.rutas.length">
+            <ng-template ngFor let-r [ngForOf]="m.rutas">
+              <li class="nav-item" *ngIf="r.show">
+                <a class="nav-link" [routerLink]="r.route" routerLinkActive="active" (click)="optionClick()">
+                  <fa-icon [icon]="r.icon"></fa-icon> {{ r.name }}
+                </a>
+              </li>
+            </ng-template>
+          </ul>
+        </ng-template>
+      </ngb-panel>
+    </ng-template>
+  </ngb-accordion>
 </div>
