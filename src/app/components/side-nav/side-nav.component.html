@@ -4,7 +4,7 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId">
+  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId" (panelChange)="beforeChange($event)">
     <ng-template ngFor let-m [ngForOf]="menuData">
       <ngb-panel [id]="m.id" *ngIf="m.show">
         <ng-template ngbPanelTitle>

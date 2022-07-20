@@ -1,6 +1,6 @@
 import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
-import { NgbAccordion, NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordion, NgbAccordionConfig, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Component, EventEmitter, Output, ViewChild, OnDestroy } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Rol} from '../../models/rol';
@@ -42,11 +42,11 @@ export class SideNavComponent implements OnDestroy {
         show: this.tieneRolAdminOEncargado,
         rutas: [
           { name: 'Cajas', icon: ['fas', 'cash-register'], route: '/cajas', show: true },
-          { name: 'Gastos', icon: ['fas', 'hand-holding-usd'], route: '/gastos', show: true },
-          { name: 'Transportistas', icon: ['fas', 'truck-moving'], route: '/transportistas', show: true },
           { name: 'Formas de Pago', icon: ['fas', 'money-bill-wave'], route: '/formas-de-pago', show: true },
+          { name: 'Gastos', icon: ['fas', 'hand-holding-usd'], route: '/gastos', show: true },
           { name: 'Localidades', icon: ['fas', 'map-marked-alt'], route: '/localidades', show: true },
           { name: 'Rubros', icon: ['fas', 'cubes'], route: '/rubros', show: true },
+          { name: 'Transportistas', icon: ['fas', 'truck-moving'], route: '/transportistas', show: true },
         ],
       },
       {
@@ -55,9 +55,9 @@ export class SideNavComponent implements OnDestroy {
         show: this.tieneRolAdminOEncargado,
         rutas: [
           { name: 'Facturas', icon: ['fas', 'file-invoice'], route: '/facturas-compra', show: true },
-          { name: 'Proveedores', icon: ['fas', 'truck'], route: '/proveedores', show: true },
-          { name: 'Notas de Crédito', icon: ['fas', 'truck'], route: '/notas-credito-compra', show: true },
+          { name: 'Notas de Crédito', icon: ['fas', 'balance-scale-left'], route: '/notas-credito-compra', show: true },
           { name: 'Notas de Débito', icon: ['fas', 'balance-scale-right'], route: '/notas-debito-compra', show: true },
+          { name: 'Proveedores', icon: ['fas', 'truck'], route: '/proveedores', show: true },
           { name: 'Recibos', icon: ['fas', 'file-invoice-dollar'], route: '/recibos-compra', show: true },
         ],
       },
@@ -86,28 +86,16 @@ export class SideNavComponent implements OnDestroy {
         show: true,
         rutas: [
           {
-            name: 'Pedidos',
-            icon: ['fas', 'clipboard-list'],
-            route: '/pedidos',
-            show: true
+            name: 'Clientes',
+            icon: ['fas', 'portrait'],
+            route: '/clientes',
+            show: this.tieneRolAdminOEncargado
           },
           {
             name: 'Facturas',
             icon: ['fas', 'file-invoice'],
             route: '/facturas-venta',
             show: this.tieneRolAdminOEncargado || this.tieneRolVendedor
-          },
-          {
-            name: 'Remitos',
-            icon: ['fas', 'file-export'],
-            route: '/remitos',
-            show: this.tieneRolAdminOEncargado || this.tieneRolVendedor
-          },
-          {
-            name: 'Clientes',
-            icon: ['fas', 'portrait'],
-            route: '/clientes',
-            show: this.tieneRolAdminOEncargado
           },
           {
             name: 'Notas de Crédito',
@@ -119,6 +107,18 @@ export class SideNavComponent implements OnDestroy {
             name: 'Notas de Débito',
             icon: ['fas', 'balance-scale-right'],
             route: '/notas-debito-venta',
+            show: this.tieneRolAdminOEncargado || this.tieneRolVendedor
+          },
+          {
+            name: 'Pedidos',
+            icon: ['fas', 'clipboard-list'],
+            route: '/pedidos',
+            show: true
+          },
+          {
+            name: 'Remitos',
+            icon: ['fas', 'file-export'],
+            route: '/remitos',
             show: this.tieneRolAdminOEncargado || this.tieneRolVendedor
           },
           {
@@ -155,5 +155,11 @@ export class SideNavComponent implements OnDestroy {
 
   optionClick() {
     this.menuOptionClick.emit();
+  }
+
+  public beforeChange($event: NgbPanelChangeEvent) {
+    if (this.accordion.isExpanded($event.panelId)) {
+      $event.preventDefault();
+    }
   }
 }
