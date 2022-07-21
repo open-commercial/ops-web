@@ -45,6 +45,7 @@ export class SideNavComponent implements OnDestroy {
           { name: 'Formas de Pago', icon: ['fas', 'money-bill-wave'], route: '/formas-de-pago', show: true },
           { name: 'Gastos', icon: ['fas', 'hand-holding-usd'], route: '/gastos', show: true },
           { name: 'Localidades', icon: ['fas', 'map-marked-alt'], route: '/localidades', show: true },
+          { name: 'Medidas', icon: ['fas', 'ruler-combined'], route: '/medidas', show: true },
           { name: 'Rubros', icon: ['fas', 'cubes'], route: '/rubros', show: true },
           { name: 'Transportistas', icon: ['fas', 'truck-moving'], route: '/transportistas', show: true },
         ],

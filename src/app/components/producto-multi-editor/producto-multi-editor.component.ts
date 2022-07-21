@@ -4,7 +4,7 @@ import {BatchActionElement, BatchActionKey, BatchActionsService} from '../../ser
 import {Location} from '@angular/common';
 import {Medida} from '../../models/medida';
 import {Rubro} from '../../models/rubro';
-import {MedidaService} from '../../services/medida.service';
+import {MedidasService} from '../../services/medidas.service';
 import {RubrosService} from '../../services/rubros.service';
 import {combineLatest, Observable} from 'rxjs';
 import {finalize} from 'rxjs/operators';
@@ -46,7 +46,7 @@ export class ProductoMultiEditorComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private batchActionsService: BatchActionsService,
               private loadingOverlayService: LoadingOverlayService,
-              private medidaService: MedidaService,
+              private medidasService: MedidasService,
               private rubrosService: RubrosService,
               private mensajeService: MensajeService,
               private productosService: ProductosService,
@@ -63,7 +63,7 @@ export class ProductoMultiEditorComponent implements OnInit {
     }
 
     const obvs: Observable<any>[] = [
-      this.medidaService.getMedidas(),
+      this.medidasService.getMedidas(),
       this.rubrosService.getRubros(),
     ];
 

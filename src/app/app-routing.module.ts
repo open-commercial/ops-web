@@ -186,6 +186,10 @@ const routes: Routes = [
         loadChildren: () => import('./feature-modules/rubros/rubros.module')
           .then(m => m.RubrosModule)
       },
+      { path: 'medidas',
+        loadChildren: () => import('./feature-modules/medidas/medidas.module')
+          .then(m => m.MedidasModule)
+      },
     ]
   },
   { path: '**', redirectTo: '' }
