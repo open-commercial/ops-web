@@ -1,9 +1,17 @@
 @import "../../../variables";
 
+:host ::ng-deep {
+  #menu {
+    .card-body {
+      padding: 0;
+    }
+  }
+}
+
 .side-nav {
   height: 100%;
   width: 15rem;
-  padding-top: 1rem;
+  padding-top: 0.6rem;
   background: whitesmoke;
   overflow-y: auto;
   border-left: 2px solid #dee2e6;
