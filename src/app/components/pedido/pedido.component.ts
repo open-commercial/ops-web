@@ -302,7 +302,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
       opcionEnvio: [null, Validators.required],
       opcionEnvioUbicacion: null,
       resultados: null,
-      //pagos: [],
       pagos: this.fb.array([]),
     });
   }
@@ -604,6 +603,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         m = saldoCCC >= totalAPagar ? 0 : (totalAPagar - saldoCCC);
       }
     }
+    m = Number(m.toFixed(2));
     this.pagos.push(this.createPagoForm({ idFormaDePago: null, monto: m }));
   }
 
