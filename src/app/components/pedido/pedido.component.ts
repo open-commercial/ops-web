@@ -592,9 +592,13 @@ export class PedidoComponent implements OnInit, OnDestroy {
     });
   }
 
+  getSaldoCCC() {
+    return this.form && this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value.saldo : 0;
+  }
+
   addPagoForm() {
     const totalAPagar = this.form && this.form.get('resultados') ? this.form.get('resultados').value.total : 0;
-    const saldoCCC = this.form && this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value.saldo : 0;
+    const saldoCCC = this.getSaldoCCC();
     let m = 0;
     if (!this.pagos.length) {
       if (saldoCCC <= 0) {

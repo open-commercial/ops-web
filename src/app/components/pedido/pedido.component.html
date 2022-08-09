@@ -184,6 +184,12 @@
           <button class="btn btn-outline-secondary ml-2 mb-2" type="button" (click)="addPagoForm()">
             <fa-icon icon="plus"></fa-icon>
           </button>
+          <div>
+            <strong>Saldo CC de Cliente: </strong>
+            <span class="badge badge-light border" [ngClass]="getSaldoCCC() >= 0 ? 'border-success text-success': 'border-danger text-danger'">
+              {{ getSaldoCCC() | currency: 'ARS':'symbol':'1.0-2' }}
+            </span>
+          </div>
           <table class="table table-bordered table-sm">
             <caption class="sr-only">Pagos</caption>
             <thead>
@@ -221,7 +227,7 @@
                   </div>
                 </td>
                 <td class="text-center">
-                  <button class="btn btn-danger" type="button" (click)="removePagoForm(i)">
+                  <button class="btn btn-primary" type="button" (click)="removePagoForm(i)">
                     <fa-icon [icon]="['fas', 'trash']"></fa-icon>
                   </button>
                 </td>
