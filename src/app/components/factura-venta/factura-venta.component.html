@@ -200,11 +200,55 @@
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
+          <strong>Pagos</strong>
+            <button class="btn btn-primary ml-2 mb-2" type="button" (click)="addPagoForm()">
+              <fa-icon icon="plus"></fa-icon>
+            </button>
+            <table class="table table-bordered table-sm">
+              <caption class="sr-only">Pagos</caption>
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" class="w-75">Forma de Pago</th>
+                <th scope="col" class="w-25">Monto ($)</th>
+                <th scope="col"><div class="sr-only">Acción</div></th>
+              </tr>
+              </thead>
+              <tbody formArrayName="pagos">
+                <tr *ngFor="let p of pagos.controls; index as i" [formGroupName]="i.toString()">
+                  <td class="align-middle">{{ i + 1  }}</td>
+                  <td>
+                    <div class="form-group mb-0">
+                      <label class="sr-only" [for]="'idFormaDePago_' + i">Forma de pago</label>
+                      <select class="form-control" formControlName="idFormaDePago" [id]="'idFormaDePago_' + i"
+                          [ngClass]="{ 'is-invalid': submitted && p.get('idFormaDePago').errors }">
+                          <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
+                      </select>
+                      <div class="invalid-feedback" *ngIf="submitted && p.get('idFormaDePago').errors">
+                        <div *ngIf="p.get('idFormaDePago').errors.required">Requerido</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group mb-0">
+                      <label class="sr-only" [for]="'monto_' + i">Monto ($)</label>
+                      <input type="number" class="form-control" id="'monto_' + i" formControlName="monto"
+                          [ngClass]="{ 'is-invalid': submitted && p.get('monto').errors }">
+                      <div class="invalid-feedback" *ngIf="submitted && p.get('monto').errors">
+                        <div *ngIf="p.get('monto').errors.required">Requerido</div>
+                        <div *ngIf="p.get('monto').errors.min">Mínimo: {{ p.get('monto').errors.min.min | currency:'ARS':'symbol':'1.0-2' }} </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <button class="btn btn-primary" type="button" (click)="removePagoForm(i)">
+                      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           <div *ngIf="!saving">
-            <app-pagos formControlName="pagos"
-                       [totalAPagar]="resultados && resultados.total ? resultados.total : 0"
-                       [saldoCCC]="form && form.get('ccc') && form.get('ccc').value ? form.get('ccc').value.saldo : 0"
-            ></app-pagos>
             <div class="alert alert-success" *ngIf="esComprobanteDivido()">
               ATENCION: Este comprobante será dividido.
             </div>

@@ -1,3 +1,5 @@
+import { FormasDePagoService } from './../../services/formas-de-pago.service';
+import { FormaDePago } from './../../models/forma-de-pago';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
@@ -58,6 +60,7 @@ enum Action {
 export class PedidoComponent implements OnInit, OnDestroy {
   title = 'Nuevo Pedido';
   form: FormGroup;
+  submitted = false;
 
   oe = OpcionEnvio;
   oeu = OpcionEnvioUbicacion;
@@ -94,6 +97,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   mov = Movimiento;
 
+  formasDePago: FormaDePago[] = [];
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -109,7 +114,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
               private storageService: StorageService,
               private mensajeService: MensajeService,
               private location: Location,
-              public loadingOverlayService: LoadingOverlayService) {
+              public loadingOverlayService: LoadingOverlayService,
+              public formasDePagoService: FormasDePagoService) {
 
     this.subscription = new Subscription();
     accordionConfig.type = 'dark';
@@ -122,10 +128,19 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.loadingOverlayService.activate();
     this.sucursalesService.getPuntosDeRetito()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (sucs: Array<Sucursal>) => this.sucursales = sucs,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: (sucs: Sucursal[]) => this.sucursales = sucs,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
+
+    this.loadingOverlayService.activate()
+    this.formasDePagoService.getFormasDePago()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: formasDePago => this.formasDePago = formasDePago,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
 
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
@@ -148,13 +163,13 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.loadingOverlayService.activate();
       this.authService.getLoggedInUsuario()
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (u: Usuario) => {
+        .subscribe({
+          next: (u: Usuario) => {
             this.usuario = u;
             this.handleCCCPredeterminado();
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
       ;
     } else {
       if (this.action === Action.EDITAR) {
@@ -287,7 +302,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
       opcionEnvio: [null, Validators.required],
       opcionEnvioUbicacion: null,
       resultados: null,
-      pagos: [],
+      pagos: this.fb.array([]),
     });
   }
 
@@ -403,9 +418,10 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
     this.form.get('opcionEnvio').setValue(data.opcionEnvio ? data.opcionEnvio : null);
     this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion ? data.opcionEnvioUbicacion : null);
-    this.form.get('pagos').setValue(
-      data.pagos && Array.isArray(data.pagos) && data.pagos.length ? data.pagos : []
-    );
+
+    if (data.pagos && Array.isArray(data.pagos) && data.pagos.length) {
+      data.pagos.forEach((p: { idFormaDePago: number, monto: number }) => this.pagos.push(this.createPagoForm(p)));
+    }
   }
 
   clienteHasUbicacionFacturacion() {
@@ -419,6 +435,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    this.submitted = true;
     if (this.form.valid) {
       const formValue = this.form.value;
 
@@ -562,6 +579,40 @@ export class PedidoComponent implements OnInit, OnDestroy {
     return this.fb.group({
       renglonPedido: [renglonPedido],
     });
+  }
+
+  get pagos() {
+    return this.form.get('pagos') as FormArray;
+  }
+
+  createPagoForm(pago: { idFormaDePago: number, monto: number } = { idFormaDePago: null, monto: 0.0 }) {
+    return this.fb.group({
+      idFormaDePago: [ pago.idFormaDePago, Validators.required ],
+      monto: [ pago.monto, [Validators.required, Validators.min(10) ] ]
+    });
+  }
+
+  getSaldoCCC() {
+    return this.form && this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value.saldo : 0;
+  }
+
+  addPagoForm() {
+    const totalAPagar = this.form && this.form.get('resultados') ? this.form.get('resultados').value.total : 0;
+    const saldoCCC = this.getSaldoCCC();
+    let m = 0;
+    if (!this.pagos.length) {
+      if (saldoCCC <= 0) {
+        m = -1 * saldoCCC + totalAPagar;
+      } else {
+        m = saldoCCC >= totalAPagar ? 0 : (totalAPagar - saldoCCC);
+      }
+    }
+    m = Number(m.toFixed(2));
+    this.pagos.push(this.createPagoForm({ idFormaDePago: null, monto: m }));
+  }
+
+  removePagoForm(i: number) {
+    this.pagos.removeAt(i);
   }
 
   handleSelectCcc(ccc: CuentaCorrienteCliente) {

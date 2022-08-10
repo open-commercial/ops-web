@@ -1,3 +1,5 @@
+import { FormasDePagoService } from './../../services/formas-de-pago.service';
+import { FormaDePago } from './../../models/forma-de-pago';
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -5,7 +7,6 @@ import { FacturasService } from '../../services/facturas.service';
 import { HelperService } from '../../services/helper.service';
 import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Location } from '@angular/common';
-import { ClientesService } from '../../services/clientes.service';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { debounceTime, finalize } from 'rxjs/operators';
@@ -19,7 +20,6 @@ import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comp
 import { Resultados } from '../../models/resultados';
 import { NuevaFacturaVenta } from '../../models/nueva-factura-venta';
 import { StorageKeys, StorageService } from '../../services/storage.service';
-import { ProductosService } from '../../services/productos.service';
 import { PedidosService } from '../../services/pedidos.service';
 import { EstadoPedido } from '../../models/estado-pedido';
 import { Pedido } from '../../models/pedido';
@@ -30,7 +30,6 @@ import {Subscription} from 'rxjs';
 import {Usuario} from '../../models/usuario';
 import {AuthService} from '../../services/auth.service';
 import {Rol} from '../../models/rol';
-
 
 @Component({
   selector: 'app-factura-venta',
@@ -76,23 +75,23 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   usuario: Usuario = null;
 
+  formasDePago: FormaDePago[] = [];
+
   constructor(private fb: FormBuilder,
               modalConfig: NgbModalConfig,
-              private modalService: NgbModal,
               accordionConfig: NgbAccordionConfig,
               private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
               private route: ActivatedRoute,
               private router: Router,
               private location: Location,
-              private clientesService: ClientesService,
               private cuentasCorrienteService: CuentasCorrientesService,
               private mensajeService: MensajeService,
               private sucursalesService: SucursalesService,
               private storageService: StorageService,
-              private productosService: ProductosService,
               private pedidosService: PedidosService,
               public loadingOverlayService: LoadingOverlayService,
+              public formasDePagoService: FormasDePagoService,
               public authService: AuthService) {
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -102,6 +101,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createFrom();
+
     this.loadingOverlayService.activate();
     this.authService.getLoggedInUsuario()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
@@ -112,6 +112,16 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
         }
       })
     ;
+
+    this.loadingOverlayService.activate()
+    this.formasDePagoService.getFormasDePago()
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: formasDePago => this.formasDePago = formasDePago,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
+
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes()));
   }
 
@@ -220,7 +230,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
       descuento: [0, Validators.min(0)],
       recargo: [0, Validators.min(0)],
       idTransportista: null,
-      pagos: [],
+      pagos: this.fb.array([]),
       idPedido: null,
     });
   }
@@ -287,7 +297,10 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
     this.form.get('recargo').setValue(data.recargo ? data.recargo : 0);
     this.form.get('idTransportista').setValue(data.idTransportista ? Number(data.idTransportista) : null);
     this.form.get('idPedido').setValue(data.idPedido ? Number(data.idPedido) : null);
-    this.form.get('pagos').setValue(data.pagos && data.pagos.length ? data.pagos : []);
+
+    if (data.pagos && Array.isArray(data.pagos) && data.pagos.length) {
+      data.pagos.forEach((p: { idFormaDePago: number, monto: number }) => this.pagos.push(this.createPagoForm(p)));
+    }
   }
 
   get f() { return this.form.controls; }
@@ -510,5 +523,35 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   transportistaChange(t: Transportista) {
     this.transportistaSeleccionado = t;
+  }
+
+  get pagos() {
+    return this.form.get('pagos') as FormArray;
+  }
+
+  createPagoForm(pago: { idFormaDePago: number, monto: number } = { idFormaDePago: null, monto: 0.0 }) {
+    return this.fb.group({
+      idFormaDePago: [ pago.idFormaDePago, Validators.required ],
+      monto: [ pago.monto, [Validators.required, Validators.min(10) ] ]
+    });
+  }
+
+  addPagoForm() {
+    const totalAPagar = this.resultados && this.resultados.total ? this.resultados.total : 0
+    const saldoCCC = this.form && this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value.saldo : 0;
+    let m = 0;
+    if (!this.pagos.length) {
+      if (saldoCCC <= 0) {
+        m = -1 * saldoCCC + totalAPagar;
+      } else {
+        m = saldoCCC >= totalAPagar ? 0 : (totalAPagar - saldoCCC);
+      }
+    }
+    m = Number(m.toFixed(2));
+    this.pagos.push(this.createPagoForm({ idFormaDePago: null, monto: m }));
+  }
+
+  removePagoForm(i: number) {
+    this.pagos.removeAt(i);
   }
 }
