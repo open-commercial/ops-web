@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NotaCredito} from '../../models/nota';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {MensajeService} from '../../services/mensaje.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {NotasService} from '../../services/notas.service';
@@ -23,7 +23,7 @@ export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCredito
   nncsf: NuevaNotaCreditoSinFactura;
 
   constructor(public activeModal: NgbActiveModal,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               protected notasService: NotasService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,

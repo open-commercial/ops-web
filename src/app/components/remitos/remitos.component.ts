@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {RemitosService} from '../../services/remitos.service';
 import {BusquedaRemitoCriteria} from '../../models/criterias/busqueda-remito-criteria';
 import * as moment from 'moment';
@@ -59,7 +59,7 @@ export class RemitosComponent extends ListadoDirective implements OnInit {
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private remitosService: RemitosService,
               private transportistasService: TransportistasService,
               private usuariosService: UsuariosService,

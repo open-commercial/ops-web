@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Sucursal} from '../../models/sucursal';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
@@ -24,7 +24,7 @@ import {ProductosService} from '../../services/productos.service';
 })
 export class TraspasoComponent implements OnInit {
   loading = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   sucursalesOrigen: Sucursal[] = [];
@@ -36,7 +36,7 @@ export class TraspasoComponent implements OnInit {
 
   constructor(private router: Router,
               private location: Location,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               public sucursalesService: SucursalesService,
               private modalService: NgbModal,
@@ -101,7 +101,7 @@ export class TraspasoComponent implements OnInit {
   }
 
   get renglones() {
-    return this.form.get('renglones') as FormArray;
+    return this.form.get('renglones') as UntypedFormArray;
   }
 
   createRenglonTraspasoForm(p: Producto, cantidad: number) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../models/usuario';
 import { debounceTime, finalize } from 'rxjs/operators';
@@ -16,7 +16,7 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   loading = false;
   submitted = false;
 
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string;
 
   constructor(private authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private router: Router,
               private route: ActivatedRoute,
               private sucursalesService: SucursalesService,

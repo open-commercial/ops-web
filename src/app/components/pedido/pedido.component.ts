@@ -1,7 +1,7 @@
 import { FormasDePagoService } from './../../services/formas-de-pago.service';
 import { FormaDePago } from './../../models/forma-de-pago';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
 import {NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 import {NuevoRenglonPedido} from '../../models/nuevo-renglon-pedido';
@@ -59,7 +59,7 @@ enum Action {
 })
 export class PedidoComponent implements OnInit, OnDestroy {
   title = 'Nuevo Pedido';
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   oe = OpcionEnvio;
@@ -99,7 +99,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   formasDePago: FormaDePago[] = [];
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
               accordionConfig: NgbAccordionConfig,
@@ -563,7 +563,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   get renglonesPedido() {
-    return this.form.get('renglonesPedido') as FormArray;
+    return this.form.get('renglonesPedido') as UntypedFormArray;
   }
 
   handleRenglonPedido(renglonPedido: RenglonPedido) {
@@ -582,7 +582,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   get pagos() {
-    return this.form.get('pagos') as FormArray;
+    return this.form.get('pagos') as UntypedFormArray;
   }
 
   createPagoForm(pago: { idFormaDePago: number, monto: number } = { idFormaDePago: null, monto: 0.0 }) {

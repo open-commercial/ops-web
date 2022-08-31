@@ -1,5 +1,5 @@
 import {Cliente} from '../models/cliente';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../services/notas.service';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
@@ -16,7 +16,7 @@ export default abstract class NotaCreditoVentaDetalleModalDirective extends Nota
   cliente: Cliente;
 
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,

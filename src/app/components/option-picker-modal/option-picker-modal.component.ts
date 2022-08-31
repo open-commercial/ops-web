@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 export interface OPOption {
@@ -15,8 +15,8 @@ export class OptionPickerModalComponent implements OnInit {
   options: OPOption[] = [];
   title = '';
   label = 'Seleccione una opción';
-  form: FormGroup;
-  constructor(private fb: FormBuilder,
+  form: UntypedFormGroup;
+  constructor(private fb: UntypedFormBuilder,
               public activeModal: NgbActiveModal) { }
 
   ngOnInit() {

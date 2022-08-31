@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UbicacionesService } from './../../../../services/ubicaciones.service';
 import { MensajeService } from 'src/app/services/mensaje.service';
 import { LoadingOverlayService } from './../../../../services/loading-overlay.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal.component';
@@ -17,7 +17,7 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   styleUrls: ['./localidad.component.scss']
 })
 export class LocalidadComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   localidad: Localidad;
 
@@ -26,7 +26,7 @@ export class LocalidadComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private location: Location,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private authService: AuthService,

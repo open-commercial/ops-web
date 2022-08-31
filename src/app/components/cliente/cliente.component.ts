@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Cliente} from '../../models/cliente';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {CategoriaIVA} from '../../models/categoria-iva';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {Location} from '@angular/common';
@@ -19,7 +19,7 @@ import {UFProfile} from '../usuario-form/usuario-form.component';
 })
 export class ClienteComponent implements OnInit {
   cliente: Cliente = null;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   categoriasIVA = [
@@ -33,7 +33,7 @@ export class ClienteComponent implements OnInit {
 
   ufProfile = UFProfile.CLIENTE;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,

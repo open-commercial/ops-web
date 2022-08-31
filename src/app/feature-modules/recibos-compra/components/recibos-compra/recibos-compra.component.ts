@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../../../services/sucursales.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
-import {FormBuilder, FormControl} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RecibosService} from '../../../../services/recibos.service';
 import {FormasDePagoService} from '../../../../services/formas-de-pago.service';
@@ -38,7 +38,7 @@ export class RecibosCompraComponent extends RecibosDirective implements OnInit {
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               protected modalService: NgbModal,
               protected recibosService: RecibosService,
               protected formasDePagoService: FormasDePagoService,
@@ -75,7 +75,7 @@ export class RecibosCompraComponent extends RecibosDirective implements OnInit {
 
   createFilterForm() {
     super.createFilterForm();
-    this.filterForm.addControl('idProveedor', new FormControl(null));
+    this.filterForm.addControl('idProveedor', new UntypedFormControl(null));
   }
 
   resetFilterForm() {

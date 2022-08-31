@@ -6,7 +6,7 @@ import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../models/pagination';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {BusquedaCuentaCorrienteClienteCriteria} from '../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
 import {CuentasCorrientesService} from '../../services/cuentas-corrientes.service';
 import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
@@ -67,7 +67,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private ccService: CuentasCorrientesService,
               private usuariosService: UsuariosService,
               private ubicacionesService: UbicacionesService,

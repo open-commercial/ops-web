@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {BatchActionElement, BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {Location} from '@angular/common';
 import {Medida} from '../../models/medida';
@@ -28,7 +28,7 @@ enum OpcionPorcentaje {
   styleUrls: ['./producto-multi-editor.component.scss']
 })
 export class ProductoMultiEditorComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   medidas: Medida[] = [];
@@ -43,7 +43,7 @@ export class ProductoMultiEditorComponent implements OnInit {
   @ViewChild('calculosPrecioCheck') calculosPrecioCheck: ElementRef;
   @ViewChild('descuentoRecargoPorcentajeCheck') descuentoRecargoPorcentajeCheck: ElementRef;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private batchActionsService: BatchActionsService,
               private loadingOverlayService: LoadingOverlayService,
               private medidasService: MedidasService,

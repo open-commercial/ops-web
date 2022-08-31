@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {SucursalesService} from '../../services/sucursales.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ConfiguracionSucursal} from '../../models/configuracion-sucursal';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {finalize} from 'rxjs/operators';
@@ -18,7 +18,7 @@ import {AuthService} from '../../services/auth.service';
   templateUrl: './configuracion.component.html'
 })
 export class ConfiguracionComponent implements OnInit, OnDestroy {
-  form: FormGroup;
+  form: UntypedFormGroup;
   sucursal: Sucursal;
   configuracion: ConfiguracionSucursal;
   submitted = false;
@@ -37,7 +37,7 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private router: Router,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private authService: AuthService) {
     this.subscription = new Subscription();
   }

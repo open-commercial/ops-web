@@ -7,7 +7,7 @@ import {LoadingOverlayService} from '../../../../services/loading-overlay.servic
 import {MensajeService} from '../../../../services/mensaje.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../../../models/pagination';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {UsuariosService} from '../../../../services/usuarios.service';
 import {BusquedaUsuarioCriteria} from '../../../../models/criterias/busqueda-usuario-criteria';
 import {FiltroOrdenamientoComponent} from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
@@ -60,7 +60,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private usuariosService: UsuariosService,
               private authService: AuthService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);

@@ -5,7 +5,7 @@ import {NotaDebito} from '../../../../models/nota';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
 import {NotaDebitoCompraDetalleModalDirective} from '../../../../directives/nota-debito-compra-detalle-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {NotasService} from '../../../../services/notas.service';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
@@ -18,7 +18,7 @@ import {MensajeService} from '../../../../services/mensaje.service';
 export class NotaDebitoCompraDetalleSinReciboModalComponent extends NotaDebitoCompraDetalleModalDirective implements OnInit {
   nndsr: NuevaNotaDebitoSinRecibo;
   constructor(public activeModal: NgbActiveModal,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               protected notasService: NotasService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService) {

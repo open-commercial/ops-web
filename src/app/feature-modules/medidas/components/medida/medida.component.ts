@@ -5,7 +5,7 @@ import { MensajeService } from './../../../../services/mensaje.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from './../../../../services/auth.service';
 import { Medida } from './../../../../models/medida';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Rol } from './../../../../models/rol';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
@@ -17,7 +17,7 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   styleUrls: ['./medida.component.scss']
 })
 export class MedidaComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   medida: Medida;
@@ -25,7 +25,7 @@ export class MedidaComponent implements OnInit {
   allowedRolesToManageMedidas: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToManageMedidas = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private location: Location,
               private authService: AuthService,

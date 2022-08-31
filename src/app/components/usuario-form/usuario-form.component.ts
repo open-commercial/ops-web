@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Usuario} from '../../models/usuario';
 import {Rol} from '../../models/rol';
 import {UsuariosService} from '../../services/usuarios.service';
@@ -26,7 +26,7 @@ const repeatedPasswordValidator: ValidatorFn = (control: AbstractControl): Valid
   styleUrls: ['./usuario-form.component.scss']
 })
 export class UsuarioFormComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   allRoles = [
@@ -50,7 +50,7 @@ export class UsuarioFormComponent implements OnInit {
   @Input() saving: boolean = false;
   @Output() savingChange = new EventEmitter<boolean>();
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private usuariosService: UsuariosService,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService) { }

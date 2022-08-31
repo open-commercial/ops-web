@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormaDePago} from '../../models/forma-de-pago';
 import {MensajeService} from '../../services/mensaje.service';
 import {FormasDePagoService} from '../../services/formas-de-pago.service';
@@ -16,13 +16,13 @@ import {Gasto} from '../../models/gasto';
 })
 export class GastoFormComponent implements OnInit {
   loading = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   formasDePago: FormaDePago[] = [];
 
   @Output() gastoSaved = new EventEmitter<Gasto>();
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private mensajeService: MensajeService,
               private formasDePagoService: FormasDePagoService,
               private sucursalesService: SucursalesService,

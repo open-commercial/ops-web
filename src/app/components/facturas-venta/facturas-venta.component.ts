@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {FacturaVenta} from '../../models/factura-venta';
 import {Rol} from '../../models/rol';
 import {HelperService} from '../../services/helper.service';
@@ -102,7 +102,7 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
               protected sucursalesService: SucursalesService,
               private facturasService: FacturasService,
               private facturasVentaService: FacturasVentaService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
               private productosService: ProductosService,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
 
@@ -8,11 +8,11 @@ import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
   templateUrl: './nuevo-renglon-factura-modal.component.html'
 })
 export class NuevoRenglonFacturaModalComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   nrf: NuevoRenglonFactura;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {

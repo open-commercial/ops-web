@@ -1,7 +1,7 @@
 import { FormasDePagoService } from './../../services/formas-de-pago.service';
 import { FormaDePago } from './../../models/forma-de-pago';
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
 import { HelperService } from '../../services/helper.service';
@@ -38,7 +38,7 @@ import {Rol} from '../../models/rol';
 })
 export class FacturaVentaComponent implements OnInit, OnDestroy {
   title = '';
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   loading = false;
 
@@ -77,7 +77,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   formasDePago: FormaDePago[] = [];
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               modalConfig: NgbModalConfig,
               accordionConfig: NgbAccordionConfig,
               private facturasService: FacturasService,
@@ -328,7 +328,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   }
 
   get renglones() {
-    return this.form.get('renglones') as FormArray;
+    return this.form.get('renglones') as UntypedFormArray;
   }
 
   createRenglonForm(r: RenglonFactura, c = false) {
@@ -526,7 +526,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   }
 
   get pagos() {
-    return this.form.get('pagos') as FormArray;
+    return this.form.get('pagos') as UntypedFormArray;
   }
 
   createPagoForm(pago: { idFormaDePago: number, monto: number } = { idFormaDePago: null, monto: 0.0 }) {

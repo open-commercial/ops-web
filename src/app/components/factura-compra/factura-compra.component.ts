@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
@@ -31,7 +31,7 @@ import {Transportista} from '../../models/transportista';
   styleUrls: ['./factura-compra.component.scss']
 })
 export class FacturaCompraComponent implements OnInit, OnDestroy {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   saving = false;
   helper = HelperService;
@@ -59,7 +59,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   proveedorSeleccionado: Proveedor;
   transportistaSeleccionado: Transportista;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private router: Router,
               private loadingOverlayService: LoadingOverlayService,
@@ -169,7 +169,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   get f() { return this.form.controls; }
 
   get renglones() {
-    return this.form.get('renglones') as FormArray;
+    return this.form.get('renglones') as UntypedFormArray;
   }
 
   checkProveedorYTipoComprobante(): boolean {

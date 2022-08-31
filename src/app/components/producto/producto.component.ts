@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { Producto } from '../../models/producto';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { combineLatest, Observable } from 'rxjs';
 import { MedidasService } from '../../services/medidas.service';
 import { RubrosService } from '../../services/rubros.service';
@@ -43,7 +43,7 @@ export class ProductoComponent implements OnInit {
   hasRolToEditCantidades = false;
 
   producto: Producto;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   @ViewChild('accordion') accordion: NgbAccordion;
@@ -60,7 +60,7 @@ export class ProductoComponent implements OnInit {
               private productosService: ProductosService,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private sucursalesService: SucursalesService,
               private location: Location,
               private authService: AuthService) {
@@ -160,7 +160,7 @@ export class ProductoComponent implements OnInit {
   }
 
   get cantidadEnSucursal() {
-    return this.form.get('cantidadEnSucursal') as FormArray;
+    return this.form.get('cantidadEnSucursal') as UntypedFormArray;
   }
 
   addCantidadEnSucursal(idSucursal: number, nombreSucursal: string, cantidad: number = 0) {

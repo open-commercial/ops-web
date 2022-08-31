@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Transportista} from '../../../../models/transportista';
 import {ActivatedRoute} from '@angular/router';
 import {TransportistasService} from '../../../../services/transportistas.service';
@@ -15,10 +15,10 @@ import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-mod
 })
 export class TransportistaComponent implements OnInit {
   transportista: Transportista;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   constructor(private route: ActivatedRoute,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               private location: Location,
               private transportistasService: TransportistasService,

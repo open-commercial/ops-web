@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {CajasService} from '../../services/cajas.service';
 import {BusquedaCajaCriteria} from '../../models/criterias/busqueda-caja-criteria';
 import {Observable} from 'rxjs';
@@ -41,7 +41,7 @@ export class CajasComponent extends ListadoDirective implements OnInit {
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               private authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private cajasService: CajasService,
               private usuariosService: UsuariosService,
               private modalService: NgbModal) {

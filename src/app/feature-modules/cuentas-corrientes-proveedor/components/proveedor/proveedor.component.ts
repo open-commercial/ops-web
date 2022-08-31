@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
@@ -18,7 +18,7 @@ import {AuthService} from '../../../../services/auth.service';
 })
 export class ProveedorComponent implements OnInit {
   proveedor: Proveedor = null;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   categoriasIVA = [
@@ -31,7 +31,7 @@ export class ProveedorComponent implements OnInit {
   allowedRolesToCreateOrEdit: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToCreateOrEdit = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private router: Router,
               private loadingOverlayService: LoadingOverlayService,

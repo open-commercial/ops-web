@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { LoadingOverlayService } from './../../../../services/loading-overlay.service';
 import { SucursalesService } from './../../../../services/sucursales.service';
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MensajeService } from 'src/app/services/mensaje.service';
@@ -18,7 +18,7 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   styleUrls: ['./sucursal.component.scss']
 })
 export class SucursalComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   sucursal: Sucursal;
 
@@ -36,7 +36,7 @@ export class SucursalComponent implements OnInit {
 
   eliminarImagen = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private locaction: Location,
               private loadingOverlayService: LoadingOverlayService,

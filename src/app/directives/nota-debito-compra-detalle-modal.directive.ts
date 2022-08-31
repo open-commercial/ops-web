@@ -1,5 +1,5 @@
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, Validators} from '@angular/forms';
+import {UntypedFormBuilder, Validators} from '@angular/forms';
 import {NotasService} from '../services/notas.service';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
 import {MensajeService} from '../services/mensaje.service';
@@ -14,7 +14,7 @@ export abstract class NotaDebitoCompraDetalleModalDirective extends NotaDebitoDe
   helper = HelperService;
 
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService) {

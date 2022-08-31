@@ -7,7 +7,7 @@ import {MensajeService} from '../services/mensaje.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../models/pagination';
 import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import * as moment from 'moment';
 import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
 import {HelperService} from '../services/helper.service';
@@ -72,7 +72,7 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
                         protected clientesService: ClientesService,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected usuariosService: UsuariosService,
                         protected authService: AuthService,
                         protected configuracionesSucursalService: ConfiguracionesSucursalService,

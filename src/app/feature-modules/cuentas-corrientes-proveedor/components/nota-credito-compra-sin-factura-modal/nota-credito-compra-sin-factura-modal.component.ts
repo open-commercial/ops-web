@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NotaCreditoSinFacturaModalDirective} from '../../../../directives/nota-credito-sin-factura-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
 import {SucursalesService} from '../../../../services/sucursales.service';
@@ -19,7 +19,7 @@ export class NotaCreditoCompraSinFacturaModalComponent extends NotaCreditoSinFac
   proveedor: Proveedor;
 
   constructor(public activeModal: NgbActiveModal,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               public loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               protected sucursalesService: SucursalesService,

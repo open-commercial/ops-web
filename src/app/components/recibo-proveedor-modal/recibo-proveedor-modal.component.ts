@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ReciboModalDirective} from '../../directives/recibo-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {FormasDePagoService} from '../../services/formas-de-pago.service';
@@ -19,7 +19,7 @@ import {Observable} from 'rxjs';
 export class ReciboProveedorModalComponent extends ReciboModalDirective implements OnInit {
   proveedor: Proveedor;
   constructor(public activeModal: NgbActiveModal,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               protected formasDePagoService: FormasDePagoService,

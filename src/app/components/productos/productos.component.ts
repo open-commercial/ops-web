@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {SucursalesService} from '../../services/sucursales.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BusquedaProductoCriteria} from '../../models/criterias/busqueda-producto-criteria';
@@ -77,7 +77,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private rubrosService: RubrosService,
               private authService: AuthService,
               public loadingOverlayService: LoadingOverlayService,
