@@ -9,32 +9,30 @@
   <div class="renglones">
     <div class="renglon" *ngFor="let r of notaCredito.renglonesNotaCredito">
       <div class="d-flex flex-row flex-wrap">
-        <span class="mr-2" *ngIf="r.codigoItem"><span class="font-weight-bold">Código: </span>{{ r.codigoItem }}</span>
+        <span class="me-2" *ngIf="r.codigoItem"><span class="font-weight-bold">Código: </span>{{ r.codigoItem }}</span>
         <span *ngIf="r.descripcionItem"><span class="font-weight-bold">Descripción: </span>{{ r.descripcionItem }} <span *ngIf="r.medidaItem">({{ r.medidaItem }})</span></span>
       </div>
       <div class="d-flex flex-column flex-md-row">
-        <div class="mr-2"><span class="font-weight-bold">Cant: </span>{{ r.cantidad | number:'1.0-2' }}</div>
-        <div class="mr-2"><span class="font-weight-bold">P.U.: </span>{{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="mr-2" *ngIf="r.descuentoPorcentaje"><span class="font-weight-bold">% Desc.: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}</div>
-        <div class="flex-fill text-right"><span class="font-weight-bold">Importe </span>{{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2"><span class="font-weight-bold">Cant: </span>{{ r.cantidad | number:'1.0-2' }}</div>
+        <div class="me-2"><span class="font-weight-bold">P.U.: </span>{{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2" *ngIf="r.descuentoPorcentaje"><span class="font-weight-bold">% Desc.: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}</div>
+        <div class="flex-fill text-end"><span class="font-weight-bold">Importe </span>{{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}</div>
       </div>
     </div>
   </div>
   <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading">
-    <div class="form-group">
-      <label for="fecha">Fecha</label>
+    <div class="mb-3">
+      <label for="fecha" class="form-label">Fecha</label>
       <div class="input-group">
         <input class="form-control" readonly id="fecha" formControlName="fecha"
                [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
-            <fa-icon [icon]="['fas', 'times']"></fa-icon>
-          </button>
-          <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
-            <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-          </button>
-        </div>
+        <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
+          <fa-icon [icon]="['fas', 'times']"></fa-icon>
+        </button>
+        <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+          <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+        </button>
       </div>
       <div class="d-block invalid-feedback" *ngIf="submitted && f.fecha.errors">
         <div *ngIf="f.fecha.errors.required">Requerido</div>
@@ -42,8 +40,8 @@
     </div>
     <div class="row">
       <div class="col-4">
-        <div class="form-group">
-          <label for="serie">Serie</label>
+        <div class="mb-3">
+          <label for="serie" class="form-label">Serie</label>
           <input class="form-control" type="number" min="0" id="serie" formControlName="serie"
                  [ngClass]="{ 'is-invalid': submitted && f.serie.errors }"/>
           <div class="invalid-feedback" *ngIf="submitted && f.serie.errors">
@@ -53,8 +51,8 @@
         </div>
       </div>
       <div class="col-8">
-        <div class="form-group">
-          <label for="nroNota">Nº</label>
+        <div class="mb-3">
+          <label for="nroNota" class="form-label">Nº</label>
           <input class="form-control" type="number" min="0" id="nroNota" formControlName="nroNota"
                  [ngClass]="{ 'is-invalid': submitted && f.nroNota.errors }"/>
           <div class="invalid-feedback" *ngIf="submitted && f.nroNota.errors">
@@ -64,8 +62,8 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="cae">CAE</label>
+    <div class="mb-3">
+      <label for="cae" class="form-label">CAE</label>
       <input class="form-control" type="number" min="0" id="cae" formControlName="cae"
              [ngClass]="{ 'is-invalid': submitted && f.cae.errors }">
       <div class="invalid-feedback" *ngIf="submitted && f.cae.errors">
@@ -73,8 +71,8 @@
         <div *ngIf="f.cae.errors.min">Mínimo {{ f.cae.errors.min.min }}</div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="motivo">Motivo</label>
+    <div class="mb-3">
+      <label for="motivo" class="form-label">Motivo</label>
       <input type="text" class="form-control" id="motivo" formControlName="motivo"
              [ngClass]="{ 'is-invalid': submitted && f.motivo.errors }">
       <div class="invalid-feedback" *ngIf="submitted && f.motivo.errors">
@@ -84,33 +82,33 @@
   </form>
   <table class="table table-bordered table-sm" *ngIf="proveedor">
     <caption class="sr-only">Resumen de Totales</caption>
-    <tbody class="thead-dark">
+    <tbody>
     <tr>
-      <th scope="row" class="w-25">Subtotal</th>
+      <th scope="row" class="w-25 table-dark">Subtotal</th>
       <td>{{ notaCredito.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">% Descuento</th>
+      <th scope="row" class="w-25 table-dark">% Descuento</th>
       <td>{{ notaCredito.descuentoNeto | currency: 'ARS':'symbol':'1.0-2'  }} ({{ notaCredito.descuentoPorcentaje | number:'1.0-2' }} %)</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">% Recargo</th>
+      <th scope="row" class="w-25 table-dark">% Recargo</th>
       <td>{{ notaCredito.recargoNeto | currency: 'ARS':'symbol':'1.0-2'  }} ({{ notaCredito.recargoPorcentaje | number:'1.0-2' }} %)</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">Subtotal Bruto</th>
+      <th scope="row" class="w-25 table-dark">Subtotal Bruto</th>
       <td>{{ notaCredito.subTotalBruto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">IVA 10.5%</th>
+      <th scope="row" class="w-25 table-dark">IVA 10.5%</th>
       <td>{{ notaCredito.iva105Neto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">IVA 21%</th>
+      <th scope="row" class="w-25 table-dark">IVA 21%</th>
       <td>{{ notaCredito.iva21Neto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">Total</th>
+      <th scope="row" class="w-25 table-dark">Total</th>
       <td>{{ notaCredito.total | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     </tbody>

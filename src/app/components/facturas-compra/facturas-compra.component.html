@@ -1,11 +1,11 @@
 <div class="app-facturas-compra">
   <div class="d-flex flex-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas Compras</h1>
-    <div class="text-right m-0 text-nowrap">
-      <button type="button" class="btn btn-primary ml-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left">
+    <div class="text-end m-0 text-nowrap">
+      <button type="button" class="btn btn-primary ms-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasCompraFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -19,22 +19,22 @@
         <div class="col-md-6">
           <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
           <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
-          <div class="form-group">
-            <label for="tipo_factura">Tipo de Comprobante</label>
-            <select class="form-control" id="tipo_factura" formControlName="tipoComprobante">
+          <div class="mb-3">
+            <label for="tipo_factura" class="form-label">Tipo de Comprobante</label>
+            <select class="form-select" id="tipo_factura" formControlName="tipoComprobante">
               <option></option>
               <option *ngFor="let tdc of tiposDeComprobantesFC" [value]="tdc.val">{{ tdc.text }}</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Nº Factura</label>
+          <div class="mb-3">
+            <label class="form-label">Nº Factura</label>
             <div class="row">
               <div class="col-4">
-                <label class="sr-only" for="num-serie">Número de serie</label>
+                <label class="form-label sr-only" for="num-serie">Número de serie</label>
                 <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
               </div>
               <div class="col-8">
-                <label class="sr-only" for="num-factura">Número de Factura</label>
+                <label class="form-label sr-only" for="num-factura">Número de Factura</label>
                 <input type="text" class="form-control" id="num-factura" formControlName="numFactura">
               </div>
             </div>
@@ -44,7 +44,7 @@
           <app-rango-fecha-filtro formControlName="rangoFechaFactura" [label]="'Fecha Factura'"></app-rango-fecha-filtro>
           <app-rango-fecha-filtro formControlName="rangoFechaAlta" [label]="'Fecha Alta'"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorFC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorFC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoFC></app-filtro-ordenamiento>
           </div>
         </div>
@@ -57,19 +57,19 @@
   <div class="facturas my-2">
     <ng-template #info let-item let-i="index" id="infoFC">
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
+        <span class="badge text-bg-pill text-bg-light ms-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
           {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
           #INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
           #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
-        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
+        <span class="badge text-bg-secondary ms-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
           CAE: {{ item.cae }} (vto: {{ item.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
         </span>
       </div>

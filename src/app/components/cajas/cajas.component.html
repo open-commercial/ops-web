@@ -1,11 +1,11 @@
 <div class="app-cajas">
   <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Cajas</h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" ngbPopover="Abrir nueva caja" triggers="mouseenter:mouseleave" placement="left" (click)="abrirCaja()">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" ngbPopover="Abrir nueva caja" triggers="mouseenter:mouseleave" placement="left" (click)="abrirCaja()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="cajasFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -35,16 +35,16 @@
   <div class="cajas my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge ml-2 mb-2 px-2 py-1"
-              [class.badge-success]="item.estado === estado.ABIERTA"
-              [class.badge-danger]="item.estado === estado.CERRADA">
+        <span class="badge ms-2 mb-2 px-2 py-1"
+              [class.text-bg-success]="item.estado === estado.ABIERTA"
+              [class.text-bg-danger]="item.estado === estado.CERRADA">
           {{ item.estado }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
           Apertura: {{ item.fechaApertura | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.fechaCierre">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.fechaCierre">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
           Cierre: {{ item.fechaCierre | date:'dd/MM/yyyy HH:mm' }}
         </span>

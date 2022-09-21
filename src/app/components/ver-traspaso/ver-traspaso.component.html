@@ -12,14 +12,14 @@
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del traspaso</caption>
-      <tbody class="thead-dark">
-      <tr><th scope="row" class="w-25">Fecha</th><td>{{ traspaso.fechaDeAlta | date:'dd/MM/yyyy' }}</td></tr>
-      <tr><th scope="row" class="w-25">Nº Traspaso</th><td>{{ traspaso.nroTraspaso }}</td></tr>
-      <tr *ngIf="traspaso.nroPedido"><th scope="row" class="w-25">Nº Pedido</th><td>{{ traspaso.nroPedido }}</td></tr>
-      <tr><th scope="row" class="w-25">Sucursal Origen</th><td>{{ traspaso.nombreSucursalOrigen }}</td></tr>
-      <tr><th scope="row" class="w-25">Sucursal Destino</th><td>{{ traspaso.nombreSucursalDestino }}</td></tr>
-      <tr><th scope="row" class="w-25">Usuario</th><td>{{ traspaso.nombreUsuario }}</td></tr>
-      <tr><th scope="row" colspan="2">Productos</th></tr>
+      <tbody>
+      <tr><th scope="row" class="w-25 table-dark">Fecha</th><td>{{ traspaso.fechaDeAlta | date:'dd/MM/yyyy' }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Nº Traspaso</th><td>{{ traspaso.nroTraspaso }}</td></tr>
+      <tr *ngIf="traspaso.nroPedido"><th scope="row" class="w-25 table-dark">Nº Pedido</th><td>{{ traspaso.nroPedido }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Sucursal Origen</th><td>{{ traspaso.nombreSucursalOrigen }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Sucursal Destino</th><td>{{ traspaso.nombreSucursalDestino }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Usuario</th><td>{{ traspaso.nombreUsuario }}</td></tr>
+      <tr><th scope="row" colspan="2" class="table-dark">Productos</th></tr>
       <tr>
         <td colspan="2">
           <div *ngFor="let r of renglones" class="d-flex flex-column flex-sm-row align-items-sm-center traspaso p-2">
@@ -27,8 +27,8 @@
               <div class="codigo">{{ r.codigoProducto }}</div>
               <div class="descripcion">{{ r.descripcionProducto }}</div>
             </div>
-            <div class="item-cantidad text-right text-sm-center">
-              <span class="ml-2 text-nowrap">{{ r.cantidadProducto | number: '1.0-2' }} {{ r.nombreMedidaProducto }}</span>
+            <div class="item-cantidad text-end text-sm-center">
+              <span class="ms-2 text-nowrap">{{ r.cantidadProducto | number: '1.0-2' }} {{ r.nombreMedidaProducto }}</span>
             </div>
           </div>
         </td>

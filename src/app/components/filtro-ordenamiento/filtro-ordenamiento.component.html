@@ -1,8 +1,6 @@
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="{{ labelId }}">{{ label }}</span>
-  </div>
-  <select class="custom-select" [attr.aria-label]="label" [attr.aria-describedby]="labelId" (change)="select($event)">
+<div class="input-group">
+  <label class="input-group-text" id="{{ labelId }}">{{ label }}</label>
+  <select class="form-select" [attr.aria-label]="label" [attr.aria-describedby]="labelId" (change)="select($event)">
     <option *ngFor="let v of values" [value]="v.val" [selected]="v.val === value">{{ v.text }}</option>
   </select>
 </div>

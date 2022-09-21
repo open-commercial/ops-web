@@ -89,7 +89,7 @@ export class ProductoMultiEditorComponent implements OnInit {
 
   creatForm() {
     this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEditCantidades);
-
+    //this.hasRolToEditCantidades = false;
     this.form = this.fb.group({
       idProveedor: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
       idRubro: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
@@ -98,7 +98,7 @@ export class ProductoMultiEditorComponent implements OnInit {
       paraCatalogo: this.fb.group({ check: false, value: [{ value: false, disabled: true }] }),
       calculosPrecio: this.fb.group({ check: false, value: [{ value: CalculosPrecio.getEmtpyValues(), disabled: true }] }),
       cantidadVentaMinima: this.fb.group({
-        check: [{ value: this.hasRolToEditCantidades, disabled: true }],
+        check: [{ value: false, disabled: !this.hasRolToEditCantidades }],
         value: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]] }
       ),
       descuentoRecargoPorcentaje: this.fb.group({
@@ -185,14 +185,14 @@ export class ProductoMultiEditorComponent implements OnInit {
       this.loadingOverlayService.activate();
       this.productosService.actualizarMultiplesProductos(ppa)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.batchActionsService.clear(BatchActionKey.PRODUCTOS);
             this.mensajeService.msg('Productos actualizados correctamente!', MensajeModalType.INFO);
             this.location.back();
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        )
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
       ;
     }
   }

@@ -8,7 +8,8 @@ import {Rol} from '../../models/rol';
 @Component({
   selector: 'app-side-nav',
   templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss']
+  styleUrls: ['./side-nav.component.scss'],
+  providers: [NgbAccordionConfig]
 })
 export class SideNavComponent implements OnDestroy {
   tieneRolAdministrador = false;

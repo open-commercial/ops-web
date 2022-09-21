@@ -1,37 +1,33 @@
 <div class="row">
     <div class="col-12 col-lg-6">
-      <div class="form-group">
+      <div class="mb-3">
         <label [for]="label.toLowerCase() + '-desde'">{{ label }} (desde)</label>
         <div class="input-group">
           <input class="form-control" readonly [id]="label.toLowerCase() + '-desde'" [(ngModel)]="fromDate" (dateSelect)="onFromDateSelection($event)"
                  [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                  [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" (click)="clearFromDate()">
-              <fa-icon [icon]="['fas', 'times']"></fa-icon>
-            </button>
-            <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
-              <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-            </button>
-          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="clearFromDate()">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          </button>
+          <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+            <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+          </button>
         </div>
       </div>
     </div>
     <div class="col-12 col-lg-6">
-      <div class="form-group">
+      <div class="mb-3">
         <label [for]="label.toLowerCase() + '-hasta'">{{ label }} (hasta)</label>
         <div class="input-group">
           <input class="form-control" readonly [id]="label.toLowerCase() + '-hasta'" [(ngModel)]="toDate" (dateSelect)="onToDateSelection($event)"
                  [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                  [showWeekNumbers]="false" ngbDatepicker #dh="ngbDatepicker">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" (click)="clearToDate()">
-              <fa-icon [icon]="['fas', 'times']"></fa-icon>
-            </button>
-            <button class="btn btn-outline-secondary" (click)="dh.open()" type="button">
-              <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-            </button>
-          </div>
+          <button class="btn btn-outline-secondary" type="button" (click)="clearToDate()">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          </button>
+          <button class="btn btn-outline-secondary" (click)="dh.open()" type="button">
+            <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+          </button>
         </div>
       </div>
     </div>

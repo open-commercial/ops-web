@@ -1,7 +1,7 @@
 <div class="app-ver-pedido my-3">
   <div *ngIf="pedido">
     <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
-      <h1 class="h3 pr-2 mb-0 flex-fill">
+      <h1 class="h3 pe-2 mb-0 flex-fill">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
           (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
@@ -14,23 +14,23 @@
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del pedido</caption>
-      <tbody class="thead-dark">
-      <tr><th scope="row">Cliente</th><td>{{ getNombreCliente() }}</td></tr>
-      <tr><th scope="row">Fecha</th><td>{{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
-      <tr *ngIf="pedido.fechaVencimiento"><th scope="row">Fecha de Vencimiento</th><td>{{ pedido.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}</td></tr>
-      <tr *ngIf="pedido.nombreUsuario"><th scope="row">Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
-      <tr *ngIf="pedido.nombreViajante"><th scope="row">Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
-      <tr><th scope="row" colspan="2">Productos</th></tr>
+      <tbody>
+      <tr><th scope="row" class="table-dark">Cliente</th><td>{{ getNombreCliente() }}</td></tr>
+      <tr><th scope="row" class="table-dark">Fecha</th><td>{{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
+      <tr *ngIf="pedido.fechaVencimiento"><th scope="row" class="table-dark">Fecha de Vencimiento</th><td>{{ pedido.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}</td></tr>
+      <tr *ngIf="pedido.nombreUsuario"><th scope="row" class="table-dark">Usuario</th><td>{{ pedido.nombreUsuario }}</td></tr>
+      <tr *ngIf="pedido.nombreViajante"><th scope="row" class="table-dark">Viajante</th><td>{{ pedido.nombreViajante }}</td></tr>
+      <tr><th scope="row" colspan="2" class="table-dark">Productos</th></tr>
       <tr>
         <td colspan="2">
           <div *ngFor="let r of renglones" class="d-flex flex-column flex-md-row align-items-md-center articulo">
             <div class="item-info">
               <span class="codigo">{{ r.codigoItem }}</span>&nbsp;
-              <span *ngIf="r.bonificacionPorcentaje" class="badge badge-success">{{ r.oferta ? 'OFERTA' : 'BONIF.' }} {{ r.bonificacionPorcentaje | number:'1.0-2' }}%</span>
+              <span *ngIf="r.bonificacionPorcentaje" class="badge text-bg-success">{{ r.oferta ? 'OFERTA' : 'BONIF.' }} {{ r.bonificacionPorcentaje | number:'1.0-2' }}%</span>
               <br>
               <span class="descripcion">{{ r.descripcionItem }}</span>
             </div>
-            <div class="item-numeros text-right">
+            <div class="item-numeros text-end">
               {{ r.cantidad }}&nbsp;{{ r.medidaItem }} x {{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
               = <span *ngIf="r.bonificacionPorcentaje"><s>{{ r.importeAnterior | currency: 'ARS':'symbol':'1.0-2' }}</s></span>
               {{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}
@@ -38,18 +38,18 @@
           </div>
         </td>
       </tr>
-      <tr><th scope="row">Observaciones</th><td>{{ pedido.observaciones }}</td></tr>
-      <tr><th scope="row">Subtotal</th><td>{{ pedido.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Observaciones</th><td>{{ pedido.observaciones }}</td></tr>
+      <tr><th scope="row" class="table-dark">Subtotal</th><td>{{ pedido.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr>
-        <th scope="row">Descuento &nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <th scope="row" class="table-dark">Descuento &nbsp;<span *ngIf="pedido.descuentoPorcentaje > 0">({{ pedido.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
         <td><span *ngIf="pedido.descuentoNeto > 0">-&nbsp;</span>{{ pedido.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
-        <th scope="row">Recargo&nbsp;<span *ngIf="pedido.recargoPorcentaje > 0">({{ pedido.recargoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <th scope="row" class="table-dark">Recargo&nbsp;<span *ngIf="pedido.recargoPorcentaje > 0">({{ pedido.recargoPorcentaje | number:'1.0-2' }} %)</span></th>
         <td>{{ pedido.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
-        <th scope="row">Total</th>
+        <th scope="row" class="table-dark">Total</th>
         <td>{{ pedido.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       </tbody>
@@ -57,16 +57,16 @@
     <table class="table table-bordered">
       <caption class="sr-only">Envio del Pedido</caption>
       <tbody>
-        <tr><th scope="row" class="text-nowrap">Tipo de Envio</th><td class="w-100">{{ getEnvioLabel() }}</td></tr>
+        <tr><th scope="row" class="text-nowrap table-dark">Tipo de Envio</th><td class="w-100">{{ getEnvioLabel() }}</td></tr>
         <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.RETIRO_EN_SUCURSAL">
-          <th scope="row" class="text-nowrap">Sucursal</th>
+          <th scope="row" class="text-nowrap table-dark">Sucursal</th>
           <td class="w-100">
             {{ pedido.nombreSucursal }}
             <span *ngIf="pedido.detalleEnvio">({{ pedido.detalleEnvio }})</span>
           </td>
         </tr>
         <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION || pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">
-          <th scope="row" class="text-nowrap">Dirección</th>
+          <th scope="row" class="text-nowrap table-dark">Dirección</th>
           <td class="w-100">
             <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION">{{ pedido.cliente.detalleUbicacionDeFacturacion }}</span>
             <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">{{ pedido.cliente.detalleUbicacionDeEnvio }}</span>

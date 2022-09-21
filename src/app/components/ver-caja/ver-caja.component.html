@@ -8,11 +8,11 @@
         </a>
         <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Arqueo de Caja
       </h1>
-      <div class="text-nowrap text-right" *ngIf="caja.estado === estado.ABIERTA" >
-        <button type="button" class="btn btn-primary ml-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
+      <div class="text-nowrap text-end" *ngIf="caja.estado === estado.ABIERTA" >
+        <button type="button" class="btn btn-primary ms-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
           <fa-icon [icon]="['fas', 'coins']"></fa-icon>
         </button>
-        <button type="button" class="btn btn-primary ml-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left">
+        <button type="button" class="btn btn-primary ms-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left">
           <fa-icon [icon]="['fas', 'lock']"></fa-icon>
         </button>
       </div>
@@ -27,8 +27,8 @@
           <button class="d-flex align-items-center justify-content-between mb-0" ngbPanelToggle
                   [class.table-success]="r.total>=0" [class.table-danger]="r.total < 0">
             <fa-icon [icon]="['fas', accordion.isExpanded('panel-' + r.idFormaDePago) ? 'chevron-up' : 'chevron-down']"
-                     class="mr-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
-            <span class="mb-0 flex-fill text-left nombre">
+                     class="me-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
+            <span class="mb-0 flex-fill text-start nombre">
               {{ r.nombreFormaDePago }} <br *ngIf="r.afectaCaja">
               <small *ngIf="r.afectaCaja" class="font-weight-bold text-nowrap">(Afecta la caja)</small>
             </span>
@@ -40,11 +40,11 @@
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
-    <ul class="list-unstyled my-3 text-right">
+    <ul class="list-unstyled my-3 text-end">
       <li>
         <strong>Total afecta Caja: </strong>
         <span class="lead">
-          <span class="badge" [class.badge-success]="totalQueAfectaCaja >= 0" [class.badge-danger]="totalQueAfectaCaja < 0">
+          <span class="badge" [class.text-bg-success]="totalQueAfectaCaja >= 0" [class.text-bg-danger]="totalQueAfectaCaja < 0">
             <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
             <span *ngIf="!loadingTotales">{{ totalQueAfectaCaja | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </span>
@@ -53,7 +53,7 @@
       <li>
         <strong>Total Sistema: </strong>
         <span class="lead">
-          <span class="badge" [class.badge-success]="totalSistema >= 0" [class.badge-danger]="totalSistema < 0">
+          <span class="badge" [class.text-bg-success]="totalSistema >= 0" [class.text-bg-danger]="totalSistema < 0">
             <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
             <span *ngIf="!loadingTotales">{{ totalSistema | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </span>

@@ -11,8 +11,8 @@
   <form (ngSubmit)="submit()" [formGroup]="form" class="card card-body bg-light mt-2" *ngIf="form">
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="razonSocial">R. Social *</label>
+        <div class="mb-3">
+          <label for="razonSocial" class="form-label">R. Social *</label>
           <input type="text" class="form-control" id="razonSocial" required formControlName="razonSocial"
                  [ngClass]="{ 'is-invalid': submitted && f.razonSocial.errors }">
           <div class="invalid-feedback" *ngIf="submitted && f.razonSocial.errors">
@@ -21,17 +21,17 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="idFiscal">CUIT o DNI</label>
+        <div class="mb-3">
+          <label for="idFiscal" class="form-label">CUIT o DNI</label>
           <input type="text" class="form-control" id="idFiscal" formControlName="idFiscal">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="categoriaIVA">Categoría IVA *</label>
-          <select type="text" class="form-control" id="categoriaIVA" required formControlName="categoriaIVA"
+        <div class="mb-3">
+          <label for="categoriaIVA" class="form-label">Categoría IVA *</label>
+          <select class="form-select" type="text" id="categoriaIVA" required formControlName="categoriaIVA"
                   [ngClass]="{ 'is-invalid': submitted && f.categoriaIVA.errors }">
             <option [value]="ci.value" *ngFor="let ci of categoriasIVA">{{ ci.text }}</option>
           </select>
@@ -46,28 +46,28 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="telPrimario">Telefono #1</label>
+        <div class="mb-3">
+          <label for="telPrimario" class="form-label">Telefono #1</label>
           <input type="text" class="form-control" id="telPrimario" formControlName="telPrimario">
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="telSecundario">Telefono #2</label>
+        <div class="mb-3">
+          <label for="telSecundario" class="form-label">Telefono #2</label>
           <input type="text" class="form-control" id="telSecundario" formControlName="telSecundario">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="contacto">Contacto</label>
+        <div class="mb-3">
+          <label for="contacto" class="form-label">Contacto</label>
           <input type="text" class="form-control" id="contacto" formControlName="contacto">
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="email">Email</label>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
           <input type="email" class="form-control" id="email" formControlName="email"
                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
           <div class="invalid-feedback" *ngIf="submitted && f.email.errors">
@@ -76,11 +76,11 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="web">Página Web</label>
+    <div class="mb-3">
+      <label for="web" class="form-label">Página Web</label>
       <input type="url" class="form-control" id="web" formControlName="web">
     </div>
-    <div class="text-right">
+    <div class="text-end">
       <button class="btn btn-primary" type="submit">Guardar</button>
     </div>
   </form>

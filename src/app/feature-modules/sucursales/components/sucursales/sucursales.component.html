@@ -3,8 +3,8 @@
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'store']"></fa-icon> Sucursales
     </h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Sucursal" triggers="mouseenter:mouseleave" placement="left" (click)="nuevaSucursal()">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" ngbPopover="Nuevo Sucursal" triggers="mouseenter:mouseleave" placement="left" (click)="nuevaSucursal()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
     </div>
@@ -14,7 +14,7 @@
       <div class="flex-fill lead">
         {{ s.nombre }}
       </div>
-      <ul class="list-inline mb-0 text-right" *ngIf="hasRoleToAdministrarSucursales">
+      <ul class="list-inline mb-0 text-end" *ngIf="hasRoleToAdministrarSucursales">
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarSucursal(s)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>

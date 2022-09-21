@@ -1,13 +1,11 @@
 <div class="modal-header p-2 flex-column">
   <div class="input-group">
-    <label class="sr-only" for="searchTerm"></label>
+    <label class="form-label sr-only" for="searchTerm"></label>
     <input [(ngModel)]="searchTerm" autocomplete="off" type="search" class="form-control" id="searchTerm" [placeholder]="searchInputPlaceholder"
            (keyup.enter)="search()" [readOnly]="clearLoading || loading">
-    <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
-        <fa-icon [icon]="['fas', 'search']"></fa-icon>
-      </button>
-    </div>
+    <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
+      <fa-icon [icon]="['fas', 'search']"></fa-icon>
+    </button>
   </div>
 </div>
 <div class="modal-body d-flex flex-column p-2">
@@ -17,7 +15,7 @@
   <div class="flex-fill mt-2" *ngIf="!clearLoading && items.length">
     <ng-template #itemTemplate let-item>
       <div class="d-flex flex-column">
-        <span class="mr-2"><span class="username">{{ item.username }}</span></span>
+        <span class="me-2"><span class="username">{{ item.username }}</span></span>
         <span><strong>{{ item.nombre }}&nbsp;{{ item.apellido}}</strong></span>
         <span>{{ item.email }}</span>
       </div>

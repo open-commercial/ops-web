@@ -1,20 +1,20 @@
 <div class="app-productos">
   <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos</h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
               [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="productosBatchActionsBoxCollapse"
               [class.bg-white]="!isBatchActionsBoxCollapsed"
               ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="font-weight-bold">{{ batchActionsService.count(baKey) }}</span>
       </button>
-      <button class="btn btn-primary ml-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
+      <button class="btn btn-primary ms-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="productosFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -22,17 +22,17 @@
       </button>
     </div>
   </div>
-  <div id="productosFiltersCollapse" [ngbCollapse]="isFiltersCollapsed" class="mb-3">
+  <div id="productosFiltersCollapse" #collapse="ngbCollapse" [(ngbCollapse)]="isFiltersCollapsed" class="mb-3">
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="codODes">Código/Descripción</label>
+          <div class="mb-3">
+            <label for="codODes" class="form-label">Código/Descripción</label>
             <input type="text" class="form-control" id="codODes" formControlName="codODes">
           </div>
-          <div class="form-group">
-            <label for="idRubro">Rubro</label>
-            <select class="form-control" id="idRubro" formControlName="idRubro">
+          <div class="mb-3">
+            <label for="idRubro" class="form-label">Rubro</label>
+            <select class="form-select" id="idRubro" formControlName="idRubro">
               <option></option>
               <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
             </select>
@@ -40,38 +40,34 @@
           <app-proveedor-filtro formControlName="idProveedor"></app-proveedor-filtro>
         </div>
         <div class="col-md-6">
-          <div class="form-group">
-            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="visibilidad">
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="null"> Todos
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill" *ngFor="let v of visibilidades">
-                <input ngbButton type="radio" [value]="v"> {{ v | titlecase }}
-              </label>
+          <div class="mb-3">
+            <div class="btn-group d-flex" role="group">
+              <input type="radio" class="btn-check" [value]="null" id="visibilidad-todos" autocomplete="off" formControlName="visibilidad">
+              <label class="btn btn-outline-secondary" for="visibilidad-todos">Todos</label>
+              <ng-template ngFor let-v [ngForOf]="visibilidades" let-i="index">
+                <input type="radio" class="btn-check" [value]="v" [id]="'visibilidad-' + i.toString()" autocomplete="off" formControlName="visibilidad">
+                <label class="btn btn-outline-secondary" [for]="'visibilidad-' + i.toString()">{{ v }}</label>
+              </ng-template>
             </div>
           </div>
-          <div class="form-group">
-            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="oferta" formControlName="oferta">
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="false"> Todos
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="true"> Solo Ofertas
-              </label>
+          <div class="mb-3 text-primary">
+            <div class="btn-group d-flex" role="group">
+              <input type="radio" class="btn-check" [value]="false" id="oferta-false" autocomplete="off" formControlName="oferta">
+              <label class="btn btn-outline-secondary" for="oferta-false">Todos</label>
+              <input type="radio" class="btn-check" [value]="true" id="oferta-true" autocomplete="off" formControlName="oferta">
+              <label class="btn btn-outline-secondary" for="oferta-true">Solo Ofertas</label>
             </div>
           </div>
-          <div class="form-group">
-            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="listarSoloParaCatalogo" formControlName="listarSoloParaCatalogo">
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="false"> Todos
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="true"> Solo Catálogo
-              </label>
+          <div class="mb-3">
+            <div class="btn-group d-flex" role="group">
+              <input type="radio" class="btn-check" [value]="false" id="listar-solo-para-catalogo-false" autocomplete="off" formControlName="listarSoloParaCatalogo">
+              <label class="btn btn-outline-secondary" for="listar-solo-para-catalogo-false">Todos</label>
+              <input type="radio" class="btn-check" [value]="true" id="listar-solo-para-catalogo-true" autocomplete="off" formControlName="listarSoloParaCatalogo">
+              <label class="btn btn-outline-secondary" for="listar-solo-para-catalogo-true">Solo Catálogo</label>
             </div>
           </div>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorP" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorP></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorP" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorP class="mb-3"></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoP" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoP></app-filtro-ordenamiento>
           </div>
         </div>
@@ -92,16 +88,16 @@
         <div class="img-container px-2 mb-2 flex-shrink-0 flex-grow-0">
           <img [src]="item.urlImagen ? item.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
         </div>
-        <div class="flex-fill d-flex flex-column ml-2">
+        <div class="flex-fill d-flex flex-column ms-2">
           <span class="d-flex flex-row flex-wrap align-items-center">
-            <span class="mr-2 mb-1 d-inline-block badge badge-info" *ngIf="item.publico"><fa-icon [icon]="['far', 'eye']"></fa-icon> PÚBLICO</span>
-            <span class="mr-2 mb-1 d-inline-block badge badge-danger" *ngIf="!item.publico"><fa-icon [icon]="['far', 'eye-slash']"></fa-icon> PRIVADO</span>
-            <span *ngIf="item.oferta" class="mb-1 badge badge-success">OFERTA {{ item.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
-            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="mb-1 badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio | number:'1.0-2' }}%</span>
+            <span class="me-2 mb-1 d-inline-block badge text-bg-info" *ngIf="item.publico"><fa-icon [icon]="['far', 'eye']"></fa-icon> PÚBLICO</span>
+            <span class="me-2 mb-1 d-inline-block badge text-bg-danger" *ngIf="!item.publico"><fa-icon [icon]="['far', 'eye-slash']"></fa-icon> PRIVADO</span>
+            <span *ngIf="item.oferta" class="mb-1 badge text-bg-success">OFERTA {{ item.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
+            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="mb-1 badge text-bg-success">BONIF. {{ item.porcentajeBonificacionPrecio | number:'1.0-2' }}%</span>
           </span>
-          <span class="mr-2 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
-          <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
-          <span class="mr-2">
+          <span class="me-2 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
+          <span class="me-2"><strong>{{ item.descripcion }}</strong></span>
+          <span class="me-2">
             Stock: <strong>{{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}</strong>
             - Otra Suc: {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}
             - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}

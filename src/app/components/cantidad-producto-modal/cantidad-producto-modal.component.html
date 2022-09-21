@@ -6,27 +6,23 @@
       </div>
       <div class="info flex-fill">
         <span class="codigo">{{ producto.codigo }}</span>&nbsp;
-        <span *ngIf="producto.oferta" class="badge badge-success">OFERTA {{ producto.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
+        <span *ngIf="producto.oferta" class="badge text-bg-success">OFERTA {{ producto.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
         <p class="m-0"><strong>{{ producto.descripcion }}</strong></p>
         <span *ngIf="producto.cantMinima > 1">Llevando {{ producto.cantMinima }} o más</span>
       </div>
     </div>
     <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading && !productoLoading">
-      <div class="form-group mb-0">
-        <label for="cantidad" class="small form-text text-muted">Ingrese la cantidad que desea {{ addCantidad ? 'agregar' : 'modificar' }}:</label>
+      <div class="mb-0">
+        <label for="cantidad" class="form-label">Ingrese la cantidad que desea {{ addCantidad ? 'agregar' : 'modificar' }}:</label>
         <div class="input-group">
-          <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
-              <fa-icon [icon]="['fas', 'minus']"></fa-icon>
-            </button>
-          </div>
+          <button class="btn btn-outline-secondary" type="button" id="button-minus" (click)="decrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
+            <fa-icon [icon]="['fas', 'minus']"></fa-icon>
+          </button>
           <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" #cantidadInput [readOnly]="loading || verificandoDisponibilidadStock"
                  formControlName="cantidad" [ngClass]="{ 'is-invalid': submitted && (f.cantidad.errors || form.errors) }" *ngIf="!!(form && form.get('cantidad'))">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-            </button>
-          </div>
+          <button class="btn btn-outline-secondary" type="button" id="button-plus" (click)="incrementarCantidad()" [disabled]="loading || verificandoDisponibilidadStock">
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+          </button>
         </div>
       </div>
       <div class="custom-error-message" *ngIf="submitted && f.cantidad.errors">
@@ -35,7 +31,7 @@
       </div>
       <div class="custom-error-message" *ngIf="submitted && stockVerificado && !verificandoDisponibilidadStock && !hayStockDisponible">
         Cantidad no disponible (disponibles para {{ addCantidad ? 'agregar' : 'modificar' }}: {{ stockDisponible }})
-        <ul class="mb-0 pl-3">
+        <ul class="mb-0 ps-3">
           <li *ngFor="let sds of stockDisponibleEnSucursales">Disponible en {{ sds }} ({{ producto.nombreMedida }})</li>
         </ul>
       </div>

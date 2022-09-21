@@ -1,6 +1,6 @@
 <div class="app-traspaso my-3">
   <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2" *ngIf="!(loading)">
-    <h1 class="h3 pr-2 mb-0 flex-fill">
+    <h1 class="h3 pe-2 mb-0 flex-fill">
       <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
@@ -11,9 +11,9 @@
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group my-3">
-          <label for="idSucursalOrigen">Sucursal Origen</label>
-          <select class="form-control" id="idSucursalOrigen" required formControlName="idSucursalOrigen"
+        <div class="my-3">
+          <label for="idSucursalOrigen" class="form-label">Sucursal Origen</label>
+          <select class="form-select" id="idSucursalOrigen" required formControlName="idSucursalOrigen"
                   [ngClass]="{ 'is-invalid': submitted && f.idSucursalOrigen.errors }">
             <option *ngFor="let s of sucursalesOrigen" [value]="s.idSucursal">{{ sucursalesService.getSucursalLabel(s) }}</option>
           </select>
@@ -23,9 +23,9 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group my-3">
-          <label for="idSucursalDestino">Sucursal Destino</label>
-          <select class="form-control" id="idSucursalDestino" formControlName="idSucursalDestino"
+        <div class="my-3">
+          <label for="idSucursalDestino" class="form-label">Sucursal Destino</label>
+          <select class="form-select" id="idSucursalDestino" formControlName="idSucursalDestino"
                   [ngClass]="{ 'is-invalid': submitted && f.idSucursalDestino.errors }">
             <option></option>
             <option *ngFor="let s of sucursalesDestino" [value]="s.idSucursal">{{ sucursalesService.getSucursalLabel(s) }}</option>
@@ -63,8 +63,8 @@
                 <div class="codigo">{{ r.get('producto').value.codigo }}</div>
                 <div class="descripcion">{{ r.get('producto').value.descripcion }}</div>
               </div>
-              <div class="item-cantidad text-right">
-                <span class="ml-2 text-nowrap">{{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }}</span>
+              <div class="item-cantidad text-end">
+                <span class="ms-2 text-nowrap">{{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }}</span>
               </div>
               <div class="disponibilidad-error" *ngIf="disponibles && disponibles.hasOwnProperty(r.get('producto').value.idProducto.toString())">
                 Solicitado ({{ r.get('cantidad').value | number: '1.0-2' }} {{ r.get('producto').value.nombreMedida }})
@@ -73,12 +73,12 @@
             </td>
             <td>
               <ul class="list-inline mb-0 text-center">
-                <li class="list-inline-item mr-0 ml-2 my-1">
+                <li class="list-inline-item me-0 ms-2 my-1">
                   <button type="button" class="btn btn-primary" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left" (click)="editarCantidad(i)">
                     <fa-icon [icon]="['fas', 'pen']"></fa-icon>
                   </button>
                 </li>
-                <li class="list-inline-item mr-0 ml-2">
+                <li class="list-inline-item me-0 ms-2">
                   <button type="button" class="btn btn-primary" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" (click)="removeRenglonTraspasoForm(i)">
                     <fa-icon [icon]="['fas', 'trash']"></fa-icon>
                   </button>
@@ -90,7 +90,7 @@
         </table>
       </div>
     </fieldset>
-    <div class="text-right">
+    <div class="text-end">
       <button type="submit" class="btn btn-primary" [disabled]="!this.form.valid">
         <fa-icon [icon]="['fas', 'check']" [size]="'lg'"></fa-icon> Guardar
       </button>

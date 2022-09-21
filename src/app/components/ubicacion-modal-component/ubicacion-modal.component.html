@@ -5,8 +5,8 @@
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="row">
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="idProvincia">Provincia</label>
+        <div class="mb-3">
+          <label for="idProvincia" class="form-label">Provincia</label>
           <ng-select class="ops-ng-select" [items]="provincias"
                      labelForId="idProvincia"
                      bindLabel="nombre"
@@ -21,8 +21,8 @@
         </div>
       </div>
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="idLocalidad">Localidad</label>
+        <div class="mb-3">
+          <label for="idLocalidad" class="form-label">Localidad</label>
           <ng-select class="ops-ng-select" [items]="localidades"
                      labelForId="idLocalidad"
                      bindLabel="nombre"
@@ -39,15 +39,15 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="calle">Calle</label>
+        <div class="mb-3">
+          <label for="calle" class="form-label">Calle</label>
           <input type="text" class="form-control" id="calle" formControlName="calle"
                  [ngClass]="{ 'is-invalid': submitted && f.calle.errors }">
         </div>
       </div>
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="numero">Número</label>
+        <div class="mb-3">
+          <label for="numero" class="form-label">Número</label>
           <input type="text" class="form-control" id="numero" formControlName="numero"
                  [ngClass]="{ 'is-invalid': submitted && f.numero.errors }">
         </div>
@@ -55,22 +55,22 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="piso">Piso</label>
+        <div class="mb-3">
+          <label for="piso" class="form-label">Piso</label>
           <input type="text" class="form-control" id="piso" formControlName="piso"
                  [ngClass]="{ 'is-invalid': submitted && f.piso.errors }">
         </div>
       </div>
       <div class="col-sm-6">
-        <div class="form-group">
-          <label for="departamento">Dpto</label>
+        <div class="mb-3">
+          <label for="departamento" class="form-label">Dpto</label>
           <input type="text" class="form-control" id="departamento" formControlName="departamento"
                  [ngClass]="{ 'is-invalid': submitted && f.departamento.errors }">
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="descripcion">Descripción</label>
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción</label>
       <textarea type="text" class="form-control" id="descripcion" formControlName="descripcion"
              [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }"></textarea>
     </div>

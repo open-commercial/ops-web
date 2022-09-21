@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
   NgbAccordionModule,
-  NgbAlertModule, NgbButtonsModule,
+  NgbAlertModule, // NgbButtonsModule,
   NgbCollapseModule, NgbDateParserFormatter,
   NgbDatepickerModule,
   NgbDropdownModule, NgbModalModule, NgbPaginationModule,
@@ -12,11 +12,11 @@ import { MomentDateFormatter } from '../formatters/moment-date-formatter';
 @NgModule({
   imports: [
     NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbDatepickerModule, NgbPopoverModule, NgbAccordionModule,
-    NgbModalModule, NgbTypeaheadModule, NgbButtonsModule, NgbPaginationModule
+    NgbModalModule, NgbTypeaheadModule, /*NgbButtonsModule,*/ NgbPaginationModule
   ],
   exports: [
     NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbDatepickerModule, NgbPopoverModule, NgbAccordionModule,
-    NgbModalModule, NgbTypeaheadModule, NgbButtonsModule, NgbPaginationModule
+    NgbModalModule, NgbTypeaheadModule, /*NgbButtonsModule,*/ NgbPaginationModule
   ],
   providers: [{ provide: NgbDateParserFormatter, useValue: new MomentDateFormatter() }]
 })

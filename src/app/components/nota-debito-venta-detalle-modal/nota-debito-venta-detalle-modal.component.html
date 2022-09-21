@@ -10,26 +10,24 @@
     <div class="renglon" *ngFor="let r of notaDebito.renglonesNotaDebito">
       <div *ngIf="r.descripcion"><span class="font-weight-bold">Descripción: </span>{{ r.descripcion }}</div>
       <div class="d-flex flex-column flex-md-row">
-        <div class="mr-2"><span class="font-weight-bold">Monto: </span>{{ r.monto | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="mr-2"><span class="font-weight-bold">% IVA: </span>{{ r.ivaPorcentaje | number:'1.0-2' }}</div>
-        <div class="mr-2"><span class="font-weight-bold">IVA: </span>{{ r.ivaNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="flex-fill text-right"><span class="font-weight-bold">Importe: </span>{{ r.importeNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2"><span class="font-weight-bold">Monto: </span>{{ r.monto | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2"><span class="font-weight-bold">% IVA: </span>{{ r.ivaPorcentaje | number:'1.0-2' }}</div>
+        <div class="me-2"><span class="font-weight-bold">IVA: </span>{{ r.ivaNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="flex-fill text-end"><span class="font-weight-bold">Importe: </span>{{ r.importeNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
       </div>
     </div>
   </div>
   <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading">
-    <div class="form-group">
-      <label for="motivo">Motivo</label>
+    <div class="mb-3">
+      <label for="motivo" class="form-label">Motivo</label>
       <div class="input-group" [ngClass]="{ 'is-invalid': submitted && f.motivo.errors }">
         <input type="text" class="form-control" id="motivo" formControlName="motivo"
                [ngClass]="{ 'is-invalid': submitted && f.motivo.errors }">
-        <div class="input-group-append">
-          <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
-            <button type="button" class="btn btn-primary" ngbDropdownToggle></button>
-            <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-              <button type="button" ngbDropdownItem *ngFor="let mo of motivoOptions" (click)="this.form.get('motivo').setValue(mo)">{{ mo }}</button>
-            </div>
-          </div>
+        <div ngbDropdown>
+          <button class="btn btn-primary rounded-0 rounded-end" type="button" ngbDropdownToggle data-bs-toggle="dropdown"></button>
+          <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+            <li *ngFor="let mo of motivoOptions"><a class="dropdown-item" ngbDropdownItem (click)="this.form.get('motivo').setValue(mo)">{{ mo }}</a></li>
+          </ul>
         </div>
         <div class="invalid-feedback" *ngIf="submitted && f.motivo.errors">
           <div *ngIf="f.motivo.errors.required">Requerido</div>
@@ -39,21 +37,21 @@
   </form>
   <table class="table table-bordered table-sm" *ngIf="cliente">
     <caption class="sr-only">Resumen de Totales</caption>
-    <tbody class="thead-dark">
+    <tbody>
     <tr>
-      <th scope="row" class="w-25">Subtotal Bruto</th>
+      <th scope="row" class="w-25 table-dark">Subtotal Bruto</th>
       <td>{{ notaDebito.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">IVA 21%</th>
+      <th scope="row" class="w-25 table-dark">IVA 21%</th>
       <td>{{ notaDebito.iva21Neto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">No Gravado</th>
+      <th scope="row" class="w-25 table-dark">No Gravado</th>
       <td>{{ notaDebito.montoNoGravado | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25">Total</th>
+      <th scope="row" class="w-25 table-dark">Total</th>
       <td>{{ notaDebito.total | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     </tbody>

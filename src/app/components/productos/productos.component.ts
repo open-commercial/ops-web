@@ -54,7 +54,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   @ViewChild('sentidoP') sentidoPElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
-  visibilidades = ['públicos', 'privados'];
+  visibilidades = ['Públicos', 'Privados'];
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
@@ -95,10 +95,10 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     this.loadingOverlayService.activate();
     this.rubrosService.getRubros()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        rubros => this.rubros = rubros,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: rubros => this.rubros = rubros,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 

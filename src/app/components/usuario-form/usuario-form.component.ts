@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Usuario} from '../../models/usuario';
 import {Rol} from '../../models/rol';
 import {UsuariosService} from '../../services/usuarios.service';
@@ -30,11 +30,11 @@ export class UsuarioFormComponent implements OnInit {
   submitted = false;
 
   allRoles = [
-    { value: Rol.ADMINISTRADOR, text: 'Administrador' },
-    { value: Rol.ENCARGADO, text: 'Encargado' },
-    { value: Rol.VENDEDOR, text: 'Vendedor' },
-    { value: Rol.VIAJANTE, text: 'Viajante' },
-    { value: Rol.COMPRADOR, text: 'Comprador' },
+    { value: Rol.ADMINISTRADOR, text: 'Administrador', isChecked: false },
+    { value: Rol.ENCARGADO, text: 'Encargado', isChecked: false },
+    { value: Rol.VENDEDOR, text: 'Vendedor', isChecked: false },
+    { value: Rol.VIAJANTE, text: 'Viajante', isChecked: false },
+    { value: Rol.COMPRADOR, text: 'Comprador', isChecked: false },
   ];
 
   private pUsuario: Usuario;
@@ -73,7 +73,8 @@ export class UsuarioFormComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      roles: [[], Validators.required],
+      //roles: [[], Validators.required],
+      roles: this.fb.array([], Validators.required),
     }, { validators: repeatedPasswordValidator });
 
     this.applyDataAndProflie();
@@ -81,7 +82,18 @@ export class UsuarioFormComponent implements OnInit {
 
   applyDataAndProflie() {
     if (this.pUsuario) {
+      const formArray: FormArray = this.form.get('roles') as FormArray;
       this.form.patchValue(this.pUsuario);
+      this.allRoles = this.allRoles.map(r => {
+        const nR = {
+          ...r,
+          isChecked: this.pUsuario.roles.filter((rr: Rol) => rr === r.value).length > 0,
+        }
+        return nR;
+      });
+      this.pUsuario.roles.forEach(r => {
+        formArray.push(new FormControl(r));
+      });
     }
 
     if (!this.pUsuario || !this.pUsuario.idUsuario) {
@@ -96,8 +108,34 @@ export class UsuarioFormComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  onRolCheckChange(event) {
+    const formArray: FormArray = this.form.get('roles') as FormArray;
+
+    /* Selected */
+    if(event.target.checked){
+      // Add a new control in the arrayForm
+      formArray.push(new FormControl(event.target.value));
+    }
+    /* unselected */
+    else{
+      // find the unselected element
+      let i: number = 0;
+
+      formArray.controls.forEach((ctrl: FormControl) => {
+        if(ctrl.value == event.target.value) {
+          // Remove the unselected element from the arrayForm
+          formArray.removeAt(i);
+          return;
+        }
+
+        i++;
+      });
+    }
+  }
+
   submit() {
     this.submitted = true;
+    console.log(this.form.value);
     if (this.form.valid) {
       const formValues = this.form.value;
 

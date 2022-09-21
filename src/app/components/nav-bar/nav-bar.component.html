@@ -1,43 +1,69 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
-  <span class="navbar-brand">
-    <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1588301552/assets/logo-globo-200x200px.png'" alt="">
-  </span>
-
-  <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown" ngbDropdown >
-        <a class="nav-link dropdown-toggle fake-cursor" id="dropdownSucursales" ngbDropdownToggle>
-            <fa-icon [icon]="['fas', 'store']"></fa-icon>
-            <span class="d-none d-md-inline">&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownSucursales">
-          <h6 class="dropdown-header d-md-none">Sucursales</h6>
-          <a class="dropdown-item fake-cursor" *ngFor="let s of sucursales"
-             (click)="seleccionarSucursal(s)" [class.active]="s && sucursalSeleccionada && s.idSucursal === sucursalSeleccionada.idSucursal">
-            <fa-icon [icon]="['fas', 'store']"></fa-icon> {{ s.nombre }}
-          </a>
-        </div>
-      </li>
-      <li class="nav-item dropdown" ngbDropdown >
-        <a class="nav-link dropdown-toggle fake-cursor" id="dropdownUser" ngbDropdownToggle>
-          <fa-icon [icon]="['fas', 'user']"></fa-icon>
-          <span class="d-none d-md-inline">&nbsp;{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu aria-labelledby="dropdownUser">
-          <h6 class="dropdown-header d-md-none">{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</h6>
-          <a class="dropdown-item fake-cursor" (click)="logout()">
-            <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir
-          </a>
-        </div>
-      </li>
-    </ul>
-    <span class="navbar-text">
-      <button type="button" id="menu-btn" class="btn btn-link fake-cursor mr-1" (click)="menuBtnClick()">
-        <fa-icon [icon]="['fas', 'bars']" size="lg"></fa-icon>
-      </button>
+  <div class="container-fluid">
+    <span class="navbar-brand">
+      <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1588301552/assets/logo-globo-200x200px.png'" alt="">
     </span>
+
+    <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown" ngbDropdown >
+          <a class="nav-link dropdown-toggle fake-cursor" id="dropdownSucursales" ngbDropdownToggle>
+              <fa-icon [icon]="['fas', 'store']"></fa-icon>
+              <span class="d-none d-md-inline">&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu aria-labelledby="dropdownSucursales">
+            <h6 class="dropdown-header d-md-none">Sucursales</h6>
+            <a class="dropdown-item fake-cursor" *ngFor="let s of sucursales"
+              (click)="seleccionarSucursal(s)" [class.active]="s && sucursalSeleccionada && s.idSucursal === sucursalSeleccionada.idSucursal">
+              <fa-icon [icon]="['fas', 'store']"></fa-icon> {{ s.nombre }}
+            </a>
+          </div>
+        </li>
+        <li class="nav-item dropdown" ngbDropdown >
+          <a class="nav-link dropdown-toggle fake-cursor" id="dropdownUser" ngbDropdownToggle>
+            <fa-icon [icon]="['fas', 'user']"></fa-icon>
+            <span class="d-none d-md-inline">&nbsp;{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu aria-labelledby="dropdownUser">
+            <h6 class="dropdown-header d-md-none">{{ usuario ? usuario.nombre + ' ' + usuario.apellido : '' }}</h6>
+            <a class="dropdown-item fake-cursor" (click)="logout()">
+              <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon> Salir
+            </a>
+          </div>
+        </li>
+      </ul>
+      <span class="navbar-text">
+        <button type="button" id="menu-btn" class="btn btn-link text-primary fake-cursor me-1" (click)="menuBtnClick()">
+          <fa-icon [icon]="['fas', 'bars']" size="lg"></fa-icon>
+        </button>
+      </span>
+    </div>
   </div>
 </nav>
+<!--<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img [src]="'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1588301552/assets/logo-globo-200x200px.png'" alt="">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>-->
 <div class="bg-primary d-md-none text-center py-1 px-2">
   <fa-icon [icon]="['fas', 'store']"></fa-icon>&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}
 </div>

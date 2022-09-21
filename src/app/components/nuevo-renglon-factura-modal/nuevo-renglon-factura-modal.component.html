@@ -1,7 +1,7 @@
 <div class="modal-header">Nuevo Renglón de Factura</div>
 <div class="modal-body">
   <form [formGroup]="form" (submit)="submit()" *ngIf="form">
-    <div class="form-group">
+    <div class="mb-3">
       <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
       <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProducto.errors">
         <div *ngIf="f.idProducto.errors.required">Requerido</div>
@@ -9,8 +9,8 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="cantidad">Cantidad</label>
+        <div class="mb-3">
+          <label for="cantidad" class="form-label">Cantidad</label>
           <input type="number" min="1" class="form-control" id="cantidad" formControlName="cantidad"
                  [ngClass]="{ 'is-invalid': submitted && f.cantidad.errors }">
           <div class="invalid-feedback" *ngIf="submitted && f.cantidad.errors">
@@ -20,8 +20,8 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="form-group">
-          <label for="bonificacion">Bonificación (%)</label>
+        <div class="mb-3">
+          <label for="bonificacion" class="form-label">Bonificación (%)</label>
           <input type="number" min="0" class="form-control" id="bonificacion" formControlName="bonificacion"
                  [ngClass]="{ 'is-invalid': submitted && f.bonificacion.errors }">
           <div class="invalid-feedback" *ngIf="submitted && f.bonificacion.errors">

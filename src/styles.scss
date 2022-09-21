@@ -1,9 +1,5 @@
 @import "variables";
 
-$theme-colors: (
-  "primary": $primary-color
-);
-
 $custom-file-text: (
   en: "Browse",
   es: "Elegir"
@@ -23,6 +19,10 @@ body {
   height: 100%;
   background: whitesmoke;
   overflow-x: hidden;
+}
+
+.bg-dark {
+  background-color: #343a40!important;
 }
 
 .navbar {
@@ -48,7 +48,7 @@ body {
 }
 
 .spinner-primary {
-  color: $primary-color;
+  color: $primary;
 }
 
 .card-body {
@@ -89,8 +89,8 @@ body {
 
 .alert-globo {
   color: $gray-900;
-  background-color: $primary-color;
-  border-color: $primary-color;
+  background-color: $primary;
+  border-color: $primary;
   font-weight: bold;
 }
 
@@ -113,6 +113,13 @@ body {
 }*/
 
 .ops-accordion {
+  .accordion-button {
+    background-color: var(--bs-dark-rgb) !important; //#343a40;
+    color: var(--bs-primary) !important; //#f2dc47
+    &::after {
+      content: none;
+    }
+  }
   .card-body {
     padding: 1rem;
   }

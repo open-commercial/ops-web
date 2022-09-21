@@ -30,8 +30,6 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
 
   disabledInputFile = false;
 
-  @ViewChild('fileInputLabel') fileInputLabel: ElementRef<HTMLLabelElement>;
-
   constructor(private sucursalesService: SucursalesService,
               private configuracionesSucursalService: ConfiguracionesSucursalService,
               private loadingOverlayService: LoadingOverlayService,
@@ -162,10 +160,6 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
     const readerBuffer = new FileReader();
     const fileParts = $event.target.value.split('\\');
     const fileName = fileParts[fileParts.length - 1];
-
-    if (fileName) {
-      this.fileInputLabel.nativeElement.innerHTML = fileName;
-    }
 
     readerBuffer.addEventListener('load', () => {
       const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
