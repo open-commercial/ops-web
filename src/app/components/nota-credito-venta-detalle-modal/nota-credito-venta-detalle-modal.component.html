@@ -9,14 +9,14 @@
   <div class="renglones">
     <div class="renglon" *ngFor="let r of notaCredito.renglonesNotaCredito">
       <div class="d-flex flex-row flex-wrap">
-        <span class="me-2" *ngIf="r.codigoItem"><span class="font-weight-bold">Código: </span>{{ r.codigoItem }}</span>
-        <span *ngIf="r.descripcionItem"><span class="font-weight-bold">Descripción: </span>{{ r.descripcionItem }} <span *ngIf="r.medidaItem">({{ r.medidaItem }})</span></span>
+        <span class="me-2" *ngIf="r.codigoItem"><span class="fw-bold">Código: </span>{{ r.codigoItem }}</span>
+        <span *ngIf="r.descripcionItem"><span class="fw-bold">Descripción: </span>{{ r.descripcionItem }} <span *ngIf="r.medidaItem">({{ r.medidaItem }})</span></span>
       </div>
       <div class="d-flex flex-column flex-md-row">
-        <div class="me-2"><span class="font-weight-bold">Cant: </span>{{ r.cantidad | number:'1.0-2' }}</div>
-        <div class="me-2"><span class="font-weight-bold">P.U.: </span>{{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="me-2" *ngIf="r.descuentoPorcentaje"><span class="font-weight-bold">% Desc.: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}</div>
-        <div class="flex-fill text-end"><span class="font-weight-bold">Importe </span>{{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2"><span class="fw-bold">Cant: </span>{{ r.cantidad | number:'1.0-2' }}</div>
+        <div class="me-2"><span class="fw-bold">P.U.: </span>{{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2" *ngIf="r.descuentoPorcentaje"><span class="fw-bold">% Desc.: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}</div>
+        <div class="flex-fill text-end"><span class="fw-bold">Importe </span>{{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}</div>
       </div>
     </div>
   </div>

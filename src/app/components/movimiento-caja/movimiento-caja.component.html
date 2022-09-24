@@ -9,7 +9,7 @@
         <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ m.fecha | date:'dd/MM/yyyy HH:mm' }}
       </span><br>
         {{ m.concepto }}<br>
-        <span class="font-weight-bold" [class.text-success]="m.monto >= 0" [class.text-danger]="m.monto < 0">
+        <span class="fw-bold" [class.text-success]="m.monto >= 0" [class.text-danger]="m.monto < 0">
         {{ m.monto | currency: 'ARS':'symbol':'1.0-2' }}
       </span>
       </div>

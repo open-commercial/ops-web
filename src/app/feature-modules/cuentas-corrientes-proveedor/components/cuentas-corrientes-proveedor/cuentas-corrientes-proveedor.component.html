@@ -59,20 +59,20 @@
           <span class="badge text-bg-secondary me-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
           <span class="badge text-bg-dark me-2 mb-2">CUIT: {{item.proveedor.idFiscal}}</span>
           <span class="badge text-bg-dark me-2 mb-2">{{ helper.categoriaIVALabel(item.proveedor.categoriaIVA) }}</span>
-          <div class="ms-2 mb-2 font-italic font-weight-bold nombre">
+          <div class="ms-2 mb-2 fst-italic fw-bold nombre">
             {{ item.proveedor.razonSocial }}
           </div>
           <div class="ms-2" *ngIf="!!item.proveedor.ubicacion">
-            <span class="font-weight-bold">Ubicación: </span>{{ helper.formatUbicacion(item.proveedor.ubicacion) }}
+            <span class="fw-bold">Ubicación: </span>{{ helper.formatUbicacion(item.proveedor.ubicacion) }}
           </div>
         </div>
         <div class="col-lg-6">
           <div class="ms-2 text-nowrap">
-            <span class="font-weight-bold">Saldo C/C: </span>
+            <span class="fw-bold">Saldo C/C: </span>
             <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
           </div>
           <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-            <span class="font-weight-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
+            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
         </div>
       </div>

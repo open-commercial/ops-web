@@ -1,3 +1,6 @@
-.app-lista {
-  margin: 0;
+@import "../../../variables";
+@import "~bootstrap/scss/functions";
+
+.selected {
+  background: lighten($color: $primary, $amount: 25%);
 }

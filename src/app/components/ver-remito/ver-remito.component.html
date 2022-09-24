@@ -50,7 +50,7 @@
       <tr *ngIf="remito.pesoTotalEnKg"><th scope="row" class="w-25 table-dark">Peso</th><td>{{ remito.pesoTotalEnKg }} kg</td></tr>
       <tr *ngIf="remito.volumenTotalEnM3"><th scope="row" class="w-25 table-dark">Volumen</th><td>{{ remito.volumenTotalEnM3 }} m<sup>3</sup></td></tr>
       <tr><th scope="row" class="w-25 table-dark">Transportista</th><td>{{ remito.nombreTransportista }}</td></tr>
-      <tr><th scope="row" class="w-25 table-dark">Usuario</th><td class="font-italic">{{ remito.nombreUsuario }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Usuario</th><td class="fst-italic">{{ remito.nombreUsuario }}</td></tr>
       <tr><th scope="row" class="w-25 table-dark">Observaciones</th><td>{{ remito.observaciones }}</td></tr>
       <tr><th scope="row" class="w-25 table-dark">Total Facturas</th><td>{{ remito.totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr><th scope="row" class="w-25 table-dark">Costo de Envío</th><td>{{ remito.costoDeEnvio | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>

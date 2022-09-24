@@ -69,30 +69,30 @@
       <div class="d-flex flex-column flex-md-row mt-2">
         <div class="w-100 me-2">
           <div class="me-2">
-            <span class="font-weight-bold">Proveedor:&nbsp;</span>
-            <span class="font-italic">{{ item.razonSocialProveedor }}</span>
+            <span class="fw-bold">Proveedor:&nbsp;</span>
+            <span class="fst-italic">{{ item.razonSocialProveedor }}</span>
           </div>
           <div class="me-2">
-            <span class="font-weight-bold">Usuario:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreUsuario }}</span>
+            <span class="fw-bold">Usuario:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreUsuario }}</span>
           </div>
           <div class="me-2" *ngIf="item.nombreViajante">
-            <span class="font-weight-bold">Viajante:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreViajante }}</span>
+            <span class="fw-bold">Viajante:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreViajante }}</span>
           </div>
         </div>
         <div class="w-100 me-2">
           <div class="flex-fill d-flex flex-row flex-wrap me-2">
-            <span class="font-weight-bold">Forma de Pago:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreFormaDePago }}</span>
+            <span class="fw-bold">Forma de Pago:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreFormaDePago }}</span>
           </div>
           <div class="flex-fill d-flex flex-row flex-wrap align-items-center me-2">
-            <span class="font-weight-bold">Monto:&nbsp;</span>
-            <span class="font-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+            <span class="fw-bold">Monto:&nbsp;</span>
+            <span class="fst-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
           </div>
           <div class="flex-fill d-flex flex-row flex-wrap me-2">
-            <span class="font-weight-bold">Concepto:&nbsp;</span>
-            <span class="font-italic">{{ item.concepto }}</span>
+            <span class="fw-bold">Concepto:&nbsp;</span>
+            <span class="fst-italic">{{ item.concepto }}</span>
           </div>
         </div>
       </div>

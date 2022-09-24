@@ -7,7 +7,7 @@
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
         <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
-        Factura {{ factura.type === 'FacturaVenta' ? 'Venta' : 'Compra' }} #{{ getNumeroDeComprobante() }}
+        Factura {{ factura.type === 'FacturaVenta' ? 'Venta' : 'Compra' }}
       </h1>
       <button class="btn btn-primary" (click)="downloadFacturaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
               *ngIf="factura.type === 'FacturaVenta'">

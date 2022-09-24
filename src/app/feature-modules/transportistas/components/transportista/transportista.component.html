@@ -5,7 +5,7 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> {{ transportista ? transportista.nombre : 'Nuevo Transportista' }}
+      <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportista
     </h1>
   </div>
   <form (ngSubmit)="submit()" [formGroup]="form" class="card card-body bg-light mt-2" *ngIf="form">
@@ -27,7 +27,9 @@
       <input type="url" class="form-control" id="web" formControlName="web">
     </div>
     <div class="text-end">
-      <button class="btn btn-primary" type="submit">Guardar</button>
+      <button class="btn btn-primary" type="submit">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
     </div>
   </form>
 </div>

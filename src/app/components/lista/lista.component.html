@@ -5,7 +5,7 @@
   <div class="alert alert-danger">No actions template defined</div>
 </ng-template>
 
-<div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center border-bottom border-top py-2" [class.table-warning]="isSelected(item)">
+<div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center border-bottom border-top py-2" [class.selected]="isSelected(item)">
   <div class="form-check ms-2" *ngIf="batchActionKey">
     <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
     <label class="form-check-label" [for]="'check_row_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>

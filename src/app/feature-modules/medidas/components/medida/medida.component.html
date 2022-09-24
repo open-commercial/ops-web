@@ -1,5 +1,9 @@
 <div class="app-medida">
   <div class="d-flex flex-row align-items-center my-3">
+    <a class="btn fake-cursor" placement="right" ngbPopover="Volver atras" triggers="mouseenter:mouseleave"
+          (click)="volverAlListado()">
+      <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+    </a>
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'ruler-combined']"></fa-icon> Medida
     </h1>
@@ -14,7 +18,9 @@
       </div>
     </div>
     <div class="text-end">
-      <button type="submit" class="btn btn-primary">Guardar</button>
+      <button type="submit" class="btn btn-primary">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
     </div>
   </form>
 </div>

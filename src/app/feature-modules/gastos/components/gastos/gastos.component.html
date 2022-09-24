@@ -53,28 +53,26 @@
   <div class="gastos">
     <ng-template #info let-item>
       <div class="flex-fill">
-        <div>
+        <div class="mb-1">
           <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
           <span class="badge text-bg-secondary">#{{ item.nroGasto }}</span>
         </div>
-        <div class="d-flex flex-column flex-md-row">
-          <div class="flex-fill d-flex flex-row flex-wrap me-2">
-            <div class="me-2">
-              <span class="font-weight-bold">Usuario:&nbsp;</span>
-              <span class="font-italic">{{ item.nombreUsuario }}</span>
-            </div>
-            <div class="me-2">
-              <span class="font-weight-bold">Forma de Pago:&nbsp;</span>
-              <span class="font-italic">{{ item.nombreFormaDePago }}</span>
-            </div>
-            <div>
-              <span class="font-weight-bold">Concepto:&nbsp;</span>
-              <span class="font-italic">{{ item.concepto }}</span>
-            </div>
+        <div class="flex-fill d-flex flex-row flex-wrap me-2">
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Usuario:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreUsuario }}</span>
           </div>
-          <div class="text-end">
-            <span class="font-weight-bold">Monto:&nbsp;</span>
-            <span class="font-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Forma de Pago:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreFormaDePago }}</span>
+          </div>
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Concepto:&nbsp;</span>
+            <span class="fst-italic">{{ item.concepto }}</span>
+          </div>
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Monto:&nbsp;</span>
+            <span class="fst-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
           </div>
         </div>
       </div>

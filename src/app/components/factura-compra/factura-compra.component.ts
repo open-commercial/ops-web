@@ -225,7 +225,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
 
   removeRenglon(i: number) {
     const rf: RenglonFactura = this.renglones.at(i).get('renglonFactura').value;
-    this.mensajeService.msg(`Est seguro de eliminar "${rf.descripcionItem}" de los renglones de la factura.`, MensajeModalType.CONFIRM)
+    this.mensajeService.msg(`Está seguro de eliminar "${rf.descripcionItem}" de los renglones de la factura?`, MensajeModalType.CONFIRM)
       .then(result => {
         if (result) {
           this.renglones.removeAt(i);

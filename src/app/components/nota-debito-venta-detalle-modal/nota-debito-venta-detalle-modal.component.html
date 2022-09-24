@@ -8,12 +8,12 @@
   <app-cliente-detalle [cliente]="cliente" *ngIf="cliente && !loading"></app-cliente-detalle>
   <div class="renglones">
     <div class="renglon" *ngFor="let r of notaDebito.renglonesNotaDebito">
-      <div *ngIf="r.descripcion"><span class="font-weight-bold">Descripción: </span>{{ r.descripcion }}</div>
+      <div *ngIf="r.descripcion"><span class="fw-bold">Descripción: </span>{{ r.descripcion }}</div>
       <div class="d-flex flex-column flex-md-row">
-        <div class="me-2"><span class="font-weight-bold">Monto: </span>{{ r.monto | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="me-2"><span class="font-weight-bold">% IVA: </span>{{ r.ivaPorcentaje | number:'1.0-2' }}</div>
-        <div class="me-2"><span class="font-weight-bold">IVA: </span>{{ r.ivaNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="flex-fill text-end"><span class="font-weight-bold">Importe: </span>{{ r.importeNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2"><span class="fw-bold">Monto: </span>{{ r.monto | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="me-2"><span class="fw-bold">% IVA: </span>{{ r.ivaPorcentaje | number:'1.0-2' }}</div>
+        <div class="me-2"><span class="fw-bold">IVA: </span>{{ r.ivaNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
+        <div class="flex-fill text-end"><span class="fw-bold">Importe: </span>{{ r.importeNeto | currency: 'ARS':'symbol':'1.0-2' }}</div>
       </div>
     </div>
   </div>

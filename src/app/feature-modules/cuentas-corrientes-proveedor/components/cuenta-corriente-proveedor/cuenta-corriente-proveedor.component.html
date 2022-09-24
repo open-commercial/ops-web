@@ -25,7 +25,7 @@
   </div>
   <app-proveedor-detalle [proveedor]="ccp.proveedor"></app-proveedor-detalle>
   <div class="text-end mx-2">
-    SALDO: <span class="font-weight-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
   </div>
   <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
                   [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
@@ -75,11 +75,11 @@
               <span class="badge text-bg-pill text-bg-light border border-dark me-2 my-1">
                 {{ helper.tipoComprobanteLabel(r.tipoComprobante) }}
               </span>
-              <span class="text-nowrap font-weight-bold">Nº {{ r.serie }}-{{ r.numero }}</span>
+              <span class="text-nowrap fw-bold">Nº {{ r.serie }}-{{ r.numero }}</span>
             </div>
             <div class="d-flex flex-row align-items-center flex-wrap">
-              <div class="me-2"><span class="font-weight-bold">Suc: </span>{{ r.nombreSucursal }}</div>
-              <div class="me-2" *ngIf="r.descripcion"><span class="font-weight-bold">Detalle: </span>{{ r.descripcion }}</div>
+              <div class="me-2"><span class="fw-bold">Suc: </span>{{ r.nombreSucursal }}</div>
+              <div class="me-2" *ngIf="r.descripcion"><span class="fw-bold">Detalle: </span>{{ r.descripcion }}</div>
             </div>
           </td>
           <td class="text-end">{{ r.monto > 0 ? (r.monto | currency:'ARS':'symbol':'1.2-2') : '' }}</td>
@@ -100,7 +100,7 @@
       </tbody>
     </table>
   </div>
-  <div class="alert alert-info lead font-italic" *ngIf="!loadingOverlayService.isActive() && renglones.length <= 0">Sin Movimientos.</div>
+  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && renglones.length <= 0">Sin Movimientos.</div>
   <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
                   [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
                   *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>

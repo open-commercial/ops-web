@@ -54,12 +54,12 @@
     <ng-template #info let-item>
       <div class="row">
         <div class="col-md-6">
-          <div class="lead font-weight-bold">{{ item.nombre }}</div>
-          <div class="font-italic">{{ item.nombreProvincia }}</div>
+          <div class="lead fw-bold">{{ item.nombre }}</div>
+          <div class="fst-italic">{{ item.nombreProvincia }}</div>
         </div>
         <div class="col-md-6">
           <span class="badge text-bg-success" *ngIf="item.envioGratuito">Envío Gratuito</span>
-          <div><span class="font-weight-bold">Costo de Envío: </span>{{ item.costoEnvio | currency:'ARS':'symbol':'1.0-2' }}</div>
+          <div><span class="fw-bold">Costo de Envío: </span>{{ item.costoEnvio | currency:'ARS':'symbol':'1.0-2' }}</div>
         </div>
       </div>
     </ng-template>

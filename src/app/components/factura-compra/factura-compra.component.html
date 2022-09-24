@@ -30,7 +30,7 @@
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
             <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobantePanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
-            <span>Tipo De Comprobante{{ (form.get('tipoDeComprobante') && form.get('tipoDeComprobante').value) ? ': ' + form.get('tipoDeComprobante').value : '' }}</span>
+            <span>Tipo de Comprobante{{ (form.get('tipoDeComprobante') && form.get('tipoDeComprobante').value) ? ': ' + form.get('tipoDeComprobante').value.toString().replace('_', ' ') : '' }}</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
@@ -128,12 +128,11 @@
         </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="text-end p-2">
-            <button type="button" class="btn btn-secondary" (click)="showNuevoReglonFacturaModal()">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon> Agregar Producto
+          <div class="text-end mb-2">
+            <button type="button" class="btn btn-primary" (click)="showNuevoReglonFacturaModal()">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </div>
-
           <table class="table table-sm table-bordered table-striped">
             <caption class="sr-only">Renglones</caption>
             <thead>

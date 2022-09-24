@@ -42,15 +42,15 @@
       <div class="row">
         <div class="col-md-6">
           <div class="d-flex flex-row flex-wrap align-items-center">
-            <span class="lead font-weight-bold">{{ item.username }}</span>
-            <span class="font-italic">&nbsp;({{ item.apellido }}{{ (item.apellido ? ', ' : '') + item.nombre }})</span>
+            <span class="lead fw-bold">{{ item.username }}</span>
+            <span class="fst-italic">&nbsp;({{ item.apellido }}{{ (item.apellido ? ', ' : '') + item.nombre }})</span>
           </div>
           <div>
-            <span class="font-weight-bold">Email: </span><span>{{ item.email }}</span>
+            <span class="fw-bold">Email: </span><span>{{ item.email }}</span>
           </div>
         </div>
         <div class="col-md-6 text-md-center">
-          <span class="font-weight-bold">Rol: </span>
+          <span class="fw-bold">Rol: </span>
           <span>{{ item.roles }}</span>
         </div>
       </div>

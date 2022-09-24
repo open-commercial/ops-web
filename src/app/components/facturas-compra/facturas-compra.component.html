@@ -1,6 +1,6 @@
 <div class="app-facturas-compra">
   <div class="d-flex flex-row align-md-items-center my-3">
-    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas Compras</h1>
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Compras</h1>
     <div class="text-end m-0 text-nowrap">
       <button type="button" class="btn btn-primary ms-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
@@ -77,9 +77,8 @@
         <span class="dato"><span class="column-name">Proveedor:&nbsp;</span><span class="column-data">{{ item.razonSocialProveedor }}</span></span>
         <span class="dato"><span class="column-name">Usuario:&nbsp;</span><span class="column-data">{{ item.nombreUsuario }}</span></span>
         <span class="dato" *ngIf="item.nombreViajante"><span class="column-name">Viajante:&nbsp;</span><span class="column-data">{{ item.nombreViajante }}</span></span>
-        <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
-        <br>
         <span class="dato"><span class="column-name">Fecha de Alta:&nbsp;</span><span class="column-data">{{ item.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</span></span>
+        <span class="dato"><span class="column-name">Total:&nbsp;</span><span class="column-data total">{{ item.total | currency:'ARS':'symbol':'1.0-2' }}</span></span>
       </div>
     </ng-template>
     <ng-template #actions let-item id="actionsFC">

@@ -16,15 +16,15 @@
             <span class="descripcion">{{ r.get('renglon').value.descripcionItem }}</span>
             <div class="d-flex flex-row flex-wrap">
               <span class="me-2">
-                <span class="font-weight-bold">PU: </span>
+                <span class="fw-bold">PU: </span>
                 {{ r.get('renglon').value.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
               </span>
               <span class="me-2">
-                <span class="font-weight-bold">IVA: </span>
+                <span class="fw-bold">IVA: </span>
                 {{ r.get('renglon').value.ivaPorcentaje | number:'1.0-2' }}%
               </span>
               <span class="me-2">
-                <span class="font-weight-bold">Cant.: </span>
+                <span class="fw-bold">Cant.: </span>
                 {{ r.get('renglon').value.cantidad | number:'1.0-2' }}
               </span>
             </div>

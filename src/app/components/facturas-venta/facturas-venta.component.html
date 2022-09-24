@@ -1,12 +1,12 @@
 <div class="app-facturas-venta">
   <div class="d-flex flex-row my-3">
-    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas Ventas</h1>
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Ventas</h1>
     <div class="text-end m-0 text-nowrap">
       <button type="button" class="btn btn-primary ms-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
               [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="facturasVentaBatchActionsBoxCollapse"
               [class.bg-white]="!isBatchActionsBoxCollapsed"
               ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="font-weight-bold">{{ batchActionsService.count(baKey) }}</span>
+        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="fw-bold">{{ batchActionsService.count(baKey) }}</span>
       </button>
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"

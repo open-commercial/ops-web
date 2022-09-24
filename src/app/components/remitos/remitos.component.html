@@ -56,14 +56,14 @@
       </div>
       <div class="px-2 flex-fill">
         <div class="d-flex flex-row flex-wrap align-items-center">
-          <span class="me-2"><span class="font-weight-bold">Usuario:&nbsp;</span><span class="font-italic">{{ item.nombreUsuario }}</span></span>
-          <span class="me-2"><span class="font-weight-bold">Cliente:&nbsp;</span><span class="font-italic">{{ item.nombreFiscalCliente }}</span></span>
-          <span class="me-2"><span class="font-weight-bold">Transportista:&nbsp;</span><span class="font-italic">{{ item.nombreTransportista }}</span></span>
-          <span class="me-2"><span class="font-weight-bold">Costo Envio:&nbsp;</span><span class="font-italic costo-de-envio">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+          <span class="me-2"><span class="fw-bold">Usuario:&nbsp;</span><span class="fst-italic">{{ item.nombreUsuario }}</span></span>
+          <span class="me-2"><span class="fw-bold">Cliente:&nbsp;</span><span class="fst-italic">{{ item.nombreFiscalCliente }}</span></span>
+          <span class="me-2"><span class="fw-bold">Transportista:&nbsp;</span><span class="fst-italic">{{ item.nombreTransportista }}</span></span>
+          <span class="me-2"><span class="fw-bold">Costo Envio:&nbsp;</span><span class="fst-italic costo-de-envio">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span></span>
         </div>
       </div>
       <div class="px-2 flex-fill">
-        <span class="font-weight-bold">Ubicación:&nbsp;</span><span class="font-italic">{{ item.detalleEnvio }}</span>
+        <span class="fw-bold">Ubicación:&nbsp;</span><span class="fst-italic">{{ item.detalleEnvio }}</span>
       </div>
     </ng-template>
     <ng-template #actions let-item let-index>

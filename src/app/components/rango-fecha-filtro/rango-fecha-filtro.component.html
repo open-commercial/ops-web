@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12 col-lg-6">
       <div class="mb-3">
-        <label [for]="label.toLowerCase() + '-desde'">{{ label }} (desde)</label>
+        <label class="form-label" [for]="label.toLowerCase() + '-desde'">{{ label }} (desde)</label>
         <div class="input-group">
           <input class="form-control" readonly [id]="label.toLowerCase() + '-desde'" [(ngModel)]="fromDate" (dateSelect)="onFromDateSelection($event)"
                  [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
@@ -17,7 +17,7 @@
     </div>
     <div class="col-12 col-lg-6">
       <div class="mb-3">
-        <label [for]="label.toLowerCase() + '-hasta'">{{ label }} (hasta)</label>
+        <label class="form-label" [for]="label.toLowerCase() + '-hasta'">{{ label }} (hasta)</label>
         <div class="input-group">
           <input class="form-control" readonly [id]="label.toLowerCase() + '-hasta'" [(ngModel)]="toDate" (dateSelect)="onToDateSelection($event)"
                  [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"

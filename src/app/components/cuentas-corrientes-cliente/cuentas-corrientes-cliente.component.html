@@ -59,17 +59,17 @@
           <span class="badge text-bg-secondary ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
           <span class="badge text-bg-dark ms-2 mb-2 mb-2" *ngIf="item.cliente.idFiscal">CUIT o CUIL: {{ item.cliente.idFiscal }}</span>
           <span class="badge text-bg-dark ms-2 mb-2">{{ helper.categoriaIVALabel(item.cliente.categoriaIVA) }}</span>
-          <div class="ms-2 mb-2 font-italic font-weight-bold nombre">
+          <div class="ms-2 mb-2 fst-italic fw-bold nombre">
             {{ item.cliente.nombreFiscal }} <span *ngIf="item.cliente.nombreFantasia">({{ item.cliente.nombreFantasia }})</span>
           </div>
           <span class="badge text-bg-success ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
             Cliente Predeterminado
           </span>
           <div class="text-nowrap ms-2">
-            <span class="font-weight-bold">Fecha Alta: </span>{{ item.cliente.fechaAlta | date:'dd/MM/yyyy HH:mm'  }}
+            <span class="fw-bold">Fecha Alta: </span>{{ item.cliente.fechaAlta | date:'dd/MM/yyyy HH:mm'  }}
           </div>
           <div class="ms-2" *ngIf="!!(item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion)">
-            <span class="font-weight-bold">Ubicación: </span>{{ item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion  }}
+            <span class="fw-bold">Ubicación: </span>{{ item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion  }}
           </div>
         </div>
         <div class="col-lg-6">
@@ -82,11 +82,11 @@
             </span>
           </div>
           <div class="ms-2 text-nowrap">
-            <span class="font-weight-bold">Saldo C/C: </span>
+            <span class="fw-bold">Saldo C/C: </span>
             <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
           </div>
           <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-            <span class="font-weight-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
+            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
         </div>
       </div>

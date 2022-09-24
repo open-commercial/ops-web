@@ -55,13 +55,18 @@
         <label for="repetir_password" class="form-label">Repetir Contraseña</label>
         <input type="password" class="form-control" id="repetir_password" formControlName="repetir_password">
       </div>
-      <div class="mb-3">
-        <div class="form-check form-switch mb-2" *ngFor="let r of allRoles">
-          <input class="form-check-input" type="checkbox" role="switch" [id]="'rol_' + r.value" [value]="r.value"[checked]="r.isChecked" (change)="onRolCheckChange($event)">
-          <label class="form-check-label" [for]="'rol_' + r.value">{{ r.text }}</label>
+      <div class="card mb-3">
+        <div class="card-header">
+          Roles
         </div>
-        <div class="custom-error-message" *ngIf="submitted && f.roles.errors">
-          <div *ngIf="f.roles.errors.required">Debe seleccionar al menos un rol.</div>
+        <div class="card-body">
+          <div class="form-check form-switch mb-2" *ngFor="let r of allRoles">
+            <input class="form-check-input" type="checkbox" role="switch" [id]="'rol_' + r.value" [value]="r.value"[checked]="r.isChecked" (change)="onRolCheckChange($event)">
+            <label class="form-check-label" [for]="'rol_' + r.value">{{ r.text }}</label>
+          </div>
+          <div class="custom-error-message" *ngIf="submitted && f.roles.errors">
+            <div *ngIf="f.roles.errors.required">Debe seleccionar al menos un rol.</div>
+          </div>
         </div>
       </div>
     </div>

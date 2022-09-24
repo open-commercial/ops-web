@@ -22,17 +22,17 @@
       Estado: <strong [ngClass]="{'text-danger': caja.estado === estado.CERRADA, 'text-success': caja.estado === estado.ABIERTA}">{{ caja.estado }}</strong>
     </div>
     <ngb-accordion class="ops-accordion-2" #accordion [closeOthers]="true" [destroyOnHide]="true" (panelChange)="panelBeforeChange($event)">
-      <ngb-panel *ngFor="let r of resumen"  [id]="'panel-' + r.idFormaDePago">
+      <ngb-panel *ngFor="let r of resumen; last as isLast"  [id]="'panel-' + r.idFormaDePago">
         <ng-template ngbPanelHeader>
-          <button class="d-flex align-items-center justify-content-between mb-0" ngbPanelToggle
-                  [class.table-success]="r.total>=0" [class.table-danger]="r.total < 0">
+          <button class="d-flex align-items-center justify-content-between mb-0 w-100 border-0 border-bottom" ngbPanelToggle
+                  [class.bg-success]="r.total >= 0" [class.bg-danger]="r.total < 0" style="--bs-bg-opacity: .3;" [class.border-secondary]="!isLast" >
             <fa-icon [icon]="['fas', accordion.isExpanded('panel-' + r.idFormaDePago) ? 'chevron-up' : 'chevron-down']"
                      class="me-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
             <span class="mb-0 flex-fill text-start nombre">
               {{ r.nombreFormaDePago }} <br *ngIf="r.afectaCaja">
-              <small *ngIf="r.afectaCaja" class="font-weight-bold text-nowrap">(Afecta la caja)</small>
+              <small *ngIf="r.afectaCaja" class="fw-bold text-nowrap">(Afecta la caja)</small>
             </span>
-            <span class="font-weight-bold">{{ r.total | currency: 'ARS':'symbol':'1.0-2' }}</span>
+            <span class="fw-bold">{{ r.total | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </button>
         </ng-template>
         <ng-template ngbPanelContent>

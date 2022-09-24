@@ -1,5 +1,5 @@
-<div class="app-transportistas my-3">
-  <div class="d-flex flex-row">
+<div class="app-transportistas">
+  <div class="d-flex flex-row my-3">
     <h1 class="h3 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'truck-moving']"></fa-icon> Transportistas
     </h1>
@@ -51,12 +51,12 @@
     <ng-template #info let-item>
       <div class="row">
         <div class="col-md-6">
-          <div class="lead font-italic font-weight-bold">{{ item.nombre }}</div>
-          <div><span class="font-weight-bold">Dir.: </span>{{ helper.formatUbicacion(item.ubicacion) }}</div>
+          <div class="lead fst-italic fw-bold">{{ item.nombre }}</div>
+          <div *ngIf="item.ubicacion"><span class="fw-bold">Dir.: </span>{{ helper.formatUbicacion(item.ubicacion) }}</div>
         </div>
         <div class="col-md-6">
-          <div><span class="font-weight-bold">Teléfono: </span>{{ item.telefono }}</div>
-          <div><span class="font-weight-bold">Web: </span>{{ item.web }}</div>
+          <div *ngIf="item.telefono"><span class="fw-bold">Teléfono: </span>{{ item.telefono }}</div>
+          <div *ngIf="item.web"><span class="fw-bold">Web: </span>{{ item.web }}</div>
         </div>
       </div>
     </ng-template>

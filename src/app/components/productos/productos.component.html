@@ -9,7 +9,7 @@
               [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="productosBatchActionsBoxCollapse"
               [class.bg-white]="!isBatchActionsBoxCollapsed"
               ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="font-weight-bold">{{ batchActionsService.count(baKey) }}</span>
+        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="fw-bold">{{ batchActionsService.count(baKey) }}</span>
       </button>
       <button class="btn btn-primary ms-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
