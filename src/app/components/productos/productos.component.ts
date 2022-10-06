@@ -125,12 +125,12 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       if (ps.visibilidad === 'privados') { terminos.publico = false; }
     }
 
-    if (ps.oferta === 'true') {
+    if (['true', true].indexOf(ps.oferta) >= 0) {
       this.filterForm.get('oferta').setValue(true);
       terminos.oferta = true;
     }
 
-    if (ps.listarSoloParaCatalogo == 'true') {
+    if (['true', true].indexOf(ps.listarSoloParaCatalogo) >= 0) {
       this.filterForm.get('listarSoloParaCatalogo').setValue(true);
       terminos.listarSoloParaCatalogo = true;
     }
@@ -303,6 +303,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   descargarReporteAlEmail() {
     const qParams = this.getFormValues();
     const terminos = this.getTerminosFromQueryParams(qParams);
+
     const obs: Observable<any>[] = [
       this.sucursalesService.getSucursal(this.sucursalesService.getIdSucursal()),
       this.productosService.getReporte(terminos)
@@ -311,15 +312,15 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     this.loadingOverlayService.activate();
     combineLatest(obs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (data: [Sucursal]) => {
+      .subscribe({
+        next: (data: [Sucursal]) => {
           const email = data[0].email;
           this.mensajeService.msg(
             `En breve recibirá un email con la información solicitada a la dirección ${email}`, MensajeModalType.INFO
           );
         },
-      err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 }

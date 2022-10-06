@@ -82,12 +82,12 @@ export class LocalidadesComponent extends ListadoDirective implements OnInit {
       sentido: { defaultValue: sentido },
     };
 
-    if (ps.envioGratuito === 'true') {
+    if (['true', true].indexOf(ps.envioGratuito) >= 0) {
       this.filterForm.get('envioGratuito').setValue(true);
       terminos.envioGratuito = true;
     }
 
-    if (ps.envioGratuito === 'false') {
+    if (['false', false].indexOf(ps.envioGratuito) >= 0) {
       this.filterForm.get('envioGratuito').setValue(false);
       terminos.envioGratuito = false;
     }
