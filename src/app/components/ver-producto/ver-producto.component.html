@@ -1,14 +1,22 @@
 <div class="app-ver-producto my-3">
   <div *ngIf="producto">
-    <div class="row">
-      <h1 class="h3 col-md-10 text-truncate">
+    <div class="d-flex flex-row ">
+      <h1 class="h3 flex-fill text-truncate">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
            (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
         <fa-icon [icon]="['fas', 'box-open']"></fa-icon>
-        {{ producto.descripcion }}
+        Producto
       </h1>
+      <div class="text-end">
+        <button type="button" class="btn btn-primary ms-2 my-1" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editar()" *ngIf="hasRoleToEdit">
+          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        </button>
+        <button class="btn btn-primary ms-2" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar()" *ngIf="hasRoleToDelete">
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+        </button>
+      </div>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del producto</caption>

@@ -67,12 +67,12 @@
           </div>
         </div>
         <div class="col-lg-6">
+          <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
+            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
+          </div>
           <div class="ms-2 text-nowrap">
             <span class="fw-bold">Saldo C/C: </span>
             <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
-          </div>
-          <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
         </div>
       </div>

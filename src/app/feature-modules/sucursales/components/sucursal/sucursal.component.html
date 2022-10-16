@@ -10,7 +10,13 @@
   </div>
   <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading" class="bg-white border rounded p-3">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 col-lg-4 align-self-center">
+        <label class="form-label sr-only" for="imagen">Imágen</label>
+        <app-img-picker id="imagen" [imageDataUrl]="imageDataUrl"
+            (changeAsData)="imageDataChange($event)" (changeAsUrl)="imageUrlChange($event)" >
+        </app-img-picker>
+      </div>
+      <div class="col-md-6 col-lg-8">
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre</label>
           <input type="text" class="form-control" id="nombre" formControlName="nombre"
@@ -19,16 +25,10 @@
             <div *ngIf="f.nombre.errors.required">Requerido</div>
           </div>
         </div>
-      </div>
-      <div class="col-md-6">
         <div class="mb-3">
           <label for="lema" class="form-label">Lema</label>
           <input type="text" class="form-control" id="lema" formControlName="lema">
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
         <div class="mb-3">
           <label for="categoriaIVA" class="form-label">Condición IVA</label>
           <select class="form-select" id="categoriaIVA" formControlName="categoriaIVA"
@@ -39,14 +39,10 @@
             <div *ngIf="f.categoriaIVA.errors.required">Requerido</div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
         <div class="mb-3">
           <label for="idFiscal" class="form-label">CUIT</label>
           <input type="text" class="form-control" id="idFiscal" formControlName="idFiscal">
         </div>
-      </div>
-      <div class="col-md-4">
         <div class="mb-3">
           <label for="ingresosBrutos" class="form-label">Ingresos Brutos</label>
           <input type="text" class="form-control" id="ingresosBrutos" formControlName="ingresosBrutos">
@@ -88,35 +84,17 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-12">
         <app-ubicacion-form-field id="ubicacion" label="Ubicación" formControlName="ubicacion"></app-ubicacion-form-field>
         <div class="custom-error-message error-message-fix" *ngIf="submitted && f.ubicacion.errors">
           <div *ngIf="f.ubicacion.errors.required">Requerido</div>
         </div>
       </div>
-      <div class="col-md-6 text-center">
-        <label for="image-file me-2" class="form-label">
-          Imagen<br>(click para seleccionar...)
-        </label>
-        <button type="button" class="btn btn-link text-dark" *ngIf="imageDataUrl && !eliminarImagen && !(sucursal && sucursal.logo === imageDataUrl)" (click)="imageClear(imageFile)">
-          <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
-        </button>
-        <br>
-        <div class="d-inline-block mb-3">
-          <div class="preview" (click)="imageFile.click()">
-            <img [src]="imageDataUrl ? imageDataUrl : sucursal.logo" alt="" *ngIf="!eliminarImagen && (imageDataUrl || (sucursal && sucursal.logo))">
-            <fa-icon [icon]="['far', 'image']" [size]="'4x'" *ngIf="eliminarImagen || (!imageDataUrl && !(sucursal && sucursal.logo))" style="color: rgb(134, 134, 134);"></fa-icon>
-          </div>
-          <div class="mb-3 form-check" *ngIf="sucursal && sucursal.logo">
-            <input type="checkbox" class="form-check-input" id="eliminar-imagen" (change)="eliminarImagenChange($event)" [checked]="eliminarImagen">
-            <label for="eliminar-imagen" class="form-check-label">Eliminar Imagen</label>
-          </div>
-        </div>
-        <input id="image-file" type="file" class="d-none" accept="image/jpeg, image/png" #imageFile (change)="imageChange($event)" />
-      </div>
     </div>
     <div class="text-end">
-      <button class="btn btn-primary">Guardar</button>
+      <button class="btn btn-primary">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
     </div>
   </form>
 </div>

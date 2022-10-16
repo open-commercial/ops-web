@@ -7,7 +7,7 @@ import {MensajeAsincronicoComponent} from '../components/mensaje-asincronico/men
 import {UbicacionFormFieldComponent} from '../components/ubicacion-form-field/ubicacion-form-field.component';
 import {ListaComponent} from '../components/lista/lista.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faEye, faEyeSlash, faImage } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash, faImage, faSquare, faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import {
   faBars, faCircleNotch, faFileInvoice, faFilter,
   faSearch, faTrash, faCalendar, faPortrait,
@@ -23,7 +23,7 @@ import {
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
   faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers, faMapMarkedAlt,
-  faCubes, faRulerCombined, faCheckDouble
+  faCubes, faRulerCombined
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -36,6 +36,7 @@ import {ProveedorFiltroComponent} from '../components/proveedor-filtro/proveedor
 import { ReciboClienteModalComponent } from '../components/recibo-cliente-modal/recibo-cliente-modal.component';
 import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
 import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.component';
+import { ImgPickerComponent } from '../components/img-picker/img-picker.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.co
     ReciboClienteModalComponent,
     ReciboProveedorModalComponent,
     UsuarioFormComponent,
+    ImgPickerComponent,
   ],
   imports: [
     CommonModule,
@@ -80,6 +82,7 @@ import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.co
     MensajeAsincronicoComponent,
     GastoFormComponent,
     UsuarioFormComponent,
+    ImgPickerComponent,
   ]
 })
 export class ShareModule {
@@ -101,7 +104,7 @@ export class ShareModule {
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
       faCog, faImage, faUndoAlt, faUsers, faMapMarkedAlt,
-      faCubes, faRulerCombined, faCheckDouble
+      faCubes, faRulerCombined, faSquare, faSquareCheck
     );
   }
 }

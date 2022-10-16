@@ -174,19 +174,18 @@
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <!-- <app-pagos formControlName="pagos"
-                     [totalAPagar]="form && form.get('resultados') ? form.get('resultados').value.total : 0"
-                     [saldoCCC]="form && form.get('ccc') && form.get('ccc').value ? form.get('ccc').value.saldo : 0"
-          ></app-pagos> -->
-          <strong>Pagos</strong>
-          <button class="btn btn-primary ms-2 mb-2" type="button" (click)="addPagoForm()">
-            <fa-icon icon="plus"></fa-icon>
-          </button>
-          <div>
-            <strong>Saldo CC de Cliente: </strong>
-            <span class="badge text-bg-light border" [ngClass]="getSaldoCCC() >= 0 ? 'border-success text-success': 'border-danger text-danger'">
-              {{ getSaldoCCC() | currency: 'ARS':'symbol':'1.0-2' }}
-            </span>
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+            <div class="flex-fill mb-2">
+              <strong>Saldo CC de Cliente: </strong>
+              <span class="badge text-bg-light border" [ngClass]="getSaldoCCC() >= 0 ? 'border-success text-success': 'border-danger text-danger'">
+                {{ getSaldoCCC() | currency: 'ARS':'symbol':'1.0-2' }}
+              </span>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary ms-2 mb-2" type="button" (click)="addPagoForm()">
+                <fa-icon icon="plus"></fa-icon>
+              </button>
+            </div>
           </div>
           <table class="table table-bordered table-sm">
             <caption class="sr-only">Pagos</caption>

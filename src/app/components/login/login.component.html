@@ -18,6 +18,8 @@
         <div *ngIf="f.password.errors.required">Requerido</div>
       </div>
     </div>
-    <button class="btn btn-primary btn-block" type="submit" [disabled]="loading">Ingresar</button>
+    <div class="d-grid gap-2">
+      <button class="btn btn-primary" type="submit" [disabled]="loading">Ingresar</button>
+    </div>
   </form>
 </div>

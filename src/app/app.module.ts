@@ -95,7 +95,6 @@ import { FacturaCompraComponent } from './components/factura-compra/factura-comp
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
 
-
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
 @NgModule({

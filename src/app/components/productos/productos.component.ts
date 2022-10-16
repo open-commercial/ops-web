@@ -56,8 +56,14 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   rubros: Rubro[] = [];
   visibilidades = ['Públicos', 'Privados'];
 
+  allowedRolesToCreate: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToCreate = false;
+
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
+
+  allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToEdit = false;
 
   baKey = BatchActionKey.PRODUCTOS;
   baActions: ActionConfiguration[] = [
@@ -91,6 +97,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   ngOnInit() {
     super.ngOnInit();
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
 
     this.loadingOverlayService.activate();
     this.rubrosService.getRubros()
@@ -121,16 +129,16 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     }
 
     if (this.visibilidades.indexOf(ps.visibilidad) >= 0) {
-      if (ps.visibilidad === 'públicos') { terminos.publico = true; }
-      if (ps.visibilidad === 'privados') { terminos.publico = false; }
+      if (ps.visibilidad === 'Públicos') { terminos.publico = true; }
+      if (ps.visibilidad === 'Privados') { terminos.publico = false; }
     }
 
-    if (ps.oferta === 'true') {
+    if (['true', true].indexOf(ps.oferta) >= 0) {
       this.filterForm.get('oferta').setValue(true);
       terminos.oferta = true;
     }
 
-    if (ps.listarSoloParaCatalogo == 'true') {
+    if (['true', true].indexOf(ps.listarSoloParaCatalogo) >= 0) {
       this.filterForm.get('listarSoloParaCatalogo').setValue(true);
       terminos.listarSoloParaCatalogo = true;
     }
@@ -242,6 +250,11 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   }
 
   editarProducto(producto: Producto) {
+    if (!this.hasRoleToEdit) {
+      this.mensajeService.msg('No posee permiso para editar productos.', MensajeModalType.ERROR);
+      return;
+    }
+
     this.router.navigate(['/productos/editar', producto.idProducto]);
   }
 
@@ -257,17 +270,17 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos([producto.idProducto])
-          .subscribe(
-            () => {
+          .subscribe({
+            next: () => {
               this.batchActionsService.removeElememt(this.baKey, producto.idProducto);
               // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
               location.reload();
             },
-            err => {
+            error: err => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          )
+            }
+          })
         ;
       }
     }, () => { return; });
@@ -284,17 +297,17 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos(ids)
-          .subscribe(
-            () => {
+          .subscribe({
+            next: () => {
               this.batchActionsService.clear(this.baKey);
               location.reload();
               // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
             },
-            err => {
+            error: err => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          )
+            }
+          })
         ;
       }
     });
@@ -311,15 +324,15 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     this.loadingOverlayService.activate();
     combineLatest(obs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (data: [Sucursal]) => {
+      .subscribe({
+        next: (data: [Sucursal]) => {
           const email = data[0].email;
           this.mensajeService.msg(
             `En breve recibirá un email con la información solicitada a la dirección ${email}`, MensajeModalType.INFO
           );
         },
-      err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 }

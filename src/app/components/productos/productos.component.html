@@ -1,8 +1,8 @@
 <div class="app-productos">
-  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+  <div class="d-flex flex-md-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'box-open']"></fa-icon> Productos</h1>
-    <div class="text-end m-0">
-      <button class="btn btn-primary ms-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left">
+    <div class="text-end text-nowrap m-0">
+      <button class="btn btn-primary ms-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToCreate">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ms-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
@@ -119,12 +119,12 @@
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item">
+        <li class="list-inline-item" *ngIf="hasRoleToEdit">
           <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProducto(item)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item" *ngIf="this.hasRoleToDelete">
+        <li class="list-inline-item" *ngIf="hasRoleToDelete">
           <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProducto(item)">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>

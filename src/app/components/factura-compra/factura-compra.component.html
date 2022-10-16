@@ -165,12 +165,18 @@
                 </div>
               </td>
               <td class="text-nowrap">
-                <button type="button" class="btn btn-success" (click)="showEditReglonFacturaModal(i)">
-                  <fa-icon [icon]="['fas', 'edit']"></fa-icon>
-                </button>
-                <button type="button" class="btn btn-danger ms-2" (click)="removeRenglon(i)">
-                  <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-                </button>
+              <ul class="list-unstyled text-center mb-0">
+                <li class="mb-2">
+                  <button type="button" class="btn btn-primary" (click)="showEditReglonFacturaModal(i)">
+                    <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="btn btn-primary" (click)="removeRenglon(i)">
+                    <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                  </button>
+                </li>
+              </ul>
               </td>
             </tr>
             </tbody>
@@ -188,71 +194,80 @@
           <app-transportista formControlName="idTransportista" (objectChange)="transportistaChange($event)"></app-transportista>
         </ng-template>
       </ngb-panel>
+      <ngb-panel id="ResumenPanel">
+        <ng-template ngbPanelTitle>
+        <span class="d-flex align-items-center">
+          <fa-icon [icon]="['fas', accordion.isExpanded('ResumenPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+          <span>Resumen</span>
+        </span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
+          </div>
+          <table class="table table-bordered table-sm">
+            <caption class="sr-only">Resumen de Totales</caption>
+            <tbody>
+            <tr>
+              <th scope="row" class="table-dark">Subtotal</th>
+              <td class="w-100" colspan="2">{{ this.resultados.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr class="mb-3">
+              <th scope="row" class="text-nowrap table-dark">
+                <label class="form-label mb-0" for="descuentoPorcentaje">Descuento</label>
+              </th>
+              <td class="w-50">
+                <div class="d-flex flex-row align-items-center">
+                  <input type="number" min="0" class="form-control" id="descuentoPorcentaje" formControlName="descuentoPorcentaje"
+                        [ngClass]="{ 'is-invalid': submitted && f.descuentoPorcentaje.errors }"><span class="ms-2">%</span>
+                </div>
+                <div class="invalid-feedback" *ngIf="submitted && f.descuentoPorcentaje.errors">
+                  <div *ngIf="f.descuentoPorcentaje.errors.min">Mínimo {{ f.descuentoPorcentaje.errors.min.min }}</div>
+                </div>
+              </td>
+              <td>{{ this.resultados.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr class="mb-3">
+              <th scope="row" class="table-dark">
+                <label class="form-label mb-0" for="recargoPorcentaje">Recargo</label>
+              </th>
+              <td class="w-50">
+                <div class="d-flex flex-row align-items-center">
+                  <input type="number" min="0" class="form-control" id="recargoPorcentaje" formControlName="recargoPorcentaje"
+                        [ngClass]="{ 'is-invalid': submitted && f.recargoPorcentaje.errors }"><span class="ms-2">%</span>
+                </div>
+                <div class="invalid-feedback" *ngIf="submitted && f.recargoPorcentaje.errors">
+                  <div *ngIf="f.recargoPorcentaje.errors.min">Mínimo {{ f.recargoPorcentaje.errors.min.min }}</div>
+                </div>
+              </td>
+              <td>{{ this.resultados.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="text-nowrap table-dark">Subtotal Bruto</th>
+              <td class="w-100" colspan="2">{{ this.resultados.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="text-nowrap table-dark">IVA 10.5%</th>
+              <td class="w-100" colspan="2">{{ this.resultados.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="text-nowrap table-dark">IVA 21%</th>
+              <td class="w-100" colspan="2">{{ this.resultados.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="table-dark">Total</th>
+              <td class="w-100" colspan="2">{{ this.resultados.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary">
+              <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+            </button>
+          </div>
+        </ng-template>
+      </ngb-panel>
     </ngb-accordion>
-    <div class="mb-3 mt-3">
-      <label for="observaciones" class="form-label">Observaciones</label>
-      <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
-    </div>
-    <table class="table table-bordered table-sm">
-      <caption class="sr-only">Resumen de Totales</caption>
-      <tbody>
-      <tr>
-        <th scope="row" class="table-dark">Subtotal</th>
-        <td class="w-100" colspan="2">{{ this.resultados.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr class="mb-3">
-        <th scope="row" class="text-nowrap table-dark">
-          <label class="form-label mb-0" for="descuentoPorcentaje">Descuento</label>
-        </th>
-        <td class="w-50">
-          <div class="d-flex flex-row align-items-center">
-            <input type="number" min="0" class="form-control" id="descuentoPorcentaje" formControlName="descuentoPorcentaje"
-                   [ngClass]="{ 'is-invalid': submitted && f.descuentoPorcentaje.errors }"><span class="ms-2">%</span>
-          </div>
-          <div class="invalid-feedback" *ngIf="submitted && f.descuentoPorcentaje.errors">
-            <div *ngIf="f.descuentoPorcentaje.errors.min">Mínimo {{ f.descuentoPorcentaje.errors.min.min }}</div>
-          </div>
-        </td>
-        <td>{{ this.resultados.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr class="mb-3">
-        <th scope="row" class="table-dark">
-          <label class="form-label mb-0" for="recargoPorcentaje">Recargo</label>
-        </th>
-        <td class="w-50">
-          <div class="d-flex flex-row align-items-center">
-            <input type="number" min="0" class="form-control" id="recargoPorcentaje" formControlName="recargoPorcentaje"
-                   [ngClass]="{ 'is-invalid': submitted && f.recargoPorcentaje.errors }"><span class="ms-2">%</span>
-          </div>
-          <div class="invalid-feedback" *ngIf="submitted && f.recargoPorcentaje.errors">
-            <div *ngIf="f.recargoPorcentaje.errors.min">Mínimo {{ f.recargoPorcentaje.errors.min.min }}</div>
-          </div>
-        </td>
-        <td>{{ this.resultados.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="text-nowrap table-dark">Subtotal Bruto</th>
-        <td class="w-100" colspan="2">{{ this.resultados.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="text-nowrap table-dark">IVA 10.5%</th>
-        <td class="w-100" colspan="2">{{ this.resultados.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="text-nowrap table-dark">IVA 21%</th>
-        <td class="w-100" colspan="2">{{ this.resultados.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="table-dark">Total</th>
-        <td class="w-100" colspan="2">{{ this.resultados.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      </tbody>
-    </table>
-    <hr>
-    <div class="text-end">
-      <button type="submit" class="btn btn-primary">
-        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
-      </button>
-    </div>
   </form>
 </div>

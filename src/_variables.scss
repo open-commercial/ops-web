@@ -1,5 +1,6 @@
 /** Globo colors **/
 $yellow-globo: #f2dc47;
+$black-globo: black;
 
 /** Overwrides **/
 $primary: $yellow-globo !default;
@@ -7,10 +8,10 @@ $primary: $yellow-globo !default;
 
 $badge-font-size: 85% !default;
 
-$navbar-dark-color:                 $yellow-globo !default;
-$navbar-dark-hover-color:           $yellow-globo !default;
-$navbar-dark-active-color:          $yellow-globo !default;
-$navbar-dark-disabled-color:        rgba($yellow-globo, .25) !default;
+$navbar-dark-color:                 $black-globo !default;
+$navbar-dark-hover-color:           $black-globo !default;
+$navbar-dark-active-color:          $black-globo !default;
+$navbar-dark-disabled-color:        rgba($black-globo, .25) !default;
 
 $pagination-custom-color: #343a40;
 $pagination-color:                  $pagination-custom-color !default;

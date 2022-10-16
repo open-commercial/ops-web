@@ -39,6 +39,12 @@ export class ProductoComponent implements OnInit {
   sucursales: Sucursal[] = [];
   ivas = [0, 10.5, 21];
 
+  allowedRolesToCreate: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToCreate = false;
+
+  allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToEdit = false;
+
   allowedRolesToEditCantidades = [ Rol.ADMINISTRADOR ];
   hasRolToEditCantidades = false;
 
@@ -68,7 +74,8 @@ export class ProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.createForm();
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
 
     const obvs: Observable<any>[] = [
       this.medidasService.getMedidas(),
@@ -78,14 +85,29 @@ export class ProductoComponent implements OnInit {
 
     if (this.route.snapshot.paramMap.has('id')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
+
+      if (!this.hasRoleToEdit) {
+        this.mensajeService.msg('No tiene permisos para editar productos.', MensajeModalType.ERROR);
+        this.volverAlListado();
+        return;
+      }
+
       obvs.push(this.productosService.getProducto(id));
+    } else {
+      if (!this.hasRoleToCreate) {
+        this.mensajeService.msg('No tiene permisos para dar de alta productos.', MensajeModalType.ERROR);
+        this.volverAlListado();
+        return;
+      }
     }
+
+    this.createForm();
 
     this.loadingOverlayService.activate();
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
+      .subscribe({
+        next: (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
           this.medidas = recursos[0];
           this.rubros = recursos[1];
           this.sucursales = recursos[2];
@@ -100,11 +122,11 @@ export class ProductoComponent implements OnInit {
           }
           this.initializeForm();
         },
-        err => {
+        error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.router.navigate(['/productos']);
         }
-      )
+      })
     ;
   }
 
@@ -324,30 +346,14 @@ export class ProductoComponent implements OnInit {
     this.location.back();
   }
 
-  imageChange($event) {
-    const file = $event.target.files[0];
-    const readerBuffer = new FileReader();
-    const readerDataUrl = new FileReader();
-
-    readerBuffer.addEventListener('load', () => {
-      this.borrarImagen = false;
-      const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
-      this.form.get('imagen').setValue(Array.from(arr));
-    });
-
-    readerDataUrl.addEventListener('load', () => {
-      this.imageDataUrl = readerDataUrl.result as string;
-    });
-
-    readerBuffer.readAsArrayBuffer(file);
-    readerDataUrl.readAsDataURL(file);
+  imageDataChange(data: number[]) {
+    this.borrarImagen = false;
+    this.form.get('imagen').setValue(data);
   }
 
-  clearFile(file) {
-    file.value = null;
-    this.imageDataUrl = '';
-    this.borrarImagen = true;
-    this.form.get('imagen').setValue(null);
+  imageUrlChange(url: string) {
+    this.imageDataUrl = url;
+    if (!url) { this.borrarImagen = true; }
   }
 
   isGeneralPanelValid(): boolean {

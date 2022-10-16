@@ -24,7 +24,7 @@ export class SucursalComponent implements OnInit {
 
   loading = false;
 
-  imageData: number[] = [];
+  imageData = null;
   imageDataUrl = '';
 
   categoriasIVA = [
@@ -156,7 +156,18 @@ export class SucursalComponent implements OnInit {
     ;
   }
 
-  imageChange($event) {
+  imageDataChange(data: number[] | null) {
+    this.imageData = data;
+  }
+
+  imageUrlChange(url: string) {
+    this.imageDataUrl = url;
+    if (!url) {
+      this.eliminarImagen = true;
+    }
+  }
+
+/*   imageChange($event) {
     const file = $event.target.files[0];
     const readerBuffer = new FileReader();
     const readerDataUrl = new FileReader();
@@ -184,5 +195,5 @@ export class SucursalComponent implements OnInit {
 
   eliminarImagenChange($event) {
     this.eliminarImagen = $event.target.checked;
-  }
+  } */
 }
