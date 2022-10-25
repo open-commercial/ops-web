@@ -1,11 +1,9 @@
 <div class="app-cuentas-corrientes-proveedor">
-  <div class="row my-3">
-    <div class="col-8">
-      <h1 class="h3 text-truncate">
-        <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedores
-      </h1>
-    </div>
-    <div class="col-4 text-end m-0">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 mb-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedores
+    </h1>
+    <div class="text-nowrap text-end m-0">
       <button class="btn btn-primary ms-2 my-1" routerLink="/proveedores/nuevo" ngbPopover="Nuevo Proveedor" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>

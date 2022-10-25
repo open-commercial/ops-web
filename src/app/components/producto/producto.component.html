@@ -5,8 +5,7 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'box-open']"></fa-icon>
-      {{ producto ? producto.descripcion : 'Nuevo producto' }}
+      <fa-icon [icon]="['fas', 'box-open']"></fa-icon> {{ title }}
     </h1>
   </div>
   <form [formGroup]="form" class="mt-2" *ngIf="form">

@@ -36,16 +36,16 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
   localidades: Localidad[] = [];
 
   ordenArray = [
+    { val: 'fechaUltimoMovimiento', text: 'Fecha último Movimiento' },
     { val: 'cliente.nombreFiscal', text: 'R. Social o Nombre' },
     { val: 'cliente.fechaAlta', text: 'Fecha Alta' },
     { val: 'cliente.nombreFantasia', text: 'Nombre Fantasía' },
     { val: 'saldo', text: 'Saldo C/C' },
-    { val: 'fechaUltimoMovimiento', text: 'Fecha último Movimiento' },
   ];
 
   sentidoArray = [
-    { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   rol = Rol;

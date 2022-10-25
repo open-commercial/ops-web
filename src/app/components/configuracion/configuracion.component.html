@@ -1,7 +1,7 @@
 <div class="app-configuracion my-3">
   <div class="d-flex flex-row">
     <h1 class="h3 flex-fill text-truncate">
-      <fa-icon [icon]="['fas', 'cog']"></fa-icon> Configuración de sucursal
+      <fa-icon [icon]="['fas', 'cog']"></fa-icon> Configuración de Sucursal
     </h1>
   </div>
   <p>La siguiente configuración se aplica a la sucursal seleccionada<span *ngIf="sucursal"> ({{ this.sucursal.nombre}})</span>: </p>
@@ -38,8 +38,8 @@
             <div class="mb-3">
               <label class="form-label">
                 Certificado Digital Afip
-                <span *ngIf="configuracion && configuracion.existeCertificado" class="badge text-bg-success">(Cargado)</span>
-                <span *ngIf="!(configuracion && configuracion.existeCertificado)" class="badge text-bg-danger">(No Cargado)</span>
+                <span *ngIf="configuracion && configuracion.existeCertificado" class="badge text-bg-success">CARGADO</span>
+                <span *ngIf="!(configuracion && configuracion.existeCertificado)" class="badge text-bg-danger">NO CARGADO</span>
               </label>
               <input type="file" class="form-control" id="certificadoAfip" lang="es" accept=".p12" (change)="fileChange($event)" [disabled]="disabledInputFile">
             </div>

@@ -5,14 +5,14 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'truck']"></fa-icon> {{ proveedor ? proveedor.razonSocial : 'Nuevo Proveedor' }}
+      <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedor
     </h1>
   </div>
   <form (ngSubmit)="submit()" [formGroup]="form" class="card card-body bg-light mt-2" *ngIf="form">
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
-          <label for="razonSocial" class="form-label">R. Social *</label>
+          <label for="razonSocial" class="form-label">Razón Social</label>
           <input type="text" class="form-control" id="razonSocial" required formControlName="razonSocial"
                  [ngClass]="{ 'is-invalid': submitted && f.razonSocial.errors }">
           <div class="invalid-feedback" *ngIf="submitted && f.razonSocial.errors">
@@ -81,7 +81,10 @@
       <input type="url" class="form-control" id="web" formControlName="web">
     </div>
     <div class="text-end">
-      <button class="btn btn-primary" type="submit">Guardar</button>
+      <button class="btn btn-primary" type="submit">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon>
+        Guardar
+      </button>
     </div>
   </form>
 </div>

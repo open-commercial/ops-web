@@ -55,9 +55,6 @@ export class ProductoComponent implements OnInit {
   @ViewChild('accordion') accordion: NgbAccordion;
   imageDataUrl = '';
 
-  // esta variable solo es relevante en la edición
-  borrarImagen = false;
-
   constructor(accordionConfig: NgbAccordionConfig,
               private route: ActivatedRoute,
               private router: Router,
@@ -113,7 +110,7 @@ export class ProductoComponent implements OnInit {
           this.sucursales = recursos[2];
           if (recursos[3]) {
             this.producto = recursos[3];
-            this.title = this.producto.descripcion;
+            this.title = 'Producto';
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
             }
@@ -214,13 +211,13 @@ export class ProductoComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.productosService.crearProducto(np, idMedida, idRubro, idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.mensajeService.msg('Producto creado correctamente', MensajeModalType.INFO);
           this.location.back();
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 
@@ -232,13 +229,13 @@ export class ProductoComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.productosService.actualizarProducto(p, idMedida, idRubro, idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.mensajeService.msg('Producto actualizado correctamente', MensajeModalType.INFO);
           this.location.back();
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 
@@ -314,7 +311,6 @@ export class ProductoComponent implements OnInit {
       porcentajeBonificacionPrecio: formValues.calculosPrecio.porcentajeBonificacionPrecio.toString(),
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
-      urlImagen: this.borrarImagen && !this.imageDataUrl ? null : this.producto.urlImagen,
       imagen: formValues.imagen,
     };
   }
@@ -347,13 +343,11 @@ export class ProductoComponent implements OnInit {
   }
 
   imageDataChange(data: number[]) {
-    this.borrarImagen = false;
     this.form.get('imagen').setValue(data);
   }
 
   imageUrlChange(url: string) {
     this.imageDataUrl = url;
-    if (!url) { this.borrarImagen = true; }
   }
 
   isGeneralPanelValid(): boolean {

@@ -57,7 +57,7 @@
           <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
           <span class="badge text-bg-secondary">#{{ item.nroGasto }}</span>
         </div>
-        <div class="flex-fill d-flex flex-row flex-wrap me-2">
+        <div class="flex-fill d-flex flex-column flex-md-row flex-md-wrap me-2">
           <div class="me-2 mb-1">
             <span class="fw-bold">Usuario:&nbsp;</span>
             <span class="fst-italic">{{ item.nombreUsuario }}</span>

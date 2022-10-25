@@ -1,3 +1,5 @@
+import { AuthService } from './../../services/auth.service';
+import { Rol } from './../../models/rol';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Caja} from '../../models/caja';
 import {ActivatedRoute} from '@angular/router';
@@ -36,6 +38,9 @@ export class VerCajaComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
 
+  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  hasRoleToDelete = false;
+
   constructor(private route: ActivatedRoute,
               private formasDePagoService: FormasDePagoService,
               private cajasService: CajasService,
@@ -43,11 +48,13 @@ export class VerCajaComponent implements OnInit, OnDestroy {
               private location: Location,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private authService: AuthService) {
     this.subscription = new Subscription();
   }
 
   ngOnInit() {
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.refreshCaja(id);
 
@@ -73,8 +80,8 @@ export class VerCajaComponent implements OnInit, OnDestroy {
     this.subscription.add(
       combineLatest(obs)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (data: [Caja, FormaDePago[], { [key: number]: number }, number, number]) => {
+        .subscribe({
+          next: (data: [Caja, FormaDePago[], { [key: number]: number }, number, number]) => {
             this.caja = data[0];
             this.formasDePago = data[1];
             this.totalesFormasDePago = data[2];
@@ -82,11 +89,11 @@ export class VerCajaComponent implements OnInit, OnDestroy {
             this.totalSistema = data[4];
             this.generateResumen();
           },
-          err => {
+          error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             this.volverAlListado();
           }
-        )
+        })
     );
   }
 
@@ -100,16 +107,16 @@ export class VerCajaComponent implements OnInit, OnDestroy {
     this.subscription.add(
       combineLatest(obs)
         .pipe(finalize(() => this.loadingTotales = false))
-        .subscribe(
-          (data: [number, number]) => {
+        .subscribe({
+          next: (data: [number, number]) => {
             this.totalQueAfectaCaja = data[0];
             this.totalSistema = data[1];
           },
-          err => {
+          error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             this.volverAlListado();
           }
-        )
+        })
     );
   }
 
@@ -144,8 +151,8 @@ export class VerCajaComponent implements OnInit, OnDestroy {
     this.loadingOverlayService.activate();
     this.cajasService.getSaldoSistema(this.caja.idCaja)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        saldo => {
+      .subscribe({
+        next: saldo => {
           const modalRef = this.modalService.open(MontoModalComponent, {scrollable: true});
           modalRef.componentInstance.title = 'Cerrar Caja';
           modalRef.componentInstance.htmlInfo = [
@@ -156,15 +163,15 @@ export class VerCajaComponent implements OnInit, OnDestroy {
             this.loadingOverlayService.activate();
             this.cajasService.cerrarCaja(this.caja.idCaja, monto)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe(
-                caja => this.caja = caja,
-                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-              )
+              .subscribe({
+                next: caja => this.caja = caja,
+                error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+              })
             ;
           }, () => { return; });
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 
@@ -182,18 +189,58 @@ export class VerCajaComponent implements OnInit, OnDestroy {
       this.loadingOverlayService.activate();
       combineLatest(obs)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          data => {
+        .subscribe({
+          next: data => {
             this.caja = data[0];
             this.totalesFormasDePago = data[1];
             this.refreshCaja();
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
       ;
     }, () => { return; });
   }
 
+  reabrirCaja() {
+    if (this.caja.estado !== EstadoCaja.CERRADA) {
+      return;
+    }
+
+    const modalRef = this.modalService.open(MontoModalComponent, {scrollable: true});
+    modalRef.componentInstance.title = 'Reabrir Caja';
+    modalRef.componentInstance.label = 'Saldo Apertura';
+    modalRef.result.then((monto: number) => {
+      this.loadingOverlayService.activate();
+      this.cajasService.reabrirCaja(this.caja.idCaja, monto)
+        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+        .subscribe({
+          next: () => this.refreshCaja(),
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }, () => { return; });
+  }
+
+  eliminarCaja() {
+    if (!this.hasRoleToDelete) {
+      this.mensajeService.msg('No posee permiso para eliminar una caja.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = `¿Está seguro que desea eliminar la caja?`;
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.cajasService.eliminarCaja(this.caja.idCaja)
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe({
+            next: () => this.volverAlListado(),
+            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+          })
+        ;
+      }
+    }, () => { return; });
+  }
 
   onMovimientosChange(cantidad: number) {
     if (cantidad > 0) {

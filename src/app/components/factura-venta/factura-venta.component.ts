@@ -26,7 +26,7 @@ import { Pedido } from '../../models/pedido';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
 import { Transportista } from '../../models/transportista';
-import {Subscription} from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import {Usuario} from '../../models/usuario';
 import {AuthService} from '../../services/auth.service';
 import {Rol} from '../../models/rol';
@@ -76,6 +76,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   usuario: Usuario = null;
 
   formasDePago: FormaDePago[] = [];
+  formaDePagoPredeterminada: FormaDePago;
 
   constructor(private fb: UntypedFormBuilder,
               modalConfig: NgbModalConfig,
@@ -102,22 +103,22 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.createFrom();
 
-    this.loadingOverlayService.activate();
-    this.authService.getLoggedInUsuario()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: (u: Usuario) => {
-          this.usuario = u;
-          this.verificarPedido();
-        }
-      })
-    ;
+    const obvs = [
+      this.authService.getLoggedInUsuario(),
+      this.formasDePagoService.getFormasDePago(),
+      this.formasDePagoService.getFormaDePagoPredeterminada(),
+    ];
 
-    this.loadingOverlayService.activate()
-    this.formasDePagoService.getFormasDePago()
+    this.loadingOverlayService.activate();
+    combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: formasDePago => this.formasDePago = formasDePago,
+        next: (data: [Usuario, FormaDePago[], FormaDePago]) => {
+          this.usuario = data[0];
+          this.formasDePago = data[1];
+          this.formaDePagoPredeterminada = data[2];
+          this.verificarPedido();
+        },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
     ;
@@ -174,18 +175,18 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
         this.loadingOverlayService.activate();
         this.cuentasCorrienteService.getCuentaCorrienteCliente(this.pedido.cliente.idCliente)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe(
-            (ccc: CuentaCorrienteCliente) => {
+          .subscribe({
+            next: (ccc: CuentaCorrienteCliente) => {
               data.ccc = ccc;
               this.storageService.setItem(this.localStorageKey, data);
               this.ininicializarForm();
             },
-            err => {
+            error: err => {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 .then(() => this.router.navigate(['/pedidos']))
               ;
             }
-          )
+          })
         ;
       } else {
         this.ininicializarForm();
@@ -461,8 +462,8 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
         this.saving = false;
         this.loadingOverlayService.deactivate();
       }))
-      .subscribe(
-        (fs: FacturaVenta[]) => {
+      .subscribe({
+        next: (fs: FacturaVenta[]) => {
           const f = fs[0];
           this.storageService.removeItem(this.localStorageKey);
           this.pedido = null;
@@ -475,8 +476,8 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
           this.mensajeService.msg(msg, MensajeModalType.INFO);
           this.router.navigate(['/facturas-venta']);
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 
@@ -548,10 +549,17 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
       }
     }
     m = Number(m.toFixed(2));
-    this.pagos.push(this.createPagoForm({ idFormaDePago: null, monto: m }));
+    this.pagos.push(this.createPagoForm({
+      idFormaDePago: this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null,
+      monto: m
+    }));
   }
 
   removePagoForm(i: number) {
     this.pagos.removeAt(i);
+  }
+
+  getSaldoCCC() {
+    return this.form && this.form.get('ccc') && this.form.get('ccc').value ? this.form.get('ccc').value.saldo : 0;
   }
 }

@@ -46,7 +46,8 @@ export class ImgPickerComponent implements OnInit {
     file.value = null;
     this.imageDataUrl = '';
 
-    this.changeAsData.emit(null);
+    //this.changeAsData.emit(null);
+    this.changeAsData.emit([]);
     this.changeAsUrl.emit('');
   }
 }

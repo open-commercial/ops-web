@@ -34,8 +34,6 @@ export class SucursalComponent implements OnInit {
     { value: CategoriaIVA.MONOTRIBUTO, text: 'Monotributo'},
   ];
 
-  eliminarImagen = false;
-
   constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private locaction: Location,
@@ -106,7 +104,8 @@ export class SucursalComponent implements OnInit {
         nombre: formValues.nombre,
         categoriaIVA: formValues.categoriaIVA,
         email: formValues.email,
-        ubicacion: formValues.ubicacion
+        ubicacion: formValues.ubicacion,
+        imagen: this.imageData,
       };
 
       if (formValues.lema) { sucursal.lema = formValues.lema; }
@@ -116,12 +115,6 @@ export class SucursalComponent implements OnInit {
         sucursal.fechaInicioActividad = HelperService.getDateFromNgbDate(formValues.fechaInicioActividad);
       }
       if (formValues.telefono) { sucursal.telefono = formValues.telefono; }
-
-      if (this.eliminarImagen) {
-        sucursal.imagen = null;
-      } else if (this.imageData && this.imageData.length > 0) {
-        sucursal.imagen = this.imageData;
-      }
 
       if (this.sucursal) {
         this.doUpdate(sucursal as Sucursal);
@@ -156,44 +149,11 @@ export class SucursalComponent implements OnInit {
     ;
   }
 
-  imageDataChange(data: number[] | null) {
+  imageDataChange(data: number[]) {
     this.imageData = data;
   }
 
   imageUrlChange(url: string) {
     this.imageDataUrl = url;
-    if (!url) {
-      this.eliminarImagen = true;
-    }
   }
-
-/*   imageChange($event) {
-    const file = $event.target.files[0];
-    const readerBuffer = new FileReader();
-    const readerDataUrl = new FileReader();
-
-    readerBuffer.addEventListener('load', () => {
-      const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
-      this.imageData = Array.from(arr);
-    });
-
-    readerDataUrl.addEventListener('load', () => {
-      this.imageDataUrl = readerDataUrl.result as string;
-    });
-
-    readerBuffer.readAsArrayBuffer(file);
-    readerDataUrl.readAsDataURL(file);
-
-    this.eliminarImagen = false;
-  }
-
-  imageClear(imageFile) {
-    this.imageDataUrl = '';
-    this.imageData = [];
-    imageFile.value = '';
-  }
-
-  eliminarImagenChange($event) {
-    this.eliminarImagen = $event.target.checked;
-  } */
 }

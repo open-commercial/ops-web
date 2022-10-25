@@ -168,13 +168,13 @@ export class CajasComponent extends ListadoDirective implements OnInit {
         hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
         es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
         */
-        .subscribe(
-          () => location.reload(),
-          err => {
+        .subscribe({
+          next: () => location.reload(),
+          error: err => {
             this.loadingOverlayService.deactivate();
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           }
-        )
+        })
       ;
     }, () => { return; });
   }
@@ -190,13 +190,13 @@ export class CajasComponent extends ListadoDirective implements OnInit {
         hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
         es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
         */
-        .subscribe(
-          () => location.reload(),
-          err => {
+        .subscribe({
+          next: () => location.reload(),
+          error: err => {
             this.loadingOverlayService.deactivate();
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           }
-        )
+        })
       ;
     }, () => { return; });
   }
@@ -220,13 +220,13 @@ export class CajasComponent extends ListadoDirective implements OnInit {
           hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
           es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
           */
-          .subscribe(
-            () => location.reload(),
-            err => {
+          .subscribe({
+            next: () => location.reload(),
+            error: err => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
-          )
+          })
         ;
       }
     }, () => { return; });

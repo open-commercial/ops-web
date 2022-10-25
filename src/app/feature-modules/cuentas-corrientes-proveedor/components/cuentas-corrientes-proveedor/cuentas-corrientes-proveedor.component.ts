@@ -33,14 +33,14 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
   helper = HelperService;
 
   ordenArray = [
+    { val: 'fechaUltimoMovimiento', text: 'Último Movimiento C/C' },
     { val: 'proveedor.razonSocial', text: 'Razón Social' },
     { val: 'saldo', text: 'Saldo C/C' },
-    { val: 'fechaUltimoMovimiento', text: 'Último Movimiento C/C' },
   ];
 
   sentidoArray = [
-    { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';

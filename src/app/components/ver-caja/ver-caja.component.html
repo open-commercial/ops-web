@@ -1,6 +1,6 @@
-<div class="app-ver-caja my-3">
+<div class="app-ver-caja">
   <div *ngIf="caja">
-    <div class="d-flex flex-column flex-md-row mb-2">
+    <div class="d-flex flex-row my-3">
       <h1 class="h3 flex-fill text-truncate">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
            (click)="volverAlListado()">
@@ -8,12 +8,18 @@
         </a>
         <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Arqueo de Caja
       </h1>
-      <div class="text-nowrap text-end" *ngIf="caja.estado === estado.ABIERTA" >
-        <button type="button" class="btn btn-primary ms-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
+      <div class="text-nowrap text-end">
+        <button type="button" class="btn btn-primary ms-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" *ngIf="caja.estado === estado.ABIERTA">
           <fa-icon [icon]="['fas', 'coins']"></fa-icon>
         </button>
-        <button type="button" class="btn btn-primary ms-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left">
+        <button type="button" class="btn btn-primary ms-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left" *ngIf="caja.estado === estado.ABIERTA">
           <fa-icon [icon]="['fas', 'lock']"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-primary ms-2" (click)="reabrirCaja()" ngbPopover="Reabrir" triggers="mouseenter:mouseleave" placement="left" *ngIf="caja.estado === estado.CERRADA">
+          <fa-icon [icon]="['fas', 'lock-open']"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-primary ms-2" (click)="eliminarCaja()" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToDelete">
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
         </button>
       </div>
     </div>

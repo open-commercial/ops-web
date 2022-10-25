@@ -6,7 +6,7 @@
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
       <fa-icon [icon]="['fas', 'portrait']"></fa-icon>
-      {{ cliente ? 'Cliente: ' + cliente.nombreFiscal + (cliente.nombreFantasia ? ' (' + cliente.nombreFantasia + ')' : '')  : 'Nuevo cliente' }}
+      {{ cliente ? 'Cliente' : 'Nuevo cliente' }}
     </h1>
   </div>
   <form (ngSubmit)="submit()" [formGroup]="form" class="card card-body bg-light mt-2" *ngIf="form">
@@ -14,7 +14,7 @@
       <div class="col-md-6">
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="puede-comprar-a-plazo" formControlName="puedeComprarAPlazo">
-          <label for="puede-comprar-a-plazo" class="form-check-label">Compra a Plazo</label>
+          <label for="puede-comprar-a-plazo" class="form-check-label">Puede comprar a plazo</label>
         </div>
       </div>
       <div class="col-md-6">
@@ -91,12 +91,18 @@
         </div>
       </div>
     </div>
-    <app-usuario-filtro formControlName="idCredencial" label="Credencial *"  [roles]="[rol.COMPRADOR]" [profile]="ufProfile" [showNewButton]="true"></app-usuario-filtro>
-    <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idCredencial.errors">
-      <div *ngIf="f.idCredencial.errors.required">Requerido</div>
+    <div class="row">
+      <div class="col-md-6">
+        <app-usuario-filtro formControlName="idCredencial" label="Credencial *"  [roles]="[rol.COMPRADOR]" [profile]="ufProfile" [showNewButton]="true"></app-usuario-filtro>
+        <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idCredencial.errors">
+          <div *ngIf="f.idCredencial.errors.required">Requerido</div>
+        </div>
+      </div>
     </div>
     <div class="text-end">
-      <button class="btn btn-primary" type="submit">Guardar</button>
+      <button class="btn btn-primary" type="submit">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
     </div>
   </form>
 </div>

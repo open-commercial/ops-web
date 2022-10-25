@@ -98,6 +98,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   mov = Movimiento;
 
   formasDePago: FormaDePago[] = [];
+  formaDePagoPredeterminada: FormaDePago;
 
   constructor(private fb: UntypedFormBuilder,
               modalConfig: NgbModalConfig,
@@ -125,8 +126,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createForm();
-    this.loadingOverlayService.activate();
-    this.sucursalesService.getPuntosDeRetito()
+
+    /*this.sucursalesService.getPuntosDeRetito()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: (sucs: Sucursal[]) => this.sucursales = sucs,
@@ -141,7 +142,24 @@ export class PedidoComponent implements OnInit, OnDestroy {
         next: formasDePago => this.formasDePago = formasDePago,
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
-    ;
+    ;*/
+    const obvs = [
+      this.sucursalesService.getPuntosDeRetito(),
+      this.formasDePagoService.getFormasDePago(),
+      this.formasDePagoService.getFormaDePagoPredeterminada(),
+    ];
+
+    this.loadingOverlayService.activate();
+    combineLatest(obvs)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: (data: [Sucursal[], FormaDePago[], FormaDePago]) => {
+          this.sucursales = data[0];
+          this.formasDePago = data[1];
+          this.formaDePagoPredeterminada = data[2];
+        },
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
 
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
       if (!s.configuracionSucursal.puntoDeRetiro) {
@@ -206,8 +224,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.loadingOverlayService.activate();
     this.pedidosService.getPedido(idPedido)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (p: Pedido) => {
+      .subscribe({
+        next: (p: Pedido) => {
           this.datosParaEditarOClonar.pedido = p;
           if (this.action === Action.EDITAR) {
             this.title += ' #' + p.nroPedido;
@@ -240,11 +258,11 @@ export class PedidoComponent implements OnInit, OnDestroy {
             }
           );
         },
-        err => {
+        error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.router.navigate(['/pedidos']);
         }
-      )
+      })
     ;
   }
 
@@ -255,8 +273,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.loadingOverlayService.activate();
       this.clientesService.existeClientePredetermiando()
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (v: boolean) => {
+        .subscribe({
+          next: (v: boolean) => {
             if (v) {
               this.loadingOverlayService.activate();
               this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
@@ -273,8 +291,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
               this.inicializarForm();
             }
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
       ;
     } else {
       this.inicializarForm();
@@ -608,7 +626,10 @@ export class PedidoComponent implements OnInit, OnDestroy {
       }
     }
     m = Number(m.toFixed(2));
-    this.pagos.push(this.createPagoForm({ idFormaDePago: null, monto: m }));
+    this.pagos.push(this.createPagoForm({
+      idFormaDePago: this.formaDePagoPredeterminada ? this.formaDePagoPredeterminada.idFormaDePago : null,
+      monto: m
+    }));
   }
 
   removePagoForm(i: number) {
