@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {CajasService} from '../../services/cajas.service';
 import {BusquedaCajaCriteria} from '../../models/criterias/busqueda-caja-criteria';
 import {Observable} from 'rxjs';
@@ -41,7 +41,7 @@ export class CajasComponent extends ListadoDirective implements OnInit {
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               private authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private cajasService: CajasService,
               private usuariosService: UsuariosService,
               private modalService: NgbModal) {
@@ -168,13 +168,13 @@ export class CajasComponent extends ListadoDirective implements OnInit {
         hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
         es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
         */
-        .subscribe(
-          () => location.reload(),
-          err => {
+        .subscribe({
+          next: () => location.reload(),
+          error: err => {
             this.loadingOverlayService.deactivate();
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           }
-        )
+        })
       ;
     }, () => { return; });
   }
@@ -190,13 +190,13 @@ export class CajasComponent extends ListadoDirective implements OnInit {
         hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
         es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
         */
-        .subscribe(
-          () => location.reload(),
-          err => {
+        .subscribe({
+          next: () => location.reload(),
+          error: err => {
             this.loadingOverlayService.deactivate();
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           }
-        )
+        })
       ;
     }, () => { return; });
   }
@@ -220,13 +220,13 @@ export class CajasComponent extends ListadoDirective implements OnInit {
           hacer this.loadingOverlayService.deactivate() en pipe(finalize) produce un mal efecto visual,
           es por eso que el loading overlay no se desactiva en finalize (el reload lo sustituye). Si se hace en error.
           */
-          .subscribe(
-            () => location.reload(),
-            err => {
+          .subscribe({
+            next: () => location.reload(),
+            error: err => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
-          )
+          })
         ;
       }
     }, () => { return; });

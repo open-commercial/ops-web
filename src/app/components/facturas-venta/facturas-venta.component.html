@@ -1,14 +1,14 @@
 <div class="app-facturas-venta">
   <div class="d-flex flex-row my-3">
-    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas Ventas</h1>
-    <div class="text-right m-0 text-nowrap">
-      <button type="button" class="btn btn-primary ml-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
+    <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Ventas</h1>
+    <div class="text-end m-0 text-nowrap">
+      <button type="button" class="btn btn-primary ms-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
               [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="facturasVentaBatchActionsBoxCollapse"
               [class.bg-white]="!isBatchActionsBoxCollapsed"
               ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="font-weight-bold">{{ batchActionsService.count(baKey) }}</span>
+        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="fw-bold">{{ batchActionsService.count(baKey) }}</span>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -27,32 +27,32 @@
         </div>
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
-          <div class="form-group">
-            <label for="tipo_de_comprobante">Tipo de Comprobante</label>
-            <select class="form-control" id="tipo_de_comprobante" formControlName="tipoComprobante">
+          <div class="mb-3">
+            <label for="tipo_de_comprobante" class="form-label">Tipo de Comprobante</label>
+            <select class="form-select" id="tipo_de_comprobante" formControlName="tipoComprobante">
               <option></option>
               <option *ngFor="let tdc of tiposDeComprobanteFV" [value]="tdc.val">{{ tdc.text }}</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Nº Factura</label>
+          <div class="mb-3">
+            <label class="form-label">Nº Factura</label>
             <div class="row">
               <div class="col-4">
-                <label class="sr-only" for="num-serie">Número de serie</label>
+                <label class="form-label sr-only" for="num-serie">Número de serie</label>
                 <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
               </div>
               <div class="col-8">
-                <label class="sr-only" for="num-factura">Número de Factura</label>
+                <label class="form-label sr-only" for="num-factura">Número de Factura</label>
                 <input type="text" class="form-control" id="num-factura" formControlName="numFactura">
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="nro-pedido">Nº Pedido</label>
+          <div class="mb-3">
+            <label for="nro-pedido" class="form-label">Nº Pedido</label>
             <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
           </div>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorFV" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFV></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorFV" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFV></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFV" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoFV></app-filtro-ordenamiento>
           </div>
         </div>
@@ -69,19 +69,19 @@
   <div class="facturas my-2">
     <ng-template #info let-item let-i="index" id="infoFV">
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="fechaFV_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="fechaFV_{{ i }}">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-pill badge-light ml-2 mb-2 px-2 py-1" id="tipoComprobanteFV_{{ i }}">
+        <span class="badge text-bg-pill text-bg-light ms-2 mb-2 px-2 py-1" id="tipoComprobanteFV_{{ i }}">
           {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" id="nroComprobanteInternoFV_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="nroComprobanteInternoFV_{{ i }}">
           #INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfip_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfip_{{ i }}">
           #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
-        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cae" id="cae_{{ i }}">
+        <span class="badge text-bg-secondary ms-2 mb-2 px-2 py-1" *ngIf="item.cae" id="cae_{{ i }}">
           CAE: {{ item.cae }} (vto: {{ item.vencimientoCae | date:'dd/MM/yyyy' }})
         </span>
       </div>

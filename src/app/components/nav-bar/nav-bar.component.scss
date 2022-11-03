@@ -7,3 +7,7 @@
     width: 3.2rem;
   }
 }
+
+.dropdown-item.active, .dropdown-item:active {
+  color: black;
+}

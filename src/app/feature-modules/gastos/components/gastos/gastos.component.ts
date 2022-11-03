@@ -8,7 +8,7 @@ import {LoadingOverlayService} from '../../../../services/loading-overlay.servic
 import {MensajeService} from '../../../../services/mensaje.service';
 import {Rol} from '../../../../models/rol';
 import {AuthService} from '../../../../services/auth.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {BusquedaGastoCriteria} from '../../../../models/criterias/busqueda-gasto-criteria';
 import * as moment from 'moment';
 import {GastosService} from '../../../../services/gastos.service';
@@ -59,7 +59,7 @@ export class GastosComponent extends ListadoDirective implements OnInit {
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               private authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private gastosService: GastosService,
               private usuariosService: UsuariosService,
               private formasDePagoService: FormasDePagoService,

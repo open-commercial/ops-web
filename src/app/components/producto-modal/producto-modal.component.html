@@ -1,13 +1,11 @@
 <div class="modal-header p-2 flex-column">
   <div class="input-group">
-    <label class="sr-only" for="searchTerm"></label>
+    <label class="form-label sr-only" for="searchTerm"></label>
     <input [(ngModel)]="searchTerm" autocomplete="off" type="search" class="form-control" id="searchTerm" [placeholder]="searchInputPlaceholder"
            (keyup.enter)="search()" [readOnly]="clearLoading || loading">
-    <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
-        <fa-icon [icon]="['fas', 'search']"></fa-icon>
-      </button>
-    </div>
+    <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
+      <fa-icon [icon]="['fas', 'search']"></fa-icon>
+    </button>
   </div>
   <div class="mt-2 px-1 small" *ngIf="sucursal">Sucursal origen: <strong>{{ sucursal.nombre }}</strong></div>
 </div>
@@ -23,12 +21,12 @@
         </span>
         <span class="flex-fill d-flex flex-column p-2 info">
           <span>
-            <span class="mr-2 codigo">{{ item.codigo }}</span>
-            <span *ngIf="item.oferta" class="badge badge-success">OFERTA {{ item.porcentajeBonificacionOferta }}%</span>
-            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge badge-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
+            <span class="me-2 codigo">{{ item.codigo }}</span>
+            <span *ngIf="item.oferta" class="badge text-bg-success">OFERTA {{ item.porcentajeBonificacionOferta }}%</span>
+            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge text-bg-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
           </span>
-          <span class="mr-2"><strong>{{ item.descripcion }}</strong></span>
-          <span class="mr-2">
+          <span class="me-2"><strong>{{ item.descripcion }}</strong></span>
+          <span class="me-2">
             <span>Stock: <strong>{{ getCantidadDisponible(item) }} {{ item.nombreMedida }}</strong></span>
             <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantDisponibleOtrasSucursales(item) }} {{ item.nombreMedida }}</span>
             <span> - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}</span>

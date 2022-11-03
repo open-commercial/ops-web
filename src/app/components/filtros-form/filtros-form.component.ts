@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-filtros-form',
@@ -7,10 +7,10 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./filtros-form.component.scss']
 })
 export class FiltrosFormComponent {
-  private pform: FormGroup;
+  private pform: UntypedFormGroup;
 
   @Input()
-  set form(value: FormGroup) {
+  set form(value: UntypedFormGroup) {
     this.pform = value;
   }
   get form() { return this.pform; }

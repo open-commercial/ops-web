@@ -1,6 +1,6 @@
-<div class="form-group app-transportista">
-  <label for="transportista">Transportista</label>
-  <select class="form-control" id="transportista" (change)="select($event)" [disabled]="isDisabled">
+<div class="mb-3 app-transportista">
+  <label for="transportista" class="form-label">Transportista</label>
+  <select class="form-select" id="transportista" (change)="select($event)" [disabled]="isDisabled">
     <option value=""></option>
     <option *ngFor="let t of transportistas" [value]="t.idTransportista" [selected]="value == t.idTransportista">{{ t.nombre }}</option>
   </select>

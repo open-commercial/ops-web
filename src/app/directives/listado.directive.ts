@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SucursalesService } from '../services/sucursales.service';
 import { OnDestroy, OnInit, Directive } from '@angular/core';
@@ -19,7 +19,7 @@ export abstract class ListadoDirective implements OnInit, OnDestroy {
   totalPages = 0;
   size = 0;
 
-  filterForm: FormGroup;
+  filterForm: UntypedFormGroup;
   appliedFilters: { label: string; value: string; asyncFn?: Observable<string> }[] = [];
 
   subscription: Subscription;

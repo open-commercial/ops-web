@@ -1,5 +1,5 @@
 import {Directive, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
 import {MensajeService} from '../services/mensaje.service';
@@ -14,7 +14,7 @@ import {NotaDebitoModalDirective} from './nota-debito-modal.directive';
 export abstract class NotaDebitoVentaModalDirective extends NotaDebitoModalDirective implements OnInit {
   cliente: Cliente;
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
                         protected sucursalesService: SucursalesService,

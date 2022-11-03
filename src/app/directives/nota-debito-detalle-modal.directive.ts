@@ -1,5 +1,5 @@
 import {NotaDebito} from '../models/nota';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../services/notas.service';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
@@ -10,7 +10,7 @@ import {Directive, OnInit} from '@angular/core';
 @Directive()
 export abstract class NotaDebitoDetalleModalDirective implements OnInit {
   notaDebito: NotaDebito;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   loading = false;
 
@@ -22,7 +22,7 @@ export abstract class NotaDebitoDetalleModalDirective implements OnInit {
   ];
 
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService) { }

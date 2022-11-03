@@ -3,8 +3,8 @@
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'map-marked-alt']"></fa-icon> Localidades
     </h1>
-    <div class="text-right m-0">
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+    <div class="text-end m-0">
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
         [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="localidadesCollapse"
         [class.bg-white]="!isFiltersCollapsed"
         ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -16,34 +16,33 @@
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-lg-6">
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" formControlName="nombre">
           </div>
-          <div class="form-group">
-            <label for="nombreProvincia">Provincia</label>
-            <select class="form-control" id="nombreProvincia" formControlName="nombreProvincia">
+          <div class="mb-3">
+            <label for="nombreProvincia" class="form-label">Provincia</label>
+            <select class="form-select" id="nombreProvincia" formControlName="nombreProvincia">
               <option value=""></option>
               <option *ngFor="let p of provincias" [value]="p.nombre">{{ p.nombre }}</option>
             </select>
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="form-group">
-            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="envioGratuito" formControlName="envioGratuito">
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="null"> Todos
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="false"> Envío NO Gratuito
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="true"> Envío Gratuito
-              </label>
+          <div class="mb-3">
+            <div class="btn-group d-flex" role="group">
+              <input type="radio" class="btn-check" [value]="null" id="envio-gratuito-null" autocomplete="off" formControlName="envioGratuito">
+              <label class="btn btn-outline-secondary" for="envio-gratuito-null">Todos</label>
+              <input type="radio" class="btn-check" [value]="false" id="envio-gratuito-false" autocomplete="off" formControlName="envioGratuito">
+              <label class="btn btn-outline-secondary" for="envio-gratuito-false">Envío NO Gratuito</label>
+              <input type="radio" class="btn-check" [value]="true" id="envio-gratuito-true" autocomplete="off" formControlName="envioGratuito">
+              <label class="btn btn-outline-secondary" for="envio-gratuito-true">Envío Gratuito</label>
             </div>
           </div>
-          <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorL" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorL></app-filtro-ordenamiento>
-          <app-filtro-ordenamiento id="filtroOrdenamientoSentidoL" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoL></app-filtro-ordenamiento>
+          <div class="p-3 bg-light border mb-3">
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorL" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorL></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoL" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoL></app-filtro-ordenamiento>
+          </div>
         </div>
       </div>
     </ng-template>
@@ -55,12 +54,12 @@
     <ng-template #info let-item>
       <div class="row">
         <div class="col-md-6">
-          <div class="lead font-weight-bold">{{ item.nombre }}</div>
-          <div class="font-italic">{{ item.nombreProvincia }}</div>
+          <div class="lead fw-bold">{{ item.nombre }}</div>
+          <div class="fst-italic">{{ item.nombreProvincia }}</div>
         </div>
         <div class="col-md-6">
-          <span class="badge badge-success" *ngIf="item.envioGratuito">Envío Gratuito</span>
-          <div><span class="font-weight-bold">Costo de Envío: </span>{{ item.costoEnvio | currency:'ARS':'symbol':'1.0-2' }}</div>
+          <span class="badge text-bg-success" *ngIf="item.envioGratuito">Envío Gratuito</span>
+          <div><span class="fw-bold">Costo de Envío: </span>{{ item.costoEnvio | currency:'ARS':'symbol':'1.0-2' }}</div>
         </div>
       </div>
     </ng-template>

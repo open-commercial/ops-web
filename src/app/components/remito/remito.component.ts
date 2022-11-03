@@ -7,7 +7,7 @@ import {finalize} from 'rxjs/operators';
 import {MensajeService} from '../../services/mensaje.service';
 import {Location} from '@angular/common';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {TipoBulto} from '../../models/tipo-bulto';
 import {Transportista} from '../../models/transportista';
 import {combineLatest, Observable, Subscription} from 'rxjs';
@@ -21,7 +21,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 const bultosCount = (min: number): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
     let cant = 0;
-    (control as FormArray).controls.forEach((b) => {
+    (control as UntypedFormArray).controls.forEach((b) => {
       cant += b.get('cantidad') && b.get('cantidad').valid ? b.get('cantidad').value : 0;
     });
     return cant >= min ? null : { bultosCount: { count: cant, min }};
@@ -35,7 +35,7 @@ const bultosCount = (min: number): ValidatorFn => {
 })
 export class RemitoComponent implements OnInit, OnDestroy {
   facturasVenta: FacturaVenta[] = [];
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   totalBultos = 0;
@@ -54,7 +54,7 @@ export class RemitoComponent implements OnInit, OnDestroy {
               private mensajeService: MensajeService,
               private transportistasService: TransportistasService,
               private location: Location,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private sucursalesService: SucursalesService) {
     this.subscription = new Subscription();
@@ -126,7 +126,7 @@ export class RemitoComponent implements OnInit, OnDestroy {
   }
 
   get bultos() {
-    return this.form.get('bultos') as FormArray;
+    return this.form.get('bultos') as UntypedFormArray;
   }
 
   getTotalBultos() {

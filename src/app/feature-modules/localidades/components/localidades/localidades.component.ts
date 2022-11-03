@@ -5,7 +5,7 @@ import { FiltroOrdenamientoComponent } from '../../../../components/filtro-orden
 import { finalize } from 'rxjs/operators';
 import { Provincia } from '../../../../models/provincia';
 import { HelperService } from '../../../../services/helper.service';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { BusquedaLocalidadCriteria } from '../../../../models/criterias/busqueda-localidad-criteria';
 import { UbicacionesService } from '../../../../services/ubicaciones.service';
 import { Pagination } from '../../../../models/pagination';
@@ -48,7 +48,7 @@ export class LocalidadesComponent extends ListadoDirective implements OnInit {
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               private authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private ubicacionesService: UbicacionesService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService)
   }

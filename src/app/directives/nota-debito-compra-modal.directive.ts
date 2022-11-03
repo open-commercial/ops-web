@@ -1,6 +1,6 @@
 import {NotaDebitoModalDirective} from './nota-debito-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
 import {MensajeService} from '../services/mensaje.service';
 import {SucursalesService} from '../services/sucursales.service';
@@ -14,7 +14,7 @@ import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.compon
 export abstract class NotaDebitoCompraModalDirective extends NotaDebitoModalDirective implements OnInit {
   proveedor: Proveedor;
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
                         protected sucursalesService: SucursalesService,

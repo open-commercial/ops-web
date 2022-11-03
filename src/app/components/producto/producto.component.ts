@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { Producto } from '../../models/producto';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { combineLatest, Observable } from 'rxjs';
 import { MedidasService } from '../../services/medidas.service';
 import { RubrosService } from '../../services/rubros.service';
@@ -39,18 +39,21 @@ export class ProductoComponent implements OnInit {
   sucursales: Sucursal[] = [];
   ivas = [0, 10.5, 21];
 
+  allowedRolesToCreate: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToCreate = false;
+
+  allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToEdit = false;
+
   allowedRolesToEditCantidades = [ Rol.ADMINISTRADOR ];
   hasRolToEditCantidades = false;
 
   producto: Producto;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   @ViewChild('accordion') accordion: NgbAccordion;
   imageDataUrl = '';
-
-  // esta variable solo es relevante en la edición
-  borrarImagen = false;
 
   constructor(accordionConfig: NgbAccordionConfig,
               private route: ActivatedRoute,
@@ -60,7 +63,7 @@ export class ProductoComponent implements OnInit {
               private productosService: ProductosService,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private sucursalesService: SucursalesService,
               private location: Location,
               private authService: AuthService) {
@@ -68,7 +71,8 @@ export class ProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.createForm();
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
 
     const obvs: Observable<any>[] = [
       this.medidasService.getMedidas(),
@@ -78,20 +82,35 @@ export class ProductoComponent implements OnInit {
 
     if (this.route.snapshot.paramMap.has('id')) {
       const id = Number(this.route.snapshot.paramMap.get('id'));
+
+      if (!this.hasRoleToEdit) {
+        this.mensajeService.msg('No tiene permisos para editar productos.', MensajeModalType.ERROR);
+        this.volverAlListado();
+        return;
+      }
+
       obvs.push(this.productosService.getProducto(id));
+    } else {
+      if (!this.hasRoleToCreate) {
+        this.mensajeService.msg('No tiene permisos para dar de alta productos.', MensajeModalType.ERROR);
+        this.volverAlListado();
+        return;
+      }
     }
+
+    this.createForm();
 
     this.loadingOverlayService.activate();
     combineLatest(obvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
+      .subscribe({
+        next: (recursos: [Medida[], Rubro[], Sucursal[], Producto?]) => {
           this.medidas = recursos[0];
           this.rubros = recursos[1];
           this.sucursales = recursos[2];
           if (recursos[3]) {
             this.producto = recursos[3];
-            this.title = this.producto.descripcion;
+            this.title = 'Producto';
             if (this.producto.urlImagen) {
               this.imageDataUrl = this.producto.urlImagen;
             }
@@ -100,11 +119,11 @@ export class ProductoComponent implements OnInit {
           }
           this.initializeForm();
         },
-        err => {
+        error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.router.navigate(['/productos']);
         }
-      )
+      })
     ;
   }
 
@@ -160,7 +179,7 @@ export class ProductoComponent implements OnInit {
   }
 
   get cantidadEnSucursal() {
-    return this.form.get('cantidadEnSucursal') as FormArray;
+    return this.form.get('cantidadEnSucursal') as UntypedFormArray;
   }
 
   addCantidadEnSucursal(idSucursal: number, nombreSucursal: string, cantidad: number = 0) {
@@ -192,13 +211,13 @@ export class ProductoComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.productosService.crearProducto(np, idMedida, idRubro, idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.mensajeService.msg('Producto creado correctamente', MensajeModalType.INFO);
           this.location.back();
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 
@@ -210,13 +229,13 @@ export class ProductoComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.productosService.actualizarProducto(p, idMedida, idRubro, idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.mensajeService.msg('Producto actualizado correctamente', MensajeModalType.INFO);
           this.location.back();
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 
@@ -292,7 +311,6 @@ export class ProductoComponent implements OnInit {
       porcentajeBonificacionPrecio: formValues.calculosPrecio.porcentajeBonificacionPrecio.toString(),
       nota: formValues.nota,
       fechaVencimiento: HelperService.getDateFromNgbDate(formValues.fechaVencimiento),
-      urlImagen: this.borrarImagen && !this.imageDataUrl ? null : this.producto.urlImagen,
       imagen: formValues.imagen,
     };
   }
@@ -324,30 +342,12 @@ export class ProductoComponent implements OnInit {
     this.location.back();
   }
 
-  imageChange($event) {
-    const file = $event.target.files[0];
-    const readerBuffer = new FileReader();
-    const readerDataUrl = new FileReader();
-
-    readerBuffer.addEventListener('load', () => {
-      this.borrarImagen = false;
-      const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
-      this.form.get('imagen').setValue(Array.from(arr));
-    });
-
-    readerDataUrl.addEventListener('load', () => {
-      this.imageDataUrl = readerDataUrl.result as string;
-    });
-
-    readerBuffer.readAsArrayBuffer(file);
-    readerDataUrl.readAsDataURL(file);
+  imageDataChange(data: number[]) {
+    this.form.get('imagen').setValue(data);
   }
 
-  clearFile(file) {
-    file.value = null;
-    this.imageDataUrl = '';
-    this.borrarImagen = true;
-    this.form.get('imagen').setValue(null);
+  imageUrlChange(url: string) {
+    this.imageDataUrl = url;
   }
 
   isGeneralPanelValid(): boolean {

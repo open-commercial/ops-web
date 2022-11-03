@@ -5,8 +5,7 @@
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
-      <fa-icon [icon]="['fas', 'box-open']"></fa-icon>
-      {{ producto ? producto.descripcion : 'Nuevo producto' }}
+      <fa-icon [icon]="['fas', 'box-open']"></fa-icon> {{ title }}
     </h1>
   </div>
   <form [formGroup]="form" class="mt-2" *ngIf="form">
@@ -14,39 +13,19 @@
       <ngb-panel id="general" title="General">
         <ng-template ngbPanelContent>
           <div class="row">
-            <div class="col-md-6 col-lg-4">
-              <label class="sr-only" for="imagen">Imágen</label>
-              <div class="d-flex flex-column h-100">
-                <div class="mb-2 border rounded preview">
-                  <img [src]="imageDataUrl ? imageDataUrl : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'"
-                       alt="Imagen del producto">
-                </div>
-                <input type="file" class="d-none" accept="image/*" id="imagen" lang="es" (change)="imageChange($event)" #imageFile>
-                <div class="text-center">
-                  <ul class="list-inline">
-                    <li class="list-inline-item">
-                      <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Buscar Imagen" triggers="mouseenter:mouseleave"
-                              (click)="imageFile.click()">
-                        <fa-icon [icon]="['fas', 'folder-open']"></fa-icon>
-                      </button>
-                    </li>
-                    <li class="list-inline-item">
-                      <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Quitar Imagen" triggers="mouseenter:mouseleave"
-                              (click)="clearFile(imageFile)">
-                        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <div class="col-md-6 col-lg-4 align-self-center">
+              <label class="form-label sr-only" for="imagen">Imágen</label>
+              <app-img-picker id="imagen" [imageDataUrl]="producto && producto.urlImagen ? producto.urlImagen : ''"
+                  (changeAsData)="imageDataChange($event)" (changeAsUrl)="imageUrlChange($event)" >
+              </app-img-picker>
             </div>
             <div class="col-md-6 col-lg-8">
-              <div class="form-group">
-                <label for="codigo">Código</label>
+              <div class="mb-3">
+                <label for="codigo" class="form-label">Código</label>
                 <input type="text" class="form-control" id="codigo" formControlName="codigo">
               </div>
-              <div class="form-group">
-                <label for="descripcion">Descripción</label>
+              <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
                 <input type="text" class="form-control" id="descripcion" required formControlName="descripcion"
                        [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }">
                 <div class="invalid-feedback" *ngIf="submitted && f.descripcion.errors">
@@ -57,9 +36,9 @@
               <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProveedor.errors">
                 <div *ngIf="f.idProveedor.errors.required">Requerido</div>
               </div>
-              <div class="form-group">
-                <label for="medida">Medida</label>
-                <select class="form-control" id="medida" formControlName="idMedida"
+              <div class="mb-3">
+                <label for="medida" class="form-label">Medida</label>
+                <select class="form-select" id="medida" formControlName="idMedida"
                         [ngClass]="{ 'is-invalid': submitted && f.idMedida.errors }">
                   <option *ngFor="let m of medidas" [value]="m.idMedida">{{ m.nombre }}</option>
                 </select>
@@ -67,9 +46,9 @@
                   <div *ngIf="f.idMedida.errors.required">Requerido</div>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="rubro">Rubro</label>
-                <select class="form-control" id="rubro" formControlName="idRubro"
+              <div class="mb-3">
+                <label for="rubro" class="form-label">Rubro</label>
+                <select class="form-select" id="rubro" formControlName="idRubro"
                         [ngClass]="{ 'is-invalid': submitted && f.idRubro.errors }">
                   <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
                 </select>
@@ -83,22 +62,20 @@
       </ngb-panel>
       <ngb-panel id="precios" title="Precios">
         <ng-template ngbPanelContent>
-          <div class="form-group mb-0">
-            <label class="sr-only" for="calculosPrecio">Precios</label>
+          <div class="mb-0">
+            <label class="form-label sr-only" for="calculosPrecio">Precios</label>
             <app-calculos-precio-form [submitted]="submitted" id="calculosPrecio" formControlName="calculosPrecio"></app-calculos-precio-form>
           </div>
         </ng-template>
       </ngb-panel>
       <ngb-panel id="cantidades" title="Cantidades">
         <ng-template ngbPanelContent>
-          <label>Cantidad en sucursales</label>
+          <label class="form-label">Cantidad en sucursales</label>
           <div formArrayName="cantidadEnSucursal">
             <div *ngFor="let ces of cantidadEnSucursal.controls; let i=index" [formGroupName]="i.toString()" class="mb-3">
               <div class="input-group mb-0">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
-                </div>
-                <input type="number" min="0" class="form-control text-right" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
+                <span class="input-group-text" [id]="'cantidad_' + i + '_addon'">{{ ces.get('nombreSucursal').value }}</span>
+                <input type="number" min="0" class="form-control text-end" placeholder="cantidad" aria-label="Cantidad" formControlName="cantidad"
                        [attr.aria-describedby]="'cantidad_' + i + '_addon'" [ngClass]="{ 'is-invalid': submitted && ces.get('cantidad').errors }">
               </div>
               <div class="custom-error-message" *ngIf="submitted && ces.get('cantidad').errors">
@@ -107,9 +84,9 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="cantMinima">Venta por cantidad</label>
-            <input type="number" min="1" class="form-control text-right" id="cantMinima" required formControlName="cantMinima"
+          <div class="mb-3">
+            <label for="cantMinima" class="form-label">Venta por cantidad</label>
+            <input type="number" min="1" class="form-control text-end" id="cantMinima" required formControlName="cantMinima"
                    [ngClass]="{ 'is-invalid': submitted && f.cantMinima.errors }">
             <div class="invalid-feedback" *ngIf="submitted && f.cantMinima.errors">
               <div *ngIf="f.cantMinima.errors.required">Requerido</div>
@@ -122,44 +99,38 @@
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group">
-                <label for="visibilidad">Visibilidad</label>
-                <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="publico">
-                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                    <input ngbButton type="radio" [value]="true"> Público
-                  </label>
-                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                    <input ngbButton type="radio" [value]="false"> Privado
-                  </label>
+              <div class="mb-3">
+                <label class="form-label">Visibilidad</label>
+                <div class="btn-group d-flex" role="group">
+                  <input type="radio" class="btn-check" [value]="true" id="publico-true" autocomplete="off" formControlName="publico">
+                  <label class="btn btn-outline-secondary" for="publico-true">Público</label>
+                  <input type="radio" class="btn-check" [value]="false" id="publico-false" autocomplete="off" formControlName="publico">
+                  <label class="btn btn-outline-secondary" for="publico-false">Privado</label>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="para-catalogo">Para Catálogo</label>
-                <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="para-catalogo" formControlName="paraCatalogo">
-                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                    <input ngbButton type="radio" [value]="true"> Sí
-                  </label>
-                  <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                    <input ngbButton type="radio" [value]="false"> No
-                  </label>
+              <div class="mb-3">
+                <label class="form-label">Para Catálogo</label>
+                <div class="btn-group d-flex" role="group">
+                  <input type="radio" class="btn-check" [value]="true" id="para-catalogo-true" autocomplete="off" formControlName="paraCatalogo">
+                  <label class="btn btn-outline-secondary" for="para-catalogo-true">Sí</label>
+                  <input type="radio" class="btn-check" [value]="false" id="para-catalogo-false" autocomplete="off" formControlName="paraCatalogo">
+                  <label class="btn btn-outline-secondary" for="para-catalogo-false">No</label>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
-                <label for="fechaVencimiento">Fecha de vencimiento</label>
+              <div class="mb-3">
+                <label for="fechaVencimiento" class="form-label">Fecha de vencimiento</label>
                 <div class="input-group">
                   <input class="form-control" readonly id="fechaVencimiento" formControlName="fechaVencimiento"
                          [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                          [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
-                      <fa-icon [icon]="['fas', 'times']"></fa-icon>
-                    </button>
-                    <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
-                      <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-                    </button>
-                  </div>
+                  <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
+                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                  </button>
+                  <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
+                    <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+                  </button>
                 </div>
               </div>
             </div>
@@ -168,8 +139,8 @@
             <div class="col-md-6 mb-2">Última Modificación: <strong>{{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</strong></div>
             <div class="col-md-6">Fecha de Alta: <strong>{{ producto.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</strong></div>
           </div>
-          <div class="form-group">
-            <label for="nota">Nota</label>
+          <div class="mb-3">
+            <label for="nota" class="form-label">Nota</label>
             <textarea class="form-control" maxlength="250" id="nota" formControlName="nota" rows="5" [ngClass]="{ 'is-invalid': submitted && f.nota.errors }"></textarea>
             <div class="invalid-feedback" *ngIf="submitted && f.nota.errors">
               <div *ngIf="f.nota.errors.maxlength">Máximo {{ f.nota.errors.maxlength.requiredLength }} caracteres</div>
@@ -178,7 +149,7 @@
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
-    <div class="text-right my-2">
+    <div class="text-end my-2">
       <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="!form.valid">
         <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
       </button>

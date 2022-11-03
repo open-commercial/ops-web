@@ -3,9 +3,9 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
-    <div class="form-group">
-      <label for="value">{{label}}</label>
-      <select class="form-control" id="value" formControlName="value">
+    <div class="mb-3">
+      <label for="value" class="form-label">{{label}}</label>
+      <select class="form-select" id="value" formControlName="value">
         <option *ngFor="let o of options" [value]="o.value">{{ o.text }}</option>
       </select>
     </div>

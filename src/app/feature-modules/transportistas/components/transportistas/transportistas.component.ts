@@ -6,7 +6,7 @@ import {LoadingOverlayService} from '../../../../services/loading-overlay.servic
 import {MensajeService} from '../../../../services/mensaje.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../../../models/pagination';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {TransportistasService} from '../../../../services/transportistas.service';
 import {BusquedaTransportistaCriteria} from '../../../../models/criterias/busqueda-transportista-criteria';
 import {Provincia} from '../../../../models/provincia';
@@ -40,7 +40,7 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private transportistasService: TransportistasService,
               private authService: AuthService,
               private ubicacionesService: UbicacionesService) {

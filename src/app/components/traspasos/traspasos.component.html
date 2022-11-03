@@ -1,16 +1,16 @@
 <div class="app-traspasos">
   <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon> Traspasos</h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary my-1 ml-2" ngbPopover="Nuevo Traspaso" triggers="mouseenter:mouseleave" placement="left"
+    <div class="text-end m-0">
+      <button class="btn btn-primary my-1 ms-2" ngbPopover="Nuevo Traspaso" triggers="mouseenter:mouseleave" placement="left"
               (click)="crearTraspaso()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button class="btn btn-primary my-1 ml-2" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave"
+      <button class="btn btn-primary my-1 ms-2" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave"
               (click)="downloadReporteTraspasoPdf()">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="traspasosFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -23,12 +23,12 @@
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
-          <div class="form-group">
-            <label for="nro-traspaso">Nº Traspaso</label>
+          <div class="mb-3">
+            <label for="nro-traspaso" class="form-label">Nº Traspaso</label>
             <input type="text" class="form-control" id="nro-traspaso" formControlName="nroTraspaso">
           </div>
-          <div class="form-group">
-            <label for="nro-pedido">Nº Pedido</label>
+          <div class="mb-3">
+            <label for="nro-pedido" class="form-label">Nº Pedido</label>
             <input type="text" class="form-control" id="nro-pedido" formControlName="nroPedido">
           </div>
         </div>
@@ -36,7 +36,7 @@
           <app-producto-filtro formControlName="idProducto"></app-producto-filtro>
           <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorT" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorT></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorT" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorT></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoT" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoT></app-filtro-ordenamiento>
           </div>
         </div>
@@ -50,21 +50,21 @@
   <div class="traspasos my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fechaDeAlta | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-secondary ms-2 mb-2 px-2 py-1">
           #{{ item.nroTraspaso }}
         </span>
-        <span class="badge badge-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.nroPedido">
+        <span class="badge text-bg-secondary ms-2 mb-2 px-2 py-1" *ngIf="item.nroPedido">
           #Pedido: {{ item.nroPedido }}
         </span>
       </div>
       <div class="px-2 flex-fill">
         <div class="d-flex flex-row flex-wrap align-items-center">
-          <span class="mr-2"><span class="font-weight-bold">Sucursal Origen:&nbsp;</span><span class="font-italic">{{ item.nombreSucursalOrigen }}</span></span>
-          <span class="mr-2"><span class="font-weight-bold">Sucursal Destino:&nbsp;</span><span class="font-italic">{{ item.nombreSucursalDestino }}</span></span>
-          <span class="mr-2"><span class="font-weight-bold">Usuario:&nbsp;</span><span class="font-italic">{{ item.nombreUsuario }}</span></span>
+          <span class="me-2"><span class="fw-bold">Sucursal Origen:&nbsp;</span><span class="fst-italic">{{ item.nombreSucursalOrigen }}</span></span>
+          <span class="me-2"><span class="fw-bold">Sucursal Destino:&nbsp;</span><span class="fst-italic">{{ item.nombreSucursalDestino }}</span></span>
+          <span class="me-2"><span class="fw-bold">Usuario:&nbsp;</span><span class="fst-italic">{{ item.nombreUsuario }}</span></span>
         </div>
       </div>
     </ng-template>

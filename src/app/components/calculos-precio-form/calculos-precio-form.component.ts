@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import {
-  ControlValueAccessor, FormBuilder, FormControl, FormGroup,
+  ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,
   NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators
 } from '@angular/forms';
 import { CalculosPrecio, CalculosPrecioValues } from '../../models/calculos-precio';
@@ -27,7 +27,7 @@ Big.DP = 15;
   ]
 })
 export class CalculosPrecioFormComponent implements ControlValueAccessor {
-  calculosForm: FormGroup;
+  calculosForm: UntypedFormGroup;
   calculosPrecio = new CalculosPrecio();
   ivas = [0, 10.5, 21];
 
@@ -38,7 +38,7 @@ export class CalculosPrecioFormComponent implements ControlValueAccessor {
   onChange: any = () => { return; };
   onTouched: any = () => { return; };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.createForm();
   }
 
@@ -101,7 +101,7 @@ export class CalculosPrecioFormComponent implements ControlValueAccessor {
   }
 
   // communicate the inner form validation to the parent form
-  validate(_: FormControl) {
+  validate(_: UntypedFormControl) {
     return this.calculosForm.valid ? null : { calculosPrecio: { valid: false } };
   }
 

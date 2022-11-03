@@ -1,15 +1,17 @@
-//$primary-color: #fbc02d !default;
+/** Globo colors **/
 $yellow-globo: #f2dc47;
-$primary-color: $yellow-globo !default;
-$secondary-color: whitesmoke !default;
+$black-globo: black;
+
+/** Overwrides **/
+$primary: $yellow-globo !default;
+//$secondary: whitesmoke !default;
+
 $badge-font-size: 85% !default;
 
-$navbar-dark-color:                 $yellow-globo !default;
-$navbar-dark-hover-color:           $yellow-globo !default;
-$navbar-dark-active-color:          $yellow-globo !default;
-$navbar-dark-disabled-color:        rgba($yellow-globo, .25) !default;
-$navbar-dark-toggler-icon-bg:       str-replace(url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$navbar-dark-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"), "#", "%23") !default;
-$navbar-dark-toggler-border-color:  rgba($yellow-globo, .1) !default;
+$navbar-dark-color:                 $black-globo !default;
+$navbar-dark-hover-color:           $black-globo !default;
+$navbar-dark-active-color:          $black-globo !default;
+$navbar-dark-disabled-color:        rgba($black-globo, .25) !default;
 
 $pagination-custom-color: #343a40;
 $pagination-color:                  $pagination-custom-color !default;

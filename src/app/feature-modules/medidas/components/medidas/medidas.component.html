@@ -3,18 +3,18 @@
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'ruler-combined']"></fa-icon> Medidas
     </h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nueva Medida" triggers="mouseenter:mouseleave" placement="left" (click)="nuevaMedida()">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" ngbPopover="Nueva Medida" triggers="mouseenter:mouseleave" placement="left" (click)="nuevaMedida()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
     </div>
   </div>
   <div class="medidas bg-light border rounded">
     <div class="medida d-flex flex-column flex-md-row align-items-md-center p-2 border-bottom" *ngFor="let m of medidas">
-      <div class="flex-fill">
+      <div class="flex-fill lead">
         {{ m.nombre }}
       </div>
-      <ul class="list-inline mb-0 text-right d-inline-block">
+      <ul class="list-inline mb-0 text-end d-inline-block">
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarMedida(m)">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>

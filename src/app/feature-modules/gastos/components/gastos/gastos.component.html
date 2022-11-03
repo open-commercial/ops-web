@@ -3,11 +3,11 @@
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
     </h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" (click)="nuevoGasto()">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" (click)="nuevoGasto()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="gastosCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -23,24 +23,24 @@
           <div class="p-3 mb-3 bg-white rounded border">
             <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           </div>
-          <div class="form-group">
-            <label for="concepto">Concepto</label>
+          <div class="mb-3">
+            <label for="concepto" class="form-label">Concepto</label>
             <input type="text" class="form-control" id="concepto" formControlName="concepto">
           </div>
         </div>
         <div class="col-xl-6">
-          <div class="form-group">
-            <label for="nroGasto">Nº de Gasto:</label>
+          <div class="mb-3">
+            <label for="nroGasto" class="form-label">Nº de Gasto:</label>
             <input type="number" min="0" class="form-control" id="nroGasto" formControlName="nroGasto">
           </div>
-          <div class="form-group">
-            <label for="idFormaDePago">Forma de Pago</label>
-            <select class="form-control" id="idFormaDePago" formControlName="idFormaDePago">
+          <div class="mb-3">
+            <label for="idFormaDePago" class="form-label">Forma de Pago</label>
+            <select class="form-select" id="idFormaDePago" formControlName="idFormaDePago">
               <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
             </select>
           </div>
-          <div class="px-3 pt-3 pb-0 border bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorG" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorG></app-filtro-ordenamiento>
+          <div class="p-3 border bg-light mb-3">
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorG" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorG></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoG" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoG></app-filtro-ordenamiento>
           </div>
         </div>
@@ -53,28 +53,26 @@
   <div class="gastos">
     <ng-template #info let-item>
       <div class="flex-fill">
-        <div>
-          <span class="badge badge-dark mr-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
-          <span class="badge badge-secondary">#{{ item.nroGasto }}</span>
+        <div class="mb-1">
+          <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span class="badge text-bg-secondary">#{{ item.nroGasto }}</span>
         </div>
-        <div class="d-flex flex-column flex-md-row">
-          <div class="flex-fill d-flex flex-row flex-wrap mr-2">
-            <div class="mr-2">
-              <span class="font-weight-bold">Usuario:&nbsp;</span>
-              <span class="font-italic">{{ item.nombreUsuario }}</span>
-            </div>
-            <div class="mr-2">
-              <span class="font-weight-bold">Forma de Pago:&nbsp;</span>
-              <span class="font-italic">{{ item.nombreFormaDePago }}</span>
-            </div>
-            <div>
-              <span class="font-weight-bold">Concepto:&nbsp;</span>
-              <span class="font-italic">{{ item.concepto }}</span>
-            </div>
+        <div class="flex-fill d-flex flex-column flex-md-row flex-md-wrap me-2">
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Usuario:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreUsuario }}</span>
           </div>
-          <div class="text-right">
-            <span class="font-weight-bold">Monto:&nbsp;</span>
-            <span class="font-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Forma de Pago:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreFormaDePago }}</span>
+          </div>
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Concepto:&nbsp;</span>
+            <span class="fst-italic">{{ item.concepto }}</span>
+          </div>
+          <div class="me-2 mb-1">
+            <span class="fw-bold">Monto:&nbsp;</span>
+            <span class="fst-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
           </div>
         </div>
       </div>

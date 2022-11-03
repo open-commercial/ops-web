@@ -7,9 +7,9 @@
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
         <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
-        Remito #{{ helper.formatNumRemito(remito.serie, remito.nroRemito) }}
+        Remito
       </h1>
-      <div class="ml-2 text-right">
+      <div class="ms-2 text-end">
         <button class="btn btn-primary" (click)="downloadRemitoPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
           <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
         </button>
@@ -17,23 +17,23 @@
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del remito</caption>
-      <tbody class="thead-dark">
-      <tr><th scope="row" class="w-25">Fecha</th><td>{{ remito.fecha | date:'dd/MM/yyyy' }}</td></tr>
-      <tr><th scope="row" class="w-25">Nº Remito</th><td>{{ helper.formatNumRemito(remito.serie, remito.nroRemito) }}</td></tr>
-      <tr><th scope="row" class="w-25">Cliente</th><td>{{ remito.nroDeCliente }} - {{ remito.nombreFiscalCliente   }}</td></tr>
-      <tr><th scope="row" class="w-25">Ubicación</th><td>{{ remito.detalleEnvio }}</td></tr>
+      <tbody>
+      <tr><th scope="row" class="w-25 table-dark">Fecha</th><td>{{ remito.fecha | date:'dd/MM/yyyy' }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Nº Remito</th><td>{{ helper.formatNumRemito(remito.serie, remito.nroRemito) }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Cliente</th><td>{{ remito.nroDeCliente }} - {{ remito.nombreFiscalCliente   }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Ubicación</th><td>{{ remito.detalleEnvio }}</td></tr>
       <tr>
-        <th scope="row" colspan="2">Detalle de los bultos:</th>
+        <th scope="row" colspan="2" class="table-dark">Detalle de los bultos:</th>
       </tr>
       <tr>
         <td colspan="2" class="p-0">
           <div class="table-responsive">
             <table class="table table-bordered table-sm mb-0">
               <caption class="sr-only">Detalle de los bultos del remito</caption>
-              <thead class="thead-light">
+              <thead>
               <tr>
-                <th scope="col" class="px-2 text-center">Cantidad</th>
-                <th scope="col" class="px-2 text-center w-100">Descripción</th>
+                <th scope="col" class="px-2 text-center table-light">Cantidad</th>
+                <th scope="col" class="px-2 text-center w-100 table-light">Descripción</th>
               </tr>
               </thead>
               <tbody>
@@ -46,15 +46,15 @@
           </div>
         </td>
       </tr>
-      <tr><th scope="row" class="w-25">Cantidad de Bultos</th><td>{{ remito.cantidadDeBultos }}</td></tr>
-      <tr *ngIf="remito.pesoTotalEnKg"><th scope="row" class="w-25">Peso</th><td>{{ remito.pesoTotalEnKg }} kg</td></tr>
-      <tr *ngIf="remito.volumenTotalEnM3"><th scope="row" class="w-25">Volumen</th><td>{{ remito.volumenTotalEnM3 }} m<sup>3</sup></td></tr>
-      <tr><th scope="row" class="w-25">Transportista</th><td>{{ remito.nombreTransportista }}</td></tr>
-      <tr><th scope="row" class="w-25">Usuario</th><td class="font-italic">{{ remito.nombreUsuario }}</td></tr>
-      <tr><th scope="row" class="w-25">Observaciones</th><td>{{ remito.observaciones }}</td></tr>
-      <tr><th scope="row" class="w-25">Total Facturas</th><td>{{ remito.totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row" class="w-25">Costo de Envío</th><td>{{ remito.costoDeEnvio | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row" class="w-25">Total</th><td>{{ remito.total | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Cantidad de Bultos</th><td>{{ remito.cantidadDeBultos }}</td></tr>
+      <tr *ngIf="remito.pesoTotalEnKg"><th scope="row" class="w-25 table-dark">Peso</th><td>{{ remito.pesoTotalEnKg }} kg</td></tr>
+      <tr *ngIf="remito.volumenTotalEnM3"><th scope="row" class="w-25 table-dark">Volumen</th><td>{{ remito.volumenTotalEnM3 }} m<sup>3</sup></td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Transportista</th><td>{{ remito.nombreTransportista }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Usuario</th><td class="fst-italic">{{ remito.nombreUsuario }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Observaciones</th><td>{{ remito.observaciones }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Total Facturas</th><td>{{ remito.totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Costo de Envío</th><td>{{ remito.costoDeEnvio | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Total</th><td>{{ remito.total | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       </tbody>
     </table>
   </div>

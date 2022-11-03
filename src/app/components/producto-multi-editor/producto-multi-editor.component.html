@@ -10,7 +10,7 @@
   </div>
   <div class="border rounded p-2">
     <strong>Productos que se van a modificar:</strong>
-    <ul class="pl-3 mb-0">
+    <ul class="ps-3 mb-0">
       <li *ngFor="let bae of baElements">{{ bae.description }}</li>
     </ul>
   </div>
@@ -23,9 +23,9 @@
       <tbody>
       <tr formGroupName="idProveedor">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idProveedorCheck" formControlName="check" (change)="checkChange('idProveedor', $event)">
-            <label class="custom-control-label" for="idProveedorCheck"><span class="sr-only">Activo el campo Proveedor</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idProveedorCheck" formControlName="check" (change)="checkChange('idProveedor', $event)">
+            <label class="form-check-label" for="idProveedorCheck"><span class="sr-only">Activo el campo Proveedor</span></label>
           </div>
         </td>
         <td class="align-middle">
@@ -37,15 +37,15 @@
       </tr>
       <tr formGroupName="idRubro">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idRubroCheck" formControlName="check" (change)="checkChange('idRubro', $event)">
-            <label class="custom-control-label" for="idRubroCheck"><span class="sr-only">Activo el campo Rubro</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idRubroCheck" formControlName="check" (change)="checkChange('idRubro', $event)">
+            <label class="form-check-label" for="idRubroCheck"><span class="sr-only">Activo el campo Rubro</span></label>
           </div>
         </td>
         <td class="align-middle">
-          <div class="form-group mb-0">
-            <label for="rubro">Rubro</label>
-            <select class="form-control" id="rubro" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.idRubro.get('value').errors }">
+          <div class="mb-0">
+            <label for="rubro" class="form-label">Rubro</label>
+            <select class="form-select" id="rubro" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.idRubro.get('value').errors }">
               <option *ngFor="let r of rubros" [value]="r.idRubro">{{ r.nombre }}</option>
             </select>
             <div class="invalid-feedback" *ngIf="submitted && f.idRubro.get('value').errors">
@@ -56,15 +56,15 @@
       </tr>
       <tr formGroupName="idMedida">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idMedidaCheck" formControlName="check" (change)="checkChange('idMedida', $event)">
-            <label class="custom-control-label" for="idMedidaCheck"><span class="sr-only">Activo el campo Medida</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idMedidaCheck" formControlName="check" (change)="checkChange('idMedida', $event)">
+            <label class="form-check-label" for="idMedidaCheck"><span class="sr-only">Activo el campo Medida</span></label>
           </div>
         </td>
         <td class="align-middle">
-          <div class="form-group mb-0">
-            <label for="medida">Medida</label>
-            <select class="form-control" id="medida" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.idMedida.get('value').errors }">
+          <div class="mb-0">
+            <label for="medida" class="form-label">Medida</label>
+            <select class="form-select" id="medida" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.idMedida.get('value').errors }">
               <option *ngFor="let m of medidas" [value]="m.idMedida">{{ m.nombre }}</option>
             </select>
             <div class="invalid-feedback" *ngIf="submitted && f.idMedida.get('value').errors">
@@ -75,86 +75,78 @@
       </tr>
       <tr formGroupName="publico">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idPublicoCheck" formControlName="check" (change)="checkChange('publico', $event)">
-            <label class="custom-control-label" for="idPublicoCheck"><span class="sr-only">Activo el campo Público</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idPublicoCheck" formControlName="check" (change)="checkChange('publico', $event)">
+            <label class="form-check-label" for="idPublicoCheck"><span class="sr-only">Activo el campo Público</span></label>
           </div>
         </td>
         <td class="align-middle">
-          <div class="form-group mb-0">
-            <label for="visibilidad">Visibilidad</label>
-            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="visibilidad" formControlName="value">
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="true"> Público
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="false"> Privado
-              </label>
+          <div class="mb-0">
+            <label class="form-label">Visibilidad</label>
+            <div class="btn-group d-flex" role="group">
+              <input type="radio" class="btn-check" [value]="true" id="publico-value-true" autocomplete="off" formControlName="value">
+              <label class="btn btn-outline-secondary" for="publico-value-true">Público</label>
+              <input type="radio" class="btn-check" [value]="false" id="publico-value-false" autocomplete="off" formControlName="value">
+              <label class="btn btn-outline-secondary" for="publico-value-false">Privado</label>
             </div>
           </div>
         </td>
       </tr>
       <tr formGroupName="paraCatalogo">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idParaCatalogoCheck" formControlName="check" (change)="checkChange('paraCatalogo', $event)">
-            <label class="custom-control-label" for="idParaCatalogoCheck"><span class="sr-only">Activo el campo Para Catálogo</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idParaCatalogoCheck" formControlName="check" (change)="checkChange('paraCatalogo', $event)">
+            <label class="form-check-label" for="idParaCatalogoCheck"><span class="sr-only">Activo el campo Para Catálogo</span></label>
           </div>
         </td>
         <td class="align-middle">
-          <div class="form-group mb-0">
-            <label for="para-catalogo">Para Catálogo</label>
-            <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="para-catalogo" formControlName="value">
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="true"> Sí
-              </label>
-              <label ngbButtonLabel class="btn-outline-secondary flex-fill">
-                <input ngbButton type="radio" [value]="false"> No
-              </label>
+          <div class="mb-0">
+            <label class="form-label">Para Catálogo</label>
+            <div class="btn-group d-flex" role="group">
+              <input type="radio" class="btn-check" [value]="true" id="para-catalogo-value-true" autocomplete="off" formControlName="value">
+              <label class="btn btn-outline-secondary" for="para-catalogo-value-true">Sí</label>
+              <input type="radio" class="btn-check" [value]="false" id="para-catalogo-value-false" autocomplete="off" formControlName="value">
+              <label class="btn btn-outline-secondary" for="para-catalogo-value-false">No</label>
             </div>
           </div>
         </td>
       </tr>
       <tr formGroupName="calculosPrecio">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idPreciosCheck" formControlName="check" (change)="checkChange('calculosPrecio', $event)" #calculosPrecioCheck>
-            <label class="custom-control-label" for="idPreciosCheck"><span class="sr-only">Activo el campo Precios</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idPreciosCheck" formControlName="check" (change)="checkChange('calculosPrecio', $event)" #calculosPrecioCheck>
+            <label class="form-check-label" for="idPreciosCheck"><span class="sr-only">Activo el campo Precios</span></label>
           </div>
         </td>
         <td>
-          <div class="form-group mb-0">
-            <label for="precios">Precios</label>
+          <div class="mb-0">
+            <label for="precios" class="form-label">Precios</label>
             <app-calculos-precio-form [submitted]="submitted" id="precios" formControlName="value"></app-calculos-precio-form>
           </div>
         </td>
       </tr>
       <tr formGroupName="descuentoRecargoPorcentaje">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="descuentoRecargoPorcentajeCheck" formControlName="check" (change)="checkChange('descuentoRecargoPorcentaje', $event)" #descuentoRecargoPorcentajeCheck>
-            <label class="custom-control-label" for="descuentoRecargoPorcentajeCheck"><span class="sr-only">Activo el campo Porcentaje</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="descuentoRecargoPorcentajeCheck" formControlName="check" (change)="checkChange('descuentoRecargoPorcentaje', $event)" #descuentoRecargoPorcentajeCheck>
+            <label class="form-check-label" for="descuentoRecargoPorcentajeCheck"><span class="sr-only">Activo el campo Porcentaje</span></label>
           </div>
         </td>
         <td class="align-middle">
           <div class="d-flex flex-column flex-sm-row align-items-center" formGroupName="value">
-            <div class="form-group mb-0 w-100 p-2">
-              <div class="btn-group btn-group-toggle d-flex" ngbRadioGroup id="opcionPorcentaje" formControlName="opcion">
-                <label ngbButtonLabel class="btn-outline-secondary flex-fill text-nowrap">
-                  <input ngbButton type="radio" [value]="opcionPorcentaje.PORCENTAJE_RECARGO"> {{ opcionPorcentaje.PORCENTAJE_RECARGO }}
-                </label>
-                <label ngbButtonLabel class="btn-outline-secondary flex-fill text-nowrap">
-                  <input ngbButton type="radio" [value]="opcionPorcentaje.PORCENTAJE_DESCUENTO"> {{ opcionPorcentaje.PORCENTAJE_DESCUENTO }}
-                </label>
+            <div class="mb-0 w-100 p-2">
+              <div class="btn-group d-flex" role="group">
+                <input type="radio" class="btn-check" [value]="opcionPorcentaje.PORCENTAJE_RECARGO" id="op-opcion-recargo" autocomplete="off" formControlName="opcion">
+                <label class="btn btn-outline-secondary" for="op-opcion-recargo">{{ opcionPorcentaje.PORCENTAJE_RECARGO }}</label>
+                <input type="radio" class="btn-check" [value]="opcionPorcentaje.PORCENTAJE_DESCUENTO" id="op-opcion-descuento" autocomplete="off" formControlName="opcion">
+                <label class="btn btn-outline-secondary" for="op-opcion-descuento">{{ opcionPorcentaje.PORCENTAJE_DESCUENTO }}</label>
               </div>
             </div>
-            <div class="form-group mb-0 w-100 p-2">
+            <div class="mb-0 w-100 p-2">
               <div class="input-group">
-                <input type="number" min="1" max="100" class="form-control text-right" required id="porcentaje" formControlName="porcentaje"
+                <input type="number" min="1" max="100" class="form-control text-end" required id="porcentaje" formControlName="porcentaje"
                        aria-label="Porcentaje" aria-describedby="porcentaje-label" [ngClass]="{ 'is-invalid': submitted && f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors }">
-                <div class="input-group-append">
-                  <span class="input-group-text" id="porcentaje-label">%</span>
-                </div>
+                <span class="input-group-text" id="porcentaje-label">%</span>
               </div>
               <div class="custom-error-message" *ngIf="submitted && f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors">
                 <div *ngIf="f.descuentoRecargoPorcentaje.get('value').get('porcentaje').errors.required">Requerido</div>
@@ -171,15 +163,15 @@
       </tr>
       <tr formGroupName="cantidadVentaMinima">
         <td class="align-middle">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="idCantidadVentaMinimaCheck" formControlName="check" (change)="checkChange('cantidadVentaMinima', $event)">
-            <label class="custom-control-label" for="idCantidadVentaMinimaCheck"><span class="sr-only">Activo el campo Rubro</span></label>
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" id="idCantidadVentaMinimaCheck" formControlName="check" (change)="checkChange('cantidadVentaMinima', $event)">
+            <label class="form-check-label" for="idCantidadVentaMinimaCheck"><span class="sr-only">Activo el campo Rubro</span></label>
           </div>
         </td>
         <td class="align-middle">
-          <div class="form-group mb-0">
-            <label for="cantidadVentaMinima">Venta x Cantidad</label>
-            <input type="number" min="1" class="form-control text-right" required id="cantidadVentaMinima" formControlName="value"
+          <div class="mb-0">
+            <label for="cantidadVentaMinima" class="form-label">Venta x Cantidad</label>
+            <input type="number" min="1" class="form-control text-end" required id="cantidadVentaMinima" formControlName="value"
                    [ngClass]="{ 'is-invalid': submitted && f.cantidadVentaMinima.get('value').errors }">
             <div class="invalid-feedback" *ngIf="submitted && f.cantidadVentaMinima.get('value').errors">
               <div *ngIf="f.cantidadVentaMinima.get('value').errors.required">Requerido</div>
@@ -190,7 +182,7 @@
       </tr>
       </tbody>
     </table>
-    <div class="text-right">
+    <div class="text-end">
       <button class="btn btn-primary" type="submit" [disabled]="form.invalid || !hasCheckedAnything()">
         <fa-icon [icon]="['fas', 'check']"></fa-icon> Actualizar
       </button>

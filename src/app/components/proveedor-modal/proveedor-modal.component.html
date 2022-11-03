@@ -1,13 +1,11 @@
 <div class="modal-header p-2 flex-column">
   <div class="input-group">
-    <label class="sr-only" for="searchTerm"></label>
+    <label class="form-label sr-only" for="searchTerm"></label>
     <input [(ngModel)]="searchTerm" autocomplete="off" type="search" class="form-control" id="searchTerm" [placeholder]="searchInputPlaceholder"
            (keyup.enter)="search()" [readOnly]="clearLoading || loading">
-    <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
-        <fa-icon [icon]="['fas', 'search']"></fa-icon>
-      </button>
-    </div>
+    <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
+      <fa-icon [icon]="['fas', 'search']"></fa-icon>
+    </button>
   </div>
 </div>
 <div class="modal-body d-flex flex-column p-2">
@@ -17,9 +15,9 @@
   <div class="flex-fill mt-2" *ngIf="!clearLoading && items.length">
     <ng-template #itemTemplate let-item>
       <div class="flex-fill d-flex flex-column proveedor">
-        <span class="mr-2 numero">#{{ item.nroProveedor }}</span>
-        <span class="mr-2" *ngIf="item.idFiscal">CUIT {{ item.idFiscal }}</span>
-        <span class="mr-2 nombre"><strong>{{ item.razonSocial }}</strong></span>
+        <span class="me-2 numero">#{{ item.nroProveedor }}</span>
+        <span class="me-2" *ngIf="item.idFiscal">CUIT {{ item.idFiscal }}</span>
+        <span class="me-2 nombre"><strong>{{ item.razonSocial }}</strong></span>
       </div>
     </ng-template>
     <app-selectable-list #selectableList [items]="items" [itemTemplate]="itemTemplate"

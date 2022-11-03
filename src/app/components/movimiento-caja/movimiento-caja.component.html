@@ -5,16 +5,16 @@
   <div *ngIf="!loading">
     <div *ngFor="let m of movimientos" class="d-flex flex-column flex-sm-row align-items-sm-center p-2 movimiento">
       <div class="flex-fill">
-      <span class="badge badge-secondary">
+      <span class="badge text-bg-secondary">
         <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ m.fecha | date:'dd/MM/yyyy HH:mm' }}
       </span><br>
         {{ m.concepto }}<br>
-        <span class="font-weight-bold" [class.text-success]="m.monto >= 0" [class.text-danger]="m.monto < 0">
+        <span class="fw-bold" [class.text-success]="m.monto >= 0" [class.text-danger]="m.monto < 0">
         {{ m.monto | currency: 'ARS':'symbol':'1.0-2' }}
       </span>
       </div>
       <div>
-        <ul class="list-inline text-right text-nowrap mb-0 ml-2">
+        <ul class="list-inline text-end text-nowrap mb-0 ms-2">
           <li class="list-inline-item" *ngIf="m.tipoComprobante === tipoComprobante.GASTO && caja.estado === estadoCaja.ABIERTA">
             <button type="button" class="btn btn-primary" (click)="eliminarGasto(m)" ngbPopover="Eliminar Gasto" triggers="mouseenter:mouseleave" placement="left">
               <fa-icon [icon]="['fas', 'trash']"></fa-icon>

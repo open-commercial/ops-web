@@ -1,5 +1,5 @@
 import {Directive, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotasService} from '../services/notas.service';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
@@ -10,7 +10,7 @@ import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
 
 const noneSelected = (): ValidatorFn => {
-  return (control: FormArray): ValidationErrors | null => {
+  return (control: UntypedFormArray): ValidationErrors | null => {
     const atLeastOneSelected = control.controls.some((rControl) => {
       return rControl.get('checked') && rControl.get('checked').value;
     });
@@ -23,13 +23,13 @@ const noneSelected = (): ValidatorFn => {
 export abstract class NotaCreditoFacturaModalDirective implements OnInit {
   idFactura: number;
   title = '';
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   loading = false;
 
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected notasService: NotasService,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
@@ -60,8 +60,8 @@ export abstract class NotaCreditoFacturaModalDirective implements OnInit {
 
   get f() { return this.form.controls; }
 
-  get renglones(): FormArray {
-    return this.form.get('renglones') as FormArray;
+  get renglones(): UntypedFormArray {
+    return this.form.get('renglones') as UntypedFormArray;
   }
 
   addRenglonesToForm(renglones) {
@@ -79,7 +79,7 @@ export abstract class NotaCreditoFacturaModalDirective implements OnInit {
   }
 
   seleccionarTodo() {
-    this.renglones.controls.forEach((c: FormGroup) => {
+    this.renglones.controls.forEach((c: UntypedFormGroup) => {
       const r = c.get('renglon').value;
       c.get('checked').setValue(true);
       c.get('cantidad').setValue(r.cantidad);

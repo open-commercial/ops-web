@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 @Component({
@@ -10,14 +10,14 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 })
 export class MontoModalComponent implements OnInit {
   monto: number = null;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   title = '';
   htmlInfo = '';
   label = 'Monto';
 
   constructor(public activeModal: NgbActiveModal,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private sanitaizer: DomSanitizer) { }
 
   ngOnInit() {

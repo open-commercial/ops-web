@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {SucursalesService} from '../../services/sucursales.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BusquedaProductoCriteria} from '../../models/criterias/busqueda-producto-criteria';
@@ -31,6 +31,7 @@ import {Sucursal} from '../../models/sucursal';
 export class ProductosComponent extends ListadoDirective implements OnInit {
   isBatchActionsBoxCollapsed = true;
   ordenArray = [
+    { val: 'fechaUltimaModificacion', text: 'Fecha Últ. Modificación' },
     { val: 'descripcion', text: 'Descripción' },
     { val: 'codigo', text: 'Código' },
     { val: 'cantidadProducto.cantidadTotalEnSucursales', text: 'Total Sucursales' },
@@ -44,8 +45,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   ];
 
   sentidoArray = [
-    { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -54,10 +55,16 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   @ViewChild('sentidoP') sentidoPElement: FiltroOrdenamientoComponent;
 
   rubros: Rubro[] = [];
-  visibilidades = ['públicos', 'privados'];
+  visibilidades = ['Públicos', 'Privados'];
+
+  allowedRolesToCreate: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToCreate = false;
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
+
+  allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToEdit = false;
 
   baKey = BatchActionKey.PRODUCTOS;
   baActions: ActionConfiguration[] = [
@@ -77,7 +84,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private rubrosService: RubrosService,
               private authService: AuthService,
               public loadingOverlayService: LoadingOverlayService,
@@ -91,14 +98,16 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   ngOnInit() {
     super.ngOnInit();
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
 
     this.loadingOverlayService.activate();
     this.rubrosService.getRubros()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        rubros => this.rubros = rubros,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: rubros => this.rubros = rubros,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 
@@ -121,8 +130,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     }
 
     if (this.visibilidades.indexOf(ps.visibilidad) >= 0) {
-      if (ps.visibilidad === 'públicos') { terminos.publico = true; }
-      if (ps.visibilidad === 'privados') { terminos.publico = false; }
+      if (ps.visibilidad === 'Públicos') { terminos.publico = true; }
+      if (ps.visibilidad === 'Privados') { terminos.publico = false; }
     }
 
     if (['true', true].indexOf(ps.oferta) >= 0) {
@@ -242,6 +251,11 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   }
 
   editarProducto(producto: Producto) {
+    if (!this.hasRoleToEdit) {
+      this.mensajeService.msg('No posee permiso para editar productos.', MensajeModalType.ERROR);
+      return;
+    }
+
     this.router.navigate(['/productos/editar', producto.idProducto]);
   }
 
@@ -257,17 +271,17 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos([producto.idProducto])
-          .subscribe(
-            () => {
+          .subscribe({
+            next: () => {
               this.batchActionsService.removeElememt(this.baKey, producto.idProducto);
               // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
               location.reload();
             },
-            err => {
+            error: err => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          )
+            }
+          })
         ;
       }
     }, () => { return; });
@@ -284,17 +298,17 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       if (result) {
         this.loadingOverlayService.activate();
         this.productosService.eliminarProductos(ids)
-          .subscribe(
-            () => {
+          .subscribe({
+            next: () => {
               this.batchActionsService.clear(this.baKey);
               location.reload();
               // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
             },
-            err => {
+            error: err => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          )
+            }
+          })
         ;
       }
     });

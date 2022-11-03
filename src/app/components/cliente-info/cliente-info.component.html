@@ -1,5 +1,5 @@
 <span class="d-flex flex-column app-cliente-info">
-  <span class="mr-2">
+  <span class="me-2">
     <span class="numero">#{{ cliente.nroCliente }}</span>
   </span>
   <span>
@@ -13,12 +13,12 @@
     Ubi. envio: {{ helper.formatUbicacion(cliente.ubicacionEnvio) }}
   </span>
   <span class="flex flex-column">
-    <span class="badge mr-2" [ngClass]="cliente.puedeComprarAPlazo?'badge-success':'badge-danger'">
+    <span class="badge me-2" [ngClass]="cliente.puedeComprarAPlazo?'text-bg-success':'text-bg-danger'">
       <fa-icon [icon]="['fas', 'check']" *ngIf="cliente.puedeComprarAPlazo"></fa-icon>
       <fa-icon [icon]="['fas', 'times']" *ngIf="!cliente.puedeComprarAPlazo"></fa-icon>
       {{ cliente.puedeComprarAPlazo ? 'P' : 'No p' }}uede comprar a plazo
     </span>
-    <span class="badge badge-info" *ngIf="cliente.montoCompraMinima">
+    <span class="badge text-bg-info" *ngIf="cliente.montoCompraMinima">
       Compra mínima: {{ cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
     </span>
   </span>

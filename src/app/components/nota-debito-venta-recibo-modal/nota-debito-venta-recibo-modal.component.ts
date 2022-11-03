@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NotaDebitoVentaModalDirective} from '../../directives/nota-debito-venta-modal.directive';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -18,7 +18,7 @@ import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 export class NotaDebitoVentaReciboModalComponent extends NotaDebitoVentaModalDirective implements OnInit {
   idRecibo: number;
   constructor(public activeModal: NgbActiveModal,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               protected sucursalesService: SucursalesService,

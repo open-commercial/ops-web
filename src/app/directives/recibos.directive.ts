@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SucursalesService} from '../services/sucursales.service';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
 import {MensajeService} from '../services/mensaje.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RecibosService} from '../services/recibos.service';
 import {FormasDePagoService} from '../services/formas-de-pago.service';
@@ -75,7 +75,7 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
                         protected sucursalesService: SucursalesService,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected modalService: NgbModal,
                         protected recibosService: RecibosService,
                         protected formasDePagoService: FormasDePagoService,

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, forwardRef, Output} from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { Proveedor } from '../../models/proveedor';
 import { finalize } from 'rxjs/operators';
@@ -88,7 +88,7 @@ export class ProveedorFiltroComponent implements ControlValueAccessor, Validator
     return this.proveedor ? this.proveedor.razonSocial : '';
   }
 
-  public validate(c: FormControl) {
+  public validate(c: UntypedFormControl) {
     return c.value ? null : { required: true };
   }
 }

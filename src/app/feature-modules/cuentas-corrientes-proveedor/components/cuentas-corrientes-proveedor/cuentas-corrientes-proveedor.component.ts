@@ -6,7 +6,7 @@ import {LoadingOverlayService} from '../../../../services/loading-overlay.servic
 import {MensajeService} from '../../../../services/mensaje.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../../../models/pagination';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {Provincia} from '../../../../models/provincia';
 import {Localidad} from '../../../../models/localidad';
 import {BusquedaCuentaCorrienteProveedorCriteria} from '../../../../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
@@ -33,14 +33,14 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
   helper = HelperService;
 
   ordenArray = [
+    { val: 'fechaUltimoMovimiento', text: 'Último Movimiento C/C' },
     { val: 'proveedor.razonSocial', text: 'Razón Social' },
     { val: 'saldo', text: 'Saldo C/C' },
-    { val: 'fechaUltimoMovimiento', text: 'Último Movimiento C/C' },
   ];
 
   sentidoArray = [
-    { val: 'ASC', text: 'Ascendente' },
     { val: 'DESC', text: 'Descendente' },
+    { val: 'ASC', text: 'Ascendente' },
   ];
 
   ordenarPorAplicado = '';
@@ -56,7 +56,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private ubicacionesService: UbicacionesService,
               private cuentasCorrientesService: CuentasCorrientesService,
               private proveedoresService: ProveedoresService,

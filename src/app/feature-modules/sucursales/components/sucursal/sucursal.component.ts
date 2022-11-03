@@ -6,7 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { LoadingOverlayService } from './../../../../services/loading-overlay.service';
 import { SucursalesService } from './../../../../services/sucursales.service';
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MensajeService } from 'src/app/services/mensaje.service';
@@ -18,13 +18,13 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   styleUrls: ['./sucursal.component.scss']
 })
 export class SucursalComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   sucursal: Sucursal;
 
   loading = false;
 
-  imageData: number[] = [];
+  imageData = null;
   imageDataUrl = '';
 
   categoriasIVA = [
@@ -34,9 +34,7 @@ export class SucursalComponent implements OnInit {
     { value: CategoriaIVA.MONOTRIBUTO, text: 'Monotributo'},
   ];
 
-  eliminarImagen = false;
-
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private locaction: Location,
               private loadingOverlayService: LoadingOverlayService,
@@ -106,7 +104,8 @@ export class SucursalComponent implements OnInit {
         nombre: formValues.nombre,
         categoriaIVA: formValues.categoriaIVA,
         email: formValues.email,
-        ubicacion: formValues.ubicacion
+        ubicacion: formValues.ubicacion,
+        imagen: this.imageData,
       };
 
       if (formValues.lema) { sucursal.lema = formValues.lema; }
@@ -116,12 +115,6 @@ export class SucursalComponent implements OnInit {
         sucursal.fechaInicioActividad = HelperService.getDateFromNgbDate(formValues.fechaInicioActividad);
       }
       if (formValues.telefono) { sucursal.telefono = formValues.telefono; }
-
-      if (this.eliminarImagen) {
-        sucursal.imagen = null;
-      } else if (this.imageData && this.imageData.length > 0) {
-        sucursal.imagen = this.imageData;
-      }
 
       if (this.sucursal) {
         this.doUpdate(sucursal as Sucursal);
@@ -156,33 +149,11 @@ export class SucursalComponent implements OnInit {
     ;
   }
 
-  imageChange($event) {
-    const file = $event.target.files[0];
-    const readerBuffer = new FileReader();
-    const readerDataUrl = new FileReader();
-
-    readerBuffer.addEventListener('load', () => {
-      const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);
-      this.imageData = Array.from(arr);
-    });
-
-    readerDataUrl.addEventListener('load', () => {
-      this.imageDataUrl = readerDataUrl.result as string;
-    });
-
-    readerBuffer.readAsArrayBuffer(file);
-    readerDataUrl.readAsDataURL(file);
-
-    this.eliminarImagen = false;
+  imageDataChange(data: number[]) {
+    this.imageData = data;
   }
 
-  imageClear(imageFile) {
-    this.imageDataUrl = '';
-    this.imageData = [];
-    imageFile.value = '';
-  }
-
-  eliminarImagenChange($event) {
-    this.eliminarImagen = $event.target.checked;
+  imageUrlChange(url: string) {
+    this.imageDataUrl = url;
   }
 }

@@ -1,18 +1,26 @@
 <div class="app-ver-producto my-3">
   <div *ngIf="producto">
-    <div class="row">
-      <h1 class="h3 col-md-10 text-truncate">
+    <div class="d-flex flex-row ">
+      <h1 class="h3 flex-fill text-truncate">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
            (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
         <fa-icon [icon]="['fas', 'box-open']"></fa-icon>
-        {{ producto.descripcion }}
+        Producto
       </h1>
+      <div class="text-end">
+        <button type="button" class="btn btn-primary ms-2 my-1" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editar()" *ngIf="hasRoleToEdit">
+          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        </button>
+        <button class="btn btn-primary ms-2" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar()" *ngIf="hasRoleToDelete">
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+        </button>
+      </div>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del producto</caption>
-      <tbody class="thead-dark">
+      <tbody>
       <tr>
         <td class="text-center bg-white" colspan="2">
           <div class="img-container">
@@ -20,10 +28,10 @@
           </div>
         </td>
       </tr>
-      <tr><th scope="row" class="w-25">Código</th><td>{{ producto.codigo }}</td></tr>
-      <tr><th scope="row">Descripción</th><td>{{ producto.descripcion }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Código</th><td>{{ producto.codigo }}</td></tr>
+      <tr><th scope="row" class="table-dark">Descripción</th><td>{{ producto.descripcion }}</td></tr>
       <tr>
-        <th scope="row">Cantidad</th>
+        <th scope="row" class="table-dark">Cantidad</th>
         <td>
           <ul class="list-unstyled mb-0">
             <li>En Sucursal: <strong>{{ getCantidadEnSucursal() }} {{ producto.nombreMedida }}</strong></li>
@@ -32,25 +40,25 @@
           </ul>
         </td>
       </tr>
-      <tr><th scope="row">Venta x Cantidad</th><td>{{ producto.cantMinima }} {{ producto.nombreMedida }}</td></tr>
-      <tr><th scope="row">Unidad de Medida</th><td>{{ producto.nombreMedida }}</td></tr>
-      <tr><th scope="row">Precio de Costo</th><td>{{ producto.precioCosto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row">% Ganancia</th><td>{{ producto.gananciaPorcentaje | number:'1.0-2' }} %</td></tr>
-      <tr><th scope="row">Ganancia</th><td>{{ producto.gananciaNeto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row">Precio de Venta Público</th><td>{{ producto.precioVentaPublico | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row">% IVA</th><td>{{ producto.ivaPorcentaje | number:'1.0-2' }} %</td></tr>
-      <tr><th scope="row">IVA</th><td>{{ producto.ivaNeto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row">Precio de Lista</th><td>{{ producto.precioLista | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row">% Oferta</th><td>{{ producto.porcentajeBonificacionOferta | number:'1.0-2' }} %</td></tr>
-      <tr><th scope="row">% Bonif.</th><td>{{ producto.porcentajeBonificacionPrecio | number:'1.0-2' }} %</td></tr>
-      <tr><th scope="row">Precio Bonificado</th><td>{{ producto.precioBonificado | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row">Rubro</th><td>{{ producto.nombreRubro }}</td></tr>
-      <tr><th scope="row">Fecha última modificación</th><td>{{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</td></tr>
-      <tr><th scope="row">Proveedor</th><td>{{ producto.razonSocialProveedor }}</td></tr>
-      <tr><th scope="row">Visibilidad</th><td>{{ producto.publico ? 'PÚBLICO' : 'PRIVADO' }}</td></tr>
-      <tr><th scope="row">Fecha de Alta</th><td>{{ producto.fechaAlta | date:'dd/MM/yyyy' }}</td></tr>
-      <tr><th scope="row">Fecha de Vencimiento</th><td>{{ producto.fechaVencimiento | date:'dd/MM/yyyy' }}</td></tr>
-      <tr><th scope="row">Nota</th><td>{{ producto.nota }}</td></tr>
+      <tr><th scope="row" class="table-dark">Venta x Cantidad</th><td>{{ producto.cantMinima }} {{ producto.nombreMedida }}</td></tr>
+      <tr><th scope="row" class="table-dark">Unidad de Medida</th><td>{{ producto.nombreMedida }}</td></tr>
+      <tr><th scope="row" class="table-dark">Precio de Costo</th><td>{{ producto.precioCosto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">% Ganancia</th><td>{{ producto.gananciaPorcentaje | number:'1.0-2' }} %</td></tr>
+      <tr><th scope="row" class="table-dark">Ganancia</th><td>{{ producto.gananciaNeto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Precio de Venta Público</th><td>{{ producto.precioVentaPublico | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">% IVA</th><td>{{ producto.ivaPorcentaje | number:'1.0-2' }} %</td></tr>
+      <tr><th scope="row" class="table-dark">IVA</th><td>{{ producto.ivaNeto | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Precio de Lista</th><td>{{ producto.precioLista | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">% Oferta</th><td>{{ producto.porcentajeBonificacionOferta | number:'1.0-2' }} %</td></tr>
+      <tr><th scope="row" class="table-dark">% Bonif.</th><td>{{ producto.porcentajeBonificacionPrecio | number:'1.0-2' }} %</td></tr>
+      <tr><th scope="row" class="table-dark">Precio Bonificado</th><td>{{ producto.precioBonificado | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Rubro</th><td>{{ producto.nombreRubro }}</td></tr>
+      <tr><th scope="row" class="table-dark">Fecha última modificación</th><td>{{ producto.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Proveedor</th><td>{{ producto.razonSocialProveedor }}</td></tr>
+      <tr><th scope="row" class="table-dark">Visibilidad</th><td>{{ producto.publico ? 'PÚBLICO' : 'PRIVADO' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Fecha de Alta</th><td>{{ producto.fechaAlta | date:'dd/MM/yyyy' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Fecha de Vencimiento</th><td>{{ producto.fechaVencimiento | date:'dd/MM/yyyy' }}</td></tr>
+      <tr><th scope="row" class="table-dark">Nota</th><td>{{ producto.nota }}</td></tr>
       </tbody>
     </table>
   </div>

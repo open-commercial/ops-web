@@ -1,5 +1,5 @@
 <ng-template #noItemTemplate>
-  <span class="font-italic">(No item template defined)</span>
+  <span class="fst-italic">(No item template defined)</span>
 </ng-template>
 <ul class="app-selectable-list" *ngIf="items.length">
   <li *ngFor="let item of items; let i=index;" tabindex="0" [class.selected]="item === selectedItem"

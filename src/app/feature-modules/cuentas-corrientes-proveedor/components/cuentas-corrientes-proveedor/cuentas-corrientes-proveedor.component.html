@@ -1,15 +1,13 @@
 <div class="app-cuentas-corrientes-proveedor">
-  <div class="row my-3">
-    <div class="col-8">
-      <h1 class="h3 text-truncate">
-        <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedores
-      </h1>
-    </div>
-    <div class="col-4 text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" routerLink="/proveedores/nuevo" ngbPopover="Nuevo Proveedor" triggers="mouseenter:mouseleave" placement="left">
+  <div class="d-flex flex-row align-items-center my-3">
+    <h1 class="h3 mb-0 flex-fill text-truncate">
+      <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedores
+    </h1>
+    <div class="text-nowrap text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" routerLink="/proveedores/nuevo" ngbPopover="Nuevo Proveedor" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="ccpFilterCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -21,20 +19,20 @@
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="nroONom">Nº Proveedor o Razón Social</label>
+          <div class="mb-3">
+            <label for="nroONom" class="form-label">Nº Proveedor o Razón Social</label>
             <input type="text" class="form-control" id="nroONom" formControlName="nroONom">
           </div>
-          <div class="form-group">
-            <label for="idProvincia">Provincia</label>
-            <select class="form-control" id="idProvincia" formControlName="idProvincia">
+          <div class="mb-3">
+            <label for="idProvincia" class="form-label">Provincia</label>
+            <select class="form-select" id="idProvincia" formControlName="idProvincia">
               <option value=""></option>
               <option [value]="p.idProvincia" *ngFor="let p of provincias">{{ p.nombre }}</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="idLocalidad">Localidad</label>
-            <select class="form-control" id="idLocalidad" formControlName="idLocalidad">
+          <div class="mb-3">
+            <label for="idLocalidad" class="form-label">Localidad</label>
+            <select class="form-select" id="idLocalidad" formControlName="idLocalidad">
               <option value=""></option>
               <option [value]="l.idLocalidad" *ngFor="let l of localidades">{{ l.nombre }}</option>
             </select>
@@ -42,7 +40,7 @@
         </div>
         <div class="col-md-6">
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorCCP></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorCCP></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoCCC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoCCP></app-filtro-ordenamiento>
           </div>
         </div>
@@ -56,23 +54,23 @@
     <ng-template #info let-item>
       <div class="row">
         <div class="col-lg-6">
-          <span class="badge badge-secondary mr-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
-          <span class="badge badge-dark mr-2 mb-2">CUIT: {{item.proveedor.idFiscal}}</span>
-          <span class="badge badge-dark mr-2 mb-2">{{ helper.categoriaIVALabel(item.proveedor.categoriaIVA) }}</span>
-          <div class="ml-2 mb-2 font-italic font-weight-bold nombre">
+          <span class="badge text-bg-secondary me-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
+          <span class="badge text-bg-dark me-2 mb-2">CUIT: {{item.proveedor.idFiscal}}</span>
+          <span class="badge text-bg-dark me-2 mb-2">{{ helper.categoriaIVALabel(item.proveedor.categoriaIVA) }}</span>
+          <div class="ms-2 mb-2 fst-italic fw-bold nombre">
             {{ item.proveedor.razonSocial }}
           </div>
-          <div class="ml-2" *ngIf="!!item.proveedor.ubicacion">
-            <span class="font-weight-bold">Ubicación: </span>{{ helper.formatUbicacion(item.proveedor.ubicacion) }}
+          <div class="ms-2" *ngIf="!!item.proveedor.ubicacion">
+            <span class="fw-bold">Ubicación: </span>{{ helper.formatUbicacion(item.proveedor.ubicacion) }}
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="ml-2 text-nowrap">
-            <span class="font-weight-bold">Saldo C/C: </span>
-            <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
+          <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
+            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
-          <div class="ml-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-            <span class="font-weight-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
+          <div class="ms-2 text-nowrap">
+            <span class="fw-bold">Saldo C/C: </span>
+            <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
           </div>
         </div>
       </div>

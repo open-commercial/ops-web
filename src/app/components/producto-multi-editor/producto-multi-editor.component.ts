@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {BatchActionElement, BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 import {Location} from '@angular/common';
 import {Medida} from '../../models/medida';
@@ -28,7 +28,7 @@ enum OpcionPorcentaje {
   styleUrls: ['./producto-multi-editor.component.scss']
 })
 export class ProductoMultiEditorComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   medidas: Medida[] = [];
@@ -43,7 +43,7 @@ export class ProductoMultiEditorComponent implements OnInit {
   @ViewChild('calculosPrecioCheck') calculosPrecioCheck: ElementRef;
   @ViewChild('descuentoRecargoPorcentajeCheck') descuentoRecargoPorcentajeCheck: ElementRef;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private batchActionsService: BatchActionsService,
               private loadingOverlayService: LoadingOverlayService,
               private medidasService: MedidasService,
@@ -89,7 +89,7 @@ export class ProductoMultiEditorComponent implements OnInit {
 
   creatForm() {
     this.hasRolToEditCantidades = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEditCantidades);
-
+    //this.hasRolToEditCantidades = false;
     this.form = this.fb.group({
       idProveedor: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
       idRubro: this.fb.group({ check: false, value: [{ value: null, disabled: true }, Validators.required] }),
@@ -98,7 +98,7 @@ export class ProductoMultiEditorComponent implements OnInit {
       paraCatalogo: this.fb.group({ check: false, value: [{ value: false, disabled: true }] }),
       calculosPrecio: this.fb.group({ check: false, value: [{ value: CalculosPrecio.getEmtpyValues(), disabled: true }] }),
       cantidadVentaMinima: this.fb.group({
-        check: [{ value: this.hasRolToEditCantidades, disabled: true }],
+        check: [{ value: false, disabled: !this.hasRolToEditCantidades }],
         value: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]] }
       ),
       descuentoRecargoPorcentaje: this.fb.group({
@@ -185,14 +185,14 @@ export class ProductoMultiEditorComponent implements OnInit {
       this.loadingOverlayService.activate();
       this.productosService.actualizarMultiplesProductos(ppa)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.batchActionsService.clear(BatchActionKey.PRODUCTOS);
             this.mensajeService.msg('Productos actualizados correctamente!', MensajeModalType.INFO);
             this.location.back();
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        )
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
       ;
     }
   }

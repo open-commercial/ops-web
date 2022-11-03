@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
 import { map } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
@@ -57,7 +57,7 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
               protected router: Router,
               protected sucursalesService: SucursalesService,
               private facturasCompraService: FacturasCompraService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
               protected loadingOverlayService: LoadingOverlayService,

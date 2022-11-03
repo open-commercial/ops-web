@@ -1,8 +1,8 @@
 <div class="app-remitos">
   <div class="d-flex flex-column flex-md-row align-items-md-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-export']"></fa-icon> Remitos</h1>
-    <div class="text-right m-0">
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+    <div class="text-end m-0">
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="remitosFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -15,15 +15,15 @@
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <app-rango-fecha-filtro id="rango-fecha-r" formControlName="rangoFecha"></app-rango-fecha-filtro>
-          <div class="form-group">
-            <label>Nº de Remito</label>
+          <div class="mb-3">
+            <label class="form-label">Nº de Remito</label>
             <div class="row">
               <div class="col-4">
-                <label class="sr-only" for="num-serie">Número de serie</label>
+                <label class="form-label sr-only" for="num-serie">Número de serie</label>
                 <input type="number" class="form-control" id="num-serie" formControlName="serieRemito">
               </div>
               <div class="col-8">
-                <label class="sr-only" for="num-remito">Número remito</label>
+                <label class="form-label sr-only" for="num-remito">Número remito</label>
                 <input type="number" class="form-control" id="num-remito" formControlName="nroRemito">
               </div>
             </div>
@@ -34,7 +34,7 @@
           <app-cliente-filtro id="clienteFiltroR" formControlName="idCliente"></app-cliente-filtro>
           <app-usuario-filtro id="usuarioFiltroR" formControlName="idUsuario" [roles]="rolesForUsuarioFilter"></app-usuario-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorT" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorR></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorT" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorR></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoT" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoR></app-filtro-ordenamiento>
           </div>
         </div>
@@ -47,23 +47,25 @@
   <div class="remitos my-2">
     <ng-template #info let-item let-i="index" id="infoR">
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge badge-dark ml-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
           #{{ helper.formatNumRemito(item.serie, item.nroRemito) }}
         </span>
       </div>
       <div class="px-2 flex-fill">
-        <div class="d-flex flex-row flex-wrap align-items-center">
-          <span class="mr-2"><span class="font-weight-bold">Usuario:&nbsp;</span><span class="font-italic">{{ item.nombreUsuario }}</span></span>
-          <span class="mr-2"><span class="font-weight-bold">Cliente:&nbsp;</span><span class="font-italic">{{ item.nombreFiscalCliente }}</span></span>
-          <span class="mr-2"><span class="font-weight-bold">Transportista:&nbsp;</span><span class="font-italic">{{ item.nombreTransportista }}</span></span>
-          <span class="mr-2"><span class="font-weight-bold">Costo Envio:&nbsp;</span><span class="font-italic costo-de-envio">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span></span>
+        <div class="d-flex flex-row flex-wrap">
+          <span class="me-2"><span class="fw-bold">Usuario:&nbsp;</span><span class="fst-italic">{{ item.nombreUsuario }}</span></span>
+          <span class="me-2"><span class="fw-bold">Cliente:&nbsp;</span><span class="fst-italic">{{ item.nombreFiscalCliente }}</span></span>
+          <span class="me-2"><span class="fw-bold">Transportista:&nbsp;</span><span class="fst-italic">{{ item.nombreTransportista }}</span></span>
         </div>
       </div>
       <div class="px-2 flex-fill">
-        <span class="font-weight-bold">Ubicación:&nbsp;</span><span class="font-italic">{{ item.detalleEnvio }}</span>
+        <span class="fw-bold">Ubicación:&nbsp;</span><span class="fst-italic">{{ item.detalleEnvio }}</span>
+      </div>
+      <div>
+        <span class="px-2 fw-bold">Costo Envio:&nbsp;</span><span class="fst-italic costo-de-envio">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span>
       </div>
     </ng-template>
     <ng-template #actions let-item let-index>

@@ -17,30 +17,24 @@ import { NotaDebitoCompraReciboModalComponent } from './components/nota-debito-c
 import { NotaDebitoCompraDetalleReciboModalComponent } from './components/nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
 
 @NgModule({
-  declarations: [
-    CuentasCorrientesProveedorComponent,
-    CuentaCorrienteProveedorComponent,
-    ProveedorDetalleComponent,
-    ProveedorComponent,
-    NotaCreditoCompraSinFacturaModalComponent,
-    NotaCreditoCompraDetalleSinFacturaModalComponent,
-    NotaDebitoCompraSinReciboModalComponent,
-    NotaDebitoCompraDetalleSinReciboModalComponent,
-    NotaCreditoCompraFacturaModalComponent,
-    NotaCreditoCompraDetalleFacturaModalComponent,
-    NotaDebitoCompraReciboModalComponent,
-    NotaDebitoCompraDetalleReciboModalComponent,
-  ],
-  imports: [
-    CommonModule,
-    ShareModule,
-    CuentasCorrientesProveedorRoutingModule,
-  ],
-  entryComponents: [
-    NotaCreditoCompraSinFacturaModalComponent,
-    NotaCreditoCompraDetalleSinFacturaModalComponent,
-    NotaDebitoCompraSinReciboModalComponent,
-    NotaDebitoCompraDetalleSinReciboModalComponent,
-  ],
+    declarations: [
+        CuentasCorrientesProveedorComponent,
+        CuentaCorrienteProveedorComponent,
+        ProveedorDetalleComponent,
+        ProveedorComponent,
+        NotaCreditoCompraSinFacturaModalComponent,
+        NotaCreditoCompraDetalleSinFacturaModalComponent,
+        NotaDebitoCompraSinReciboModalComponent,
+        NotaDebitoCompraDetalleSinReciboModalComponent,
+        NotaCreditoCompraFacturaModalComponent,
+        NotaCreditoCompraDetalleFacturaModalComponent,
+        NotaDebitoCompraReciboModalComponent,
+        NotaDebitoCompraDetalleReciboModalComponent,
+    ],
+    imports: [
+        CommonModule,
+        ShareModule,
+        CuentasCorrientesProveedorRoutingModule,
+    ]
 })
 export class CuentasCorrientesProveedorModule { }

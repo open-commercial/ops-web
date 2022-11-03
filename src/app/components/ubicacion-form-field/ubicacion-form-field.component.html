@@ -1,19 +1,15 @@
-<div class="form-group">
-  <label [for]="id">{{ label }}</label>
+<div class="mb-3">
+  <label class="form-label" [for]="id">{{ label }}</label>
   <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', 'map-marker-alt']"></fa-icon></span>
-    </div>
+    <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', 'map-marker-alt']"></fa-icon></span>
     <input type="text" class="form-control" [attr.aria-label]="label" disabled tabindex="-1"
            [value]="getDisplayValue()">
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled" (click)="clearValue()">
-        <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar Ubicación</span>
-      </button>
-      <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled" (click)="edit()">
-        <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-        <span class="sr-only">Editar Ubicación</span>
-      </button>
-    </div>
+    <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled" (click)="clearValue()">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar Ubicación</span>
+    </button>
+    <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled" (click)="edit()">
+      <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+      <span class="sr-only">Editar Ubicación</span>
+    </button>
   </div>
 </div>

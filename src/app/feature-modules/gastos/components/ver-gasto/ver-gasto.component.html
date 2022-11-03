@@ -7,18 +7,18 @@
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
         </a>
         <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon>
-        Gasto Nº {{ gasto.nroGasto }}
+        Gasto
       </h1>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del Gasto</caption>
-      <tbody class="thead-dark">
-      <tr><th scope="row" class="w-25">Nº</th><td>{{ gasto.nroGasto }}</td></tr>
-      <tr><th scope="row" class="w-25">Fecha</th><td>{{ gasto.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
-      <tr><th scope="row" class="w-25">En Concepto de</th><td>{{ gasto.concepto }}</td></tr>
-      <tr><th scope="row" class="w-25">Monto</th><td>{{ gasto.monto | currency:'ARS':'symbol':'1.0-2' }}</td></tr>
-      <tr><th scope="row" class="w-25">Forma de Pago</th><td>{{ gasto.nombreFormaDePago }}</td></tr>
-      <tr><th scope="row" class="w-25">Usuario</th><td>{{ gasto.nombreUsuario }}</td></tr>
+      <tbody>
+      <tr><th scope="row" class="table-dark text-nowrap">Nº de Gasto</th><td class="w-100">{{ gasto.nroGasto }}</td></tr>
+      <tr><th scope="row" class="table-dark text-nowrap">Fecha</th><td>{{ gasto.fecha | date:'dd/MM/yyyy HH:mm' }}</td></tr>
+      <tr><th scope="row" class="table-dark text-nowrap">Concepto</th><td>{{ gasto.concepto }}</td></tr>
+      <tr><th scope="row" class="table-dark text-nowrap">Monto</th><td>{{ gasto.monto | currency:'ARS':'symbol':'1.0-2' }}</td></tr>
+      <tr><th scope="row" class="table-dark text-nowrap">Forma de Pago</th><td>{{ gasto.nombreFormaDePago }}</td></tr>
+      <tr><th scope="row" class="table-dark text-nowrap">Usuario</th><td>{{ gasto.nombreUsuario }}</td></tr>
       </tbody>
     </table>
   </div>

@@ -1,6 +1,6 @@
 <div class="app-factura-compra my-3">
   <div class="d-flex flex-row justify-content-end align-items-center mb-2">
-    <h1 class="h3 pr-2 mb-0 flex-fill text-truncate">
+    <h1 class="h3 pe-2 mb-0 flex-fill text-truncate">
       <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
@@ -13,12 +13,12 @@
       <ngb-panel id="proveedorPanel">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('proveedorPanel') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('proveedorPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Proveedor{{ proveedorSeleccionado ? ': ' + proveedorSeleccionado.razonSocial : '' }}</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="form-group">
+          <div class="mb-3">
             <app-proveedor-filtro formControlName="idProveedor" (objectChange)="proveedorChange($event)"></app-proveedor-filtro>
             <div class="custom-error-message error-message-fix" *ngIf="submitted && f.idProveedor.errors">
               <div *ngIf="f.idProveedor.errors.required">Requerido</div>
@@ -29,14 +29,14 @@
       <ngb-panel id="tipoDeComprobantePanel" [disabled]="!this.form.get('idProveedor').value">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobantePanel') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
-            <span>Tipo De Comprobante{{ form.get('tipoDeComprobante') ? ': ' + form.get('tipoDeComprobante').value : '' }}</span>
+            <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobantePanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <span>Tipo de Comprobante{{ (form.get('tipoDeComprobante') && form.get('tipoDeComprobante').value) ? ': ' + form.get('tipoDeComprobante').value.toString().replace('_', ' ') : '' }}</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="form-group">
-            <label for="tipoDeComprobante">Tipo de Factura</label>
-            <select class="form-control" id="tipoDeComprobante" formControlName="tipoDeComprobante"
+          <div class="mb-3">
+            <label for="tipoDeComprobante" class="form-label">Tipo de Factura</label>
+            <select class="form-select" id="tipoDeComprobante" formControlName="tipoDeComprobante"
                     [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
               <option *ngFor="let tc of tiposDeComprobantes" [value]="tc">{{ helper.tipoComprobanteLabel(tc) }}</option>
             </select>
@@ -49,7 +49,7 @@
       <ngb-panel id="datosFacturaPanel">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('datosFacturaPanel') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('datosFacturaPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Datos de la Factura{{ getDatosFactura() }}</span>
           </span>
         </ng-template>
@@ -60,8 +60,8 @@
               <div class="border rounded p-2 mb-3">
                 <div class="row">
                   <div class="col-4">
-                    <div class="form-group">
-                      <label for="numSerie">Serie</label>
+                    <div class="mb-3">
+                      <label for="numSerie" class="form-label">Serie</label>
                       <input class="form-control" type="number" min="0" id="numSerie" formControlName="numSerie"
                              [ngClass]="{ 'is-invalid': submitted && f.numSerie.errors }" />
                       <div class="invalid-feedback" *ngIf="submitted && f.numSerie.errors">
@@ -71,8 +71,8 @@
                     </div>
                   </div>
                   <div class="col-8">
-                    <div class="form-group">
-                      <label for="numFactura">Nº</label>
+                    <div class="mb-3">
+                      <label for="numFactura" class="form-label">Nº</label>
                       <input class="form-control" type="number" min="0" id="numFactura" formControlName="numFactura"
                              [ngClass]="{ 'is-invalid': submitted && f.numFactura.errors }" />
                       <div class="invalid-feedback" *ngIf="submitted && f.numFactura.errors">
@@ -85,39 +85,35 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
-                <label for="fecha">Fecha de Factura</label>
+              <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha de Factura</label>
                 <div class="input-group">
                   <input class="form-control" readonly id="fecha" formControlName="fecha"
                          [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                          [showWeekNumbers]="false" ngbDatepicker #dff="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
-                      <fa-icon [icon]="['fas', 'times']"></fa-icon>
-                    </button>
-                    <button class="btn btn-outline-secondary" (click)="dff.open()" type="button">
-                      <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-                    </button>
-                  </div>
+                  <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
+                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                  </button>
+                  <button class="btn btn-outline-secondary" (click)="dff.open()" type="button">
+                    <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+                  </button>
                 </div>
                 <div class="d-block invalid-feedback" *ngIf="submitted && f.fecha.errors">
                   <div *ngIf="f.fecha.errors.required">Requerido</div>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="fechaVencimiento">Fecha de Vencimiento</label>
+              <div class="mb-3">
+                <label for="fechaVencimiento" class="form-label">Fecha de Vencimiento</label>
                 <div class="input-group">
                   <input class="form-control" readonly id="fechaVencimiento" formControlName="fechaVencimiento"
                          [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                          [showWeekNumbers]="false" ngbDatepicker #dfv="ngbDatepicker">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
-                      <fa-icon [icon]="['fas', 'times']"></fa-icon>
-                    </button>
-                    <button class="btn btn-outline-secondary" (click)="dfv.open()" type="button">
-                      <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
-                    </button>
-                  </div>
+                  <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
+                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                  </button>
+                  <button class="btn btn-outline-secondary" (click)="dfv.open()" type="button">
+                    <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+                  </button>
                 </div>
               </div>
             </div>
@@ -127,22 +123,21 @@
       <ngb-panel id="productosPanel">
         <ng-template ngbPanelTitle>
         <span class="d-flex align-items-center">
-          <fa-icon [icon]="['fas', accordion.isExpanded('productosPanel') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+          <fa-icon [icon]="['fas', accordion.isExpanded('productosPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
           <span>Productos ({{ this.renglones.length }})</span>
         </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="text-right p-2">
-            <button type="button" class="btn btn-secondary" (click)="showNuevoReglonFacturaModal()">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon> Agregar Producto
+          <div class="text-end mb-2">
+            <button type="button" class="btn btn-primary" (click)="showNuevoReglonFacturaModal()">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
             </button>
           </div>
-
           <table class="table table-sm table-bordered table-striped">
             <caption class="sr-only">Renglones</caption>
             <thead>
             <tr>
-              <th scope="col" class="w-100">Producto</th>
+              <th scope="col" class="w-100">Descripción</th>
               <th scope="col" class="text-center">&nbsp;&nbsp;Acciones&nbsp;&nbsp;</th>
             </tr>
             </thead>
@@ -154,7 +149,7 @@
                     <span class="codigo">{{ r.get('renglonFactura').value.codigoItem }}</span>
                     <div class="descripcion">{{ r.get('renglonFactura').value.descripcionItem }}</div>
                   </div>
-                  <div class="text-right">
+                  <div class="text-end">
                     <div class="text-nowrap">
                       {{ r.get('renglonFactura').value.cantidad | number:'1.0-2' }}
                       {{ r.get('renglonFactura').value.medidaItem }}&nbsp;X&nbsp;{{ r.get('renglonFactura').value.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}
@@ -170,12 +165,18 @@
                 </div>
               </td>
               <td class="text-nowrap">
-                <button type="button" class="btn btn-success" (click)="showEditReglonFacturaModal(i)">
-                  <fa-icon [icon]="['fas', 'edit']"></fa-icon>
-                </button>
-                <button type="button" class="btn btn-danger ml-2" (click)="removeRenglon(i)">
-                  <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-                </button>
+              <ul class="list-unstyled text-center mb-0">
+                <li class="mb-2">
+                  <button type="button" class="btn btn-primary" (click)="showEditReglonFacturaModal(i)">
+                    <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="btn btn-primary" (click)="removeRenglon(i)">
+                    <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                  </button>
+                </li>
+              </ul>
               </td>
             </tr>
             </tbody>
@@ -185,7 +186,7 @@
       <ngb-panel id="transportistaPanel">
         <ng-template ngbPanelTitle>
         <span class="d-flex align-items-center">
-          <fa-icon [icon]="['fas', accordion.isExpanded('transportistaPanel') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+          <fa-icon [icon]="['fas', accordion.isExpanded('transportistaPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
           <span>Transportista{{ transportistaSeleccionado ? ': ' + transportistaSeleccionado.nombre : '' }}</span>
         </span>
         </ng-template>
@@ -193,67 +194,80 @@
           <app-transportista formControlName="idTransportista" (objectChange)="transportistaChange($event)"></app-transportista>
         </ng-template>
       </ngb-panel>
+      <ngb-panel id="ResumenPanel">
+        <ng-template ngbPanelTitle>
+        <span class="d-flex align-items-center">
+          <fa-icon [icon]="['fas', accordion.isExpanded('ResumenPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+          <span>Resumen</span>
+        </span>
+        </ng-template>
+        <ng-template ngbPanelContent>
+          <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
+          </div>
+          <table class="table table-bordered table-sm">
+            <caption class="sr-only">Resumen de Totales</caption>
+            <tbody>
+            <tr>
+              <th scope="row" class="table-dark">Subtotal</th>
+              <td class="w-100" colspan="2">{{ this.resultados.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr class="mb-3">
+              <th scope="row" class="text-nowrap table-dark">
+                <label class="form-label mb-0" for="descuentoPorcentaje">Descuento</label>
+              </th>
+              <td class="w-50">
+                <div class="d-flex flex-row align-items-center">
+                  <input type="number" min="0" class="form-control" id="descuentoPorcentaje" formControlName="descuentoPorcentaje"
+                        [ngClass]="{ 'is-invalid': submitted && f.descuentoPorcentaje.errors }"><span class="ms-2">%</span>
+                </div>
+                <div class="invalid-feedback" *ngIf="submitted && f.descuentoPorcentaje.errors">
+                  <div *ngIf="f.descuentoPorcentaje.errors.min">Mínimo {{ f.descuentoPorcentaje.errors.min.min }}</div>
+                </div>
+              </td>
+              <td>{{ this.resultados.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr class="mb-3">
+              <th scope="row" class="table-dark">
+                <label class="form-label mb-0" for="recargoPorcentaje">Recargo</label>
+              </th>
+              <td class="w-50">
+                <div class="d-flex flex-row align-items-center">
+                  <input type="number" min="0" class="form-control" id="recargoPorcentaje" formControlName="recargoPorcentaje"
+                        [ngClass]="{ 'is-invalid': submitted && f.recargoPorcentaje.errors }"><span class="ms-2">%</span>
+                </div>
+                <div class="invalid-feedback" *ngIf="submitted && f.recargoPorcentaje.errors">
+                  <div *ngIf="f.recargoPorcentaje.errors.min">Mínimo {{ f.recargoPorcentaje.errors.min.min }}</div>
+                </div>
+              </td>
+              <td>{{ this.resultados.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="text-nowrap table-dark">Subtotal Bruto</th>
+              <td class="w-100" colspan="2">{{ this.resultados.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="text-nowrap table-dark">IVA 10.5%</th>
+              <td class="w-100" colspan="2">{{ this.resultados.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="text-nowrap table-dark">IVA 21%</th>
+              <td class="w-100" colspan="2">{{ this.resultados.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            <tr>
+              <th scope="row" class="table-dark">Total</th>
+              <td class="w-100" colspan="2">{{ this.resultados.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary">
+              <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+            </button>
+          </div>
+        </ng-template>
+      </ngb-panel>
     </ngb-accordion>
-    <div class="form-group mt-3">
-      <label for="observaciones">Observaciones</label>
-      <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
-    </div>
-    <table class="table table-bordered table-sm">
-      <caption class="sr-only">Resumen de Totales</caption>
-      <tbody class="thead-dark">
-      <tr>
-        <th scope="row">Subtotal</th>
-        <td class="w-100" colspan="2">{{ this.resultados.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr class="form-group">
-        <th scope="row" class="text-nowrap"><label for="descuentoPorcentaje" class="mb-0">Descuento</label></th>
-        <td class="w-50">
-          <div class="d-flex flex-row align-items-center">
-            <input type="number" min="0" class="form-control" id="descuentoPorcentaje" formControlName="descuentoPorcentaje"
-                   [ngClass]="{ 'is-invalid': submitted && f.descuentoPorcentaje.errors }"><span class="ml-2">%</span>
-          </div>
-          <div class="invalid-feedback" *ngIf="submitted && f.descuentoPorcentaje.errors">
-            <div *ngIf="f.descuentoPorcentaje.errors.min">Mínimo {{ f.descuentoPorcentaje.errors.min.min }}</div>
-          </div>
-        </td>
-        <td>{{ this.resultados.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr class="form-group">
-        <th scope="row"><label for="recargoPorcentaje" class="mb-0">Recargo</label></th>
-        <td class="w-50">
-          <div class="d-flex flex-row align-items-center">
-            <input type="number" min="0" class="form-control" id="recargoPorcentaje" formControlName="recargoPorcentaje"
-                   [ngClass]="{ 'is-invalid': submitted && f.recargoPorcentaje.errors }"><span class="ml-2">%</span>
-          </div>
-          <div class="invalid-feedback" *ngIf="submitted && f.recargoPorcentaje.errors">
-            <div *ngIf="f.recargoPorcentaje.errors.min">Mínimo {{ f.recargoPorcentaje.errors.min.min }}</div>
-          </div>
-        </td>
-        <td>{{ this.resultados.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="text-nowrap">Subtotal Bruto</th>
-        <td class="w-100" colspan="2">{{ this.resultados.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="text-nowrap">IVA 10.5%</th>
-        <td class="w-100" colspan="2">{{ this.resultados.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row" class="text-nowrap">IVA 21%</th>
-        <td class="w-100" colspan="2">{{ this.resultados.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      <tr>
-        <th scope="row">Total</th>
-        <td class="w-100" colspan="2">{{ this.resultados.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
-      </tr>
-      </tbody>
-    </table>
-    <hr>
-    <div class="text-right">
-      <button type="submit" class="btn btn-primary">
-        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
-      </button>
-    </div>
   </form>
 </div>

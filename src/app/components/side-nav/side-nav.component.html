@@ -1,6 +1,6 @@
 <div class="side-nav">
-  <div class="text-right mb-2">
-    <button class="btn btn-primary mr-2" (click)="optionClick()">
+  <div class="text-end mb-2">
+    <button class="btn btn-primary me-2" (click)="optionClick()">
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
@@ -9,7 +9,7 @@
       <ngb-panel [id]="m.id" *ngIf="m.show">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>{{ m.seccion }}</span>
           </span>
         </ng-template>

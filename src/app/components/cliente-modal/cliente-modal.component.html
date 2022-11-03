@@ -1,13 +1,11 @@
 <div class="modal-header p-2 flex-column">
   <div class="input-group">
-    <label class="sr-only" for="searchTerm"></label>
+    <label class="form-label sr-only" for="searchTerm"></label>
     <input [(ngModel)]="searchTerm" autocomplete="off" type="search" class="form-control" id="searchTerm" [placeholder]="searchInputPlaceholder"
            (keyup.enter)="search()" [readOnly]="clearLoading || loading">
-    <div class="input-group-append">
-      <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
-        <fa-icon [icon]="['fas', 'search']"></fa-icon>
-      </button>
-    </div>
+    <button tabindex="-1" class="btn btn-primary" type="button" (click)="search()" [disabled]="clearLoading || loading">
+      <fa-icon [icon]="['fas', 'search']"></fa-icon>
+    </button>
   </div>
 </div>
 <div class="modal-body d-flex flex-column p-2">

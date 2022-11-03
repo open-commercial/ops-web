@@ -1,5 +1,5 @@
 import {Directive, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
 import {MensajeService} from '../services/mensaje.service';
@@ -14,7 +14,7 @@ import {AuthService} from '../services/auth.service';
 
 @Directive()
 export abstract class ReciboModalDirective implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   saldo = 0;
   formasDePago: FormaDePago[] = [];
   submitted = false;
@@ -24,7 +24,7 @@ export abstract class ReciboModalDirective implements OnInit {
   hasRoleToCrearRecibo = false;
 
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         protected loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
                         protected formasDePagoService: FormasDePagoService,

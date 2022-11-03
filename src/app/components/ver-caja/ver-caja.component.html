@@ -1,6 +1,6 @@
-<div class="app-ver-caja my-3">
+<div class="app-ver-caja">
   <div *ngIf="caja">
-    <div class="d-flex flex-column flex-md-row mb-2">
+    <div class="d-flex flex-row my-3">
       <h1 class="h3 flex-fill text-truncate">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
            (click)="volverAlListado()">
@@ -8,12 +8,18 @@
         </a>
         <fa-icon [icon]="['fas', 'cash-register']"></fa-icon> Arqueo de Caja
       </h1>
-      <div class="text-nowrap text-right" *ngIf="caja.estado === estado.ABIERTA" >
-        <button type="button" class="btn btn-primary ml-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left">
+      <div class="text-nowrap text-end">
+        <button type="button" class="btn btn-primary ms-2" (click)="nuevoGasto()" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" *ngIf="caja.estado === estado.ABIERTA">
           <fa-icon [icon]="['fas', 'coins']"></fa-icon>
         </button>
-        <button type="button" class="btn btn-primary ml-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left">
+        <button type="button" class="btn btn-primary ms-2" (click)="cerrarCaja()" ngbPopover="Cerrar Caja" triggers="mouseenter:mouseleave" placement="left" *ngIf="caja.estado === estado.ABIERTA">
           <fa-icon [icon]="['fas', 'lock']"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-primary ms-2" (click)="reabrirCaja()" ngbPopover="Reabrir" triggers="mouseenter:mouseleave" placement="left" *ngIf="caja.estado === estado.CERRADA">
+          <fa-icon [icon]="['fas', 'lock-open']"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-primary ms-2" (click)="eliminarCaja()" ngbPopover="Eliminar" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToDelete">
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
         </button>
       </div>
     </div>
@@ -22,17 +28,17 @@
       Estado: <strong [ngClass]="{'text-danger': caja.estado === estado.CERRADA, 'text-success': caja.estado === estado.ABIERTA}">{{ caja.estado }}</strong>
     </div>
     <ngb-accordion class="ops-accordion-2" #accordion [closeOthers]="true" [destroyOnHide]="true" (panelChange)="panelBeforeChange($event)">
-      <ngb-panel *ngFor="let r of resumen"  [id]="'panel-' + r.idFormaDePago">
+      <ngb-panel *ngFor="let r of resumen; last as isLast"  [id]="'panel-' + r.idFormaDePago">
         <ng-template ngbPanelHeader>
-          <button class="d-flex align-items-center justify-content-between mb-0" ngbPanelToggle
-                  [class.table-success]="r.total>=0" [class.table-danger]="r.total < 0">
+          <button class="d-flex align-items-center justify-content-between mb-0 w-100 border-0 border-bottom" ngbPanelToggle
+                  [class.bg-success]="r.total >= 0" [class.bg-danger]="r.total < 0" style="--bs-bg-opacity: .3;" [class.border-secondary]="!isLast" >
             <fa-icon [icon]="['fas', accordion.isExpanded('panel-' + r.idFormaDePago) ? 'chevron-up' : 'chevron-down']"
-                     class="mr-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
-            <span class="mb-0 flex-fill text-left nombre">
+                     class="me-2" *ngIf="r.idFormaDePago > 0"></fa-icon>
+            <span class="mb-0 flex-fill text-start nombre">
               {{ r.nombreFormaDePago }} <br *ngIf="r.afectaCaja">
-              <small *ngIf="r.afectaCaja" class="font-weight-bold text-nowrap">(Afecta la caja)</small>
+              <small *ngIf="r.afectaCaja" class="fw-bold text-nowrap">(Afecta la caja)</small>
             </span>
-            <span class="font-weight-bold">{{ r.total | currency: 'ARS':'symbol':'1.0-2' }}</span>
+            <span class="fw-bold">{{ r.total | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </button>
         </ng-template>
         <ng-template ngbPanelContent>
@@ -40,11 +46,11 @@
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
-    <ul class="list-unstyled my-3 text-right">
+    <ul class="list-unstyled my-3 text-end">
       <li>
         <strong>Total afecta Caja: </strong>
         <span class="lead">
-          <span class="badge" [class.badge-success]="totalQueAfectaCaja >= 0" [class.badge-danger]="totalQueAfectaCaja < 0">
+          <span class="badge" [class.text-bg-success]="totalQueAfectaCaja >= 0" [class.text-bg-danger]="totalQueAfectaCaja < 0">
             <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
             <span *ngIf="!loadingTotales">{{ totalQueAfectaCaja | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </span>
@@ -53,7 +59,7 @@
       <li>
         <strong>Total Sistema: </strong>
         <span class="lead">
-          <span class="badge" [class.badge-success]="totalSistema >= 0" [class.badge-danger]="totalSistema < 0">
+          <span class="badge" [class.text-bg-success]="totalSistema >= 0" [class.text-bg-danger]="totalSistema < 0">
             <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
             <span *ngIf="!loadingTotales">{{ totalSistema | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </span>

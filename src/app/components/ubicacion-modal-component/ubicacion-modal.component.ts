@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ubicacion } from '../../models/ubicacion';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { UbicacionesService } from '../../services/ubicaciones.service';
 import { finalize } from 'rxjs/operators';
 import { Provincia } from '../../models/provincia';
@@ -23,7 +23,7 @@ export class UbicacionModalComponent implements OnInit {
 
   title = 'Ubicación';
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
 
   provinciasLoading = false;
@@ -34,7 +34,7 @@ export class UbicacionModalComponent implements OnInit {
   localidades: Localidad[] = [];
 
   constructor(public activeModal: NgbActiveModal,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private ubicacionesService: UbicacionesService) { }
 
   ngOnInit() {

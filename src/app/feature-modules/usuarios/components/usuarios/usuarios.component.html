@@ -1,11 +1,11 @@
 <div class="app-usuarios">
   <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'users']"></fa-icon> Usuarios</h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" (click)="nuevoUsuario()" ngbPopover="Nuevo Usuario" triggers="mouseenter:mouseleave" placement="left">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" (click)="nuevoUsuario()" ngbPopover="Nuevo Usuario" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="usuariosFilterCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -17,15 +17,15 @@
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="nombre">Usuario, Nombre, Apellido, Email</label>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Usuario, Nombre, Apellido, Email</label>
             <input type="text" class="form-control" id="nombre" formControlName="nombre" >
           </div>
         </div>
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="rol">Rol</label>
-            <select class="form-control" id="rol" formControlName="rol">
+          <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-select" id="rol" formControlName="rol">
               <option></option>
               <option *ngFor="let r of roles" [value]="r.value">{{ r.text }}</option>
             </select>
@@ -42,15 +42,15 @@
       <div class="row">
         <div class="col-md-6">
           <div class="d-flex flex-row flex-wrap align-items-center">
-            <span class="lead font-weight-bold">{{ item.username }}</span>
-            <span class="font-italic">&nbsp;({{ item.apellido }}{{ (item.apellido ? ', ' : '') + item.nombre }})</span>
+            <span class="lead fw-bold">{{ item.username }}</span>
+            <span class="fst-italic">&nbsp;({{ item.apellido }}{{ (item.apellido ? ', ' : '') + item.nombre }})</span>
           </div>
           <div>
-            <span class="font-weight-bold">Email: </span><span>{{ item.email }}</span>
+            <span class="fw-bold">Email: </span><span>{{ item.email }}</span>
           </div>
         </div>
         <div class="col-md-6 text-md-center">
-          <span class="font-weight-bold">Rol: </span>
+          <span class="fw-bold">Rol: </span>
           <span>{{ item.roles }}</span>
         </div>
       </div>

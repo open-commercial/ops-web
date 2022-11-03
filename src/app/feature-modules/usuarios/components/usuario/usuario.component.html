@@ -10,8 +10,10 @@
   </div>
   <div class="bg-light border rounded p-3" *ngIf="!loading">
     <app-usuario-form [usuario]="usuario" (userSaved)="onUserSaved()" [(saving)]="saving" #usuarioForm></app-usuario-form>
-    <div class="text-right">
-      <button class="btn btn-primary" type="button" [disabled]="saving" (click)="submit()">Guardar</button>
+    <div class="text-end">
+      <button class="btn btn-primary" type="button" [disabled]="saving" (click)="submit()">
+        <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
+      </button>
     </div>
   </div>
 </div>

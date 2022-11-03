@@ -1,10 +1,10 @@
-<div class="app-recibos-venta my-3">
-  <div class="d-flex flex-row">
+<div class="app-recibos-venta">
+  <div class="d-flex flex-row my-3">
     <h1 class="h3 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Recibos de Venta
     </h1>
-    <div class="text-right m-0">
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+    <div class="text-end m-0">
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="recibosVentaCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -19,26 +19,26 @@
           <div class="p-3 mb-3 bg-white rounded border">
             <app-rango-fecha-filtro formControlName="rangoFecha"></app-rango-fecha-filtro>
           </div>
-          <div class="form-group">
-            <label>Nº Recibo </label>
+          <div class="mb-3">
+            <label class="form-label">Nº Recibo </label>
             <div class="row">
               <div class="col-4">
-                <label class="sr-only" for="num-serie">Nº de serie</label>
+                <label class="form-label sr-only" for="num-serie">Nº de serie</label>
                 <input type="text" class="form-control" id="num-serie" formControlName="numSerie">
               </div>
               <div class="col-8">
-                <label class="sr-only" for="num-recibo">Nº de Recibo</label>
+                <label class="form-label sr-only" for="num-recibo">Nº de Recibo</label>
                 <input type="text" class="form-control" id="num-recibo" formControlName="numRecibo">
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="concepto">Concepto</label>
+          <div class="mb-3">
+            <label for="concepto" class="form-label">Concepto</label>
             <input type="text" class="form-control" id="concepto" formControlName="concepto">
           </div>
-          <div class="form-group">
-            <label for="idFormaDePago">Forma de Pago</label>
-            <select class="form-control" id="idFormaDePago" formControlName="idFormaDePago">
+          <div class="mb-3">
+            <label for="idFormaDePago" class="form-label">Forma de Pago</label>
+            <select class="form-select" id="idFormaDePago" formControlName="idFormaDePago">
               <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
             </select>
           </div>
@@ -47,8 +47,8 @@
           <app-cliente-filtro formControlName="idCliente"></app-cliente-filtro>
           <app-usuario-filtro formControlName="idUsuario"></app-usuario-filtro>
           <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
-          <div class="px-3 pt-3 pb-0 border bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorRV" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorR></app-filtro-ordenamiento>
+          <div class="p-3 border bg-light mb-3">
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorRV" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordenarPorR></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoRV" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoR></app-filtro-ordenamiento>
           </div>
         </div>
@@ -62,37 +62,37 @@
     <ng-template #info let-item>
       <div class="flex-fill">
         <div>
-          <span class="badge badge-dark mr-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha }}</span>
-          <span class="badge badge-secondary">#{{ helper.formatNumFactura(item.numSerie, item.numRecibo) }}</span>
+          <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha }}</span>
+          <span class="badge text-bg-secondary">#{{ helper.formatNumFactura(item.numSerie, item.numRecibo) }}</span>
         </div>
       </div>
       <div class="d-flex flex-column flex-md-row mt-2">
-        <div class="w-100 mr-2">
-          <div class="mr-2">
-            <span class="font-weight-bold">Cliente:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreFiscalCliente }}</span>
+        <div class="w-100 me-2">
+          <div class="me-2">
+            <span class="fw-bold">Cliente:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreFiscalCliente }}</span>
           </div>
-          <div class="mr-2">
-            <span class="font-weight-bold">Usuario:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreUsuario }}</span>
+          <div class="me-2">
+            <span class="fw-bold">Usuario:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreUsuario }}</span>
           </div>
-          <div class="mr-2" *ngIf="item.nombreViajante">
-            <span class="font-weight-bold">Viajante:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreViajante }}</span>
+          <div class="me-2" *ngIf="item.nombreViajante">
+            <span class="fw-bold">Viajante:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreViajante }}</span>
           </div>
         </div>
-        <div class="w-100 mr-2">
-          <div class="flex-fill d-flex flex-row flex-wrap mr-2">
-            <span class="font-weight-bold">Forma de Pago:&nbsp;</span>
-            <span class="font-italic">{{ item.nombreFormaDePago }}</span>
+        <div class="w-100 me-2">
+          <div class="flex-fill d-flex flex-row flex-wrap me-2">
+            <span class="fw-bold">Forma de Pago:&nbsp;</span>
+            <span class="fst-italic">{{ item.nombreFormaDePago }}</span>
           </div>
-          <div class="flex-fill d-flex flex-row flex-wrap align-items-center mr-2">
-            <span class="font-weight-bold">Monto:&nbsp;</span>
-            <span class="font-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+          <div class="flex-fill d-flex flex-row flex-wrap me-2">
+            <span class="fw-bold">Concepto:&nbsp;</span>
+            <span class="fst-italic">{{ item.concepto }}</span>
           </div>
-          <div class="flex-fill d-flex flex-row flex-wrap mr-2">
-            <span class="font-weight-bold">Concepto:&nbsp;</span>
-            <span class="font-italic">{{ item.concepto }}</span>
+          <div class="flex-fill d-flex flex-row flex-wrap align-items-center me-2">
+            <span class="fw-bold">Monto:&nbsp;</span>
+            <span class="fst-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
           </div>
         </div>
       </div>

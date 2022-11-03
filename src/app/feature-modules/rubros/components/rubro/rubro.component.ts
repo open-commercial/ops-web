@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 import { LoadingOverlayService } from './../../../../services/loading-overlay.service';
 import { Rubro } from './../../../../models/rubro';
 import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal.component';
 
@@ -17,7 +17,7 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   templateUrl: './rubro.component.html'
 })
 export class RubroComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   rubro: Rubro;
   submitted = false;
 
@@ -28,7 +28,7 @@ export class RubroComponent implements OnInit {
   hasRoleToUpdate = false;
 
   constructor(private route: ActivatedRoute,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private location: Location,

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../models/producto';
 import { finalize } from 'rxjs/operators';
 import { ProductosService } from '../../services/productos.service';
@@ -17,7 +17,7 @@ export class CantidadProductoModalComponent implements OnInit {
   cantidad = 1;
   producto: Producto = null;
   productoLoading = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   loading = false;
   verificarStock = false;
@@ -35,7 +35,7 @@ export class CantidadProductoModalComponent implements OnInit {
 
   @ViewChild('cantidadInput') cantidadInput: ElementRef;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               public activeModal: NgbActiveModal,
               private productosService: ProductosService) { }
 

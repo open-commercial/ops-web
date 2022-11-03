@@ -1,14 +1,14 @@
 <div class="app-cuentas-corrientes-cliente">
   <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'portrait']"></fa-icon> Clientes</h1>
-    <div class="text-right m-0">
-      <button class="btn btn-primary ml-2 my-1" routerLink="/clientes/nuevo" ngbPopover="Nuevo Cliente" triggers="mouseenter:mouseleave" placement="left">
+    <div class="text-end m-0">
+      <button class="btn btn-primary ms-2 my-1" routerLink="/clientes/nuevo" ngbPopover="Nuevo Cliente" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button class="btn btn-primary ml-2" (click)="generateReporte()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
+      <button class="btn btn-primary ms-2" (click)="generateReporte()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ml-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
+      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="cccFilterCollapse"
               [class.bg-white]="!isFiltersCollapsed"
               ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
@@ -20,29 +20,29 @@
     <ng-template #filterFormFields>
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="nroONom">Nº Cliente/Nombre</label>
+          <div class="mb-3">
+            <label for="nroONom" class="form-label">Nº Cliente/Nombre</label>
             <input type="text" class="form-control" id="nroONom" formControlName="nroONom">
           </div>
           <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
         </div>
         <div class="col-md-6">
-          <div class="form-group">
-            <label for="idProvincia">Provincia</label>
-            <select class="form-control" id="idProvincia" formControlName="idProvincia">
+          <div class="mb-3">
+            <label for="idProvincia" class="form-label">Provincia</label>
+            <select class="form-select" id="idProvincia" formControlName="idProvincia">
               <option value=""></option>
               <option [value]="p.idProvincia" *ngFor="let p of provincias">{{ p.nombre }}</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="idLocalidad">Localidad</label>
-            <select class="form-control" id="idLocalidad" formControlName="idLocalidad">
+          <div class="mb-3">
+            <label for="idLocalidad" class="form-label">Localidad</label>
+            <select class="form-select" id="idLocalidad" formControlName="idLocalidad">
               <option value=""></option>
               <option [value]="l.idLocalidad" *ngFor="let l of localidades">{{ l.nombre }}</option>
             </select>
           </div>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorCCC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorCCC></app-filtro-ordenamiento>
             <app-filtro-ordenamiento id="filtroOrdenamientoSentidoCCC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoCCC></app-filtro-ordenamiento>
           </div>
         </div>
@@ -54,45 +54,51 @@
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="ccc my-2 bg-white">
     <ng-template #info let-item>
+      <div>
+        <span class="badge text-bg-secondary ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
+        <span class="badge text-bg-light border border-secondary ms-2 mb-2">
+          Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
+        </span>
+        <span class="badge text-bg-{{ item.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} ms-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'check']" *ngIf="item.cliente.puedeComprarAPlazo"></fa-icon>
+          <fa-icon [icon]="['fas', 'times']" *ngIf="!item.cliente.puedeComprarAPlazo"></fa-icon>
+          &nbsp;{{ item.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
+        </span>
+        <span class="badge text-bg-info ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
+          Cliente Predeterminado
+        </span>
+      </div>
       <div class="row">
         <div class="col-lg-6">
-          <span class="badge badge-secondary ml-2 mb-2">#{{ item.cliente.nroCliente }}</span>
-          <span class="badge badge-dark ml-2 mb-2 mb-2" *ngIf="item.cliente.idFiscal">CUIT o CUIL: {{ item.cliente.idFiscal }}</span>
-          <span class="badge badge-dark ml-2 mb-2">{{ helper.categoriaIVALabel(item.cliente.categoriaIVA) }}</span>
-          <div class="ml-2 mb-2 font-italic font-weight-bold nombre">
+          <div class="ms-2 mb-2 fst-italic fw-bold nombre">
             {{ item.cliente.nombreFiscal }} <span *ngIf="item.cliente.nombreFantasia">({{ item.cliente.nombreFantasia }})</span>
           </div>
-          <span class="badge badge-success ml-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
-            Cliente Predeterminado
-          </span>
-          <div class="text-nowrap ml-2">
-            <span class="font-weight-bold">Fecha Alta: </span>{{ item.cliente.fechaAlta | date:'dd/MM/yyyy HH:mm'  }}
+          <div class="ms-2" *ngIf="item.cliente.idFiscal">
+            <span class="fw-bold">CUIT o CUIL: </span>{{ item.cliente.idFiscal }}
           </div>
-          <div class="ml-2" *ngIf="!!(item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion)">
-            <span class="font-weight-bold">Ubicación: </span>{{ item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion  }}
+          <div class="ms-2">
+            <span class="fw-bold">Categoría IVA: </span>{{ helper.categoriaIVALabel(item.cliente.categoriaIVA) }}
+          </div>
+          <div class="text-nowrap ms-2">
+            <span class="fw-bold">Fecha Alta: </span>{{ item.cliente.fechaAlta | date:'dd/MM/yyyy HH:mm'  }}
+          </div>
+          <div class="ms-2" *ngIf="!!(item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion)">
+            <span class="fw-bold">Ubicación: </span>{{ item.cliente.detalleUbicacionDeEnvio || item.cliente.detalleUbicacionDeFacturacion  }}
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="d-flex flex-row flex-wrap">
-            <span class="badge badge-pill badge-light border border-secondary ml-2 mb-2 px-2 py-1" *ngIf="item.cliente.puedeComprarAPlazo">
-              Compra a Plazo
-            </span>
-            <span class="badge badge-pill badge-light border border-secondary ml-2 mb-2 px-2 py-1">
-              Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
-            </span>
+          <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
+            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
-          <div class="ml-2 text-nowrap">
-            <span class="font-weight-bold">Saldo C/C: </span>
+          <div class="ms-2 text-nowrap">
+            <span class="fw-bold">Saldo C/C: </span>
             <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
-          </div>
-          <div class="ml-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-            <span class="font-weight-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
         </div>
       </div>
     </ng-template>
     <ng-template #actions let-item>
-      <ul class="list-inline mb-0 text-center d-inline-block">
+      <ul class="list-inline mb-0 text-center d-inline-block mt-2">
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.cliente)">
             <fa-icon [icon]="['fas', 'book']"></fa-icon>

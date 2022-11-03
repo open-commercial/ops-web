@@ -1,6 +1,6 @@
 import {Directive, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {NotasService} from '../services/notas.service';
 import {SucursalesService} from '../services/sucursales.service';
 import {LoadingOverlayService} from '../services/loading-overlay.service';
@@ -13,7 +13,7 @@ import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.compon
 
 @Directive()
 export abstract class NotaCreditoSinFacturaModalDirective implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   loading = false;
   tiposDeComprobantes: TipoDeComprobante[] = [];
@@ -21,7 +21,7 @@ export abstract class NotaCreditoSinFacturaModalDirective implements OnInit {
   helper = HelperService;
 
   protected constructor(public activeModal: NgbActiveModal,
-                        protected fb: FormBuilder,
+                        protected fb: UntypedFormBuilder,
                         public loadingOverlayService: LoadingOverlayService,
                         protected mensajeService: MensajeService,
                         protected sucursalesService: SucursalesService,

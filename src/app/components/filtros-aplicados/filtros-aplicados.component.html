@@ -5,7 +5,7 @@
   <div *ngIf="!searching">
     <div *ngIf="appliedFilters.length">
       Filtros aplicados:
-      <ul class="pl-3">
+      <ul class="ps-3">
         <li *ngFor="let f of appliedFilters">
           {{ f.label ? f.label + ':' : '' }}
           <app-mensaje-asincronico *ngIf="f.asyncFn" [asyncFn]="f.asyncFn"></app-mensaje-asincronico>

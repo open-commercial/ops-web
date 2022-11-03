@@ -1,0 +1,23 @@
+<div class="d-flex flex-column h-100">
+  <div class="mb-2 border rounded preview">
+    <img [src]="imageDataUrl ? imageDataUrl : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'"
+          alt="Imagen del producto">
+  </div>
+  <input type="file" class="d-none" accept="image/png, image/jpeg" [id]="id" lang="es" (change)="imageChange($event)" #imageFile>
+  <div class="text-center">
+    <ul class="list-inline">
+      <li class="list-inline-item">
+        <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Buscar Imagen" triggers="mouseenter:mouseleave"
+                (click)="imageFile.click()">
+          <fa-icon [icon]="['fas', 'folder-open']"></fa-icon>
+        </button>
+      </li>
+      <li class="list-inline-item">
+        <button type="button" class="btn btn-outline-secondary" placement="top" ngbPopover="Quitar Imagen" triggers="mouseenter:mouseleave"
+                (click)="clearFile(imageFile)">
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

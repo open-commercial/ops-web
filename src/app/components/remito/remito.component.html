@@ -11,7 +11,7 @@
     </div>
     <div class="border rounded p-2 mb-3">
       <strong>Facturas que van a ser parte del remito:</strong>
-      <ul class="pl-3 mb-0">
+      <ul class="ps-3 mb-0">
         <li *ngFor="let f of facturasVenta">
           {{ f.tipoComprobante.toString().replace('_', ' ') }} {{ f.cae ? helper.formatNumFactura(f.numSerieAfip, f.numFacturaAfip) : helper.formatNumFactura(f.numSerie, f.numFactura) }}
         </li>
@@ -21,13 +21,13 @@
       <div class="row">
         <div class="col-md-4" formArrayName="bultos">
           <div class="d-flex flex-row align-items-center mb-2" *ngFor="let b of bultos.controls; let i=index;" [formGroupName]="i.toString()">
-            <div class="custom-control custom-checkbox check-container">
-              <input type="checkbox" class="custom-control-input" [id]="'check_' + i" (change)="checkChange($event, b.get('cantidad'))" formControlName="check">
-              <label class="custom-control-label" [for]="'check_' + i">{{ b.get('tipo').value }}</label>
+            <div class="form-check check-container">
+              <input type="checkbox" class="form-check-input" [id]="'check_' + i" (change)="checkChange($event, b.get('cantidad'))" formControlName="check">
+              <label class="form-check-label" [for]="'check_' + i">{{ b.get('tipo').value }}</label>
             </div>
-            <div class="form-group ml-2 mb-0 flex-fill">
+            <div class="ms-2 mb-0 flex-fill">
               <label [for]="'cantidad_' + i" class="sr-only">Cantidad</label>
-              <input type="number" min="1" required class="form-control text-right" [id]="'cantidad_' + i" formControlName="cantidad"
+              <input type="number" min="1" required class="form-control text-end" [id]="'cantidad_' + i" formControlName="cantidad"
                       [ngClass]="{ 'is-invalid': submitted && b.get('cantidad').errors }">
               <div class="invalid-feedback" *ngIf="submitted && b.get('cantidad').errors">
                 <div *ngIf="b.get('cantidad').errors.required">Requerido</div>
@@ -39,7 +39,7 @@
           <div class="mb-3">
             <div class="d-flex flex-row justify-content-between align-items-center">
               <span [class.text-danger]="submitted && form.get('bultos').errors">Total de Bultos:&nbsp;</span>
-              <span class="px-4 flex-fill text-right">{{ totalBultos }}</span>
+              <span class="px-4 flex-fill text-end">{{ totalBultos }}</span>
             </div>
             <div class="custom-error-message" *ngIf="submitted && form.get('bultos').errors">
               <div *ngIf="form.get('bultos').errors.bultosCount">
@@ -49,25 +49,25 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div class="form-group">
-            <label for="pesoTotalEnKg">Peso Total (kg)</label>
-            <input type="number" class="form-control text-right" id="pesoTotalEnKg" formControlName="pesoTotalEnKg"
+          <div class="mb-3">
+            <label for="pesoTotalEnKg" class="form-label">Peso Total (kg)</label>
+            <input type="number" class="form-control text-end" id="pesoTotalEnKg" formControlName="pesoTotalEnKg"
                    [ngClass]="{ 'is-invalid': submitted && form.get('pesoTotalEnKg').errors }">
             <div class="invalid-feedback" *ngIf="submitted && form.get('pesoTotalEnKg').errors">
               <div *ngIf="form.get('pesoTotalEnKg').errors.min">Mínimo {{ form.get('pesoTotalEnKg').errors.min.min | number:'1.0-2' }}</div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="volumenTotalEnM3">Volumen Total (m<sup>3</sup>)</label>
-            <input type="number" class="form-control text-right" id="volumenTotalEnM3" formControlName="volumenTotalEnM3"
+          <div class="mb-3">
+            <label for="volumenTotalEnM3" class="form-label">Volumen Total (m<sup>3</sup>)</label>
+            <input type="number" class="form-control text-end" id="volumenTotalEnM3" formControlName="volumenTotalEnM3"
                    [ngClass]="{ 'is-invalid': submitted && form.get('volumenTotalEnM3').errors }">
             <div class="invalid-feedback" *ngIf="submitted && form.get('volumenTotalEnM3').errors">
               <div *ngIf="form.get('volumenTotalEnM3').errors.min">Mínimo {{ form.get('volumenTotalEnM3').errors.min.min | number:'1.0-2' }}</div>
             </div>
           </div>
-          <div class="form-group mb-4">
-            <label for="idTransportista">Transportista</label>
-            <select class="form-control" id="idTransportista" formControlName="idTransportista"
+          <div class="mb-4">
+            <label for="idTransportista" class="form-label">Transportista</label>
+            <select class="form-select" id="idTransportista" formControlName="idTransportista"
                     [ngClass]="{ 'is-invalid': submitted && form.get('idTransportista').errors }">
               <option *ngFor="let t of transportistas" [value]="t.idTransportista">{{ t.nombre }}</option>
             </select>
@@ -76,23 +76,23 @@
             </div>
           </div>
           <div class="mb-3">
-            Total Facturas: <span class="font-weight-bold">{{ totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}</span>
+            Total Facturas: <span class="fw-bold">{{ totalFacturas | currency: 'ARS':'symbol':'1.0-2' }}</span>
           </div>
-          <div class="form-group">
-            <label for="costoDeEnvio">Costo de Envio ($)</label>
-            <input type="number" class="form-control text-right" id="costoDeEnvio" formControlName="costoDeEnvio"
+          <div class="mb-3">
+            <label for="costoDeEnvio" class="form-label">Costo de Envio ($)</label>
+            <input type="number" class="form-control text-end" id="costoDeEnvio" formControlName="costoDeEnvio"
                    [ngClass]="{ 'is-invalid': submitted && form.get('costoDeEnvio').errors }">
             <div class="invalid-feedback" *ngIf="submitted && form.get('costoDeEnvio').errors">
               <div *ngIf="form.get('costoDeEnvio').errors.min">Mínimo {{ form.get('costoDeEnvio').errors.min.min | currency: 'ARS':'symbol':'1.0-2' }}</div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="observaciones">Observaciones</label>
+          <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones</label>
             <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
           </div>
         </div>
       </div>
-      <div class="text-right">
+      <div class="text-end">
         <button type="submit" class="btn btn-primary">
           <fa-icon [icon]="['fas', 'check']"></fa-icon> Guardar
         </button>

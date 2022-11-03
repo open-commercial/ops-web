@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {SucursalesService} from '../../services/sucursales.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ConfiguracionSucursal} from '../../models/configuracion-sucursal';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {finalize} from 'rxjs/operators';
@@ -18,7 +18,7 @@ import {AuthService} from '../../services/auth.service';
   templateUrl: './configuracion.component.html'
 })
 export class ConfiguracionComponent implements OnInit, OnDestroy {
-  form: FormGroup;
+  form: UntypedFormGroup;
   sucursal: Sucursal;
   configuracion: ConfiguracionSucursal;
   submitted = false;
@@ -30,14 +30,12 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
 
   disabledInputFile = false;
 
-  @ViewChild('fileInputLabel') fileInputLabel: ElementRef<HTMLLabelElement>;
-
   constructor(private sucursalesService: SucursalesService,
               private configuracionesSucursalService: ConfiguracionesSucursalService,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private router: Router,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private authService: AuthService) {
     this.subscription = new Subscription();
   }
@@ -162,10 +160,6 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
     const readerBuffer = new FileReader();
     const fileParts = $event.target.value.split('\\');
     const fileName = fileParts[fileParts.length - 1];
-
-    if (fileName) {
-      this.fileInputLabel.nativeElement.innerHTML = fileName;
-    }
 
     readerBuffer.addEventListener('load', () => {
       const arr = new Uint8Array(readerBuffer.result as ArrayBuffer);

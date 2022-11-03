@@ -6,7 +6,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {MensajeService} from '../../services/mensaje.service';
 import {ClientesService} from '../../services/clientes.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {UsuariosService} from '../../services/usuarios.service';
 import {AuthService} from '../../services/auth.service';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
@@ -26,7 +26,7 @@ export class NotasCreditoCompraComponent extends NotasCreditoDirective implement
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               protected clientesService: ClientesService,
-              protected fb: FormBuilder,
+              protected fb: UntypedFormBuilder,
               protected usuariosService: UsuariosService,
               protected authService: AuthService,
               protected configuracionesSucursalService: ConfiguracionesSucursalService,

@@ -1,5 +1,7 @@
+import { AuthService } from './../../services/auth.service';
+import { Rol } from './../../models/rol';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductosService } from '../../services/productos.service';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
@@ -17,32 +19,43 @@ import { SucursalesService } from '../../services/sucursales.service';
 })
 export class VerProductoComponent implements OnInit {
   producto: Producto;
+
+  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  hasRoleToDelete = false;
+
+  allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToEdit = false;
+
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private productosService: ProductosService,
               private sucursalesService: SucursalesService,
               private location: Location,
               private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService) { }
+              private mensajeService: MensajeService,
+              private authService: AuthService) { }
 
   ngOnInit() {
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadingOverlayService.activate();
     this.productosService.getProducto(id)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (p: Producto) => this.producto = p,
-        err => {
+      .subscribe({
+        next: (p: Producto) => this.producto = p,
+        error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.volverAlListado();
         }
-      )
+      })
     ;
   }
 
   volverAlListado() {
     this.location.back();
   }
-
 
   getCantidadEnSucursal() {
     const aux: Array<CantidadEnSucursal> = this.producto.cantidadEnSucursales.filter(
@@ -58,5 +71,35 @@ export class VerProductoComponent implements OnInit {
     let cant = 0;
     aux.forEach((ces: CantidadEnSucursal) => cant += ces.cantidad);
     return cant;
+  }
+
+  editar() {
+    if (!this.hasRoleToEdit) {
+      this.mensajeService.msg('No posee permiso para editar productos.', MensajeModalType.ERROR);
+      return;
+    }
+
+    this.router.navigate(['/productos/editar', this.producto.idProducto]);
+  }
+
+  eliminar() {
+    if (!this.hasRoleToDelete) {
+      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
+      return;
+    }
+
+    const msg = `¿Desea eliminar "${this.producto.descripcion}"?`;
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+      if (result) {
+        this.loadingOverlayService.activate();
+        this.productosService.eliminarProductos([this.producto.idProducto])
+          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+          .subscribe({
+            next: () => this.volverAlListado(),
+            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          })
+        ;
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
 <div class="app-factura-venta my-3">
   <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2" *ngIf="!(loading || verificandoPedido)">
-    <h1 class="h3 pr-2 mb-0 flex-fill">
+    <h1 class="h3 pe-2 mb-0 flex-fill">
       <a class="btn" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
          (click)="volverAlListado()">
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
@@ -16,7 +16,7 @@
       <ngb-panel id="cliente">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('cliente') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('cliente') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Cliente {{ getCccLabel() }}</span>
           </span>
         </ng-template>
@@ -28,14 +28,14 @@
       <ngb-panel id="tipoDeComprobante" [disabled]="!form.get('ccc').value">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobante') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobante') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Tipo de Comprobante: {{ getTipoComprobanteLabel() }}</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="form-group">
-            <label for="tipo-de-comprobante">Seleccione un Tipo de Comprobante</label>
-            <select class="form-control" id="tipo-de-comprobante" formControlName="tipoDeComprobante"
+          <div class="mb-3">
+            <label for="tipo-de-comprobante" class="form-label">Seleccione un Tipo de Comprobante</label>
+            <select class="form-select" id="tipo-de-comprobante" formControlName="tipoDeComprobante"
                     [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
               <option *ngFor="let tc of tiposDeComprobanteLabesForCombo" [value]="tc.val">{{ tc.text }}</option>
             </select>
@@ -48,20 +48,20 @@
       <ngb-panel id="productos" [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('productos') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('productos') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Productos ({{ form.get('renglones') ? form.get('renglones').value.length : 0 }})</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
           <div class="table-responsive" formArrayName="renglones">
-            <table class="table table-bordered table-sm mb-0">
+            <table class="table table-bordered table-sm table-striped mb-0">
               <caption class="sr-only">Productos de la Factura de Venta</caption>
               <thead>
               <tr>
                 <th scope="col" class="text-center">
-                  <div class="custom-control custom-checkbox ml-2">
-                    <input type="checkbox" class="custom-control-input" id="check-all" (change)="toggleCheckAll($event)" #checkAllToggler>
-                    <label class="custom-control-label" for="check-all"><span class="sr-only">Todos</span></label>
+                  <div class="form-check ms-2">
+                    <input type="checkbox" class="form-check-input" id="check-all" (change)="toggleCheckAll($event)" #checkAllToggler>
+                    <label class="form-check-label" for="check-all"><span class="sr-only">Todos</span></label>
                   </div>
                 </th>
                 <th class="w-100 align-middle" scope="col">Descripción</th>
@@ -71,22 +71,22 @@
               <ng-template ngFor let-rf [ngForOf]="renglones.controls" let-i="index">
                 <tr [formGroupName]="i.toString()" [class.table-warning]="rf.get('checked') && rf.get('checked').value">
                   <td class="align-middle">
-                    <div class="custom-control custom-checkbox ml-2">
-                      <input type="checkbox" [id]="'cb_' + i" class="custom-control-input" formControlName="checked">
-                      <label [for]="'cb_' + i" class="custom-control-label"></label>
+                    <div class="form-check ms-2">
+                      <input type="checkbox" [id]="'cb_' + i" class="form-check-input" formControlName="checked">
+                      <label [for]="'cb_' + i" class="form-check-label"></label>
                     </div>
                   </td>
                   <td class="align-middle">
                     <span class="codigo">{{ rf.get('renglon').value.codigoItem }}</span>&nbsp;
-                    <span  *ngIf="rf.get('renglon').value.bonificacionPorcentaje > 0" class="badge badge-success">
+                    <span  *ngIf="rf.get('renglon').value.bonificacionPorcentaje > 0" class="badge text-bg-success">
                       {{ rf.get('renglon').value.oferta ? "OFERTA" : "BONIF." }} {{ rf.get('renglon').value.bonificacionPorcentaje }}%
                     </span>
                     <br>
                     <strong>{{ rf.get('renglon').value.descripcionItem }}</strong>
-                    <div class="text-right">
+                    <div class="text-end">
                       {{ rf.get('renglon').value.cantidad }} {{ rf.get('renglon').value.medidaItem }} x {{ rf.get('renglon').value.precioUnitario | currency:'ARS':'symbol':'1.0-2' }}
                       = <span [class.tachado]="rf.get('renglon').value.bonificacionPorcentaje">{{ rf.get('renglon').value.importeAnterior | currency:'ARS':'symbol':'1.0-2' }}</span>
-                      <span class="text-right text-nowrap" *ngIf="rf.get('renglon').value.bonificacionPorcentaje">
+                      <span class="text-end text-nowrap" *ngIf="rf.get('renglon').value.bonificacionPorcentaje">
                         &nbsp;<strong>{{ rf.get('renglon').value.importe | currency:'ARS':'symbol':'1.0-2'}}</strong>
                       </span>
                     </div>
@@ -97,16 +97,16 @@
             </table>
           </div>
           <div class="custom-error-message" *ngIf="submitted && f.renglones.errors && f.renglones.errors.required">Debe ingresar al menos un producto.</div>
-          <div class="form-group">
-            <label for="observaciones">Observaciones</label>
+          <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones</label>
             <textarea class="form-control" id="observaciones" rows="3" maxlength="250" formControlName="observaciones"></textarea>
           </div>
           <table class="table table-bordered table-sm totales">
             <caption class="sr-only">Totales</caption>
             <tbody>
             <tr>
-              <th colspan="2" scope="row" class="align-middle text-right">Subtotal</th>
-              <td class="align-middle w-50 text-right">
+              <th colspan="2" scope="row" class="align-middle text-end">Subtotal</th>
+              <td class="align-middle w-50 text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                   {{ (resultados && resultados.subTotal ? resultados.subTotal: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -114,13 +114,13 @@
               </td>
             </tr>
             <tr>
-              <th scope="row" class="align-middle text-right">
-                <label class="m-0 text-nowrap" for="descuento">% Desc.</label>
+              <th scope="row" class="align-middle text-end">
+                <label class="form-label m-0 text-nowrap" for="descuento">% Desc.</label>
               </th>
               <td class="align-middle">
                 <input class="form-control" type="number" min="0" id="descuento" formControlName="descuento" [readOnly]="recalculandoRenglones || loadingResultados">
               </td>
-              <td class="align-middle text-right">
+              <td class="align-middle text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.descuentoNeto ? -1 * resultados.descuentoNeto: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -128,13 +128,13 @@
               </td>
             </tr>
             <tr>
-              <th scope="row" class="align-middle text-right">
-                <label class="m-0 text-nowrap" for="recargo">% Rec.</label>
+              <th scope="row" class="align-middle text-end">
+                <label class="form-label m-0 text-nowrap" for="recargo">% Rec.</label>
               </th>
               <td class="align-middle">
                 <input class="form-control" type="number" min="0" id="recargo" formControlName="recargo" [readOnly]="recalculandoRenglones || loadingResultados">
               </td>
-              <td class="align-middle text-right">
+              <td class="align-middle text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.recargoNeto ? resultados.recargoNeto: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -142,8 +142,8 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2" scope="row" class="align-middle text-right">Subtotal Bruto</th>
-              <td class="align-middle text-right">
+              <th colspan="2" scope="row" class="align-middle text-end">Subtotal Bruto</th>
+              <td class="align-middle text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.subTotalBruto ? resultados.subTotalBruto: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -151,8 +151,8 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2" scope="row" class="align-middle text-right">IVA 10.5%</th>
-              <td class="align-middle text-right">
+              <th colspan="2" scope="row" class="align-middle text-end">IVA 10.5%</th>
+              <td class="align-middle text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.iva105Neto ? resultados.iva105Neto: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -160,8 +160,8 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2" scope="row" class="align-middle text-right">IVA 21%</th>
-              <td class="align-middle text-right">
+              <th colspan="2" scope="row" class="align-middle text-end">IVA 21%</th>
+              <td class="align-middle text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.iva21Neto ? resultados.iva21Neto: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -169,8 +169,8 @@
               </td>
             </tr>
             <tr>
-              <th colspan="2" scope="row" class="align-middle text-right">Total</th>
-              <td class="align-middle text-right">
+              <th colspan="2" scope="row" class="align-middle text-end">Total</th>
+              <td class="align-middle text-end">
                 <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="recalculandoRenglones || loadingResultados"></fa-icon>
                 <span *ngIf="!(recalculandoRenglones || loadingResultados)">
                 {{ (resultados && resultados.total ? resultados.total: 0)| currency:'ARS':'symbol':'1.0-2' }}
@@ -184,7 +184,7 @@
       <ngb-panel id="transportista">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('transportista') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('transportista') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Transportista{{ transportistaSeleccionado ? ': ' + transportistaSeleccionado.nombre : '' }}</span>
           </span>
         </ng-template>
@@ -195,64 +195,74 @@
       <ngb-panel id="pago" [disabled]="!form.get('ccc').value || !form.get('tipoDeComprobante').value || !(form.get('renglones').value && form.get('renglones').value.length)">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded('pago') ? 'chevron-up' : 'chevron-down']" class="mr-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded('pago') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
             <span>Pago{{ this.resultados && this.resultados.total > 0 ? ': ' + (this.resultados.total | currency:'ARS':'symbol':'1.0-2') : '' }}</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
-          <strong>Pagos</strong>
-            <button class="btn btn-primary ml-2 mb-2" type="button" (click)="addPagoForm()">
-              <fa-icon icon="plus"></fa-icon>
-            </button>
-            <table class="table table-bordered table-sm">
-              <caption class="sr-only">Pagos</caption>
-              <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col" class="w-75">Forma de Pago</th>
-                <th scope="col" class="w-25">Monto ($)</th>
-                <th scope="col"><div class="sr-only">Acción</div></th>
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+            <div class="flex-fill mb-2">
+              <strong>Saldo CC de Cliente: </strong>
+              <span class="badge text-bg-light border" [ngClass]="getSaldoCCC() >= 0 ? 'border-success text-success': 'border-danger text-danger'">
+                {{ getSaldoCCC() | currency: 'ARS':'symbol':'1.0-2' }}
+              </span>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-primary ms-2 mb-2" type="button" (click)="addPagoForm()">
+                <fa-icon icon="plus"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-sm">
+            <caption class="sr-only">Pagos</caption>
+            <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" class="w-75">Forma de Pago</th>
+              <th scope="col" class="w-25">Monto ($)</th>
+              <th scope="col"><div class="sr-only">Acción</div></th>
+            </tr>
+            </thead>
+            <tbody formArrayName="pagos">
+              <tr *ngFor="let p of pagos.controls; index as i" [formGroupName]="i.toString()">
+                <td class="align-middle">{{ i + 1  }}</td>
+                <td>
+                  <div class="mb-0">
+                    <label class="form-label sr-only" [for]="'idFormaDePago_' + i">Forma de pago</label>
+                    <select class="form-select" formControlName="idFormaDePago" [id]="'idFormaDePago_' + i"
+                        [ngClass]="{ 'is-invalid': submitted && p.get('idFormaDePago').errors }">
+                        <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="submitted && p.get('idFormaDePago').errors">
+                      <div *ngIf="p.get('idFormaDePago').errors.required">Requerido</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mb-0">
+                    <label class="form-label sr-only" [for]="'monto_' + i">Monto ($)</label>
+                    <input type="number" class="form-control" id="'monto_' + i" formControlName="monto"
+                        [ngClass]="{ 'is-invalid': submitted && p.get('monto').errors }">
+                    <div class="invalid-feedback" *ngIf="submitted && p.get('monto').errors">
+                      <div *ngIf="p.get('monto').errors.required">Requerido</div>
+                      <div *ngIf="p.get('monto').errors.min">Mínimo: {{ p.get('monto').errors.min.min | currency:'ARS':'symbol':'1.0-2' }} </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-primary" type="button" (click)="removePagoForm(i)">
+                    <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                  </button>
+                </td>
               </tr>
-              </thead>
-              <tbody formArrayName="pagos">
-                <tr *ngFor="let p of pagos.controls; index as i" [formGroupName]="i.toString()">
-                  <td class="align-middle">{{ i + 1  }}</td>
-                  <td>
-                    <div class="form-group mb-0">
-                      <label class="sr-only" [for]="'idFormaDePago_' + i">Forma de pago</label>
-                      <select class="form-control" formControlName="idFormaDePago" [id]="'idFormaDePago_' + i"
-                          [ngClass]="{ 'is-invalid': submitted && p.get('idFormaDePago').errors }">
-                          <option *ngFor="let fp of formasDePago" [value]="fp.idFormaDePago">{{ fp.nombre }}</option>
-                      </select>
-                      <div class="invalid-feedback" *ngIf="submitted && p.get('idFormaDePago').errors">
-                        <div *ngIf="p.get('idFormaDePago').errors.required">Requerido</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group mb-0">
-                      <label class="sr-only" [for]="'monto_' + i">Monto ($)</label>
-                      <input type="number" class="form-control" id="'monto_' + i" formControlName="monto"
-                          [ngClass]="{ 'is-invalid': submitted && p.get('monto').errors }">
-                      <div class="invalid-feedback" *ngIf="submitted && p.get('monto').errors">
-                        <div *ngIf="p.get('monto').errors.required">Requerido</div>
-                        <div *ngIf="p.get('monto').errors.min">Mínimo: {{ p.get('monto').errors.min.min | currency:'ARS':'symbol':'1.0-2' }} </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="text-center">
-                    <button class="btn btn-primary" type="button" (click)="removePagoForm(i)">
-                      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            </tbody>
+          </table>
           <div *ngIf="!saving">
             <div class="alert alert-success" *ngIf="esComprobanteDivido()">
               ATENCION: Este comprobante será dividido.
             </div>
-            <div class="text-right">
+            <div class="text-end">
               <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
                 <fa-icon [icon]="['fas', 'check']"></fa-icon> Finalizar
               </button>

@@ -4,7 +4,7 @@ import { Pedido } from '../../models/pedido';
 import { Pagination } from '../../models/pagination';
 import { EstadoPedido } from '../../models/estado-pedido';
 import { finalize, map } from 'rxjs/operators';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
 import { BusquedaPedidoCriteria } from '../../models/criterias/busqueda-pedido-criteria';
@@ -51,7 +51,7 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
               protected router: Router,
               protected sucursalesService: SucursalesService,
               private pedidosService: PedidosService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private authService: AuthService,
               protected mensajeService: MensajeService,
               private clientesService: ClientesService,
