@@ -54,23 +54,25 @@
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
   <div class="ccc my-2 bg-white">
     <ng-template #info let-item>
+      <div>
+        <span class="badge text-bg-secondary ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
+        <span class="badge text-bg-light border border-secondary ms-2 mb-2">
+          Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
+        </span>
+        <span class="badge text-bg-{{ item.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} ms-2 mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'check']" *ngIf="item.cliente.puedeComprarAPlazo"></fa-icon>
+          <fa-icon [icon]="['fas', 'times']" *ngIf="!item.cliente.puedeComprarAPlazo"></fa-icon>
+          &nbsp;{{ item.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
+        </span>
+        <span class="badge text-bg-info ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
+          Cliente Predeterminado
+        </span>
+      </div>
       <div class="row">
         <div class="col-lg-6">
-          <span class="badge text-bg-secondary ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
-          <span class="badge text-bg-light border border-secondary ms-2 mb-2">
-            Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
-          </span>
-          <span class="badge text-bg-{{ item.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} ms-2 mb-2 px-2 py-1">
-            <fa-icon [icon]="['fas', 'check']" *ngIf="item.cliente.puedeComprarAPlazo"></fa-icon>
-            <fa-icon [icon]="['fas', 'times']" *ngIf="!item.cliente.puedeComprarAPlazo"></fa-icon>
-            &nbsp;{{ item.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
-          </span>
           <div class="ms-2 mb-2 fst-italic fw-bold nombre">
             {{ item.cliente.nombreFiscal }} <span *ngIf="item.cliente.nombreFantasia">({{ item.cliente.nombreFantasia }})</span>
           </div>
-          <span class="badge text-bg-success ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
-            Cliente Predeterminado
-          </span>
           <div class="ms-2" *ngIf="item.cliente.idFiscal">
             <span class="fw-bold">CUIT o CUIL: </span>{{ item.cliente.idFiscal }}
           </div>
@@ -85,18 +87,18 @@
           </div>
         </div>
         <div class="col-lg-6">
+          <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
+            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
+          </div>
           <div class="ms-2 text-nowrap">
             <span class="fw-bold">Saldo C/C: </span>
             <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
-          </div>
-          <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
-            <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
         </div>
       </div>
     </ng-template>
     <ng-template #actions let-item>
-      <ul class="list-inline mb-0 text-center d-inline-block">
+      <ul class="list-inline mb-0 text-center d-inline-block mt-2">
         <li class="list-inline-item">
           <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.cliente)">
             <fa-icon [icon]="['fas', 'book']"></fa-icon>

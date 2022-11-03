@@ -1,9 +1,20 @@
 <div class="d-flex flex-row align-items-center">
   <div class="flex-fill p-2">
-    <div *ngIf="ccc" class="d-flex flex-column">
-      <span class="me-2">
+    <div *ngIf="refreshing">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    </div>
+    <div *ngIf="ccc && !refreshing" class="d-flex flex-column">
+      <!-- <span class="me-2">
         #{{ ccc.cliente.nroCliente }}
-      </span>
+      </span> -->
+      <div>
+        <span class="badge text-bg-secondary me-2 mb-2">#{{ ccc.cliente.nroCliente }}</span>
+        <span class="badge text-bg-{{ ccc.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} mb-2 px-2 py-1">
+          <fa-icon [icon]="['fas', 'check']" *ngIf="ccc.cliente.puedeComprarAPlazo"></fa-icon>
+          <fa-icon [icon]="['fas', 'times']" *ngIf="!ccc.cliente.puedeComprarAPlazo"></fa-icon>
+          &nbsp;{{ ccc.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
+        </span>
+      </div>
       <span>
         <div *ngIf="ccc.cliente.idFiscal">CUIT ó DNI: {{ ccc.cliente.idFiscal }}</div>
         <strong>{{ ccc.cliente.nombreFiscal }}</strong><em *ngIf="ccc.cliente.nombreFantasia"> - {{ ccc.cliente.nombreFantasia }}</em>
