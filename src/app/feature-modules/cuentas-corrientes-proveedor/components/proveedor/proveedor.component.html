@@ -12,7 +12,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
-          <label for="razonSocial" class="form-label">Razón Social</label>
+          <label for="razonSocial" class="form-label">Razón Social *</label>
           <input type="text" class="form-control" id="razonSocial" required formControlName="razonSocial"
                  [ngClass]="{ 'is-invalid': submitted && f.razonSocial.errors }">
           <div class="invalid-feedback" *ngIf="submitted && f.razonSocial.errors">

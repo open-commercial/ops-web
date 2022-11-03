@@ -6,7 +6,7 @@
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
       <fa-icon [icon]="['fas', 'portrait']"></fa-icon>
-      {{ cliente ? 'Cliente' : 'Nuevo cliente' }}
+      {{ cliente ? 'Cliente' : 'Nuevo Cliente' }}
     </h1>
   </div>
   <form (ngSubmit)="submit()" [formGroup]="form" class="card card-body bg-light mt-2" *ngIf="form">
