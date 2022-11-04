@@ -2,7 +2,7 @@
   "name": "sic-ops-web",
   "version": "0.0.0",
   "engines": {
-    "node": "16.9"
+    "node": "16.13"
   },
   "scripts": {
     "build": "ng build --configuration ${ENV_NAME}",
