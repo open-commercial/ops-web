@@ -36,6 +36,10 @@ export class ProductosService {
     return this.http.post<Pagination>(url , criteria);
   }
 
+  valorStock(criteria: BusquedaProductoCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/valor-stock/criteria`, criteria);
+  }
+
   getProducto(idProducto: number): Observable<Producto> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     return this.http.get<Producto>(this.url + `/${idProducto}/sucursales/${idSucursal}`);

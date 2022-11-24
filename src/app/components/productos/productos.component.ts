@@ -81,6 +81,9 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     }
   ];
 
+  valorStockLoading = false;
+  valorStock = 0;
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -333,6 +336,18 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
             `En breve recibirá un email con la información solicitada a la dirección ${email}`, MensajeModalType.INFO
           );
         },
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
+  }
+
+  getItems(terminos: BusquedaProductoCriteria) {
+    super.getItems(terminos);
+    this.valorStockLoading = true;
+    this.productosService.valorStock(terminos)
+      .pipe(finalize(() => this.valorStockLoading = false))
+      .subscribe({
+        next: (valorStock: number) => this.valorStock = valorStock,
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
     ;

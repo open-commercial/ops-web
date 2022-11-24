@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
-import { map } from 'rxjs/operators';
+import { map, finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -9,7 +9,7 @@ import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-f
 import { SucursalesService } from '../../services/sucursales.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Producto } from '../../models/producto';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { ProductosService } from '../../services/productos.service';
@@ -19,6 +19,7 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import { ListadoDirective } from '../../directives/listado.directive';
 import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -52,6 +53,10 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
   sentidoAplicado = '';
   @ViewChild('ordernarPorFC') ordenarPorFCElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoFC') sentidoFCElement: FiltroOrdenamientoComponent;
+
+  loadigTotalizadores = false;
+  totalFacturado = 0;
+  totalIva = 0;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -250,5 +255,24 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
 
   verFactura(factura: FacturaCompra) {
     this.router.navigate(['/facturas-compra/ver', factura.idFactura]);
+  }
+
+  getItems(terminos: BusquedaFacturaCompraCriteria) {
+    super.getItems(terminos);
+    const obvs = [
+      this.facturasCompraService.totalFacturado(terminos),
+      this.facturasCompraService.totalIva(terminos)
+    ];
+    this.loadigTotalizadores = true;
+    combineLatest(obvs)
+      .pipe(finalize(() => this.loadigTotalizadores = false))
+      .subscribe({
+        next: (valores: [number, number]) => {
+          this.totalFacturado = valores[0];
+          this.totalIva = valores[1];
+        },
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
   }
 }
