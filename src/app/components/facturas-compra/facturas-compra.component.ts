@@ -54,7 +54,7 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
   @ViewChild('ordernarPorFC') ordenarPorFCElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoFC') sentidoFCElement: FiltroOrdenamientoComponent;
 
-  loadigTotalizadores = false;
+  loadingTotalizadores = false;
   totalFacturado = 0;
   totalIva = 0;
 
@@ -263,9 +263,9 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
       this.facturasCompraService.totalFacturado(terminos),
       this.facturasCompraService.totalIva(terminos)
     ];
-    this.loadigTotalizadores = true;
+    this.loadingTotalizadores = true;
     combineLatest(obvs)
-      .pipe(finalize(() => this.loadigTotalizadores = false))
+      .pipe(finalize(() => this.loadingTotalizadores = false))
       .subscribe({
         next: (valores: [number, number]) => {
           this.totalFacturado = valores[0];

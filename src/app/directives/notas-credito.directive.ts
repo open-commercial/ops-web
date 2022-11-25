@@ -12,7 +12,7 @@ import {ConfiguracionesSucursalService} from '../services/configuraciones-sucurs
 import {NotasService} from '../services/notas.service';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
-import {Observable} from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import {Pagination} from '../models/pagination';
 import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
 import {Nota} from '../models/nota';
@@ -21,6 +21,10 @@ import {Movimiento} from '../models/movimiento';
 
 @Directive()
 export abstract class NotasCreditoDirective extends NotasDirective implements OnInit {
+
+  loadingTotalizadores = false;
+  totalCredito = 0;
+  totalIvaCredito = 0;
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
@@ -75,5 +79,23 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
     }
 
     this.router.navigate([path, idFactura]);
+  }
+
+  getItems(terminos: BusquedaNotaCriteria) {
+    super.getItems(terminos);
+    this.loadingTotalizadores = true;
+    const obvs = [
+      this.notasService.totalCredito(terminos),
+      this.notasService.totalIvaCredito(terminos)
+    ];
+    combineLatest(obvs)
+      .pipe(finalize(() => this.loadingTotalizadores = false))
+      .subscribe({
+        next: (data: [number, number]) => {
+          this.totalCredito = data[0];
+          this.totalIvaCredito = data[1];
+        }
+      })
+    ;
   }
 }
