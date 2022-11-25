@@ -70,6 +70,9 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
     TipoDeComprobante.NOTA_DEBITO_C,
   ];
 
+  loadingTotal = false;
+  total = 0;
+
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
                         protected sucursalesService: SucursalesService,
@@ -317,5 +320,17 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
     } else {
       throw new Error('La Nota no posee id');
     }
+  }
+
+  getItems(terminos: BusquedaReciboCriteria) {
+    super.getItems(terminos);
+    this.loadingTotal = true;
+    this.recibosService.total(terminos)
+      .pipe(finalize(() => this.loadingTotal = false))
+      .subscribe({
+        next: (total: number) => this.total = total,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
   }
 }

@@ -118,5 +118,16 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+    <div class="text-end my-3">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="loadingTotal"></fa-icon>
+      <div *ngIf="!loadingTotal">
+        <span class="fw-bold">Total: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="total >= 0 ? 'text-bg-success' : 'text-bg-danger'">
+            {{ total | currency: 'ARS':'symbol':'1.0-2' }}
+          </span>
+        </span>
+      </div>
+    </div>
   </div>
 </div>
