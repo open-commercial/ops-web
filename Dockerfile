@@ -1,3 +1,4 @@
-FROM nginx:1.23.2-alpine
+FROM nginx:stable
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY /dist /usr/share/nginx/html
+EXPOSE 80
