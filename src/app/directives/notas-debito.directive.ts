@@ -12,13 +12,18 @@ import {ConfiguracionesSucursalService} from '../services/configuraciones-sucurs
 import {NotasService} from '../services/notas.service';
 import {finalize} from 'rxjs/operators';
 import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
-import {Observable} from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import {Pagination} from '../models/pagination';
 import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
 import {ProveedoresService} from '../services/proveedores.service';
 
 @Directive()
 export abstract class NotasDebitoDirective extends NotasDirective implements OnInit {
+
+  loadingTotalizadores = false;
+  totalDebito = 0;
+  totalIvaDebito = 0;
+
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
                         protected sucursalesService: SucursalesService,
@@ -55,5 +60,26 @@ export abstract class NotasDebitoDirective extends NotasDirective implements OnI
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
     return this.notasService.buscarNotasDebito(terminos as BusquedaNotaCriteria);
+  }
+
+  getItems(terminos: BusquedaNotaCriteria) {
+    super.getItems(terminos);
+    if (this.hasRoleToSeeTotales) {
+      this.loadingTotalizadores = true;
+      const obvs = [
+        this.notasService.totalDebito(terminos),
+        this.notasService.totalIvaDebito(terminos),
+      ];
+      combineLatest(obvs)
+        .pipe(finalize(() => this.loadingTotalizadores = false))
+        .subscribe({
+          next: (data: [number, number]) => {
+            this.totalDebito = data[0];
+            this.totalIvaDebito = data[1];
+          },
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

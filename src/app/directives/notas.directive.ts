@@ -55,6 +55,9 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   hasRoleToDelete = false;
 
+  allowedRolesToSeeTotales = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
+  hasRoleToSeeTotales = false;
+
   tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
     TipoDeComprobante.NOTA_CREDITO_A,
     TipoDeComprobante.NOTA_CREDITO_B,
@@ -79,6 +82,10 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
                         protected notasService: NotasService,
                         protected proveedoresService: ProveedoresService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToAutorizar = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToAutorizar);
+    this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToSeeTotales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotales);
     this.fillOrdenarPorOptions();
     if (this.allowedMovimientos.indexOf(this.getMovimiento()) < 0) {
       throw new Error('El movimiento configurado no está permitido');
@@ -88,9 +95,6 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
   ngOnInit() {
     super.ngOnInit();
     this.getTiposDeNotasSucursal();
-    this.hasRoleToAutorizar = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToAutorizar);
-    this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
-    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
   }
 
   fillOrdenarPorOptions() {

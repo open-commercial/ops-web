@@ -130,5 +130,26 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+    <ul class="list-unstyled my-3 text-end">
+      <li *ngIf="loadingTotalizadores"><fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon></li>
+      <li *ngIf="!loadingTotalizadores && hasRoleToSeeTotales">
+        <span class="fw-bold">Ganancia Total: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="gananciaTotal >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ gananciaTotal | currency: 'ARS':'symbol':'1.0-2' }}</span>
+        </span>
+      </li>
+      <li *ngIf="!loadingTotalizadores && hasRoleToSeeTotales">
+        <span class="fw-bold">Total IVA Venta: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="totalIva >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ totalIva | currency: 'ARS':'symbol':'1.0-2' }}</span>
+        </span>
+      </li>
+      <li *ngIf="!loadingTotalizadores">
+        <span class="fw-bold">Total Facturado: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="totalFacturado >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ totalFacturado | currency: 'ARS':'symbol':'1.0-2' }}</span>
+        </span>
+      </li>
+    </ul>
   </div>
 </div>

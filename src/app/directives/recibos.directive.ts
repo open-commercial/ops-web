@@ -39,6 +39,9 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
   allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToCrearNota = false;
 
+  allowedRolesToSeeTotal = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
+  hasRoleToSeeTotal = false;
+
   helper = HelperService;
   formasDePago: FormaDePago[] = [];
 
@@ -87,20 +90,22 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
                         protected configuracionesSucursalService: ConfiguracionesSucursalService,
                         protected notasService: NotasService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
+    this.hasRoleToSeeTotal = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotal);
   }
 
   abstract getMovimiento(): Movimiento;
   abstract doCrearNotaDebitoRecibo(r: Recibo);
 
   ngOnInit(): void {
-    super.ngOnInit();
-    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
-    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
-    this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     if (!this.hasRoleToSee) {
       this.mensajeService.msg('No tiene permiso para ver el listado de recibos de ' + this.getMovimiento() + '.');
       this.router.navigate(['/']);
+      return;
     }
+    super.ngOnInit();
     this.getFormasDePago();
   }
 
@@ -324,13 +329,15 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
 
   getItems(terminos: BusquedaReciboCriteria) {
     super.getItems(terminos);
-    this.loadingTotal = true;
-    this.recibosService.total(terminos)
-      .pipe(finalize(() => this.loadingTotal = false))
-      .subscribe({
-        next: (total: number) => this.total = total,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+    if (this.allowedRolesToSeeTotal) {
+      this.loadingTotal = true;
+      this.recibosService.total(terminos)
+        .pipe(finalize(() => this.loadingTotal = false))
+        .subscribe({
+          next: (total: number) => this.total = total,
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

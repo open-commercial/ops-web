@@ -133,16 +133,16 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
-    <div class="my-3 text-end">
-        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="valorStockLoading"></fa-icon>
-        <div *ngIf="!valorStockLoading">
-          <span class="fw-bold">Valor del Stock: </span>
-          <span class="lead">
-            <span class="badge" [ngClass]="valorStock >= 0 ? 'text-bg-success' : 'text-bg-danger'">
-              {{ valorStock | currency: 'ARS':'symbol':'1.0-2' }}
-            </span>
+    <div class="my-3 text-end" *ngIf="hasRolToSeeValorStock">
+      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="valorStockLoading"></fa-icon>
+      <div *ngIf="!valorStockLoading">
+        <span class="fw-bold">Valor del Stock: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="valorStock >= 0 ? 'text-bg-success' : 'text-bg-danger'">
+            {{ valorStock | currency: 'ARS':'symbol':'1.0-2' }}
           </span>
-        </div>
+        </span>
+      </div>
     </div>
   </div>
 </div>

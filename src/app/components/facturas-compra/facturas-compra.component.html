@@ -2,7 +2,7 @@
   <div class="d-flex flex-row align-md-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Compra</h1>
     <div class="text-end m-0 text-nowrap">
-      <button type="button" class="btn btn-primary ms-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left">
+      <button type="button" class="btn btn-primary ms-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToCreate">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
@@ -92,7 +92,7 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
-    <ul class="list-unstyled my-3 text-end">
+    <ul class="list-unstyled my-3 text-end" *ngIf="hasRoleToSeeTotales">
       <li *ngIf="loadingTotalizadores"><fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon></li>
       <li *ngIf="!loadingTotalizadores">
         <span class="fw-bold">Total Facturado: </span>

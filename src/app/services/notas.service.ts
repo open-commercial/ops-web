@@ -81,6 +81,15 @@ export class NotasService {
     return this.http.post<NotaCredito>(`${this.urlNotaCredito}/factura`, nncf);
   }
 
+
+  totalIvaDebito(criteria: BusquedaNotaCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total-iva-debito/criteria`, criteria);
+  }
+
+  totalDebito(criteria: BusquedaNotaCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total-debito/criteria`, criteria);
+  }
+
   // NOTAS DEBITO VENTA
   buscarNotasDebito(criteria: BusquedaNotaCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlNotaDebitoBusqueda, criteria);

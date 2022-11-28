@@ -34,6 +34,9 @@ export class GastosComponent extends ListadoDirective implements OnInit {
   allowedRolesToDelete: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToDelete = false;
 
+  allowedRolesToSeeTotal: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToSeeTotal = false;
+
   formasDePago: FormaDePago[] = [];
 
   ordenArray = [
@@ -47,6 +50,9 @@ export class GastosComponent extends ListadoDirective implements OnInit {
     { val: 'DESC', text: 'Descendente' },
     { val: 'ASC', text: 'Ascendente' },
   ];
+
+  loadingTotal = false;
+  total = 0;
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
@@ -66,12 +72,13 @@ export class GastosComponent extends ListadoDirective implements OnInit {
               private cajasService: CajasService,
               ) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToSeeTotal = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotal);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
-    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     if (!this.hasRoleToSee) {
       this.mensajeService.msg('No tiene permiso para ver el listado de gastos.');
       this.router.navigate(['/']);
@@ -265,5 +272,19 @@ export class GastosComponent extends ListadoDirective implements OnInit {
         ;
       }
     }, () => { return; });
+  }
+
+  getItems(terminos: BusquedaGastoCriteria) {
+    super.getItems(terminos);
+    if (this.hasRoleToSeeTotal) {
+      this.loadingTotal = true;
+      this.gastosService.total(terminos)
+        .pipe(finalize(() => this.loadingTotal = false))
+        .subscribe({
+          next: total => this.total = total,
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

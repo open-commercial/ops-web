@@ -66,6 +66,9 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToEdit = false;
 
+  allowedRolesToSeeValorStock: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRolToSeeValorStock = false;
+
   baKey = BatchActionKey.PRODUCTOS;
   baActions: ActionConfiguration[] = [
     {
@@ -96,13 +99,14 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
               private proveedoresService: ProveedoresService,
               public batchActionsService: BatchActionsService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
+    this.hasRolToSeeValorStock = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeValorStock);
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
-    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
-    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
 
     this.loadingOverlayService.activate();
     this.rubrosService.getRubros()
@@ -343,13 +347,15 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
 
   getItems(terminos: BusquedaProductoCriteria) {
     super.getItems(terminos);
-    this.valorStockLoading = true;
-    this.productosService.valorStock(terminos)
-      .pipe(finalize(() => this.valorStockLoading = false))
-      .subscribe({
-        next: (valorStock: number) => this.valorStock = valorStock,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+    if (this.hasRolToSeeValorStock) {
+      this.valorStockLoading = true;
+      this.productosService.valorStock(terminos)
+        .pipe(finalize(() => this.valorStockLoading = false))
+        .subscribe({
+          next: (valorStock: number) => this.valorStock = valorStock,
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

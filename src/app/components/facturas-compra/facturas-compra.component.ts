@@ -1,3 +1,5 @@
+import { AuthService } from './../../services/auth.service';
+import { Rol } from './../../models/rol';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
@@ -58,6 +60,15 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
   totalFacturado = 0;
   totalIva = 0;
 
+  allowedRolesToSee = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToSee = false;
+
+  allowedRolesToCreate = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToCreate = false;
+
+  allowedRolesToSeeTotales = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToSeeTotales = false;
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -66,11 +77,20 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
               protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService) {
+              protected mensajeService: MensajeService,
+              protected authService: AuthService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
+    this.hasRoleToSeeTotales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotales);
   }
 
   ngOnInit() {
+    if (!this.hasRoleToSee) {
+      this.mensajeService.msg("No tiene permisos para ver las facturas de compra.", MensajeModalType.ERROR);
+      this.router.navigate(['/']);
+      return;
+    }
     super.ngOnInit();
   }
 
@@ -259,20 +279,22 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
 
   getItems(terminos: BusquedaFacturaCompraCriteria) {
     super.getItems(terminos);
-    const obvs = [
-      this.facturasCompraService.totalFacturado(terminos),
-      this.facturasCompraService.totalIva(terminos)
-    ];
-    this.loadingTotalizadores = true;
-    combineLatest(obvs)
-      .pipe(finalize(() => this.loadingTotalizadores = false))
-      .subscribe({
-        next: (valores: [number, number]) => {
-          this.totalFacturado = valores[0];
-          this.totalIva = valores[1];
-        },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+    if (this.hasRoleToSeeTotales) {
+      const obvs = [
+        this.facturasCompraService.totalFacturado(terminos),
+        this.facturasCompraService.totalIva(terminos)
+      ];
+      this.loadingTotalizadores = true;
+      combineLatest(obvs)
+        .pipe(finalize(() => this.loadingTotalizadores = false))
+        .subscribe({
+          next: (valores: [number, number]) => {
+            this.totalFacturado = valores[0];
+            this.totalIva = valores[1];
+          },
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

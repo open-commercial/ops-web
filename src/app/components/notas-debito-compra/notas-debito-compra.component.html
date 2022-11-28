@@ -99,6 +99,21 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+    <ul class="list-unstyled my-3 text-end" *ngIf="hasRoleToSeeTotales">
+      <li *ngIf="loadingTotalizadores"><fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon></li>
+      <li *ngIf="!loadingTotalizadores">
+        <span class="fw-bold">Total IVA Débito: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="totalIvaDebito >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ totalIvaDebito | currency: 'ARS':'symbol':'1.0-2' }}</span>
+        </span>
+      </li>
+      <li *ngIf="!loadingTotalizadores">
+        <span class="fw-bold">Total Débito: </span>
+        <span class="lead">
+          <span class="badge" [ngClass]="totalDebito >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ totalDebito | currency: 'ARS':'symbol':'1.0-2' }}</span>
+        </span>
+      </li>
+    </ul>
   </div>
 </div>
 

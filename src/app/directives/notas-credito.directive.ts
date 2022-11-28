@@ -1,3 +1,4 @@
+import { Rol } from './../models/rol';
 import { OnInit, Directive } from '@angular/core';
 import {NotasDirective} from './notas.directive';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -53,10 +54,10 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
     this.loadingOverlayService.activate();
     this.notasService.getTiposDeNotaCreditoSucursal(this.sucursalesService.getIdSucursal())
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        tipos => this.tiposNota = tipos,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: tipos => this.tiposNota = tipos,
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
     ;
   }
 
@@ -83,19 +84,22 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
 
   getItems(terminos: BusquedaNotaCriteria) {
     super.getItems(terminos);
-    this.loadingTotalizadores = true;
-    const obvs = [
-      this.notasService.totalCredito(terminos),
-      this.notasService.totalIvaCredito(terminos)
-    ];
-    combineLatest(obvs)
-      .pipe(finalize(() => this.loadingTotalizadores = false))
-      .subscribe({
-        next: (data: [number, number]) => {
-          this.totalCredito = data[0];
-          this.totalIvaCredito = data[1];
-        }
-      })
-    ;
+    if (this.hasRoleToSeeTotales) {
+      this.loadingTotalizadores = true;
+      const obvs = [
+        this.notasService.totalCredito(terminos),
+        this.notasService.totalIvaCredito(terminos)
+      ];
+      combineLatest(obvs)
+        .pipe(finalize(() => this.loadingTotalizadores = false))
+        .subscribe({
+          next: (data: [number, number]) => {
+            this.totalCredito = data[0];
+            this.totalIvaCredito = data[1];
+          },
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }
