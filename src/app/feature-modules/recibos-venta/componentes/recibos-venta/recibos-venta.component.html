@@ -62,7 +62,7 @@
     <ng-template #info let-item>
       <div class="flex-fill">
         <div>
-          <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha }}</span>
+          <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
           <span class="badge text-bg-secondary">#{{ helper.formatNumFactura(item.numSerie, item.numRecibo) }}</span>
         </div>
       </div>
