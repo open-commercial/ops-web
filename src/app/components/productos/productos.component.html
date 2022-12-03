@@ -134,7 +134,9 @@
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
     <div class="my-3 text-end" *ngIf="hasRolToSeeValorStock">
-      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="valorStockLoading"></fa-icon>
+      <div class="text-center py-2">
+        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="valorStockLoading"></fa-icon>
+      </div>
       <div *ngIf="!valorStockLoading">
         <span class="fw-bold">Valor del Stock: </span>
         <span class="lead">

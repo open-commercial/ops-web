@@ -100,7 +100,9 @@
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
     <ul class="list-unstyled my-3 text-end" *ngIf="hasRoleToSeeTotales">
-      <li *ngIf="loadingTotalizadores"><fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon></li>
+      <li class="text-center py-2" *ngIf="loadingTotalizadores">
+        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon>
+      </li>
       <li *ngIf="!loadingTotalizadores">
         <span class="fw-bold">Total IVA Débito: </span>
         <span class="lead">

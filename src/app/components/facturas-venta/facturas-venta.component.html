@@ -131,7 +131,9 @@
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
     <ul class="list-unstyled my-3 text-end">
-      <li *ngIf="loadingTotalizadores"><fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon></li>
+      <li class="text-center py-2" *ngIf="loadingTotalizadores">
+        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon>
+      </li>
       <li *ngIf="!loadingTotalizadores && hasRoleToSeeTotales">
         <span class="fw-bold">Ganancia Total: </span>
         <span class="lead">

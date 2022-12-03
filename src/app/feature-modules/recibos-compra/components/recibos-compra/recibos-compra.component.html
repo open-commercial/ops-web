@@ -119,7 +119,9 @@
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
     <div class="text-end my-3" *ngIf="hasRoleToSeeTotal">
-      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="loadingTotal"></fa-icon>
+      <div class="text-center py-2">
+        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'" *ngIf="loadingTotal"></fa-icon>
+      </div>
       <div *ngIf="!loadingTotal">
         <span class="fw-bold">Total: </span>
         <span class="lead">
