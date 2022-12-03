@@ -352,7 +352,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       this.productosService.valorStock(terminos)
         .pipe(finalize(() => this.valorStockLoading = false))
         .subscribe({
-          next: (valorStock: number) => this.valorStock = valorStock,
+          next: (valorStock: number) => this.valorStock = Number(valorStock),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

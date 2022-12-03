@@ -281,7 +281,7 @@ export class GastosComponent extends ListadoDirective implements OnInit {
       this.gastosService.total(terminos)
         .pipe(finalize(() => this.loadingTotal = false))
         .subscribe({
-          next: total => this.total = total,
+          next: total => this.total = Number(total),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

@@ -419,10 +419,10 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
       .pipe(finalize(() => this.loadingTotalizadores = false))
       .subscribe({
         next: (data) => {
-          this.totalFacturado = data[0];
+          this.totalFacturado = Number(data[0]);
           if (this.hasRoleToSeeTotales) {
-            this.totalIva = data[1];
-            this.gananciaTotal = data[2];
+            this.totalIva = Number(data[1]);
+            this.gananciaTotal = Number(data[2]);
           }
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),

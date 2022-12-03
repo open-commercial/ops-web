@@ -334,7 +334,7 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
       this.recibosService.total(terminos)
         .pipe(finalize(() => this.loadingTotal = false))
         .subscribe({
-          next: (total: number) => this.total = total,
+          next: (total: number) => this.total = Number(total),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

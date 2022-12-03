@@ -289,8 +289,8 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
         .pipe(finalize(() => this.loadingTotalizadores = false))
         .subscribe({
           next: (valores: [number, number]) => {
-            this.totalFacturado = valores[0];
-            this.totalIva = valores[1];
+            this.totalFacturado = Number(valores[0]);
+            this.totalIva = Number(valores[1]);
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })

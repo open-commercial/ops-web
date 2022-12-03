@@ -74,8 +74,8 @@ export abstract class NotasDebitoDirective extends NotasDirective implements OnI
         .pipe(finalize(() => this.loadingTotalizadores = false))
         .subscribe({
           next: (data: [number, number]) => {
-            this.totalDebito = data[0];
-            this.totalIvaDebito = data[1];
+            this.totalDebito = Number(data[0]);
+            this.totalIvaDebito = Number(data[1]);
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })

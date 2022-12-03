@@ -94,8 +94,8 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
         .pipe(finalize(() => this.loadingTotalizadores = false))
         .subscribe({
           next: (data: [number, number]) => {
-            this.totalCredito = data[0];
-            this.totalIvaCredito = data[1];
+            this.totalCredito = Number(data[0]);
+            this.totalIvaCredito = Number(data[1]);
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
