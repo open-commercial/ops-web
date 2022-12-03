@@ -1,3 +1,4 @@
+import { LoadingOverlayService } from './../../services/loading-overlay.service';
 import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 
@@ -8,6 +9,7 @@ import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.
 })
 export class ListaComponent {
   displayPage = 1;
+  isSelectingAll = false;
 
   @Input() infoTemplate: TemplateRef<any>;
   @Input() actionsTemplate: TemplateRef<any>;
@@ -41,7 +43,8 @@ export class ListaComponent {
   @Input() set batchActionKey(value: BatchActionKey) { this.pBatchActionKey = value; }
   get batchActionKey(): BatchActionKey { return this.pBatchActionKey; }
 
-  constructor(private batchActionsService: BatchActionsService) { }
+  constructor(private batchActionsService: BatchActionsService,
+              private loadingOverlayService: LoadingOverlayService) { }
 
   cambioDePagina(dPage) {
     this.pageChange.emit(dPage - 1);
@@ -62,5 +65,14 @@ export class ListaComponent {
     if (!this.pBatchActionKey) { return false; }
     const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
     return this.batchActionsService.hasElement(this.pBatchActionKey, element.id);
+  }
+
+  selectAll() {
+    this.isSelectingAll = true;
+    this.items.forEach(item => {
+      const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
+      this.batchActionsService.addElement(this.pBatchActionKey, element);
+    });
+    this.isSelectingAll = false;
   }
 }

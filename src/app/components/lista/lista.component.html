@@ -5,6 +5,10 @@
   <div class="alert alert-danger">No actions template defined</div>
 </ng-template>
 
+<div class="btn btn-primary btn-sm mb-2" *ngIf="batchActionKey" (click)="selectAll()" [disabled]="isSelectingAll">
+  <fa-icon [icon]="['fas', 'check-double']"></fa-icon>
+  Seleccionar todos los ítems de la página
+</div>
 <div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center border-bottom border-top py-2" [class.selected]="isSelected(item)">
   <div class="form-check ms-2" *ngIf="batchActionKey">
     <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
