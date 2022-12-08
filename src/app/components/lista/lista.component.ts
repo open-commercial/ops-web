@@ -1,4 +1,3 @@
-import { LoadingOverlayService } from './../../services/loading-overlay.service';
 import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 
