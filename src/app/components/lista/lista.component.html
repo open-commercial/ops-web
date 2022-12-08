@@ -5,6 +5,12 @@
   <div class="alert alert-danger">No actions template defined</div>
 </ng-template>
 
+<div class="form-check ms-2 py-2" *ngIf="batchActionKey">
+  <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
+  <label class="form-check-label fw-bold" for="check_all_items">
+    {{ isAllItemsSelected ? 'Deseleccionar' : 'Seleccionar' }} Todos (de ésta página)
+  </label>
+</div>
 <div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center border-bottom border-top py-2" [class.selected]="isSelected(item)">
   <div class="form-check ms-2" *ngIf="batchActionKey">
     <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
