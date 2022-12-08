@@ -41,6 +41,16 @@ export class BatchActionsService {
     throw new Error('Unknown BatchActionKey');
   }
 
+  static getItemIdFn(key: BatchActionKey): (item: any) => number|string {
+    if (key === BatchActionKey.PRODUCTOS) {
+      return (item: Producto) => item.idProducto;
+    }
+    if (key === BatchActionKey.FACTURAS_VENTA) {
+      return (item: FacturaVenta) => item.idFactura;
+    }
+    throw new Error('Unknown BatchActionKey');
+  }
+
   constructor(private authService: AuthService,
               private storageService: StorageService) { }
 

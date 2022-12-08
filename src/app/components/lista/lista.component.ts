@@ -10,6 +10,9 @@ import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.
 export class ListaComponent {
   displayPage = 1;
   isSelectingAll = false;
+  isAllItemsSelected = false;
+
+  private getItemIdFn = null;
 
   @Input() infoTemplate: TemplateRef<any>;
   @Input() actionsTemplate: TemplateRef<any>;
@@ -21,7 +24,11 @@ export class ListaComponent {
   get size(): number { return this.pSize; }
 
   private pItems = [];
-  @Input() set items(value: any[]) { this.pItems = value; }
+  @Input() set items(value: any[]) {
+    this.pItems = value;
+    this.isAllItemsSelected = this.isAllSelected();
+  }
+
   get items() { return this.pItems; }
 
   private pPage = 0;
@@ -40,11 +47,13 @@ export class ListaComponent {
   get totalElements() { return this.pTotalElements; }
 
   private pBatchActionKey: BatchActionKey = null;
-  @Input() set batchActionKey(value: BatchActionKey) { this.pBatchActionKey = value; }
+  @Input() set batchActionKey(value: BatchActionKey) {
+    this.pBatchActionKey = value;
+    if (this.pBatchActionKey) { this.getItemIdFn = BatchActionsService.getItemIdFn(this.pBatchActionKey); }
+  }
   get batchActionKey(): BatchActionKey { return this.pBatchActionKey; }
 
-  constructor(private batchActionsService: BatchActionsService,
-              private loadingOverlayService: LoadingOverlayService) { }
+  constructor(private batchActionsService: BatchActionsService) { }
 
   cambioDePagina(dPage) {
     this.pageChange.emit(dPage - 1);
@@ -56,8 +65,10 @@ export class ListaComponent {
     const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
     if (isSelected) {
       this.batchActionsService.addElement(this.pBatchActionKey, element);
+      this.isAllItemsSelected = this.isAllSelected();
     } else {
       this.batchActionsService.removeElememt(this.pBatchActionKey, element.id);
+      this.isAllItemsSelected = false;
     }
   }
 
@@ -67,12 +78,30 @@ export class ListaComponent {
     return this.batchActionsService.hasElement(this.pBatchActionKey, element.id);
   }
 
-  selectAll() {
+  toggleAll($event) {
+    if (!this.pBatchActionKey) { return; }
+    const isSelected = $event.target.checked;
     this.isSelectingAll = true;
-    this.items.forEach(item => {
-      const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
-      this.batchActionsService.addElement(this.pBatchActionKey, element);
-    });
+
+    if (isSelected) {
+      this.items.forEach(item => {
+        const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
+        this.batchActionsService.addElement(this.pBatchActionKey, element);
+      });
+      this.isAllItemsSelected = true;
+    } else {
+      this.items.forEach(item => {
+        const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
+        this.batchActionsService.removeElememt(this.pBatchActionKey, element.id);
+      });
+      this.isAllItemsSelected = false;
+    }
+
     this.isSelectingAll = false;
+  }
+
+  private isAllSelected(): boolean {
+    if (!this.batchActionKey) { return false; }
+    return this.pItems.every(i => this.batchActionsService.hasElement(this.pBatchActionKey, this.getItemIdFn(i) as number));
   }
 }
