@@ -1,3 +1,4 @@
+import { TotalData } from './../totales/totales.component';
 import { AuthService } from './../../services/auth.service';
 import { Rol } from './../../models/rol';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -56,10 +57,6 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
   @ViewChild('ordernarPorFC') ordenarPorFCElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoFC') sentidoFCElement: FiltroOrdenamientoComponent;
 
-  loadingTotalizadores = false;
-  totalFacturado = 0;
-  totalIva = 0;
-
   allowedRolesToSee = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToSee = false;
 
@@ -68,6 +65,12 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
 
   allowedRolesToSeeTotales = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToSeeTotales = false;
+
+  loadingTotalizadores = false;
+  totalesData: TotalData[] = [
+    { label: 'Total Facturado', data: 0, hasRole: false },
+    { label: 'Total IVA', data: 0, hasRole: false },
+  ];
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -83,6 +86,9 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
     this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
     this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
     this.hasRoleToSeeTotales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotales);
+
+    this.totalesData[0].hasRole = this.hasRoleToSeeTotales;
+    this.totalesData[1].hasRole = this.hasRoleToSeeTotales;
   }
 
   ngOnInit() {
@@ -289,8 +295,8 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
         .pipe(finalize(() => this.loadingTotalizadores = false))
         .subscribe({
           next: (valores: [number, number]) => {
-            this.totalFacturado = Number(valores[0]);
-            this.totalIva = Number(valores[1]);
+            this.totalesData[0].data = Number(valores[0]);
+            this.totalesData[1].data = Number(valores[1]);
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })

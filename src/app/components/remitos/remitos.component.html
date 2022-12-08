@@ -1,7 +1,7 @@
 <div class="app-remitos">
-  <div class="d-flex flex-column flex-md-row align-items-md-center my-3">
+  <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-export']"></fa-icon> Remitos</h1>
-    <div class="text-end m-0">
+    <div class="text-end m-0 text-nowrap">
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="remitosFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"

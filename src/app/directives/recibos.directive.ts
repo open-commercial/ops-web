@@ -1,3 +1,4 @@
+import { TotalData } from './../components/totales/totales.component';
 import {Directive, OnInit, ViewChild} from '@angular/core';
 import {ListadoDirective} from './listado.directive';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -74,7 +75,9 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
   ];
 
   loadingTotal = false;
-  total = 0;
+  totalesData: TotalData[] = [
+    { label: 'Total', data: 0, hasRole: false },
+  ];
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
@@ -94,6 +97,8 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     this.hasRoleToSeeTotal = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotal);
+
+    this.totalesData[0].hasRole = this.hasRoleToSeeTotal;
   }
 
   abstract getMovimiento(): Movimiento;
@@ -329,12 +334,12 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
 
   getItems(terminos: BusquedaReciboCriteria) {
     super.getItems(terminos);
-    if (this.allowedRolesToSeeTotal) {
+    if (this.hasRoleToSeeTotal) {
       this.loadingTotal = true;
       this.recibosService.total(terminos)
         .pipe(finalize(() => this.loadingTotal = false))
         .subscribe({
-          next: (total: number) => this.total = Number(total),
+          next: (total: number) => this.totalesData[0].data = Number(total),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

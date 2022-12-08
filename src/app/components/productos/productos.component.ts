@@ -1,3 +1,4 @@
+import { TotalData } from './../totales/totales.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -85,7 +86,9 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   ];
 
   valorStockLoading = false;
-  valorStock = 0;
+  totalesData: TotalData[] = [
+    { label: 'Valor del Stock', data: 0, hasRole: false },
+  ];
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -103,6 +106,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
     this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
     this.hasRolToSeeValorStock = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeValorStock);
+
+    this.totalesData[0].hasRole = this.hasRolToSeeValorStock;
   }
 
   ngOnInit() {
@@ -352,7 +357,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       this.productosService.valorStock(terminos)
         .pipe(finalize(() => this.valorStockLoading = false))
         .subscribe({
-          next: (valorStock: number) => this.valorStock = Number(valorStock),
+          // next: (valorStock: number) => this.valorStock = Number(valorStock),
+          next: (valorStock: number) => this.totalesData[0].data = Number(valorStock),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

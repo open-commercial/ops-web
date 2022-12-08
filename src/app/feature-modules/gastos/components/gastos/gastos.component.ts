@@ -1,3 +1,4 @@
+import { TotalData } from './../../../../components/totales/totales.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ListadoDirective} from '../../../../directives/listado.directive';
 import {Observable} from 'rxjs';
@@ -52,7 +53,9 @@ export class GastosComponent extends ListadoDirective implements OnInit {
   ];
 
   loadingTotal = false;
-  total = 0;
+  totalesData: TotalData[] = [
+    { label: 'Total', data: 0, hasRole: false },
+  ]
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
@@ -75,6 +78,8 @@ export class GastosComponent extends ListadoDirective implements OnInit {
     this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRoleToSeeTotal = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotal);
+
+    this.totalesData[0].hasRole = this.hasRoleToSeeTotal;
   }
 
   ngOnInit(): void {
@@ -281,7 +286,7 @@ export class GastosComponent extends ListadoDirective implements OnInit {
       this.gastosService.total(terminos)
         .pipe(finalize(() => this.loadingTotal = false))
         .subscribe({
-          next: total => this.total = Number(total),
+          next: total => this.totalesData[0].data = Number(total),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;

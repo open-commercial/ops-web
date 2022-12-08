@@ -3,7 +3,7 @@
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
     </h1>
-    <div class="text-end m-0">
+    <div class="text-end m-0 text-nowrap">
       <button class="btn btn-primary ms-2 my-1" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" (click)="nuevoGasto()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
@@ -94,15 +94,5 @@
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
   </div>
-  <ul class="list-unstyled my-3 text-end" *ngIf="hasRoleToSeeTotal">
-    <li class="text-center py-2" *ngIf="loadingTotal">
-      <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon>
-    </li>
-    <li *ngIf="!loadingTotal">
-      <span class="fw-bold">Total: </span>
-      <span class="lead">
-        <span class="badge" [ngClass]="total >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ total | currency: 'ARS':'symbol':'1.0-2' }}</span>
-      </span>
-    </li>
-  </ul>
+  <app-totales [loading]="loadingTotal" [data]="totalesData"></app-totales>
 </div>

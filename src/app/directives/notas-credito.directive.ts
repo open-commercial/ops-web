@@ -1,4 +1,4 @@
-import { Rol } from './../models/rol';
+import { TotalData } from './../components/totales/totales.component';
 import { OnInit, Directive } from '@angular/core';
 import {NotasDirective} from './notas.directive';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -24,8 +24,10 @@ import {Movimiento} from '../models/movimiento';
 export abstract class NotasCreditoDirective extends NotasDirective implements OnInit {
 
   loadingTotalizadores = false;
-  totalCredito = 0;
-  totalIvaCredito = 0;
+  totalesData: TotalData[] = [
+    { label: 'Total IVA Crédito', data: 0, hasRole: false },
+    { label: 'Total Crédito', data: 0, hasRole: false },
+  ];
 
   protected constructor(protected route: ActivatedRoute,
                         protected router: Router,
@@ -44,6 +46,9 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
       clientesService, fb, usuariosService, authService, configuracionesSucursalService,
       notasService, proveedoresService
     );
+
+    this.totalesData[0].hasRole = this.hasRoleToSeeTotales;
+    this.totalesData[1].hasRole = this.hasRoleToSeeTotales;
   }
 
   ngOnInit() {
@@ -87,15 +92,15 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
     if (this.hasRoleToSeeTotales) {
       this.loadingTotalizadores = true;
       const obvs = [
+        this.notasService.totalIvaCredito(terminos),
         this.notasService.totalCredito(terminos),
-        this.notasService.totalIvaCredito(terminos)
       ];
       combineLatest(obvs)
         .pipe(finalize(() => this.loadingTotalizadores = false))
         .subscribe({
           next: (data: [number, number]) => {
-            this.totalCredito = Number(data[0]);
-            this.totalIvaCredito = Number(data[1]);
+            this.totalesData[0].data = Number(data[0]);
+            this.totalesData[1].data = Number(data[1]);
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })

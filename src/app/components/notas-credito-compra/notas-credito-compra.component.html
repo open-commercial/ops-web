@@ -1,7 +1,7 @@
 <div class="app-notas-credito-compra">
-  <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
+  <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon> Notas de Crédito de Compras</h1>
-    <div class="text-end m-0">
+    <div class="text-end m-0 text-nowrap">
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="notasCreditoFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
@@ -104,23 +104,7 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
-    <ul class="list-unstyled my-3 text-end" *ngIf="hasRoleToSeeTotales">
-      <li class="text-center py-2" *ngIf="loadingTotalizadores">
-        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon>
-      </li>
-      <li *ngIf="!loadingTotalizadores">
-        <span class="fw-bold">Total IVA Crédito: </span>
-        <span class="lead">
-          <span class="badge" [ngClass]="totalIvaCredito >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ totalIvaCredito | currency: 'ARS':'symbol':'1.0-2' }}</span>
-        </span>
-      </li>
-      <li *ngIf="!loadingTotalizadores">
-        <span class="fw-bold">Total Crédito: </span>
-        <span class="lead">
-          <span class="badge" [ngClass]="totalCredito >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ totalCredito | currency: 'ARS':'symbol':'1.0-2' }}</span>
-        </span>
-      </li>
-    </ul>
+    <app-totales [loading]="loadingTotalizadores" [data]="totalesData"></app-totales>
   </div>
 </div>
 
