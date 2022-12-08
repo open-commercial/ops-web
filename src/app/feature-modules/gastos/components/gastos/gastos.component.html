@@ -3,7 +3,7 @@
     <h1 class="h3 m-0 flex-fill text-truncate">
       <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon> Gastos
     </h1>
-    <div class="text-end m-0">
+    <div class="text-end m-0 text-nowrap">
       <button class="btn btn-primary ms-2 my-1" ngbPopover="Nuevo Gasto" triggers="mouseenter:mouseleave" placement="left" (click)="nuevoGasto()">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
@@ -94,5 +94,5 @@
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
   </div>
-
+  <app-totales [loading]="loadingTotal" [data]="totalesData"></app-totales>
 </div>

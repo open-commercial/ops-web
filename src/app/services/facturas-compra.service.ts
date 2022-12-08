@@ -26,6 +26,14 @@ export class FacturasCompraService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
+  totalFacturado(criteria: BusquedaFacturaCompraCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total-facturado/criteria`, criteria);
+  }
+
+  totalIva(criteria: BusquedaFacturaCompraCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total-iva/criteria`, criteria);
+  }
+
   getTiposDeComprobante(idProveedor: number): Observable<TipoDeComprobante[]>{
     const idSucursal = this.sucursalesService.getIdSucursal();
     return this.http.get<TipoDeComprobante[]>(`${this.url}/tipos/sucursales/${idSucursal}/proveedores/${idProveedor}`);

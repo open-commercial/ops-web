@@ -1,0 +1,16 @@
+
+<div class="app-totales my-3">
+    <div class="text-center py-3" *ngIf="loading">
+        <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'2x'"></fa-icon>
+    </div>
+    <ul class="list-unstyled text-end" *ngIf="!loading">
+        <ng-container *ngFor="let d of data">
+        <li *ngIf="d.hasRole === undefined || d.hasRole">
+            <span class="fw-bold me-2">{{ d.label }}:</span>
+            <span class="lead">
+                <span class="badge" [ngClass]="d.data >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ d.data | currency: 'ARS':'symbol':'1.0-2' }}</span>
+            </span>
+        </li>
+        </ng-container>
+    </ul>
+</div>

@@ -1,3 +1,4 @@
+import { TotalData } from './../totales/totales.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
 import {SucursalesService} from '../../services/sucursales.service';
@@ -66,6 +67,9 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToEdit = false;
 
+  allowedRolesToSeeValorStock: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRolToSeeValorStock = false;
+
   baKey = BatchActionKey.PRODUCTOS;
   baActions: ActionConfiguration[] = [
     {
@@ -81,6 +85,11 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     }
   ];
 
+  valorStockLoading = false;
+  totalesData: TotalData[] = [
+    { label: 'Valor del Stock', data: 0, hasRole: false },
+  ];
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -93,13 +102,16 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
               private proveedoresService: ProveedoresService,
               public batchActionsService: BatchActionsService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
+    this.hasRolToSeeValorStock = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeValorStock);
+
+    this.totalesData[0].hasRole = this.hasRolToSeeValorStock;
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
-    this.hasRoleToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
-    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
 
     this.loadingOverlayService.activate();
     this.rubrosService.getRubros()
@@ -336,5 +348,20 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
     ;
+  }
+
+  getItems(terminos: BusquedaProductoCriteria) {
+    super.getItems(terminos);
+    if (this.hasRolToSeeValorStock) {
+      this.valorStockLoading = true;
+      this.productosService.valorStock(terminos)
+        .pipe(finalize(() => this.valorStockLoading = false))
+        .subscribe({
+          // next: (valorStock: number) => this.valorStock = Number(valorStock),
+          next: (valorStock: number) => this.totalesData[0].data = Number(valorStock),
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

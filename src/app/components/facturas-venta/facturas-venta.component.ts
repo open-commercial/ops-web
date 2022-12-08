@@ -1,3 +1,4 @@
+import { TotalData } from './../totales/totales.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
 import {FacturaVenta} from '../../models/factura-venta';
@@ -13,7 +14,7 @@ import {SucursalesService} from '../../services/sucursales.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import * as moment from 'moment';
 import {Cliente} from '../../models/cliente';
-import {Observable} from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import {ClientesService} from '../../services/clientes.service';
 import {UsuariosService} from '../../services/usuarios.service';
 import {Usuario} from '../../models/usuario';
@@ -78,6 +79,9 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
   allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
   hasRoleToCrearNota = false;
 
+  allowedRolesToSeeTotales: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToSeeTotales = false;
+
   baKey = BatchActionKey.FACTURAS_VENTA;
   baActions: ActionConfiguration[] = [
     {
@@ -97,6 +101,13 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
     TipoDeComprobante.NOTA_DEBITO_C,
   ];
 
+  loadingTotalizadores = false;
+  totalesData: TotalData[] = [
+    { label: 'Ganancia Total', data: 0, hasRole: false },
+    { label: 'Total IVA Venta', data: 0, hasRole: false },
+    { label: 'Total Facturado', data: 0 },
+  ]
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -115,12 +126,16 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
               private configuracionesSucursalService: ConfiguracionesSucursalService,
               private notasService: NotasService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEnviarPorEmail);
+    this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
+    this.hasRoleToSeeTotales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotales);
+
+    this.totalesData[0].hasRole = this.hasRoleToSeeTotales;
+    this.totalesData[1].hasRole = this.hasRoleToSeeTotales;
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEnviarPorEmail);
-    this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
   }
 
   populateFilterForm(ps) {
@@ -396,5 +411,30 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
 
   getProductoInfoAsync(id: number): Observable<string> {
     return this.productosService.getProducto(id).pipe(map((p: Producto) => p.descripcion));
+  }
+
+  getItems(terminos: BusquedaFacturaVentaCriteria) {
+    super.getItems(terminos);
+
+    const obvs = [this.facturasVentaService.totalFacturado(terminos)];
+    if (this.hasRoleToSeeTotales) {
+      obvs.push(this.facturasVentaService.gananciaTotal(terminos));
+      obvs.push(this.facturasVentaService.totalIva(terminos));
+   }
+    obvs.push();
+    this.loadingTotalizadores = true;
+    combineLatest(obvs)
+      .pipe(finalize(() => this.loadingTotalizadores = false))
+      .subscribe({
+        next: (data) => {
+          this.totalesData[2].data = Number(data[0]);
+          if (this.hasRoleToSeeTotales) {
+            this.totalesData[0].data = Number(data[1]);
+            this.totalesData[1].data = Number(data[2]);
+          }
+        },
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+      })
+    ;
   }
 }

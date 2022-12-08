@@ -133,5 +133,6 @@
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+    <app-totales [loading]="valorStockLoading" [data]="totalesData"></app-totales>
   </div>
 </div>

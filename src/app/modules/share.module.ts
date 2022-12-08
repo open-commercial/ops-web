@@ -37,6 +37,7 @@ import { ReciboClienteModalComponent } from '../components/recibo-cliente-modal/
 import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
 import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.component';
 import { ImgPickerComponent } from '../components/img-picker/img-picker.component';
+import { TotalesComponent } from '../components/totales/totales.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ImgPickerComponent } from '../components/img-picker/img-picker.componen
     ReciboProveedorModalComponent,
     UsuarioFormComponent,
     ImgPickerComponent,
+    TotalesComponent,
   ],
   imports: [
     CommonModule,
@@ -83,6 +85,7 @@ import { ImgPickerComponent } from '../components/img-picker/img-picker.componen
     GastoFormComponent,
     UsuarioFormComponent,
     ImgPickerComponent,
+    TotalesComponent,
   ]
 })
 export class ShareModule {

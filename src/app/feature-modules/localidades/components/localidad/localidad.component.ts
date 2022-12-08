@@ -48,7 +48,7 @@ export class LocalidadComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: localidad => {
-            this.localidad = localidad,
+            this.localidad = localidad;
             this.form.patchValue(this.localidad);
           },
           error: err => {

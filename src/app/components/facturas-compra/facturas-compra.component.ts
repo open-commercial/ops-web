@@ -1,7 +1,10 @@
+import { TotalData } from './../totales/totales.component';
+import { AuthService } from './../../services/auth.service';
+import { Rol } from './../../models/rol';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HelperService } from '../../services/helper.service';
-import { map } from 'rxjs/operators';
+import { map, finalize } from 'rxjs/operators';
 import { Pagination } from '../../models/pagination';
 import { FacturasCompraService } from '../../services/facturas-compra.service';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
@@ -9,7 +12,7 @@ import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-f
 import { SucursalesService } from '../../services/sucursales.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Producto } from '../../models/producto';
 import { ProveedoresService } from '../../services/proveedores.service';
 import { ProductosService } from '../../services/productos.service';
@@ -19,6 +22,7 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
 import { ListadoDirective } from '../../directives/listado.directive';
 import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -53,6 +57,21 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
   @ViewChild('ordernarPorFC') ordenarPorFCElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoFC') sentidoFCElement: FiltroOrdenamientoComponent;
 
+  allowedRolesToSee = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToSee = false;
+
+  allowedRolesToCreate = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToCreate = false;
+
+  allowedRolesToSeeTotales = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  hasRoleToSeeTotales = false;
+
+  loadingTotalizadores = false;
+  totalesData: TotalData[] = [
+    { label: 'Total Facturado', data: 0, hasRole: false },
+    { label: 'Total IVA', data: 0, hasRole: false },
+  ];
+
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
@@ -61,11 +80,23 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
               private proveedoresService: ProveedoresService,
               private productosService: ProductosService,
               protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService) {
+              protected mensajeService: MensajeService,
+              protected authService: AuthService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+    this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
+    this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
+    this.hasRoleToSeeTotales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotales);
+
+    this.totalesData[0].hasRole = this.hasRoleToSeeTotales;
+    this.totalesData[1].hasRole = this.hasRoleToSeeTotales;
   }
 
   ngOnInit() {
+    if (!this.hasRoleToSee) {
+      this.mensajeService.msg("No tiene permisos para ver las facturas de compra.", MensajeModalType.ERROR);
+      this.router.navigate(['/']);
+      return;
+    }
     super.ngOnInit();
   }
 
@@ -250,5 +281,26 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
 
   verFactura(factura: FacturaCompra) {
     this.router.navigate(['/facturas-compra/ver', factura.idFactura]);
+  }
+
+  getItems(terminos: BusquedaFacturaCompraCriteria) {
+    super.getItems(terminos);
+    if (this.hasRoleToSeeTotales) {
+      const obvs = [
+        this.facturasCompraService.totalFacturado(terminos),
+        this.facturasCompraService.totalIva(terminos)
+      ];
+      this.loadingTotalizadores = true;
+      combineLatest(obvs)
+        .pipe(finalize(() => this.loadingTotalizadores = false))
+        .subscribe({
+          next: (valores: [number, number]) => {
+            this.totalesData[0].data = Number(valores[0]);
+            this.totalesData[1].data = Number(valores[1]);
+          },
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        })
+      ;
+    }
   }
 }

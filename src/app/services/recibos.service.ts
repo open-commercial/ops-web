@@ -20,6 +20,10 @@ export class RecibosService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
+  total(criteria: BusquedaReciboCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total/criteria`, criteria);
+  }
+
   getRecibo(idRecibo: number): Observable<Recibo> {
     return this.http.get<Recibo>(`${this.url}/${idRecibo}`);
   }

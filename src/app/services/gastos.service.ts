@@ -21,6 +21,10 @@ export class GastosService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
+  total(criteria: BusquedaGastoCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total/criteria`, criteria);
+  }
+
   getGasto(idGasto: number): Observable<Gasto> {
     return this.http.get<Gasto>(`${this.url}/${idGasto}`);
   }

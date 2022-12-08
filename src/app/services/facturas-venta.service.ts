@@ -26,6 +26,18 @@ export class FacturasVentaService {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 
+  totalFacturado(criteria: BusquedaFacturaVentaCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total-facturado/criteria`, criteria);
+  }
+
+  totalIva(criteria: BusquedaFacturaVentaCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/total-iva/criteria`, criteria);
+  }
+
+  gananciaTotal(criteria: BusquedaFacturaVentaCriteria): Observable<number> {
+    return this.http.post<number>(`${this.url}/ganancia-total/criteria`, criteria);
+  }
+
   getFacturasPorId(ids: number[]): Observable<FacturaVenta[]> {
     const qs = HelperService.getQueryString({ idFactura: ids.join(',') });
     return this.http.get<FacturaVenta[]>(`${this.url}?${qs}`);
