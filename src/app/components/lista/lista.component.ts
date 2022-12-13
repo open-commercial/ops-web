@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, EventEmitter, Input, Output, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
 
 @Component({
@@ -6,7 +7,7 @@ import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss']
 })
-export class ListaComponent {
+export class ListaComponent implements OnInit, OnDestroy {
   displayPage = 1;
   isSelectingAll = false;
   isAllItemsSelected = false;
@@ -52,7 +53,24 @@ export class ListaComponent {
   }
   get batchActionKey(): BatchActionKey { return this.pBatchActionKey; }
 
-  constructor(private batchActionsService: BatchActionsService) { }
+  private subscription: Subscription;
+
+  constructor(private batchActionsService: BatchActionsService) {}
+
+  ngOnInit() {
+    this.subscription = new Subscription();
+    this.subscription.add(this.batchActionsService.selectedCount$.subscribe({
+      next: data => {
+        if (data.baKey === this.pBatchActionKey) {
+          this.isAllItemsSelected = this.isAllSelected();
+        }
+      }
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
   cambioDePagina(dPage) {
     this.pageChange.emit(dPage - 1);
@@ -64,7 +82,6 @@ export class ListaComponent {
     const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
     if (isSelected) {
       this.batchActionsService.addElement(this.pBatchActionKey, element);
-      this.isAllItemsSelected = this.isAllSelected();
     } else {
       this.batchActionsService.removeElememt(this.pBatchActionKey, element.id);
       this.isAllItemsSelected = false;
@@ -83,15 +100,17 @@ export class ListaComponent {
     this.isSelectingAll = true;
 
     if (isSelected) {
-      this.items.forEach(item => {
+      this.items.forEach((item, index) => {
         const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
-        this.batchActionsService.addElement(this.pBatchActionKey, element);
+        const triggerEvents = index === this.items.length - 1;
+        this.batchActionsService.addElement(this.pBatchActionKey, element, triggerEvents);
       });
       this.isAllItemsSelected = true;
     } else {
-      this.items.forEach(item => {
+      this.items.forEach((item, index)=> {
         const element = BatchActionsService.getBatchElementFn(this.batchActionKey)(item);
-        this.batchActionsService.removeElememt(this.pBatchActionKey, element.id);
+        const triggerEvents = index === this.items.length - 1;
+        this.batchActionsService.removeElememt(this.pBatchActionKey, element.id, triggerEvents);
       });
       this.isAllItemsSelected = false;
     }

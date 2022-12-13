@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import {StorageService} from './storage.service';
@@ -51,19 +52,22 @@ export class BatchActionsService {
     throw new Error('Unknown BatchActionKey');
   }
 
+  private selectedCountSubject = new Subject<{ baKey: BatchActionKey, count: number }>();
+  selectedCount$ = this.selectedCountSubject.asObservable();
+
   constructor(private authService: AuthService,
               private storageService: StorageService) { }
 
-  addElement(key: BatchActionKey, element: BatchActionElement) {
+  addElement(key: BatchActionKey, element: BatchActionElement, triggerEvents = true) {
     const data = this.getTokenData(key);
     data[element.id] = { id: element.id, description: element.description };
-    this.setTokenData(key, data);
+    this.setTokenData(key, data, triggerEvents);
   }
 
-  removeElememt(key: BatchActionKey, elementId: number) {
+  removeElememt(key: BatchActionKey, elementId: number, triggerEvents = true) {
     const data = this.getTokenData(key);
     delete data[elementId];
-    this.setTokenData(key, data);
+    this.setTokenData(key, data, triggerEvents);
   }
 
   getElement(key: BatchActionKey, elementId: number): BatchActionElement {
@@ -81,8 +85,8 @@ export class BatchActionsService {
     return Object.values(data);
   }
 
-  clear(key: BatchActionKey) {
-    this.setTokenData(key, {});
+  clear(key: BatchActionKey, triggerEvents = true) {
+    this.setTokenData(key, {}, triggerEvents);
   }
 
   count(key: BatchActionKey): number {
@@ -102,11 +106,14 @@ export class BatchActionsService {
   /**
    * Setea todos los datos de un token para una key
    */
-  private setTokenData(key: BatchActionKey, data: any) {
+  private setTokenData(key: BatchActionKey, data: any, triggerEvents: boolean) {
     const token = this.authService.getToken();
     if (!token) { throw new Error('Sin usuario logueado'); }
     const allData = this.storageService.getItem(key.toString()) || {};
     allData[token] = data;
     this.storageService.setItem(key, allData);
+    if (triggerEvents) {
+      this.selectedCountSubject.next({ baKey: key, count: this.count(key) });
+    }
   }
 }
