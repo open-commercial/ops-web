@@ -220,7 +220,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     const options: OPOption[] = [{ value: 'xlsx', text: 'Excel'}, { value: 'pdf', text: 'Pdf' }];
     const modalRef = this.modalService.open(OptionPickerModalComponent);
     modalRef.componentInstance.options = options;
-    modalRef.componentInstance.title = 'Formato';
+    modalRef.componentInstance.title = 'Descargar Reporte';
     modalRef.componentInstance.label = 'Seleccione un formato:';
     modalRef.result.then(formato => {
       const qParams = this.getFormValues();

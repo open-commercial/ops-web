@@ -9,7 +9,6 @@ import {Remito} from '../../models/remito';
 import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {Location} from '@angular/common';
-import {saveAs} from 'file-saver';
 import {HelperService} from '../../services/helper.service';
 import {SucursalesService} from '../../services/sucursales.service';
 
@@ -73,8 +72,9 @@ export class VerRemitoComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, `Remito_${this.remito.serie}-${this.remito.nroRemito}.pdf`);
+          const file = new Blob([res], {type: 'application/pdf'});          
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
         },
         () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )

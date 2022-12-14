@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { RenglonPedido } from '../../models/renglon-pedido';
-import { saveAs } from 'file-saver';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
@@ -60,7 +59,8 @@ export class VerPedidoComponent implements OnInit {
       .subscribe(
         (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, `pedido-${pedido.nroPedido}.pdf`);
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
         },
         () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )

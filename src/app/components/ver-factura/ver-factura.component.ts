@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
 import { finalize } from 'rxjs/operators';
 import { HelperService } from '../../services/helper.service';
-import { saveAs } from 'file-saver';
 import { combineLatest } from 'rxjs';
 import { RenglonFactura } from '../../models/renglon-factura';
 import { Location } from '@angular/common';
@@ -66,7 +65,8 @@ export class VerFacturaComponent implements OnInit {
       .subscribe(
         (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, `factura-venta.pdf`);
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
         },
         () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )

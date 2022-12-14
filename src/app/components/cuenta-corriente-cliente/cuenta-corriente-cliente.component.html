@@ -6,7 +6,7 @@
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
       <fa-icon [icon]="['fas', 'book']"></fa-icon>
-      Cuenta Corriente: {{ ccc.cliente.nombreFiscal + (ccc.cliente.nombreFantasia ? ' (' + ccc.cliente.nombreFantasia + ')' : '')}}
+      Cuenta Corriente
     </h1>
     <div class="text-end m-0 text-nowrap">
       <button class="btn btn-primary ms-2" (click)="nuevaNotaCredito()" *ngIf="hasRoleToCrearNota"
@@ -29,11 +29,8 @@
   </div>
   <app-cliente-detalle [cliente]="ccc.cliente"></app-cliente-detalle>
   <div class="text-end mx-2">
-    SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    ULTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
   </div>
-  <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
-                  [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
-                  *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
     <button class="btn btn-primary me-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"

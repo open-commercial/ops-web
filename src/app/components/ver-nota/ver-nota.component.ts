@@ -7,7 +7,6 @@ import {Location} from '@angular/common';
 import {finalize} from 'rxjs/operators';
 import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {saveAs} from 'file-saver';
 import {HelperService} from '../../services/helper.service';
 import {Movimiento} from '../../models/movimiento';
 
@@ -50,10 +49,10 @@ export class VerNotaComponent implements OnInit {
     this.notasService.getReporte(this.nota.idNota)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
-        (res) => {
-          const nombreArchivoPDF = this.nota.type === 'NotaCredito' ? 'NotaCredito.pdf' : 'NotaDebito.pdf';
+        (res) => {          
           const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, nombreArchivoPDF);
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
         },
         () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
@@ -61,12 +60,6 @@ export class VerNotaComponent implements OnInit {
   }
 
   getTitle(): string {
-    let title = this.helper.tipoComprobanteLabel(this.nota.tipoComprobante) + ' ';
-    if (this.nota.numSerieAfip) {
-      title += this.helper.formatNumFactura(this.nota.numSerieAfip, this.nota.numNotaAfip);
-    } else {
-      title += this.helper.formatNumFactura(this.nota.serie, this.nota.nroNota);
-    }
-    return title;
+    return this.nota.type === 'NotaCredito' ? 'Nota de Crédito' : 'Nota de Débito';    
   }
 }

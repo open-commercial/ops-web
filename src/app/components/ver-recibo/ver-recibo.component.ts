@@ -8,7 +8,6 @@ import {finalize} from 'rxjs/operators';
 import {Recibo} from '../../models/recibo';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {HelperService} from '../../services/helper.service';
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-ver-recibo',
@@ -49,8 +48,9 @@ export class VerReciboComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: res => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, `Recibo_${this.helper.formatNumFactura(this.recibo.numSerie, this.recibo.numRecibo)}.pdf`);
+          const file = new Blob([res], {type: 'application/pdf'});          
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
         },
         error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       })

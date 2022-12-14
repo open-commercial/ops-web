@@ -17,7 +17,6 @@ import { Usuario } from '../../models/usuario';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Traspaso } from '../../models/traspaso';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
-import { saveAs } from 'file-saver';
 import {Producto} from '../../models/producto';
 import {ProductosService} from '../../services/productos.service';
 
@@ -220,8 +219,9 @@ export class TraspasosComponent extends ListadoDirective implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe(
         (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          saveAs(file, `reporte-traspaso.pdf`);
+          const file = new Blob([res], {type: 'application/pdf'});          
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
         },
         () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       )
