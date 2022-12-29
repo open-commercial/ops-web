@@ -241,10 +241,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       TipoDeComprobante.FACTURA_X,
       TipoDeComprobante.FACTURA_Y,
       TipoDeComprobante.PRESUPUESTO,
-    ];
-
-    let nombreArchivo = '';
-    let obvs: Observable<Blob> = null;
+    ];    
 
     if (notasDeDebito.indexOf(r.tipoComprobante) >= 0) {
       this.router.navigate(['/notas-debito-venta/ver', r.idMovimiento]);
@@ -256,33 +253,19 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       return;
     }
 
-    if (facturas.indexOf(r.tipoComprobante) >= 0) {
-      nombreArchivo = 'Factura.pdf';
-      obvs = this.facturasVentaService.getFacturaPdf(r.idMovimiento);
+    if (facturas.indexOf(r.tipoComprobante) >= 0) {      
+      this.router.navigate(['/facturas-venta/ver', r.idMovimiento]);
+      return; 
     }
 
-    if (r.tipoComprobante === TipoDeComprobante.RECIBO) {
-      nombreArchivo = 'Recibo.pdf';
-      obvs = this.recibosService.getReporteRecibo(r.idMovimiento);
+    if (r.tipoComprobante === TipoDeComprobante.RECIBO) {      
+      this.router.navigate(['/recibos/ver', r.idMovimiento]);
+      return; 
     }
 
-    if (r.tipoComprobante === TipoDeComprobante.REMITO) {
-      nombreArchivo = 'Remito.pdf';
-      obvs = this.remitosService.getRemitoPdf(r.idMovimiento);
-    }
-
-    if (nombreArchivo && obvs) {
-      this.loadingOverlayService.activate();
-      obvs
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (res) => {
-            const file = new Blob([res], {type: 'application/pdf'});
-            saveAs(file, nombreArchivo);
-          },
-          () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-        )
-      ;
+    if (r.tipoComprobante === TipoDeComprobante.REMITO) {      
+      this.router.navigate(['/remitos/ver', r.idMovimiento]);
+      return; 
     }
   }
 

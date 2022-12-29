@@ -33,12 +33,12 @@
   </div>
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
-    <button class="btn btn-primary me-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
+    <button class="btn btn-primary me-2" type="button" ngbPopover="Nueva Nota de Crédito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
     </button>
     <button class="btn btn-primary me-2" type="button"
-            ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
+            ngbPopover="Nueva Nota de Débito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaDebitoRecibo(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
     </button>
@@ -82,7 +82,7 @@
               <span class="text-nowrap fw-bold">Nº {{ r.serie }}-{{ r.numero }}</span>
             </div>
             <div class="d-flex flex-row align-items-center flex-wrap">
-              <div class="me-2"><span class="fw-bold">Suc: </span>{{ r.nombreSucursal }}</div>
+              <div class="me-2"><span class="fw-bold">Sucursal: </span>{{ r.nombreSucursal }}</div>
               <div class="me-2" *ngIf="r.descripcion"><span class="fw-bold">Detalle: </span>{{ r.descripcion }}</div>
             </div>
           </td>
