@@ -1,0 +1,74 @@
+<ng-template #noInfo>
+  <div class="alert alert-danger">No info template defined</div>
+</ng-template>
+<ng-template #noActions>
+  <div class="alert alert-danger">No actions template defined</div>
+</ng-template>
+
+<ng-template #defaultTableHeaders>
+  <thead *ngIf="tableConfig.length">
+    <tr>
+      <th *ngIf="batchActionKey" class="selection-column"></th>
+      <th *ngFor="let c of tableConfig" [ngClass]="{ 'd-none': c.hidden }">{{ c.name }}</th>
+      <th class="actions-column"></th>
+    </tr>
+  </thead>
+</ng-template>
+
+<div class="d-flex flex-row">
+  <div class="flex-fill text-truncate">
+    <div class="form-check ms-2 py-2" *ngIf="batchActionKey">
+      <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
+      <label class="form-check-label fw-bold" for="check_all_items">
+        {{ isAllItemsSelected ? 'Deseleccionar' : 'Seleccionar' }} Todos (de ésta página)
+      </label>
+    </div>
+  </div>
+  <div>
+    <div ngbDropdown placement="bottom-right" class="d-inline-block toggle-columns-dropdown" *ngIf="hasColumnsThatCanBeHidden">
+      <button type="button" class="btn btn-outline-secondary" ngbDropdownToggle  ngbPopover="Mostrar/Esconder columnas" placement="left" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'toggle-on']"></fa-icon>
+        <span class="visually-hidden">Mostrar/Esconder columnas</span>
+      </button>
+      <div ngbDropdownMenu>
+        <form class="px-2">
+          <ng-template ngFor let-h [ngForOf]="tableConfig">
+            <div class="form-check form-switch" *ngIf="h.canBeHidden">
+              <input type="checkbox" class="form-check-input" [id]="'toggleColumn_' + h.field" [checked]="!h.hidden" (change)="toggleColumn(h.field)">
+              <label class="form-check-label text-nowrap" [for]="'toggleColumn_' + h.field">{{ h.name }}</label>
+            </div>
+          </ng-template>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="table-responsive" #tableContainer
+  (mousedown)="mouseDown($event)"
+  (mouseleave)="mouseLeave()"
+  (mouseup)="mouseUp()"
+  (mousemove)="mouseMove($event)"
+>
+  <table class="table table-bordered table-sm table-striped lista-table">
+    <ng-container *ngTemplateOutlet="tableHeadersTemplate ? tableHeadersTemplate : defaultTableHeaders">
+    </ng-container>
+    <tbody>
+    <tr *ngFor="let item of items; let i=index;" [class.table-warning]="isSelected(item)">
+      <td *ngIf="batchActionKey" class="align-middle selection-column">
+        <div class="form-check ms-2">
+          <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
+          <label class="form-check-label" [for]="'check_row_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>
+        </div>
+      </td>
+      <ng-container *ngTemplateOutlet="infoTemplate ? infoTemplate : noTableInfo; context:{ $implicit: item, config: dynamicConfig }"></ng-container>
+      <td class="text-end text-md-center align-middle actions-column">
+        <ng-container *ngTemplateOutlet="actionsTemplate ? actionsTemplate : noActions; context:{ $implicit: item }"></ng-container>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
+                [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="cambioDePagina($event)"
+                *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>

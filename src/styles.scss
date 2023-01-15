@@ -173,3 +173,49 @@ a.fake-cursor {
 ul.pagination {
   margin-bottom: 0;
 }
+
+.actions {
+  .dropdown-toggle::after {
+    content: unset;
+  }
+}
+
+.lista-table {
+  @include media-breakpoint-down(md) {
+    thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    tr {
+      //border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      text-align: right;
+      width: 100% !important;
+      min-height: 2rem;
+    }
+
+    td::before {
+      content: attr(data-label);
+      float: left;
+      padding-right: 0.3rem;
+      font-weight: 600;
+      font-size: .95em;
+      text-transform: uppercase;
+      font-style: italic;
+      color: rgb(76, 76, 76);
+    }
+  }
+}

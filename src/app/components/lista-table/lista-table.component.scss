@@ -1,0 +1,43 @@
+//@import "../../../variables";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.table-responsive {
+  //height: 20rem;
+  // -webkit-user-select: none;  /* Chrome all / Safari all */
+  // -moz-user-select: none;     /* Firefox all */
+  // -ms-user-select: none;      /* IE 10+ */
+  // user-select: none;
+  &.grabbing {
+    cursor: grabbing;
+  }
+}
+table.table {
+  /*thead > tr {
+    position: sticky;
+    top: 0;
+    background: rgb(235, 235, 235);
+  }*/
+  .selection-column {
+    position: sticky;
+    left: 0;
+    //width: 2rem;
+    min-width: 2rem;
+    background: rgba(241, 241, 241, 0.8);
+  }
+  .actions-column {
+    position: sticky;
+    right: 0;
+    width: 3rem;
+    min-width: 3rem;
+    //background: rgba($color: $primary, $alpha: 0.2);
+    background: rgba(241, 241, 241, 0.8);
+  }
+}
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: unset;
+}
+
+
+
