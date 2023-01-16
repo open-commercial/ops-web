@@ -127,22 +127,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.createForm();
 
-    /*this.sucursalesService.getPuntosDeRetito()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: (sucs: Sucursal[]) => this.sucursales = sucs,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
-
-    this.loadingOverlayService.activate()
-    this.formasDePagoService.getFormasDePago()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: formasDePago => this.formasDePago = formasDePago,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;*/
     const obvs = [
       this.sucursalesService.getPuntosDeRetito(),
       this.formasDePagoService.getFormasDePago(),
@@ -160,6 +144,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
+    ;
 
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
       if (!s.configuracionSucursal.puntoDeRetiro) {
@@ -369,7 +354,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
       }
       if (oe === OpcionEnvio.ENVIO_A_DOMICILIO) {
         if (!this.form.get('opcionEnvioUbicacion').value) {
-          this.form.get('opcionEnvioUbicacion').setValue(OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION);
+          this.form.get('opcionEnvioUbicacion').setValue(OpcionEnvioUbicacion.USAR_UBICACION_ENVIO);
         }
       }
     });
