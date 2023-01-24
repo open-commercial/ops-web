@@ -1,4 +1,4 @@
-import { TableFieldConfig } from './../lista-table/lista-table.component';
+import { TableFieldConfig, ListaTableKey } from './../lista-table/lista-table.component';
 import { TotalData } from './../totales/totales.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
@@ -112,6 +112,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
     { field: 'fechaVencimiento', name: 'Fecha Vencimiento', canBeHidden: true, hidden: true },
     { field: 'nota', name: 'Nota', canBeHidden: true, hidden: true },
   ];
+
+  ltKey = ListaTableKey.PRODUCTOS;
 
   valorStockLoading = false;
   totalesData: TotalData[] = [
