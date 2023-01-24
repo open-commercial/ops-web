@@ -83,57 +83,6 @@
                            (emptySelection)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed" ></app-batch-actions-box>
   </div>
   <div class="productos my-2 bg-white">
-    <!-- <ng-template #info let-item>
-      <div class="d-flex flex-row flex-fill align-items-center">
-        <div class="img-container px-2 mb-2 flex-shrink-0 flex-grow-0">
-          <img [src]="item.urlImagen ? item.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
-        </div>
-        <div class="flex-fill d-flex flex-column ms-2">
-          <span class="d-flex flex-row flex-wrap align-items-center">
-            <span class="me-2 mb-1 d-inline-block badge text-bg-info" *ngIf="item.publico"><fa-icon [icon]="['far', 'eye']"></fa-icon> PÚBLICO</span>
-            <span class="me-2 mb-1 d-inline-block badge text-bg-danger" *ngIf="!item.publico"><fa-icon [icon]="['far', 'eye-slash']"></fa-icon> PRIVADO</span>
-            <span *ngIf="item.oferta" class="mb-1 badge text-bg-success">OFERTA {{ item.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
-            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="mb-1 badge text-bg-success">BONIF. {{ item.porcentajeBonificacionPrecio | number:'1.0-2' }}%</span>
-          </span>
-          <span class="me-2 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
-          <span class="me-2"><strong>{{ item.descripcion }}</strong></span>
-          <span class="me-2">
-            Stock: <strong>{{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}</strong>
-            - Otra Suc: {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}
-            - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}
-          </span>
-          <div *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">
-              <span *ngIf="item.cantMinima > 1">Llevando {{ item.cantMinima | number:'1.0-2' }} o más&nbsp;</span>
-              <span class="precio bonificado">$ {{ item.precioBonificado | number:'1.0-2':'es-AR' }}</span>
-          </div>
-          <span class="precio" [class.tachado]="!(item.cantMinima > 1) && (item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio)">
-            $ {{item.precioLista | number:'1.0-2':'es-AR'}}
-          </span>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #actions let-item>
-      <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verProducto(item)">
-            <fa-icon [icon]="['far', 'eye']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToEdit">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProducto(item)">
-            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToDelete">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProducto(item)">
-            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-          </button>
-        </li>
-      </ul>
-    </ng-template>
-    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
-               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista> -->
-
     <ng-template #actions let-item>
       <div ngbDropdown class="actions d-none d-md-inline-block" container="body" placement="left-top">
         <button type="button" class="btn btn-primary" ngbDropdownToggle>
@@ -188,7 +137,6 @@
       </td>
       <td [ngClass]="{ 'd-none': config['cantidadReservada'].hidden}" [attr.data-label]="config['cantidadReservada'].name">{{ item.cantidadReservada | number:'1.0-2' }} {{ item.nombreMedida }}</td>
       <td [ngClass]="{ 'd-none': config['cantMinima'].hidden}" [attr.data-label]="config['cantMinima'].name">{{ item.cantMinima | number:'1.0-2' }} {{ item.nombreMedida }}</td>
-      <!-- <td [ngClass]="{ 'd-none': config['nombreMedida'].hidden}" [attr.data-label]="config['nombreMedida'].name">{{ item.nombreMedida }}</td> -->
       <td [ngClass]="{ 'd-none': config['precioCosto'].hidden}" [attr.data-label]="config['precioCosto'].name">{{ item.precioCosto | currency:'ARS':'symbol':'1.0-2' }}</td>
       <td [ngClass]="{ 'd-none': config['gananciaPorcentaje'].hidden}" [attr.data-label]="config['gananciaPorcentaje'].name">{{ item.gananciaPorcentaje | number:'1.0-2' }} %</td>
       <td [ngClass]="{ 'd-none': config['gananciaNeto'].hidden}" [attr.data-label]="config['gananciaNeto'].name">{{ item.gananciaNeto | currency:'ARS':'symbol':'1.0-2' }}</td>

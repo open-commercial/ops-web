@@ -6,13 +6,7 @@
 </ng-template>
 
 <ng-template #defaultTableHeaders>
-  <thead *ngIf="tableConfig.length">
-    <tr>
-      <th *ngIf="batchActionKey" class="selection-column"></th>
-      <th *ngFor="let c of tableConfig" [ngClass]="{ 'd-none': c.hidden }">{{ c.name }}</th>
-      <th class="actions-column"></th>
-    </tr>
-  </thead>
+  <th scope="col" *ngFor="let c of tableConfig" [ngClass]="{ 'd-none': c.hidden }">{{ c.name }}</th>
 </ng-template>
 
 <div class="d-flex flex-row">
@@ -50,8 +44,15 @@
   (mousemove)="mouseMove($event)"
 >
   <table class="table table-bordered table-sm table-striped lista-table">
-    <ng-container *ngTemplateOutlet="tableHeadersTemplate ? tableHeadersTemplate : defaultTableHeaders">
-    </ng-container>
+    <caption>{{ tableCaption }}</caption>
+    <thead *ngIf="tableConfig.length">
+      <tr>
+        <th scope="col" *ngIf="batchActionKey" class="selection-column"></th>
+        <ng-container *ngTemplateOutlet="tableHeadersTemplate ? tableHeadersTemplate : defaultTableHeaders">
+        </ng-container>
+        <th scope="col" class="actions-column"></th>
+      </tr>
+    </thead>
     <tbody>
     <tr *ngFor="let item of items; let i=index;" [class.table-warning]="isSelected(item)">
       <td *ngIf="batchActionKey" class="align-middle selection-column">

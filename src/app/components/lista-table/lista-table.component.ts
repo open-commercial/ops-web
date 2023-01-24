@@ -28,14 +28,12 @@ export class ListaTableComponent extends ListaDirective implements OnInit {
   private pTableConfig: TableFieldConfig[] = [];
   @Input() set tableConfig(value: TableFieldConfig[]) {
     this.pTableConfig = value;
-    //this.resolveConfig();
-    /*this.pTableConfig.forEach((h: TableFieldConfig) => {
-      if (h.canBeHidden) { this.canBeHiddenColumns[h.field] = h.hidden; }
-      this.dynamicConfig[h.field] = h;
-    });
-    this.hasColumnsThatCanBeHidden = Object.keys(this.canBeHiddenColumns).length > 0;*/
   };
   get tableConfig(): TableFieldConfig[] { return this.pTableConfig; }
+
+  private pTableCaption: string = 'Datos de la tabla';
+  @Input() set tableCaption(value: string) { this.pTableCaption = value; }
+  get tableCaption(): string { return this.pTableCaption; }
 
   hasColumnsThatCanBeHidden = false;
   canBeHiddenColumns: { [key: string]: boolean } = {};
@@ -119,11 +117,9 @@ export class ListaTableComponent extends ListaDirective implements OnInit {
 
   mouseDown($event) {
     this.isDown = true;
-    //console.log($event);
     this.tableContainer.nativeElement.classList.add('grabbing');
     this.startX = $event.pageX - this.tableContainer.nativeElement.offsetLeft;
     this.scrollLeft = this.tableContainer.nativeElement.scrollLeft;
-    //console.log(this.startX);
   }
 
   mouseLeave() {
