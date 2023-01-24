@@ -206,12 +206,11 @@
       <td [ngClass]="{ 'd-none': config['fechaVencimiento'].hidden}" [attr.data-label]="config['fechaVencimiento'].name" class="text-nowrap">{{ item.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}</td>
       <td [ngClass]="{ 'd-none': config['nota'].hidden}" [attr.data-label]="config['nota'].name">{{ item.nota }}</td>
     </ng-template>
-    <!-- El input "listaTableKey" siempre debe ir antes que el input "tableConfig" que tome la config del storage si hubiere -->
     <app-lista-table
       [size]="size" [items]="items"
       [batchActionKey]="baKey"
-      [listaTableKey]="ltKey"
       [tableConfig]="tableConfig"
+      [listaTableKey]="ltKey"
       [infoTemplate]="info"
       [actionsTemplate]="actions"
       [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)">
