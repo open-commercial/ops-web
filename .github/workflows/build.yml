@@ -27,11 +27,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
         run: |
-          if [ ${{ github.ref_name }} == 'globodeoro' || ${{ github.ref_name }} == 'merceriaguemes' ]; then
-            ENV_NAME=${{ github.ref_name }}
-          fi          
           npm install
-          npm run build          
+          if [ ${{ github.ref_name }} == 'globodeoro' || ${{ github.ref_name }} == 'merceriaguemes' ]; then
+            ng build --configuration ${{ github.ref_name }}
+          else 
+            ng build
+          fi
         shell: bash        
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master

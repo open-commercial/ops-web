@@ -4,8 +4,7 @@
   "engines": {
     "node": "16.13"
   },
-  "scripts": {
-    "build": "ng build --configuration ${ENV_NAME}",
+  "scripts": {    
     "start": "ng serve"
   },
   "private": true,
