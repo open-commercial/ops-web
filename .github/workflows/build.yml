@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - globodeoro
+      - merceriaguemes
   pull_request:
     types: [ opened, synchronize, reopened ]
 
