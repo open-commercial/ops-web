@@ -5,7 +5,7 @@
     "node": "16.13"
   },
   "scripts": {
-    "build": "ng build --configuration ${env.company}",
+    "build": "ng build --configuration ${{ env.company }}",
     "start": "ng serve"
   },
   "private": true,
