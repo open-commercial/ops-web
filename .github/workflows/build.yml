@@ -30,9 +30,9 @@ jobs:
           if [[ ${{ github.ref_name }} == 'globodeoro' || ${{ github.ref_name }} == 'merceriaguemes' ]]; then
             ENV_NAME=${{ github.ref_name }}
           fi          
+          echo "${{ ENV_NAME }}" 
           npm install
-          npm run build          
-        shell: bash        
+          npm run build                  
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
