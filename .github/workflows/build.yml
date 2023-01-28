@@ -25,7 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
         run: |
-          if [ ${{ github.ref_name }} != ('globodeoro' || 'merceriaguemes') ]; then
+          if [ ${{ github.ref_name }} != 'globodeoro' && ${{ github.ref_name }} != 'merceriaguemes') ]; then
             ENV_NAME=
           else
             ENV_NAME=${{ github.ref_name }}
@@ -39,13 +39,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}       
       - name: Set up QEMU
-        if: ${{ github.ref_name == ('globodeoro' || 'merceriaguemes') }}
+        if: ${{ github.ref_name == 'globodeoro' || github.ref_name == 'merceriaguemes') }}
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        if: ${{ github.ref_name == ('globodeoro' || 'merceriaguemes') }}
+        if: ${{ github.ref_name == 'globodeoro' || github.ref_name == 'merceriaguemes') }}
         uses: docker/setup-buildx-action@v2
       - name: Login to DockerHub
-        if: ${{ github.ref_name == ('globodeoro' || 'merceriaguemes') }}
+        if: ${{ github.ref_name == 'globodeoro' || github.ref_name == 'merceriaguemes') }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
