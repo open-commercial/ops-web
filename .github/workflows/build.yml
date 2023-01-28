@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push Docker image
-        if: ${{ github.ref_name == ('globodeoro' || 'merceriaguemes') }}
+        if: ${{ github.ref_name == 'globodeoro' || github.ref_name == 'merceriaguemes' }}
         uses: docker/build-push-action@v3
         with:
           context: .
