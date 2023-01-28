@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080',
+  apiUrl: 'https://api.merceriaguemes.com.ar',
   appVersion: 17,
-  qa: true,
+  qa: false,
 };

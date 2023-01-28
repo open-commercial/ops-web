@@ -45,11 +45,11 @@
             ]
           },
           "configurations": {
-            "production": {
+            "globodeoro": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.globodeoro.ts"
                 }
               ],
               "optimization": true,
@@ -71,11 +71,11 @@
                 }
               ]
             },
-            "qa": {
-              "budgets": [
+            "merceriaguemes": {
+              "fileReplacements": [
                 {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.merceriaguemes.ts"
                 }
               ],
               "optimization": true,
@@ -85,10 +85,15 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "fileReplacements": [
+              "budgets": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.qa.ts"
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
