@@ -29,8 +29,7 @@ jobs:
         run: |
           if [ ${{ github.ref_name }} == 'globodeoro' || ${{ github.ref_name }} == 'merceriaguemes' ]; then
             ENV_NAME=${{ github.ref_name }}
-          fi
-          echo "$ENV_NAME"
+          fi          
           npm install
           npm run build          
         shell: bash        
