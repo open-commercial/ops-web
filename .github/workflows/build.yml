@@ -26,10 +26,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
-        run: |
-          if [ ${{ github.ref_name }} == 'globodeoro' || ${{ github.ref_name }} == 'merceriaguemes' ]; then
+        run: |          
+          if [[ ${{ github.ref_name }} == 'globodeoro' || ${{ github.ref_name }} == 'merceriaguemes' ]]; then
             ENV_NAME=${{ github.ref_name }}
-          fi          
+          fi
           echo "$ENV_NAME"
           npm install
           npm run build          
