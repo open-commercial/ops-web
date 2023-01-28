@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          ENV_NAME: ${{ github.ref }}
+          ENV_NAME: ${{ GITHUB_REF_NAME }}
         run: |
           npm install
           npm run build          
@@ -51,4 +51,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: opencommercial/sic-ops-web:${{ github.ref }}
+          tags: opencommercial/sic-ops-web:${{ GITHUB_REF_NAME }}
