@@ -122,10 +122,10 @@
 
     <ng-template #info let-item let-config="config">
       <td [ngClass]="{ 'd-none': config['publico'].hidden }" [attr.data-label]="config['publico'].name" class="text-md-center">
-        <fa-icon [icon]="['fas', item.publico ? 'check' : 'times']"></fa-icon>
+        <fa-icon [icon]="['fas', item.publico ? 'check' : 'times']" [ngClass]="{ 'me-1 me-md-0': !item.publico }"></fa-icon>
       </td>
       <td [ngClass]="{ 'd-none': config['oferta'].hidden}" [attr.data-label]="config['oferta'].name" class="text-md-center">
-        <fa-icon [icon]="['fas', item.oferta ? 'check' : 'times']" class="me-1"></fa-icon>
+        <fa-icon [icon]="['fas', item.oferta ? 'check' : 'times']" [ngClass]="{ 'me-1 me-md-0': !item.oferta }"></fa-icon>
       </td>
       <td [attr.data-label]="config['codigo'].name">{{ item.codigo }}</td>
       <td class="w-75" [attr.data-label]="config['descripcion'].name">{{ item.descripcion }}</td>
@@ -161,6 +161,7 @@
       [listaTableKey]="ltKey"
       [infoTemplate]="info"
       [actionsTemplate]="actions"
+      [tableCaption]="'Listado de Productos'"
       [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)">
     </app-lista-table>
     <app-totales [loading]="valorStockLoading" [data]="totalesData"></app-totales>

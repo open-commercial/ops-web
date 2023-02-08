@@ -213,9 +213,15 @@ ul.pagination {
       padding-right: 0.3rem;
       font-weight: 600;
       font-size: .95em;
-      text-transform: uppercase;
+      //text-transform: uppercase;
       font-style: italic;
       color: rgb(76, 76, 76);
+    }
+  }
+  @include media-breakpoint-up(md) {
+    tbody > tr:nth-of-type(odd) > * {
+        --bs-table-accent-bg: var(--bs-table-striped-bg);
+        color: var(--bs-table-striped-color);
     }
   }
 }

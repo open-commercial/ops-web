@@ -10,17 +10,17 @@
 </ng-template>
 
 <div class="d-flex flex-row">
-  <div class="flex-fill text-truncate">
+  <div class="flex-fill">
     <div class="form-check ms-2 py-2" *ngIf="batchActionKey">
       <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
       <label class="form-check-label fw-bold" for="check_all_items">
-        {{ isAllItemsSelected ? 'Deseleccionar' : 'Seleccionar' }} Todos (de ésta página)
+        {{ isAllItemsSelected ? 'Deseleccionar' : 'Seleccionar' }} Todos
       </label>
     </div>
   </div>
   <div>
     <div ngbDropdown placement="bottom-right" class="d-inline-block toggle-columns-dropdown" *ngIf="hasColumnsThatCanBeHidden">
-      <button type="button" class="btn btn-outline-secondary" ngbDropdownToggle  ngbPopover="Mostrar/Esconder columnas" placement="left" triggers="mouseenter:mouseleave">
+      <button type="button" class="btn btn-primary" ngbDropdownToggle  ngbPopover="Mostrar/Esconder columnas" placement="left" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'toggle-on']"></fa-icon>
         <span class="visually-hidden">Mostrar/Esconder columnas</span>
       </button>
@@ -43,8 +43,8 @@
   (mouseup)="mouseUp()"
   (mousemove)="mouseMove($event)"
 >
-  <table class="table table-bordered table-sm table-striped lista-table">
-    <caption>{{ tableCaption }}</caption>
+  <table class="table table-bordered table-sm lista-table">
+    <caption class="visually-hidden">{{ tableCaption }}</caption>
     <thead *ngIf="tableConfig.length">
       <tr>
         <th scope="col" *ngIf="batchActionKey" class="selection-column"></th>
