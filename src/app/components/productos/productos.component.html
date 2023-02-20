@@ -83,56 +83,87 @@
                            (emptySelection)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed" ></app-batch-actions-box>
   </div>
   <div class="productos my-2 bg-white">
-    <ng-template #info let-item>
-      <div class="d-flex flex-row flex-fill align-items-center">
-        <div class="img-container px-2 mb-2 flex-shrink-0 flex-grow-0">
-          <img [src]="item.urlImagen ? item.urlImagen : 'https://res.cloudinary.com/hf0vu1bg2/image/upload/v1545616229/assets/sin_imagen.png'" alt="">
-        </div>
-        <div class="flex-fill d-flex flex-column ms-2">
-          <span class="d-flex flex-row flex-wrap align-items-center">
-            <span class="me-2 mb-1 d-inline-block badge text-bg-info" *ngIf="item.publico"><fa-icon [icon]="['far', 'eye']"></fa-icon> PÚBLICO</span>
-            <span class="me-2 mb-1 d-inline-block badge text-bg-danger" *ngIf="!item.publico"><fa-icon [icon]="['far', 'eye-slash']"></fa-icon> PRIVADO</span>
-            <span *ngIf="item.oferta" class="mb-1 badge text-bg-success">OFERTA {{ item.porcentajeBonificacionOferta | number:'1.0-2' }}%</span>
-            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="mb-1 badge text-bg-success">BONIF. {{ item.porcentajeBonificacionPrecio | number:'1.0-2' }}%</span>
-          </span>
-          <span class="me-2 codigo" *ngIf="item.codigo">{{ item.codigo }}</span>
-          <span class="me-2"><strong>{{ item.descripcion }}</strong></span>
-          <span class="me-2">
-            Stock: <strong>{{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}</strong>
-            - Otra Suc: {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}
-            - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}
-          </span>
-          <div *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">
-              <span *ngIf="item.cantMinima > 1">Llevando {{ item.cantMinima | number:'1.0-2' }} o más&nbsp;</span>
-              <span class="precio bonificado">$ {{ item.precioBonificado | number:'1.0-2':'es-AR' }}</span>
-          </div>
-          <span class="precio" [class.tachado]="!(item.cantMinima > 1) && (item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio)">
-            $ {{item.precioLista | number:'1.0-2':'es-AR'}}
-          </span>
+    <ng-template #actions let-item>
+      <div ngbDropdown class="actions d-none d-md-inline-block" container="body" placement="left-top">
+        <button type="button" class="btn btn-primary" ngbDropdownToggle>
+          <fa-icon [icon]="['fas', 'ellipsis-v']"></fa-icon>
+          <span class="visually-hidden">Acciones</span>
+        </button>
+        <div ngbDropdownMenu>
+          <button ngbDropdownItem (click)="verProducto(item)">
+            <fa-icon [icon]="['far', 'eye']"></fa-icon> Ver Detalle
+          </button>
+          <button ngbDropdownItem (click)="editarProducto(item)" *ngIf="hasRoleToEdit">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon> Editar
+          </button>
+          <button ngbDropdownItem (click)="eliminarProducto(item)" *ngIf="hasRoleToDelete">
+            <fa-icon [icon]="['fas', 'trash']"></fa-icon> Eliminar
+          </button>
         </div>
       </div>
-    </ng-template>
-    <ng-template #actions let-item>
-      <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verProducto(item)">
+      <ul class="list-inline mb-0 d-md-none">
+        <li class="list-inline-item m-0 p-1">
+          <button (click)="verProducto(item)" class="btn btn-primary">
             <fa-icon [icon]="['far', 'eye']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item" *ngIf="hasRoleToEdit">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProducto(item)">
+        <li class="list-inline-item m-0 p-1">
+          <button (click)="editarProducto(item)" class="btn btn-primary" *ngIf="hasRoleToEdit">
             <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
-        <li class="list-inline-item" *ngIf="hasRoleToDelete">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProducto(item)">
+        <li class="list-inline-item m-0 p-1">
+          <button (click)="eliminarProducto(item)" class="btn btn-primary" *ngIf="hasRoleToDelete">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>
         </li>
       </ul>
     </ng-template>
-    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
-               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+
+    <ng-template #info let-item let-config="config">
+      <td [ngClass]="{ 'd-none': config['publico'].hidden }" [attr.data-label]="config['publico'].name" class="text-md-center">
+        <fa-icon [icon]="['fas', item.publico ? 'check' : 'times']" [ngClass]="{ 'me-1 me-md-0': !item.publico }"></fa-icon>
+      </td>
+      <td [ngClass]="{ 'd-none': config['oferta'].hidden}" [attr.data-label]="config['oferta'].name" class="text-md-center">
+        <fa-icon [icon]="['fas', item.oferta ? 'check' : 'times']" [ngClass]="{ 'me-1 me-md-0': !item.oferta }"></fa-icon>
+      </td>
+      <td [attr.data-label]="config['codigo'].name">{{ item.codigo }}</td>
+      <td class="w-75" [attr.data-label]="config['descripcion'].name">{{ item.descripcion }}</td>
+      <td [ngClass]="{ 'd-none': config['cantidadTotalEnSucursales'].hidden}" [attr.data-label]="config['cantidadTotalEnSucursales'].name">
+        {{ productosService.getCantidad(item) | number:'1.0-2' }} {{ item.nombreMedida }}
+      </td>
+      <td [ngClass]="{ 'd-none': config['cantidadTotalEnSucursalesDisponible'].hidden}" [attr.data-label]="config['cantidadTotalEnSucursalesDisponible'].name">
+        {{ productosService.getCantOtrasSucursales(item) | number:'1.0-2' }} {{ item.nombreMedida }}
+      </td>
+      <td [ngClass]="{ 'd-none': config['cantidadReservada'].hidden}" [attr.data-label]="config['cantidadReservada'].name">{{ item.cantidadReservada | number:'1.0-2' }} {{ item.nombreMedida }}</td>
+      <td [ngClass]="{ 'd-none': config['cantMinima'].hidden}" [attr.data-label]="config['cantMinima'].name">{{ item.cantMinima | number:'1.0-2' }} {{ item.nombreMedida }}</td>
+      <td [ngClass]="{ 'd-none': config['precioCosto'].hidden}" [attr.data-label]="config['precioCosto'].name">{{ item.precioCosto | currency:'ARS':'symbol':'1.0-2' }}</td>
+      <td [ngClass]="{ 'd-none': config['gananciaPorcentaje'].hidden}" [attr.data-label]="config['gananciaPorcentaje'].name">{{ item.gananciaPorcentaje | number:'1.0-2' }} %</td>
+      <td [ngClass]="{ 'd-none': config['gananciaNeto'].hidden}" [attr.data-label]="config['gananciaNeto'].name">{{ item.gananciaNeto | currency:'ARS':'symbol':'1.0-2' }}</td>
+      <td [ngClass]="{ 'd-none': config['precioVentaPublico'].hidden}" [attr.data-label]="config['precioVentaPublico'].name">{{ item.precioVentaPublico | currency:'ARS':'symbol':'1.0-2' }}</td>
+      <td [ngClass]="{ 'd-none': config['ivaPorcentaje'].hidden}" [attr.data-label]="config['ivaPorcentaje'].name">{{ item.ivaPorcentaje | number:'1.0-2' }} %</td>
+      <td [ngClass]="{ 'd-none': config['ivaNeto'].hidden}" [attr.data-label]="config['ivaNeto'].name">{{ item.ivaNeto | currency:'ARS':'symbol':'1.0-2' }}</td>
+      <td [ngClass]="{ 'd-none': config['precioLista'].hidden}" [attr.data-label]="config['precioLista'].name">{{ item.precioLista | currency:'ARS':'symbol':'1.0-2' }}</td>
+      <td [ngClass]="{ 'd-none': config['porcentajeBonificacionOferta'].hidden}" [attr.data-label]="config['porcentajeBonificacionOferta'].name">{{ item.porcentajeBonificacionOferta | number:'1.0-2' }} %</td>
+      <td [ngClass]="{ 'd-none': config['porcentajeBonificacionPrecio'].hidden}" [attr.data-label]="config['porcentajeBonificacionPrecio'].name">{{ item.porcentajeBonificacionPrecio | number:'1.0-2' }} %</td>
+      <td [ngClass]="{ 'd-none': config['precioBonificado'].hidden}" [attr.data-label]="config['precioBonificado'].name">{{ item.precioBonificado | currency:'ARS':'symbol':'1.0-2' }}</td>
+      <td [ngClass]="{ 'd-none': config['nombreRubro'].hidden}" [attr.data-label]="config['nombreRubro'].name">{{ item.nombreRubro }}</td>
+      <td [ngClass]="{ 'd-none': config['fechaUltimaModificacion'].hidden}" [attr.data-label]="config['fechaUltimaModificacion'].name" class="text-nowrap">{{ item.fechaUltimaModificacion | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td [ngClass]="{ 'd-none': config['razonSocialProveedor'].hidden}" [attr.data-label]="config['razonSocialProveedor'].name">{{ item.razonSocialProveedor }}</td>
+      <td [ngClass]="{ 'd-none': config['fechaAlta'].hidden}" [attr.data-label]="config['fechaAlta'].name" class="text-nowrap">{{ item.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td [ngClass]="{ 'd-none': config['fechaVencimiento'].hidden}" [attr.data-label]="config['fechaVencimiento'].name" class="text-nowrap">{{ item.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td [ngClass]="{ 'd-none': config['nota'].hidden}" [attr.data-label]="config['nota'].name">{{ item.nota }}</td>
+    </ng-template>
+    <app-lista-table
+      [size]="size" [items]="items"
+      [batchActionKey]="baKey"
+      [tableConfig]="tableConfig"
+      [listaTableKey]="ltKey"
+      [infoTemplate]="info"
+      [actionsTemplate]="actions"
+      [tableCaption]="'Listado de Productos'"
+      [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)">
+    </app-lista-table>
     <app-totales [loading]="valorStockLoading" [data]="totalesData"></app-totales>
   </div>
 </div>

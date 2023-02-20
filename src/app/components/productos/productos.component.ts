@@ -1,3 +1,4 @@
+import { TableFieldConfig, ListaTableKey } from './../lista-table/lista-table.component';
 import { TotalData } from './../totales/totales.component';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
@@ -84,6 +85,35 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       isVisible: () => this.hasRoleToDelete,
     }
   ];
+
+  tableConfig: TableFieldConfig[] = [
+    { field: 'publico', name: 'Público', canBeHidden: true, hidden: false },
+    { field: 'oferta', name: 'Oferta', canBeHidden: true, hidden: false },
+    { field: 'codigo', name: 'Código', canBeHidden: false,	hidden: false },
+    { field: 'descripcion', name: 'Descripción', canBeHidden: false, hidden: false },
+    { field: 'cantidadTotalEnSucursales', name: 'Stock', canBeHidden: true, hidden: false },
+    { field: 'cantidadTotalEnSucursalesDisponible', name: 'Otras Sucursales', canBeHidden: true, hidden: false },
+    { field: 'cantidadReservada', name: 'Reservada', canBeHidden: true, hidden: false },
+    { field: 'cantMinima', name: 'Cant. Mínima', canBeHidden: true, hidden: false },
+    { field: 'precioCosto', name: 'Precio Costo', canBeHidden: true, hidden: false },
+    { field: 'gananciaPorcentaje', name: '% Ganancia', canBeHidden: true, hidden: true },
+    { field: 'gananciaNeto', name: 'Ganancia', canBeHidden: true, hidden: true },
+    { field: 'precioVentaPublico', name: 'PVP', canBeHidden: true, hidden: false },
+    { field: 'ivaPorcentaje', name: '% IVA',canBeHidden: true, hidden: true },
+    { field: 'ivaNeto', name: 'IVA', canBeHidden: true, hidden: true },
+    { field: 'precioLista', name: 'Precio Lista', canBeHidden: true, hidden: false },
+    { field: 'porcentajeBonificacionOferta', name: '% Oferta', canBeHidden: true, hidden: false },
+    { field: 'porcentajeBonificacionPrecio', name: '% Bonif.', canBeHidden: true, hidden: false },
+    { field: 'precioBonificado', name: 'Precio Bonif.', canBeHidden: true, hidden: false },
+    { field: 'nombreRubro', name: 'Rubro', canBeHidden: true, hidden: true },
+    { field: 'fechaUltimaModificacion', name: 'Fecha U. Modif.', canBeHidden: true, hidden: false },
+    { field: 'razonSocialProveedor', name: 'Proveedor', canBeHidden: true, hidden: true },
+    { field: 'fechaAlta', name: 'Fecha Alta', canBeHidden: true, hidden: false },
+    { field: 'fechaVencimiento', name: 'Fecha Vencimiento', canBeHidden: true, hidden: true },
+    { field: 'nota', name: 'Nota', canBeHidden: true, hidden: true },
+  ];
+
+  ltKey = ListaTableKey.PRODUCTOS;
 
   valorStockLoading = false;
   totalesData: TotalData[] = [
