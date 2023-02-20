@@ -1,0 +1,28 @@
+//@import "../../../variables";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.table-responsive {
+  &.grabbing {
+    cursor: grabbing;
+  }
+}
+table.table {
+  .selection-column {
+    position: sticky;
+    left: 0;
+    min-width: 2rem;
+    background: rgba(241, 241, 241, 0.8);
+  }
+  .actions-column {
+    position: sticky;
+    right: 0;
+    width: 3rem;
+    min-width: 3rem;
+    background: rgba(241, 241, 241, 0.8);
+  }
+}
+
+
+

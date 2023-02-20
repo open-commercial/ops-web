@@ -23,7 +23,7 @@ import {
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
   faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers, faMapMarkedAlt,
-  faCubes, faRulerCombined, faCheckDouble
+  faCubes, faRulerCombined, faCheckDouble, faEllipsisV, faToggleOn
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -38,6 +38,7 @@ import { ReciboProveedorModalComponent } from '../components/recibo-proveedor-mo
 import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.component';
 import { ImgPickerComponent } from '../components/img-picker/img-picker.component';
 import { TotalesComponent } from '../components/totales/totales.component';
+import { ListaTableComponent } from '../components/lista-table/lista-table.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { TotalesComponent } from '../components/totales/totales.component';
     UsuarioFormComponent,
     ImgPickerComponent,
     TotalesComponent,
+    ListaTableComponent,
   ],
   imports: [
     CommonModule,
@@ -86,6 +88,7 @@ import { TotalesComponent } from '../components/totales/totales.component';
     UsuarioFormComponent,
     ImgPickerComponent,
     TotalesComponent,
+    ListaTableComponent,
   ]
 })
 export class ShareModule {
@@ -107,7 +110,8 @@ export class ShareModule {
       faBalanceScaleLeft, faTruck, faFileInvoiceDollar,
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
       faCog, faImage, faUndoAlt, faUsers, faMapMarkedAlt,
-      faCubes, faRulerCombined, faSquare, faSquareCheck, faCheckDouble
+      faCubes, faRulerCombined, faSquare, faSquareCheck, faCheckDouble,
+      faEllipsisV, faToggleOn
     );
   }
 }
