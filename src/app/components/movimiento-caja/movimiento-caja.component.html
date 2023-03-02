@@ -15,6 +15,11 @@
       </div>
       <div>
         <ul class="list-inline text-end text-nowrap mb-0 ms-2">
+          <li class="list-inline-item">
+            <button type="button" class="btn btn-primary" (click)="verDetalle(m)" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left">
+              <fa-icon [icon]="['far', 'eye']"></fa-icon>
+            </button>
+          </li>
           <li class="list-inline-item" *ngIf="m.tipoComprobante === tipoComprobante.GASTO && caja.estado === estadoCaja.ABIERTA">
             <button type="button" class="btn btn-primary" (click)="eliminarGasto(m)" ngbPopover="Eliminar Gasto" triggers="mouseenter:mouseleave" placement="left">
               <fa-icon [icon]="['fas', 'trash']"></fa-icon>
