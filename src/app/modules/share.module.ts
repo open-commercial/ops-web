@@ -39,6 +39,7 @@ import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.co
 import { ImgPickerComponent } from '../components/img-picker/img-picker.component';
 import { TotalesComponent } from '../components/totales/totales.component';
 import { ListaTableComponent } from '../components/lista-table/lista-table.component';
+import { FacturaVentaActionsBarComponent } from '../components/factura-venta-actions-bar/factura-venta-actions-bar.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { ListaTableComponent } from '../components/lista-table/lista-table.compo
     ImgPickerComponent,
     TotalesComponent,
     ListaTableComponent,
+    FacturaVentaActionsBarComponent,
   ],
   imports: [
     CommonModule,
@@ -89,6 +91,7 @@ import { ListaTableComponent } from '../components/lista-table/lista-table.compo
     ImgPickerComponent,
     TotalesComponent,
     ListaTableComponent,
+    FacturaVentaActionsBarComponent,
   ]
 })
 export class ShareModule {

@@ -1,7 +1,7 @@
 <div class="app-ver-factura-venta my-3">
   <div *ngIf="factura">
-    <div class="d-flex flex-row flex-wrap justify-content-end align-items-center mb-2">
-      <h1 class="h3 pe-2 mb-0 flex-fill">
+    <div class="d-flex flex-column flex-md-row align-items-md-center flex-wrap my-3">
+      <h1 class="h3 m-0 flex-fill">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver al Listado" triggers="mouseenter:mouseleave"
            (click)="volverAlListado()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
@@ -9,10 +9,16 @@
         <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
         Factura {{ factura.type === 'FacturaVenta' ? 'Venta' : 'Compra' }}
       </h1>
-      <button class="btn btn-primary" (click)="downloadFacturaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
+      <div class="align-self-end">
+        <button class="btn btn-primary" (click)="downloadFacturaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
               *ngIf="factura.type === 'FacturaVenta'">
         <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-      </button>
+        </button>
+        <app-factura-venta-actions-bar  *ngIf="factura && factura.type === 'FacturaVenta'" class="ms-2 text-nowrap"
+          [facturaVenta]="factura"
+          [hiddenButtons]="['show']"
+        ></app-factura-venta-actions-bar>
+      </div>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos de la factura de venta</caption>
