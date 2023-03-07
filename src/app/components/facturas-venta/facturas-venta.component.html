@@ -99,34 +99,11 @@
       </div>
     </ng-template>
     <ng-template #actions let-item id="actionsFV">
-      <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verFactura(item)">
-            <fa-icon [icon]="['far', 'eye']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToEnviarPorEmail">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Enviar por Email" placement="left" triggers="mouseenter:mouseleave" (click)="enviarPorEmail(item)">
-            <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="item.remito">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Remito" placement="left" triggers="mouseenter:mouseleave" (click)="verRemito(item)">
-            <fa-icon [icon]="['fas', 'link']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="!item.remito">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Nuevo Remito" placement="left" triggers="mouseenter:mouseleave" (click)="nuevoRemito(item)">
-            <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToCrearNota">
-          <button class="btn btn-primary fake-cursor" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
-                  (click)="crearNotaCreditoFactura(item)">
-            <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
-          </button>
-        </li>
-      </ul>
+      <app-factura-venta-actions-bar
+        [facturaVenta]="item"
+        (afterAutorizar)="loadPage(0)"
+        (afterNoAutorizar)="loadPage(0)"
+      ></app-factura-venta-actions-bar>
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
