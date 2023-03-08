@@ -14,7 +14,7 @@
       <li *ngFor="let bae of baElements">{{ bae.description }}</li>
     </ul>
   </div>
-  <form [formGroup]="form" class="mt-2" *ngIf="form" (ngSubmit)="submit()">
+  <form [formGroup]="form" class="mt-2" *ngIf="form">
     <table class="table table-sm table-bordered">
       <caption class="sr-only">Campos de productos a editar</caption>
       <thead class="sr-only">
@@ -183,7 +183,7 @@
       </tbody>
     </table>
     <div class="text-end">
-      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || !hasCheckedAnything()">
+      <button class="btn btn-primary" type="button" (click)="submit()" [disabled]="form.invalid || !hasCheckedAnything()">
         <fa-icon [icon]="['fas', 'check']"></fa-icon> Actualizar
       </button>
     </div>
