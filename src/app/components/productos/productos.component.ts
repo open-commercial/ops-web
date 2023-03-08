@@ -394,4 +394,14 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       ;
     }
   }
+
+  filter(): void {
+    this.batchActionsService.clear(this.baKey)
+    super.filter();
+  }
+
+  reset() {
+    this.batchActionsService.clear(this.baKey);
+    super.reset();
+  }
 }
