@@ -33,8 +33,8 @@ import {Sucursal} from '../../models/sucursal';
 export class ProductosComponent extends ListadoDirective implements OnInit {
   isBatchActionsBoxCollapsed = true;
   ordenArray = [
-    { val: 'fechaUltimaModificacion', text: 'Fecha Últ. Modificación' },
     { val: 'descripcion', text: 'Descripción' },
+    { val: 'fechaUltimaModificacion', text: 'Fecha Últ. Modificación' },
     { val: 'codigo', text: 'Código' },
     { val: 'cantidadProducto.cantidadTotalEnSucursales', text: 'Total Sucursales' },
     { val: 'cantidadProducto.cantMinima', text: 'Venta x Cantidad' },
@@ -47,8 +47,8 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
   ];
 
   sentidoArray = [
-    { val: 'DESC', text: 'Descendente' },
     { val: 'ASC', text: 'Ascendente' },
+    { val: 'DESC', text: 'Descendente' },
   ];
 
   ordenarPorAplicado = '';
