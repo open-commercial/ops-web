@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PedidosService } from '../../services/pedidos.service';
-import { Pedido } from '../../models/pedido';
 import { Pagination } from '../../models/pagination';
 import { EstadoPedido } from '../../models/estado-pedido';
-import { finalize, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Rol } from '../../models/rol';
 import { HelperService } from '../../services/helper.service';
@@ -12,7 +11,6 @@ import { SucursalesService } from '../../services/sucursales.service';
 import { Usuario } from '../../models/usuario';
 import { AuthService } from '../../services/auth.service';
 import { MensajeService } from '../../services/mensaje.service';
-import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
@@ -21,7 +19,6 @@ import { Producto } from '../../models/producto';
 import { ClientesService } from '../../services/clientes.service';
 import { UsuariosService } from '../../services/usuarios.service';
 import { ProductosService } from '../../services/productos.service';
-import { StorageKeys, StorageService } from '../../services/storage.service';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { ListadoDirective } from '../../directives/listado.directive';
 
@@ -34,12 +31,6 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
   estado = EstadoPedido;
   rol = Rol;
   usuario: Usuario;
-
-  estados = [
-    { value: EstadoPedido.ABIERTO, text: EstadoPedido[EstadoPedido.ABIERTO] },
-    { value: EstadoPedido.CANCELADO, text: EstadoPedido[EstadoPedido.CANCELADO] },
-    { value: EstadoPedido.CERRADO, text: EstadoPedido[EstadoPedido.CERRADO] },
-  ];
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToDelete = false;
@@ -57,19 +48,14 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
               private clientesService: ClientesService,
               private usuariosService: UsuariosService,
               private productosService: ProductosService,
-              private storageService: StorageService,
               public loadingOverlayService: LoadingOverlayService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
-  }
-
-  getEstadoValue(e: EstadoPedido): any {
-    return EstadoPedido[e];
+    this.hasRolToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
+    this.hasRolToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.hasRolToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
-    this.hasRolToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
   }
 
   populateFilterForm(ps) {
@@ -196,81 +182,8 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
     }
   }
 
-  verPedido(pedido: Pedido) {
-    this.router.navigate(['/pedidos/ver', pedido.idPedido]);
-  }
-
-  puedeElimarPedido(p: Pedido) {
-    return this.hasRolToDelete && p.estado === EstadoPedido.ABIERTO;
-  }
-
-  puedeEditarPedido(p: Pedido) {
-    return this.hasRolToEdit && p.estado === EstadoPedido.ABIERTO;
-  }
-
-  puedeFacturarPedido(p: Pedido) {
-    return this.hasRolToEdit && (p.estado === EstadoPedido.ABIERTO);
-  }
-
-  puedeVerFacturas(p: Pedido) {
-    return [EstadoPedido.CERRADO].indexOf(p.estado) >= 0;
-  }
-
   crearPedido() {
     this.router.navigate(['/pedidos/nuevo']);
-  }
-
-  cancelarPedido(pedido: Pedido) {
-    if (!this.puedeElimarPedido(pedido)) {
-      this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
-      return;
-    }
-
-    const msg = `¿Está seguro que desea cancelar el pedido #${pedido.nroPedido}?`;
-
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) {
-        this.loadingOverlayService.activate();
-        this.pedidosService.cancelarPedido(pedido.idPedido)
-          .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe(
-            () => {
-              location.reload();
-            },
-            err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
-          )
-        ;
-      }
-    }, () => { return; });
-  }
-
-  editarPedido(pedido: Pedido) {
-    if (!this.puedeEditarPedido(pedido)) {
-      this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
-      return;
-    }
-    this.storageService.removeItem(StorageKeys.PEDIDO_EDITAR);
-    this.router.navigate(['/pedidos/editar', pedido.idPedido]);
-  }
-
-  clonarPedido(pedido: Pedido) {
-    this.storageService.removeItem(StorageKeys.PEDIDO_NUEVO);
-    this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: pedido.idPedido }});
-  }
-
-  facturarPedido(pedido: Pedido) {
-    if (!this.puedeFacturarPedido(pedido)) {
-      this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
-      return;
-    }
-    this.storageService.removeItem(StorageKeys.PEDIDO_FACTURAR);
-    this.router.navigate(['/facturas-venta/de-pedido', pedido.idPedido]);
-  }
-
-  verFacturas(pedido: Pedido) {
-    if (this.puedeVerFacturas(pedido)) {
-      this.router.navigate(['/facturas-venta'], { queryParams: { nroPedido: pedido.nroPedido }});
-    }
   }
 
   getClienteInfoAsync(id: number): Observable<string> {
