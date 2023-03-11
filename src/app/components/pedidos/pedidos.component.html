@@ -45,10 +45,10 @@
   <div class="pedidos my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge ms-2 mb-2 px-2 py-1"
-              [ngClass]="getEstadoValue(item.estado) === estado.ABIERTO ? 'text-bg-light border border-dark' : ''"
-              [class.text-bg-success]="getEstadoValue(item.estado) === estado.CERRADO"
-              [class.text-bg-danger]="getEstadoValue(item.estado) === estado.CANCELADO">
+        <span class="badge ms-2 mb-2"
+              [ngClass]="item.estado === estado.ABIERTO ? 'text-bg-light border border-dark' : ''"
+              [class.text-bg-success]="item.estado === estado.CERRADO"
+              [class.text-bg-danger]="item.estado === estado.CANCELADO">
           {{ item.estado }}
         </span>
         <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
@@ -75,44 +75,7 @@
       </div>
     </ng-template>
     <ng-template #actions let-item>
-      <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
-             (click)="verPedido(item)">
-            <fa-icon [icon]="['far', 'eye']"></fa-icon>
-          </a>
-        </li>
-        <li class="list-inline-item" *ngIf="puedeEditarPedido(item)">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left"
-             (click)="editarPedido(item)">
-            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-          </a>
-        </li>
-        <li class="list-inline-item">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Clonar" triggers="mouseenter:mouseleave" placement="left"
-             (click)="clonarPedido(item)">
-            <fa-icon [icon]="['fas', 'copy']"></fa-icon>
-          </a>
-        </li>
-        <li class="list-inline-item" *ngIf="puedeElimarPedido(item)">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Cancelar" triggers="mouseenter:mouseleave" placement="left"
-             (click)="cancelarPedido(item)">
-            <fa-icon [icon]="['fas', 'times']"></fa-icon>
-          </a>
-        </li>
-        <li class="list-inline-item" *ngIf="puedeFacturarPedido(item)">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
-             (click)="facturarPedido(item)">
-            <fa-icon [icon]="['fas', 'cash-register']"></fa-icon>
-          </a>
-        </li>
-        <li class="list-inline-item" *ngIf="puedeVerFacturas(item)">
-          <a class="btn btn-primary fake-cursor" ngbPopover="Ver Facturas" triggers="mouseenter:mouseleave" placement="left"
-             (click)="verFacturas(item)">
-            <fa-icon [icon]="['fas', 'link']"></fa-icon>
-          </a>
-        </li>
-      </ul>
+      <app-pedido-actions-bar [pedido]="item"></app-pedido-actions-bar>
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>

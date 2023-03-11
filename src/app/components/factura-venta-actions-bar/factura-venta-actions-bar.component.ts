@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 import { FacturaVenta } from './../../models/factura-venta';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
-export type fvActionButtonName = 'show'|'email'|'show-remito'|'new-remito'|'create-nota-credito';
+type FacturaVentaActionButtonName = 'show'|'email'|'show-remito'|'new-remito'|'create-nota-credito';
 
 @Component({
   selector: 'app-factura-venta-actions-bar',
@@ -31,9 +31,9 @@ export class FacturaVentaActionsBarComponent implements OnInit {
   @Input() set facturaVenta(value: FacturaVenta) { this.pFacturaVenta = value; }
   get facturaVenta(): FacturaVenta { return this.pFacturaVenta; }
 
-  private pHiddenButtons: fvActionButtonName[] = [];
-  @Input() set hiddenButtons(value: fvActionButtonName[]) { this.pHiddenButtons = value; }
-  get hiddenButtons(): fvActionButtonName[] { return this.pHiddenButtons; }
+  private pHiddenButtons: FacturaVentaActionButtonName[] = [];
+  @Input() set hiddenButtons(value: FacturaVentaActionButtonName[]) { this.pHiddenButtons = value; }
+  get hiddenButtons(): FacturaVentaActionButtonName[] { return this.pHiddenButtons; }
 
   @Output() afterAutorizar = new EventEmitter<void>();
   @Output() afterNoAutorizar = new EventEmitter<void>();
@@ -75,7 +75,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    Object.keys(this.hiddenButtonsValues).forEach((k: fvActionButtonName) => {
+    Object.keys(this.hiddenButtonsValues).forEach((k: FacturaVentaActionButtonName) => {
       this.hiddenButtonsValues[k] = this.hiddenButtons.indexOf(k) >= 0;
     });
   }

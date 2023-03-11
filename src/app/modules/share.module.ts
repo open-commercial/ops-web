@@ -40,6 +40,7 @@ import { ImgPickerComponent } from '../components/img-picker/img-picker.componen
 import { TotalesComponent } from '../components/totales/totales.component';
 import { ListaTableComponent } from '../components/lista-table/lista-table.component';
 import { FacturaVentaActionsBarComponent } from '../components/factura-venta-actions-bar/factura-venta-actions-bar.component';
+import { PedidoActionsBarComponent } from '../components/pedido-actions-bar/pedido-actions-bar.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { FacturaVentaActionsBarComponent } from '../components/factura-venta-act
     TotalesComponent,
     ListaTableComponent,
     FacturaVentaActionsBarComponent,
+    PedidoActionsBarComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +94,7 @@ import { FacturaVentaActionsBarComponent } from '../components/factura-venta-act
     TotalesComponent,
     ListaTableComponent,
     FacturaVentaActionsBarComponent,
+    PedidoActionsBarComponent,
   ]
 })
 export class ShareModule {
