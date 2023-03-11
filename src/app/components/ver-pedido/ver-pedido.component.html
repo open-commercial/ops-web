@@ -52,26 +52,24 @@
         <th scope="row" class="table-dark">Total</th>
         <td>{{ pedido.total | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
-      </tbody>
-    </table>
-    <table class="table table-bordered">
-      <caption class="sr-only">Envio del Pedido</caption>
-      <tbody>
-        <tr><th scope="row" class="text-nowrap table-dark">Tipo de Envio</th><td class="w-100">{{ getEnvioLabel() }}</td></tr>
-        <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.RETIRO_EN_SUCURSAL">
-          <th scope="row" class="text-nowrap table-dark">Sucursal</th>
-          <td class="w-100">
-            {{ pedido.nombreSucursal }}
-            <span *ngIf="pedido.detalleEnvio">({{ pedido.detalleEnvio }})</span>
-          </td>
-        </tr>
-        <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION || pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">
-          <th scope="row" class="text-nowrap table-dark">Dirección</th>
-          <td class="w-100">
-            <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION">{{ pedido.cliente.detalleUbicacionDeFacturacion }}</span>
-            <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">{{ pedido.cliente.detalleUbicacionDeEnvio }}</span>
-          </td>
-        </tr>
+      <tr>
+        <th scope="row" class="text-nowrap table-dark">Tipo de Envio</th>
+        <td>{{ getEnvioLabel() }}</td>
+      </tr>
+      <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.RETIRO_EN_SUCURSAL">
+        <th scope="row" class="text-nowrap table-dark">Sucursal</th>
+        <td>
+          {{ pedido.nombreSucursal }}
+          <span *ngIf="pedido.detalleEnvio">({{ pedido.detalleEnvio }})</span>
+        </td>
+      </tr>
+      <tr *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION || pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">
+        <th scope="row" class="text-nowrap table-dark">Dirección</th>
+        <td>
+          <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_FACTURACION">{{ pedido.cliente.detalleUbicacionDeFacturacion }}</span>
+          <span *ngIf="pedido.tipoDeEnvio === tipoDeEnvio.USAR_UBICACION_ENVIO">{{ pedido.cliente.detalleUbicacionDeEnvio }}</span>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
