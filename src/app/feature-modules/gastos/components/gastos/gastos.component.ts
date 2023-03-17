@@ -292,4 +292,8 @@ export class GastosComponent extends ListadoDirective implements OnInit {
       ;
     }
   }
+
+  afterDelete() {
+    location.reload();
+  }
 }
