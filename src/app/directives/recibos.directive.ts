@@ -102,7 +102,6 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
   }
 
   abstract getMovimiento(): Movimiento;
-  abstract doCrearNotaDebitoRecibo(r: Recibo);
 
   ngOnInit(): void {
     if (!this.hasRoleToSee) {
@@ -278,44 +277,6 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
     if (values.sentido) { ret.sentido = values.sentido; }
 
     return ret;
-  }
-
-  verRecibo(r: Recibo) {
-    this.router.navigate(['/recibos/ver', r.idRecibo]);
-  }
-
-  eliminarRecibo(r: Recibo) {
-    if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar recibos.', MensajeModalType.ERROR);
-      return;
-    }
-
-    const msg = 'Esta seguro que desea eliminar el recibo seleccionado?';
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) {
-        this.loadingOverlayService.activate();
-        this.recibosService.eliminarRecibo(r.idRecibo)
-          // No hay pipe finalize por el reload
-          // .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe({
-            next: () => location.reload(),
-            error: err => {
-              this.loadingOverlayService.deactivate();
-              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            }
-          })
-        ;
-      }
-    });
-  }
-
-  crearNotaDeDebitoRecibo(r: Recibo) {
-    if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permisos para crear notas.', MensajeModalType.ERROR);
-      return;
-    }
-
-    this.doCrearNotaDebitoRecibo(r);
   }
 
   protected showNotaCreationSuccessMessage(nota: Nota, message: string, callback: () => void = () => { return; }) {

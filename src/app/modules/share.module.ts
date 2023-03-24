@@ -1,3 +1,5 @@
+import { ReciboVentaActionsBarComponent } from './../components/recibo-venta-actions-bar/recibo-venta-actions-bar.component';
+import { ReciboCompraActionsBarComponent } from '../components/recibo-compra-actions-bar/recibo-compra-actions-bar.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
@@ -64,6 +66,8 @@ import { PedidoActionsBarComponent } from '../components/pedido-actions-bar/pedi
     ListaTableComponent,
     FacturaVentaActionsBarComponent,
     PedidoActionsBarComponent,
+    ReciboCompraActionsBarComponent,
+    ReciboVentaActionsBarComponent,
   ],
   imports: [
     CommonModule,
@@ -95,6 +99,8 @@ import { PedidoActionsBarComponent } from '../components/pedido-actions-bar/pedi
     ListaTableComponent,
     FacturaVentaActionsBarComponent,
     PedidoActionsBarComponent,
+    ReciboCompraActionsBarComponent,
+    ReciboVentaActionsBarComponent,
   ]
 })
 export class ShareModule {
