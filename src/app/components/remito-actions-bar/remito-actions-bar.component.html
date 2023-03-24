@@ -1,0 +1,24 @@
+<ul class="list-inline mb-0 text-center d-inline-block">
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['show']">
+    <button class="btn btn-primary" (click)="verRemito()"
+      ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['download']">
+    <button class="btn btn-primary" (click)="downloadRemitoPdf()"
+      placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToDelete && !hiddenButtonsValues['delete']">
+    <button class="btn btn-primary" (click)="eliminarRemito()"
+      ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+    </button>
+  </li>
+</ul>
+

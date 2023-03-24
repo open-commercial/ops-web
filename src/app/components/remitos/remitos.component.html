@@ -69,18 +69,10 @@
       </div>
     </ng-template>
     <ng-template #actions let-item let-index>
-      <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verRemito(item)">
-            <fa-icon [icon]="['far', 'eye']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToDelete">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarRemito(item)">
-            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-          </button>
-        </li>
-      </ul>
+      <app-remito-actions-bar
+        [remito]="item"
+        (afterDelete)="afterRemitoDelete()"
+      ></app-remito-actions-bar>
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
