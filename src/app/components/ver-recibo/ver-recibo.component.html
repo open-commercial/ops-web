@@ -20,9 +20,6 @@
           [recibo]="recibo"
           (afterDelete)="volverAlListado()">
         </app-recibo-venta-actions-bar>
-        <button class="btn btn-primary" (click)="downloadReciboPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave" *ngIf="recibo.idCliente">
-          <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-        </button>
       </div>
     </div>
     <table class="table table-bordered table-sm">
