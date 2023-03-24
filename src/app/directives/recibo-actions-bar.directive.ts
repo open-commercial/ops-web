@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { Recibo } from './../models/recibo';
 import { Directive, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
-type ReciboActionButtonName = 'show'|'create-nota-debito'|'delete';
+type ReciboActionButtonName = 'show'|'create-nota-debito'|'delete'|'download';
 
 @Directive()
 export abstract class ReciboActionsBarDirective implements OnInit {
@@ -44,6 +44,7 @@ export abstract class ReciboActionsBarDirective implements OnInit {
     'show': false,
     'delete': false,
     'create-nota-debito': false,
+    'download': false,
   };
 
   protected constructor(protected router: Router,
