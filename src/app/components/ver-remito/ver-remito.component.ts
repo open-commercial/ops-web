@@ -43,16 +43,16 @@ export class VerRemitoComponent implements OnInit, OnDestroy {
       this.remitosService.getRenglonesDeRemito(id),
     ])
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (data: [Remito, RenglonRemito[]]) => {
+      .subscribe({
+        next: (data: [Remito, RenglonRemito[]]) => {
           this.remito = data[0];
           this.renglones = data[1];
         },
-        err => {
+        error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.volverAlListado();
         }
-      )
+      })
     ;
 
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
@@ -64,20 +64,5 @@ export class VerRemitoComponent implements OnInit, OnDestroy {
 
   volverAlListado() {
     this.location.back();
-  }
-
-  downloadRemitoPdf() {
-    this.loadingOverlayService.activate();
-    this.remitosService.getRemitoPdf(this.remito.idRemito)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});          
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      )
-    ;
   }
 }
