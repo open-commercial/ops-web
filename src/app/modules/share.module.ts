@@ -44,6 +44,8 @@ import { ListaTableComponent } from '../components/lista-table/lista-table.compo
 import { FacturaVentaActionsBarComponent } from '../components/factura-venta-actions-bar/factura-venta-actions-bar.component';
 import { PedidoActionsBarComponent } from '../components/pedido-actions-bar/pedido-actions-bar.component';
 import { RemitoActionsBarComponent } from '../components/remito-actions-bar/remito-actions-bar.component';
+import { NotaCreditoActionsBarComponent } from '../components/nota-credito-actions-bar/nota-credito-actions-bar.component';
+import { NotaDebitoActionsBarComponent } from '../components/nota-debito-actions-bar/nota-debito-actions-bar.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,8 @@ import { RemitoActionsBarComponent } from '../components/remito-actions-bar/remi
     ReciboCompraActionsBarComponent,
     ReciboVentaActionsBarComponent,
     RemitoActionsBarComponent,
+    NotaCreditoActionsBarComponent,
+    NotaDebitoActionsBarComponent,
   ],
   imports: [
     CommonModule,
@@ -104,6 +108,8 @@ import { RemitoActionsBarComponent } from '../components/remito-actions-bar/remi
     ReciboCompraActionsBarComponent,
     ReciboVentaActionsBarComponent,
     RemitoActionsBarComponent,
+    NotaCreditoActionsBarComponent,
+    NotaDebitoActionsBarComponent,
   ]
 })
 export class ShareModule {

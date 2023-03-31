@@ -11,17 +11,15 @@ import {UntypedFormBuilder} from '@angular/forms';
 import * as moment from 'moment';
 import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
 import {HelperService} from '../services/helper.service';
-import {finalize, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Usuario} from '../models/usuario';
 import {UsuariosService} from '../services/usuarios.service';
 import {Rol} from '../models/rol';
 import {TipoDeComprobante} from '../models/tipo-de-comprobante';
-import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.component';
 import {Cliente} from '../models/cliente';
 import {ClientesService} from '../services/clientes.service';
 import {Movimiento} from '../models/movimiento';
 import {AuthService} from '../services/auth.service';
-import {Nota} from '../models/nota';
 import {ConfiguracionesSucursalService} from '../services/configuraciones-sucursal.service';
 import {NotasService} from '../services/notas.service';
 import {Proveedor} from '../models/proveedor';
@@ -310,79 +308,7 @@ export abstract class NotasDirective extends ListadoDirective implements OnInit 
     return ret;
   }
 
-  autorizar(nota: Nota) {
-    if (!this.hasRoleToAutorizar) {
-      this.mensajeService.msg('No posee permiso para autorizar la nota.', MensajeModalType.ERROR);
-      return;
-    }
-
-    if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) < 0) {
-      this.mensajeService.msg('El tipo de movimiento seleccionado no corresponde con la operación solicitada.', MensajeModalType.ERROR);
-      return;
-    }
-
-    this.loadingOverlayService.activate();
-    this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        habilitada => {
-          if (habilitada) {
-            this.loadingOverlayService.activate();
-            this.notasService.autorizar(nota.idNota)
-              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe(
-                () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO),
-                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-              )
-            ;
-          } else {
-            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
-          }
-        },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      )
-    ;
-  }
-
-  verDetalle(nota: Nota) {
-    if (!this.hasRoleToVerDetalle) {
-      this.mensajeService.msg('No posee permiso para ver la nota.', MensajeModalType.ERROR);
-      return;
-    }
-
-    let path = '';
-    if (nota.movimiento === Movimiento.VENTA) {
-       path = nota.type === 'NotaCredito' ? '/notas-credito-venta/ver' : '/notas-debito-venta/ver';
-    } else if (nota.movimiento === Movimiento.COMPRA) {
-       path = nota.type === 'NotaCredito' ? '/notas-credito-compra/ver' : '/notas-debito-compra/ver';
-    } else {
-       return;
-    }
-
-    this.router.navigate([path, nota.idNota]);
-  }
-
-  eliminar(nota) {
-    if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar la nota.', MensajeModalType.ERROR);
-      return;
-    }
-
-    const msg = 'Esta seguro que desea eliminar la nota seleccionada?';
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) {
-        this.loadingOverlayService.activate();
-        this.notasService.eliminar(nota.idNota)
-          // No se hace pipe finalize porque se hace ur reload
-          .subscribe(
-            () => location.reload(),
-            err => {
-              this.loadingOverlayService.deactivate();
-              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          )
-        ;
-      }
-    });
+  afterNotaDelete() {
+    location.reload();
   }
 }

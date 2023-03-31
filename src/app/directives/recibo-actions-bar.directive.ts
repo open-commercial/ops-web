@@ -56,7 +56,6 @@ export abstract class ReciboActionsBarDirective implements OnInit {
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
   }
 
-
   ngOnInit(): void {
     Object.keys(this.hiddenButtonsValues).forEach((k: ReciboActionButtonName) => {
       this.hiddenButtonsValues[k] = this.hiddenButtons.indexOf(k) >= 0;

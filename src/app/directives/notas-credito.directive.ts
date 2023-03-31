@@ -16,9 +16,7 @@ import {MensajeModalType} from '../components/mensaje-modal/mensaje-modal.compon
 import { Observable, combineLatest } from 'rxjs';
 import {Pagination} from '../models/pagination';
 import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
-import {Nota} from '../models/nota';
 import {ProveedoresService} from '../services/proveedores.service';
-import {Movimiento} from '../models/movimiento';
 
 @Directive()
 export abstract class NotasCreditoDirective extends NotasDirective implements OnInit {
@@ -68,23 +66,6 @@ export abstract class NotasCreditoDirective extends NotasDirective implements On
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
     return this.notasService.buscarNotasCredito(terminos as BusquedaNotaCriteria);
-  }
-
-  verFactura(nota: Nota) {
-    let idFactura = null;
-    let path = '';
-
-    if (nota.movimiento === Movimiento.VENTA) {
-      idFactura = nota.idFacturaVenta;
-      path = '/facturas-venta/ver';
-    } else if (nota.movimiento === Movimiento.COMPRA) {
-      idFactura = nota.idFacturaCompra;
-      path = '/facturas-compra/ver';
-    } else {
-      return;
-    }
-
-    this.router.navigate([path, idFactura]);
   }
 
   getItems(terminos: BusquedaNotaCriteria) {
