@@ -84,23 +84,7 @@
       </div>
     </ng-template>
     <ng-template #actions let-item>
-      <ul class="list-inline mb-0 text-center d-inline-block">
-        <li class="list-inline-item" *ngIf="(hasRoleToAutorizar && tiposDeComprobantesParaAutorizacion.indexOf(item.tipoComprobante) >= 0)">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizar(item)">
-            <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToVerDetalle">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(item)">
-            <fa-icon [icon]="['far', 'eye']"></fa-icon>
-          </button>
-        </li>
-        <li class="list-inline-item" *ngIf="hasRoleToDelete">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(item)">
-            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
-          </button>
-        </li>
-      </ul>
+      <app-nota-debito-actions-bar [nota]="item" (afterDelete)="afterNotaDelete()"></app-nota-debito-actions-bar>
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>

@@ -1,0 +1,34 @@
+<ul class="list-inline mb-0 text-center d-inline-block">
+  <li class="list-inline-item" *ngIf="(hasRoleToAutorizar && nota.movimiento === movimiento.VENTA && !nota.cae && tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) && !hiddenButtonsValues['authorize']">
+    <button class="btn btn-primary fake-cursor" (click)="autorizar()"
+      ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToVerDetalle && !hiddenButtonsValues['show']">
+    <button class="btn btn-primary fake-cursor" (click)="verDetalle()"
+      ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToDelete && !hiddenButtonsValues['delete']">
+    <button class="btn btn-primary fake-cursor" (click)="eliminar()"
+      ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="nota.movimiento === movimiento.VENTA && !hiddenButtonsValues['download']">
+    <button class="btn btn-primary" (click)="dowloadNotaPdf()"
+      placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+    </button>
+  </li>
+</ul>
+
+
+
+
