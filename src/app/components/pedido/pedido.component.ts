@@ -156,11 +156,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   setOpcionEnvio(idSucursal: number, value: OpcionEnvio|null = null) {
-    if (value === null) {
-      value = this.form.get('opcionEnvio').value;
-    } else {
-      this.form.get('opcionEnvio').setValue(value);
-    }
+    value = value || OpcionEnvio.RETIRO_EN_SUCURSAL;
+    this.form.get('opcionEnvio').setValue(value);
     if (!this.esSucursalPuntoDeReRetiro(idSucursal)) {
       if (value === OpcionEnvio.RETIRO_EN_SUCURSAL) {
         this.form.get('opcionEnvio').setValue(null);
@@ -890,5 +887,9 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.form.get('descuento').disable();
     }
   }
-}
 
+  limpiarDatos() {
+    this.storageService.removeItem(this.localStorageKey);
+    location.reload();
+  }
+}
