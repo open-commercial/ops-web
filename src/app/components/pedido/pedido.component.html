@@ -142,11 +142,18 @@
           <div class="mb-3 d-flex flex-row justify-content-center align-items-center">
             <label class="form-label me-2">Seleccione el tipo de envío:</label>
             <div class="btn-group d-flex flex-fill" role="group">
+              <input type="radio" mame="oe" class="btn-check" id="oe-retiro-en-sucursal" autocomplete="off" [disabled]="retiroEnSucursalDisabled" (click)="opcionEnvioClick(oe.RETIRO_EN_SUCURSAL)" [checked]="form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
+              <label class="btn btn-outline-secondary" for="oe-retiro-en-sucursal">Retiro en sucursal</label>
+              <input type="radio" mame="oe" class="btn-check" id="oe-envio-a-domicilio" autocomplete="off" (click)="opcionEnvioClick(oe.ENVIO_A_DOMICILIO)" [checked]="form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO">
+              <label class="btn btn-outline-secondary" for="oe-envio-a-domicilio">Envío a domicilio</label>
+            </div>
+
+            <!-- <div class="btn-group d-flex flex-fill" role="group">
               <input type="radio" class="btn-check" [value]="oe.RETIRO_EN_SUCURSAL" id="oe-retiro-en-sucursal" autocomplete="off" formControlName="opcionEnvio">
               <label class="btn btn-outline-secondary" for="oe-retiro-en-sucursal">Retiro en sucursal</label>
               <input type="radio" class="btn-check" [value]="oe.ENVIO_A_DOMICILIO" id="oe-envio-a-domicilio" autocomplete="off" formControlName="opcionEnvio">
               <label class="btn btn-outline-secondary" for="oe-envio-a-domicilio">Envío a domicilio</label>
-            </div>
+            </div> -->
           </div>
           <div class="my-3" *ngIf="form && form.get('opcionEnvio').value  === oe.ENVIO_A_DOMICILIO">
             <label class="form-label sr-only" for="opcionEnvioUbicacion">Ubicación</label>
