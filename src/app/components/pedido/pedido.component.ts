@@ -1,5 +1,5 @@
-import { FormasDePagoService } from './../../services/formas-de-pago.service';
-import { FormaDePago } from './../../models/forma-de-pago';
+import {FormasDePagoService} from './../../services/formas-de-pago.service';
+import {FormaDePago} from './../../models/forma-de-pago';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
@@ -145,8 +145,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           this.formaDePagoPredeterminada = data[2];
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+      });
 
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
       this.setOpcionEnvio(s.idSucursal);
@@ -158,7 +157,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   setOpcionEnvio(idSucursal: number, value: OpcionEnvio|null = null) {
     value = value || OpcionEnvio.RETIRO_EN_SUCURSAL;
     this.form.get('opcionEnvio').setValue(value);
-    if (!this.esSucursalPuntoDeReRetiro(idSucursal)) {
+    if (!this.esSucursalPuntoDeRetiro(idSucursal)) {
       if (value === OpcionEnvio.RETIRO_EN_SUCURSAL) {
         this.form.get('opcionEnvio').setValue(null);
       }
@@ -189,8 +188,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
             this.handleCCCPredeterminado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
       this.setOpcionEnvio(this.sucursalesService.getIdSucursal());
     } else {
       if (this.action === Action.EDITAR) {
@@ -266,8 +264,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.router.navigate(['/pedidos']);
         }
-      })
-    ;
+      });
   }
 
   handleCCCPredeterminado() {
@@ -329,9 +326,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   inicializarForm() {
-    this.form.get('ccc').valueChanges
-      .subscribe(() => this.updateRenglones())
-    ;
+    this.form.get('ccc').valueChanges.subscribe(() => this.updateRenglones());
 
     this.form.get('renglonesPedido').valueChanges
       .subscribe((renglones) => {
@@ -340,8 +335,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           this.cantidadesActualesPedido[r.renglonPedido.idProductoItem] = r.renglonPedido.cantidad;
         });
         if (!this.loadingResultados) { this.calcularResultados(); }
-      })
-    ;
+      });
 
     this.form.get('descuento').valueChanges
       .pipe(debounceTime(700))
@@ -352,8 +346,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      })
-    ;
+      });
 
     this.form.get('recargo').valueChanges
       .pipe(debounceTime(700))
@@ -364,8 +357,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      })
-    ;
+      });
 
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
@@ -514,16 +506,13 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
     const productosIds = pfs.map(pf => pf.idProducto);
-
     productosIds.forEach(id => {
       const aux = pfs.filter(pf => pf.idProducto === id);
       if (aux.length) {
         const cantSolicitada = aux[0].cantidadSolicitada;
         const cantDisponible = aux.reduce((total: number, pf: ProductoFaltante) => total + pf.cantidadDisponible, 0);
         const errorDisponibilidad = ['Solicitado', ' ', cantSolicitada, ' --UM--', ' - Disponible ', cantDisponible, ' --UM--'].join('');
-
         const errorDisponibilidadPorSucursal = aux.map(pf => [pf.nombreSucursal, ': ', pf.cantidadDisponible, ' --UM--'].join(''));
-
         const control = this.searchRPInRenglones(id);
         if (control) {
           const v: RenglonPedido = control.get('renglonPedido').value;
@@ -694,7 +683,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
               idProductoItem: p.idProducto,
               cantidad: cant,
             };
-
             this.addRenglonPedido(nrp);
           } else {
             this.mensajeService.msg(
@@ -872,7 +860,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
     );
   }
 
-  esSucursalPuntoDeReRetiro(idSucursal: number): boolean {
+  esSucursalPuntoDeRetiro(idSucursal: number): boolean {
     return !!this.sucursales.filter(s => s.idSucursal === idSucursal).length;
   }
 
