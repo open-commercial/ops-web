@@ -1,5 +1,5 @@
-import { FormasDePagoService } from './../../services/formas-de-pago.service';
-import { FormaDePago } from './../../models/forma-de-pago';
+import {FormasDePagoService} from './../../services/formas-de-pago.service';
+import {FormaDePago} from './../../models/forma-de-pago';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
@@ -100,6 +100,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   formasDePago: FormaDePago[] = [];
   formaDePagoPredeterminada: FormaDePago;
 
+  retiroEnSucursalDisabled = false;
+
   constructor(private fb: UntypedFormBuilder,
               modalConfig: NgbModalConfig,
               private modalService: NgbModal,
@@ -143,16 +145,30 @@ export class PedidoComponent implements OnInit, OnDestroy {
           this.formaDePagoPredeterminada = data[2];
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+      });
 
     this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
-      if (!s.configuracionSucursal.puntoDeRetiro) {
-        this.form.get('opcionEnvio').setValue(OpcionEnvio.ENVIO_A_DOMICILIO);
-      }
+      this.setOpcionEnvio(s.idSucursal);
     }));
 
     this.init();
+  }
+
+  setOpcionEnvio(idSucursal: number, value: OpcionEnvio|null = null) {
+    value = value || OpcionEnvio.RETIRO_EN_SUCURSAL;
+    this.form.get('opcionEnvio').setValue(value);
+    if (!this.esSucursalPuntoDeRetiro(idSucursal)) {
+      if (value === OpcionEnvio.RETIRO_EN_SUCURSAL) {
+        this.form.get('opcionEnvio').setValue(null);
+      }
+      this.retiroEnSucursalDisabled = true;
+    } else {
+      this.retiroEnSucursalDisabled = false;
+    }
+  }
+
+  opcionEnvioClick(value: OpcionEnvio) {
+    this.setOpcionEnvio(this.sucursalesService.getIdSucursal(), value);
   }
 
   ngOnDestroy() {
@@ -172,8 +188,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
             this.handleCCCPredeterminado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
+      this.setOpcionEnvio(this.sucursalesService.getIdSucursal());
     } else {
       if (this.action === Action.EDITAR) {
         const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -221,34 +237,34 @@ export class PedidoComponent implements OnInit, OnDestroy {
             this.pedidosService.getRenglonesDePedido(p.idPedido, this.action === Action.CLONAR)
           ])
             .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-            .subscribe(
-            (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
-              this.datosParaEditarOClonar.ccc = v[0];
-              this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido : e }));
-              if (this.action === Action.EDITAR) {
-                v[1].forEach(e => this.cantidadesInicialesPedido[e.idProductoItem] = e.cantidad);
-              }
-              this.datosParaEditarOClonar.sucursal = null;
-              if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
-                this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
-                this.datosParaEditarOClonar.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
-              } else {
-                this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
-                if (p.tipoDeEnvio) {
-                  this.datosParaEditarOClonar.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
-                    OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
+            .subscribe({
+              next: (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
+                this.datosParaEditarOClonar.ccc = v[0];
+                this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido : e }));
+                if (this.action === Action.EDITAR) {
+                  v[1].forEach(e => this.cantidadesInicialesPedido[e.idProductoItem] = e.cantidad);
                 }
-              }
-              this.inicializarForm();
-            }
-          );
+                this.datosParaEditarOClonar.sucursal = null;
+                if (p.tipoDeEnvio === TipoDeEnvio.RETIRO_EN_SUCURSAL) {
+                  this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.RETIRO_EN_SUCURSAL;
+                  this.datosParaEditarOClonar.sucursal = p.idSucursal ? { idSucursal: p.idSucursal } : null;
+                } else {
+                  this.datosParaEditarOClonar.opcionEnvio = OpcionEnvio.ENVIO_A_DOMICILIO;
+                  if (p.tipoDeEnvio) {
+                    this.datosParaEditarOClonar.opcionEnvioUbicacion = p.tipoDeEnvio === TipoDeEnvio.USAR_UBICACION_FACTURACION ?
+                      OpcionEnvioUbicacion.USAR_UBICACION_FACTURACION : OpcionEnvioUbicacion.USAR_UBICACION_ENVIO;
+                  }
+                }
+                this.inicializarForm();
+              },
+            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+          });
         },
         error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.router.navigate(['/pedidos']);
         }
-      })
-    ;
+      });
   }
 
   handleCCCPredeterminado() {
@@ -264,13 +280,13 @@ export class PedidoComponent implements OnInit, OnDestroy {
               this.loadingOverlayService.activate();
               this.cuentasCorrienteService.getCuentaCorrienteClientePredeterminado()
                 .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-                .subscribe(
-                  ccc => {
+                .subscribe({
+                  next: ccc => {
                     this.cccPredeterminado = ccc;
                     this.inicializarForm();
                   },
-                  err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-                )
+                  error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                })
               ;
             } else {
               this.inicializarForm();
@@ -310,9 +326,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   inicializarForm() {
-    this.form.get('ccc').valueChanges
-      .subscribe(() => this.updateRenglones())
-    ;
+    this.form.get('ccc').valueChanges.subscribe(() => this.updateRenglones());
 
     this.form.get('renglonesPedido').valueChanges
       .subscribe((renglones) => {
@@ -321,8 +335,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           this.cantidadesActualesPedido[r.renglonPedido.idProductoItem] = r.renglonPedido.cantidad;
         });
         if (!this.loadingResultados) { this.calcularResultados(); }
-      })
-    ;
+      });
 
     this.form.get('descuento').valueChanges
       .pipe(debounceTime(700))
@@ -333,8 +346,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      })
-    ;
+      });
 
     this.form.get('recargo').valueChanges
       .pipe(debounceTime(700))
@@ -345,8 +357,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           return;
         }
         if (!this.loadingResultados) { this.calcularResultados(); }
-      })
-    ;
+      });
 
     this.form.get('opcionEnvio').valueChanges.subscribe(oe => {
       if (oe === OpcionEnvio.RETIRO_EN_SUCURSAL) {
@@ -419,7 +430,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.form.get('descuento').setValue(data.descuento);
     this.form.get('recargo').setValue(data.recargo);
 
-    this.form.get('opcionEnvio').setValue(data.opcionEnvio ? data.opcionEnvio : null);
+    this.setOpcionEnvio(this.sucursalesService.getIdSucursal(), data.opcionEnvio ? data.opcionEnvio : null)
     this.form.get('opcionEnvioUbicacion').setValue(data.opcionEnvioUbicacion ? data.opcionEnvioUbicacion : null);
 
     if (data.pagos && Array.isArray(data.pagos) && data.pagos.length) {
@@ -452,17 +463,20 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.loadingOverlayService.activate();
       this.productosService.getDisponibilidadEnStock(ppvs)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe((pfs: ProductoFaltante[]) => {
-          if (!pfs.length) {
-            this.doSubmit();
-          } else {
-            this.agregarErroresDisponibilidad(pfs);
-            this.accordion.expand('productos');
-            this.mensajeService.msg(
-              'Uno o mas productos no poseen stock disponible. Por favor, verifique la sección Productos.',
-              MensajeModalType.ERROR
-            );
-          }
+        .subscribe({
+          next: (pfs: ProductoFaltante[]) => {
+            if (!pfs.length) {
+              this.doSubmit();
+            } else {
+              this.agregarErroresDisponibilidad(pfs);
+              this.accordion.expand('productos');
+              this.mensajeService.msg(
+                'Uno o mas productos no poseen stock disponible. Por favor, verifique la sección Productos.',
+                MensajeModalType.ERROR
+              );
+            }
+          },
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
       ;
     }
@@ -477,31 +491,28 @@ export class PedidoComponent implements OnInit, OnDestroy {
         this.saving = false;
         this.loadingOverlayService.deactivate();
       }))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.reset();
           const msg = np.idPedido ? 'Pedido actualizado correctamente!' : 'Pedido enviado correctamente!';
           this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
             this.router.navigate(['/pedidos']);
           });
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 
   agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
     const productosIds = pfs.map(pf => pf.idProducto);
-
     productosIds.forEach(id => {
       const aux = pfs.filter(pf => pf.idProducto === id);
       if (aux.length) {
         const cantSolicitada = aux[0].cantidadSolicitada;
         const cantDisponible = aux.reduce((total: number, pf: ProductoFaltante) => total + pf.cantidadDisponible, 0);
         const errorDisponibilidad = ['Solicitado', ' ', cantSolicitada, ' --UM--', ' - Disponible ', cantDisponible, ' --UM--'].join('');
-
         const errorDisponibilidadPorSucursal = aux.map(pf => [pf.nombreSucursal, ': ', pf.cantidadDisponible, ' --UM--'].join(''));
-
         const control = this.searchRPInRenglones(id);
         if (control) {
           const v: RenglonPedido = control.get('renglonPedido').value;
@@ -665,20 +676,22 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.loadingOverlayService.activate();
     this.productosService.getDisponibilidadEnStock(ppvs)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe((pfs: ProductoFaltante[]) => {
-        if (!pfs.length) {
-          const nrp: NuevoRenglonPedido = {
-            idProductoItem: p.idProducto,
-            cantidad: cant,
-          };
-
-          this.addRenglonPedido(nrp);
-        } else {
-          this.mensajeService.msg(
-            'No se puede solicitar mas stock para dicho producto. Por favor, verifique la sección Productos.',
-            MensajeModalType.ERROR
-          );
-        }
+      .subscribe({
+        next: (pfs: ProductoFaltante[]) => {
+          if (!pfs.length) {
+            const nrp: NuevoRenglonPedido = {
+              idProductoItem: p.idProducto,
+              cantidad: cant,
+            };
+            this.addRenglonPedido(nrp);
+          } else {
+            this.mensajeService.msg(
+              'No se puede solicitar mas stock para dicho producto. Por favor, verifique la sección Productos.',
+              MensajeModalType.ERROR
+            );
+          }
+        },
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
     ;
   }
@@ -688,10 +701,10 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.loadingOverlayService.activate();
     this.pedidosService.calcularRenglones([nrp], cliente.idCliente)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        data => this.handleRenglonPedido(data[0]),
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: data => this.handleRenglonPedido(data[0]),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 
@@ -770,10 +783,10 @@ export class PedidoComponent implements OnInit, OnDestroy {
         this.loadingResultados = false;
         this.loadingOverlayService.deactivate();
       }))
-      .subscribe(
-        (r: Resultados) => this.form.get('resultados').setValue(r),
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+      .subscribe({
+        next: (r: Resultados) => this.form.get('resultados').setValue(r),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+      })
     ;
   }
 
@@ -799,14 +812,14 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.loadingOverlayService.activate();
       this.pedidosService.calcularRenglones(renglones, cliente.idCliente)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          rps => {
+        .subscribe({
+          next: rps => {
             const nuevosRenglones = [];
             rps.forEach((rp: RenglonPedido) => nuevosRenglones.push({ renglonPedido: rp }));
             this.renglonesPedido.setValue(nuevosRenglones);
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        })
       ;
     }
   }
@@ -847,8 +860,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
     );
   }
 
-  esSucursalSeleccionadaPuntoDeRetiro() {
-    return !!this.sucursales.filter(s => s.idSucursal === this.sucursalesService.getIdSucursal()).length;
+  esSucursalPuntoDeRetiro(idSucursal: number): boolean {
+    return !!this.sucursales.filter(s => s.idSucursal === idSucursal).length;
   }
 
   toggleDescuento() {
@@ -862,5 +875,9 @@ export class PedidoComponent implements OnInit, OnDestroy {
       this.form.get('descuento').disable();
     }
   }
-}
 
+  limpiarDatos() {
+    this.storageService.removeItem(this.localStorageKey);
+    location.reload();
+  }
+}
