@@ -7,6 +7,12 @@
       </a>
       <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> {{ title }}
     </h1>
+    <button type="button" class="btn btn-primary" (click)="limpiarDatos()" *ngIf="action.toString() === 'NUEVO'"
+      ngbPopover="Limpiar datos" triggers="mouseenter:mouseleave" placement="left"
+    >
+      <fa-icon [icon]="['fas', 'broom']"></fa-icon>
+      <span class="visually-hidden">Limpiar datos</span>
+    </button>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-2" *ngIf="form">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" activeIds="cliente" (panelChange)="panelBeforeChange($event)">
@@ -142,9 +148,9 @@
           <div class="mb-3 d-flex flex-row justify-content-center align-items-center">
             <label class="form-label me-2">Seleccione el tipo de envío:</label>
             <div class="btn-group d-flex flex-fill" role="group">
-              <input type="radio" class="btn-check" [value]="oe.RETIRO_EN_SUCURSAL" id="oe-retiro-en-sucursal" autocomplete="off" formControlName="opcionEnvio">
+              <input type="radio" mame="oe" class="btn-check" id="oe-retiro-en-sucursal" autocomplete="off" [disabled]="retiroEnSucursalDisabled" (click)="opcionEnvioClick(oe.RETIRO_EN_SUCURSAL)" [checked]="form.get('opcionEnvio').value === oe.RETIRO_EN_SUCURSAL">
               <label class="btn btn-outline-secondary" for="oe-retiro-en-sucursal">Retiro en sucursal</label>
-              <input type="radio" class="btn-check" [value]="oe.ENVIO_A_DOMICILIO" id="oe-envio-a-domicilio" autocomplete="off" formControlName="opcionEnvio">
+              <input type="radio" mame="oe" class="btn-check" id="oe-envio-a-domicilio" autocomplete="off" (click)="opcionEnvioClick(oe.ENVIO_A_DOMICILIO)" [checked]="form.get('opcionEnvio').value === oe.ENVIO_A_DOMICILIO">
               <label class="btn btn-outline-secondary" for="oe-envio-a-domicilio">Envío a domicilio</label>
             </div>
           </div>
