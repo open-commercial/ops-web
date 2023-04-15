@@ -17,7 +17,7 @@ import {
   faClipboardList, faPlus, faBarcode, faEdit,
   faBoxOpen, faMinus, faStore, faUser,
   faSignOutAlt, faInfoCircle, faQuestionCircle, faTimesCircle,
-  faFileSignature, faFileDownload, faChevronLeft, faIndustry,
+  faFileSignature, faPrint, faChevronLeft, faIndustry,
   faSuitcase, faPen, faEnvelope, faLink,
   faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
   faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
@@ -25,7 +25,8 @@ import {
   faUserCheck, faBook, faBalanceScaleRight, faBalanceScaleLeft,
   faTruck, faFileInvoiceDollar, faHandHoldingUsd,
   faMoneyBillWave, faTruckMoving, faCog, faUndoAlt, faUsers, faMapMarkedAlt,
-  faCubes, faRulerCombined, faCheckDouble, faEllipsisV, faToggleOn
+  faCubes, faRulerCombined, faCheckDouble, faEllipsisV, faToggleOn,
+  faBroom
 } from '@fortawesome/free-solid-svg-icons';
 import {BatchActionsBoxComponent} from '../components/batch-actions-box/batch-actions-box.component';
 import { NgBoostrapModule } from './ng-boostrap.module';
@@ -122,7 +123,7 @@ export class ShareModule {
       faBarcode, faEdit, faBoxOpen, faMinus,
       faStore, faUser, faSignOutAlt, faInfoCircle,
       faQuestionCircle, faTimesCircle, faFileSignature,
-      faFileDownload, faChevronLeft, faIndustry, faSuitcase,
+      faPrint, faChevronLeft, faIndustry, faSuitcase,
       faPen, faEnvelope, faLink, faFolderOpen,
       faCopy, faArrowAltCircleDown, faExchangeAlt, faCheckSquare,
       faLockOpen, faLock, faSyncAlt, faCoins,
@@ -132,7 +133,7 @@ export class ShareModule {
       faHandHoldingUsd, faMoneyBillWave, faTruckMoving,
       faCog, faImage, faUndoAlt, faUsers, faMapMarkedAlt,
       faCubes, faRulerCombined, faSquare, faSquareCheck, faCheckDouble,
-      faEllipsisV, faToggleOn
+      faEllipsisV, faToggleOn, faBroom
     );
   }
 }

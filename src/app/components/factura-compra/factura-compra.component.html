@@ -92,7 +92,7 @@
                          [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                          [showWeekNumbers]="false" ngbDatepicker #dff="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }">
                   <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
-                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                    <fa-icon [icon]="['fas', 'broom']"></fa-icon>
                   </button>
                   <button class="btn btn-outline-secondary" (click)="dff.open()" type="button">
                     <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
@@ -109,7 +109,7 @@
                          [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                          [showWeekNumbers]="false" ngbDatepicker #dfv="ngbDatepicker">
                   <button class="btn btn-outline-secondary" type="button" (click)="form.get('fechaVencimiento').setValue(null)">
-                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                    <fa-icon [icon]="['fas', 'broom']"></fa-icon>
                   </button>
                   <button class="btn btn-outline-secondary" (click)="dfv.open()" type="button">
                     <fa-icon [icon]="['fas', 'calendar']"></fa-icon>

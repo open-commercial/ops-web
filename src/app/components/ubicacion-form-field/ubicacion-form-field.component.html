@@ -6,7 +6,7 @@
            [value]="getDisplayValue()">
     <ng-template [ngIf]="!isDisabled">
       <button class="btn btn-outline-secondary" type="button" (click)="clearValue()">
-        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon>
         <span class="sr-only">Quitar Ubicación</span>
       </button>
       <button class="btn btn-outline-secondary" type="button" (click)="edit()">
@@ -16,7 +16,7 @@
     </ng-template>
     <ng-template [ngIf]="isDisabled">
       <span class="input-group-text text-muted">
-        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon>
         <span class="sr-only">Quitar Ubicación</span>
       </span>
       <span class="input-group-text text-muted">

@@ -6,7 +6,7 @@
            tabindex="-1" id="{{ getLabelForId() }}" [value]="getDisplayValue()">
     <ng-template [ngIf]="!isDisabled">
       <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="clearValue()">
-        <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar {{ label }}</span>
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon><span class="sr-only">Quitar {{ label }}</span>
       </button>
       <button class="btn btn-outline-secondary" type="button" id="find-{{ getLabelForId() }}-button" [disabled]="loading" (click)="select()">
         <fa-icon [icon]="['fas', 'search']" *ngIf="!loading"></fa-icon>
@@ -20,7 +20,7 @@
     </ng-template>
     <ng-template [ngIf]="isDisabled">
       <span class="input-group-text text-muted">
-        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon>
         <span class="sr-only">Quitar {{ label }}</span>
       </span>
       <span class="input-group-text text-muted">

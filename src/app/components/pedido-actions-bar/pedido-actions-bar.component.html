@@ -6,8 +6,8 @@
     </a>
   </li>
   <li class="list-inline-item" *ngIf="!hiddenButtonsValues['download']">
-    <button class="btn btn-primary" (click)="downloadPedidoPdf(pedido)" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
-      <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+    <button class="btn btn-primary" (click)="downloadPedidoPdf(pedido)" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
     </button>
   </li>
   <li class="list-inline-item" *ngIf="puedeEditarPedido && !hiddenButtonsValues['edit']">

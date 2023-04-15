@@ -11,8 +11,8 @@
               ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="fw-bold">{{ batchActionsService.count(baKey) }}</span>
       </button>
-      <button class="btn btn-primary ms-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Descargar Reporte" triggers="mouseenter:mouseleave">
-        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+      <button class="btn btn-primary ms-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave">
+        <fa-icon [icon]="['fas', 'print']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="productosFiltersCollapse"
