@@ -54,11 +54,8 @@ export class BusquedaProductoComponent implements OnInit {
 
   loadingProducto = false;
 
-  constructor(modalConfig: NgbModalConfig,
-              private modalService: NgbModal,
+  constructor(private modalService: NgbModal,
               private productosService: ProductosService) {
-    modalConfig.backdrop = 'static';
-    modalConfig.keyboard = false;
   }
 
   ngOnInit() {
@@ -76,7 +73,7 @@ export class BusquedaProductoComponent implements OnInit {
 
   showProductoModal($event) {
     $event.preventDefault();
-    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
+    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true, keyboard: true});
     modalRef.componentInstance.cantidadesInicialesPedido = this.pCantidadesInicialesPedido;
     modalRef.componentInstance.cantidadesActualesPedido = this.pCantidadesActualesPedido;
     if (this.cliente) { modalRef.componentInstance.cliente = this.cliente; }

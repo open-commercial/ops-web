@@ -70,7 +70,7 @@ export class UsuarioFiltroComponent implements ControlValueAccessor {
   }
 
   select() {
-    const modalRef = this.modalService.open(UsuarioModalComponent, {scrollable: true});
+    const modalRef = this.modalService.open(UsuarioModalComponent, { scrollable: true, keyboard: true });
     modalRef.componentInstance.roles = this.pRoles;
     modalRef.result.then((u: Usuario) => {
       this.setUsuario(u);
