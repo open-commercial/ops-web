@@ -53,7 +53,7 @@ export class BusquedaCuentaCorrienteClienteComponent {
   }
 
   showCccModal() {
-    const modalRef = this.modalService.open(CuentaCorrienteClienteModalComponent, { scrollable: true });
+    const modalRef = this.modalService.open(CuentaCorrienteClienteModalComponent, { scrollable: true, keyboard: true });
     modalRef.result.then((ccc: CuentaCorrienteCliente) => {
       this.pCcc = ccc;
       this.select.emit(this.ccc);
