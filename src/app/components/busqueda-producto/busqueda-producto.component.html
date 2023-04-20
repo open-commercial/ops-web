@@ -10,7 +10,7 @@
       <fa-icon [icon]="['fas', 'arrow-alt-circle-down']" *ngIf="!loadingProducto"></fa-icon>
       <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
     </button>
-    <button class="btn btn-primary" type="button" (click)="showProductoModal($event)">
+    <button class="btn btn-primary" type="button" (click)="showProductoModal($event)" [disabled]="disabledShowProductoModalButton">
       <fa-icon [icon]="['fas', 'search']" *ngIf="!loadingProducto"></fa-icon>
       <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingProducto" style="color: #212529;"></fa-icon>
     </button>
