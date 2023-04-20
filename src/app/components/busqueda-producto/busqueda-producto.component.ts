@@ -54,6 +54,8 @@ export class BusquedaProductoComponent implements OnInit {
 
   loadingProducto = false;
 
+  disabledShowProductoModalButton = false;
+
   constructor(private modalService: NgbModal,
               private productosService: ProductosService) {
   }
@@ -73,15 +75,18 @@ export class BusquedaProductoComponent implements OnInit {
 
   showProductoModal($event) {
     $event.preventDefault();
+    this.disabledShowProductoModalButton = true;
     const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true, keyboard: true});
     modalRef.componentInstance.cantidadesInicialesPedido = this.pCantidadesInicialesPedido;
     modalRef.componentInstance.cantidadesActualesPedido = this.pCantidadesActualesPedido;
     if (this.cliente) { modalRef.componentInstance.cliente = this.cliente; }
     if (this.movimiento) { modalRef.componentInstance.movimiento = this.movimiento; }
     modalRef.componentInstance.idSucursal = this.idSucursal;
-    modalRef.result.then((p: Producto) => {
-      this.seleccion.emit(p);
-    }, () => { return; });
+    modalRef.result
+      .then((p: Producto) => {
+        this.seleccion.emit(p);
+      }, () => { return; })
+      .finally(() => setTimeout(() => this.disabledShowProductoModalButton = false, 1000));
   }
 
   ingresarProductoDirecto($event) {
