@@ -10,7 +10,7 @@
     <button class="btn btn-outline-secondary m-1" type="button"
             ngbPopover="Limpiar Seleccionados" triggers="mouseenter:mouseleave" placement="left"
             (click)="clearAll()" [disabled]="!batchActionsService.count(batchActionKey)">
-      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+      <fa-icon [icon]="['fas', 'broom']"></fa-icon>
     </button>
   </div>
   <div class="w-100 p-1 d-flex flex-column flex-sm-row flex-sm-wrap">
@@ -19,7 +19,7 @@
         <div class="description fw-bold small">{{ e.description }}</div>
         <div class="flex-grow-0 flex-shrink-0">
           <button class="btn btn-sm btn-primary ms-2" type="button" (click)="removeItem(e.id)">
-            <fa-icon [icon]="['fas', 'times']"></fa-icon>
+            <fa-icon [icon]="['fas', 'broom']"></fa-icon>
           </button>
         </div>
       </div>

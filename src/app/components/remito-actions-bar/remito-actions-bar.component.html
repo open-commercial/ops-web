@@ -8,9 +8,9 @@
   </li>
   <li class="list-inline-item" *ngIf="!hiddenButtonsValues['download']">
     <button class="btn btn-primary" (click)="downloadRemitoPdf()"
-      placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave"
+      placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave"
     >
-      <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
     </button>
   </li>
   <li class="list-inline-item" *ngIf="hasRoleToDelete && !hiddenButtonsValues['delete']">

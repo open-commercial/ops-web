@@ -7,8 +7,8 @@
     </button>
   </li>
   <li class="list-inline-item" *ngIf="recibo.idCliente && !hiddenButtonsValues['download']">
-    <button class="btn btn-primary" (click)="downloadReciboPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave" *ngIf="recibo.idCliente">
-      <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
+    <button class="btn btn-primary" (click)="downloadReciboPdf()" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave" *ngIf="recibo.idCliente">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
     </button>
   </li>
   <li class="list-inline-item" *ngIf="hasRoleToCrearNota && !hiddenButtonsValues['create-nota-debito']">
