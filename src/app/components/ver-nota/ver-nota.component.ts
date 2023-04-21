@@ -43,22 +43,6 @@ export class VerNotaComponent implements OnInit {
     this.location.back();
   }
 
-  dowloadNotaPdf() {
-    if (!this.nota.idCliente) { return; }
-    this.loadingOverlayService.activate();
-    this.notasService.getReporte(this.nota.idNota)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      })
-    ;
-  }
-
   getTitle(): string {
     return [
       this.nota.type === 'NotaCredito' ? 'Nota de Crédito' : 'Nota de Débito',

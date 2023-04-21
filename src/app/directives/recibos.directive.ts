@@ -26,7 +26,6 @@ import * as moment from 'moment';
 import {Observable} from 'rxjs';
 import {Pagination} from '../models/pagination';
 import {Usuario} from '../models/usuario';
-import {Recibo} from '../models/recibo';
 import {Nota} from '../models/nota';
 
 @Directive()

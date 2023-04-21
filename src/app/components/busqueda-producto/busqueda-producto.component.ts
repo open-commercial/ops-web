@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { Producto } from '../../models/producto';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from '../../services/productos.service';
 import {Cliente} from '../../models/cliente';
 import {Movimiento} from '../../models/movimiento';
@@ -97,8 +97,8 @@ export class BusquedaProductoComponent implements OnInit {
     this.loadingProducto = true;
     this.productosService.getProductoPorCodigo(this.codigo)
       .pipe(finalize(() => this.loadingProducto = false))
-      .subscribe(
-        (p: Producto) => {
+      .subscribe({
+        next: (p: Producto) => {
           if (p) {
             this.directInputSeleccion.emit(p);
             this.codigo = '';
@@ -106,10 +106,10 @@ export class BusquedaProductoComponent implements OnInit {
             this.showMessage(`No existe producto con codigo: "${this.codigo}"`, 'danger');
           }
         },
-        err => {
+        error: err => {
           this.loadingProducto = false;
           this.showMessage(err.error, 'danger');
         }
-      );
+      });
   }
 }
