@@ -63,7 +63,7 @@ export class UbicacionFormFieldComponent implements ControlValueAccessor {
   }
 
   clearValue() {
-    this.value = null;
+    this.setUbicacion(null);
   }
 
   edit() {
