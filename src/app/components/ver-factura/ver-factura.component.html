@@ -10,10 +10,6 @@
         Factura {{ factura.type === 'FacturaVenta' ? 'Venta' : 'Compra' }}
       </h1>
       <div class="align-self-end">
-        <button class="btn btn-primary" (click)="downloadFacturaPdf()" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave"
-              *ngIf="factura.type === 'FacturaVenta'">
-        <fa-icon [icon]="['fas', 'print']"></fa-icon>
-        </button>
         <app-factura-venta-actions-bar  *ngIf="factura && factura.type === 'FacturaVenta'" class="ms-2 text-nowrap"
           [facturaVenta]="factura"
           [hiddenButtons]="['show']"

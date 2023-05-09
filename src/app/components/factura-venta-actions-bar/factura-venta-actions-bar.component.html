@@ -5,6 +5,12 @@
       <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
   </li>
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['print']">
+    <button class="btn btn-primary fake-cursor" (click)="downloadFacturaPdf()"
+      ngbPopover="Imprimir" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
+    </button>
+  </li>
   <li class="list-inline-item" *ngIf="hasRoleToEnviarPorEmail && !hiddenButtonsValues['email']">
     <button class="btn btn-primary fake-cursor" (click)="enviarPorEmail()"
       ngbPopover="Enviar por Email" placement="left" triggers="mouseenter:mouseleave">

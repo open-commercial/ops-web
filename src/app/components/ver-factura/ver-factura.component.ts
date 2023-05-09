@@ -57,22 +57,6 @@ export class VerFacturaComponent implements OnInit {
     this.location.back();
   }
 
-  downloadFacturaPdf() {
-    if (this.factura.type === 'FacturaCompra') { return; }
-    this.loadingOverlayService.activate();
-    this.facturasVentaService.getFacturaPdf(this.factura.idFactura)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      )
-    ;
-  }
-
   getNumeroDeComprobante() {
     if (this.factura) {
       return this.factura.cae

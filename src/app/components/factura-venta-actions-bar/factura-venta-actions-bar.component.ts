@@ -55,6 +55,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
 
   hiddenButtonsValues = {
     'show': false,
+    'print': false,
     'email': false,
     'show-remito': false,
     'new-remito': false,
@@ -82,6 +83,21 @@ export class FacturaVentaActionsBarComponent implements OnInit {
 
   verFactura() {
     this.router.navigate(['/facturas-venta/ver', this.facturaVenta.idFactura]);
+  }
+
+  downloadFacturaPdf() {
+    this.loadingOverlayService.activate();
+    this.facturasVentaService.getFacturaPdf(this.facturaVenta.idFactura)
+      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+      .subscribe({
+        next: (res) => {
+          const file = new Blob([res], {type: 'application/pdf'});
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
+        },
+        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+      })
+    ;
   }
 
   enviarPorEmail() {
