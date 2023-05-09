@@ -32,6 +32,12 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
   rol = Rol;
   usuario: Usuario;
 
+  estados = [
+    { value: EstadoPedido.ABIERTO, text: EstadoPedido[EstadoPedido.ABIERTO] },
+    { value: EstadoPedido.CANCELADO, text: EstadoPedido[EstadoPedido.CANCELADO] },
+    { value: EstadoPedido.CERRADO, text: EstadoPedido[EstadoPedido.CERRADO] },
+  ];
+
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToDelete = false;
 
