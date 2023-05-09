@@ -62,8 +62,8 @@ export class UbicacionModalComponent implements OnInit {
       idProvincia: [null, Validators.required],
       idLocalidad: [null, Validators.required],
       calle: '',
-      numero: '',
-      piso: '',
+      numero: [null, Validators.min(0)],
+      piso: [null, Validators.min(0)],
       departamento: '',
       descripcion: '',
     });
@@ -98,8 +98,8 @@ export class UbicacionModalComponent implements OnInit {
       idProvincia: this.pUbicacion ? this.pUbicacion.idProvincia : null,
       idLocalidad: this.pUbicacion ? this.pUbicacion.idLocalidad : null,
       calle: this.pUbicacion ? this.pUbicacion.calle : '',
-      numero: this.pUbicacion ? this.pUbicacion.numero : '',
-      piso: this.pUbicacion ? this.pUbicacion.piso : '',
+      numero: this.pUbicacion ? this.pUbicacion.numero : null,
+      piso: this.pUbicacion ? this.pUbicacion.piso : null,
       departamento: this.pUbicacion ? this.pUbicacion.departamento : '',
       descripcion: this.pUbicacion ? this.pUbicacion.descripcion : '',
     });
