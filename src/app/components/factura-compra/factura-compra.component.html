@@ -183,7 +183,7 @@
           </table>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="transportistaPanel" [disabled]="!this.form.get('idProveedor').value">
+      <ngb-panel id="transportistaPanel" [disabled]="!(this.form.get('idProveedor').value && this.renglones.length)">
         <ng-template ngbPanelTitle>
         <span class="d-flex align-items-center">
           <fa-icon [icon]="['fas', accordion.isExpanded('transportistaPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
@@ -194,7 +194,7 @@
           <app-transportista formControlName="idTransportista" (objectChange)="transportistaChange($event)"></app-transportista>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="ResumenPanel" [disabled]="!this.form.get('idProveedor').value">
+      <ngb-panel id="ResumenPanel" [disabled]="!(this.form.get('idProveedor').value && this.renglones.length)">
         <ng-template ngbPanelTitle>
         <span class="d-flex align-items-center">
           <fa-icon [icon]="['fas', accordion.isExpanded('ResumenPanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
