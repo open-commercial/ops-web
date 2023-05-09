@@ -48,8 +48,11 @@
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="numero" class="form-label">Número</label>
-          <input type="text" class="form-control" id="numero" formControlName="numero"
+          <input type="number" min="0" class="form-control" id="numero" formControlName="numero"
                  [ngClass]="{ 'is-invalid': submitted && f.numero.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.numero.errors">
+            <div *ngIf="f.numero.errors.min">Mínimo {{ f.numero.errors.min.min }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -57,8 +60,11 @@
       <div class="col-sm-6">
         <div class="mb-3">
           <label for="piso" class="form-label">Piso</label>
-          <input type="text" class="form-control" id="piso" formControlName="piso"
+          <input type="number" min="0" class="form-control" id="piso" formControlName="piso"
                  [ngClass]="{ 'is-invalid': submitted && f.piso.errors }">
+          <div class="invalid-feedback" *ngIf="submitted && f.piso.errors">
+            <div *ngIf="f.piso.errors.min">Mínimo {{ f.piso.errors.min.min }}</div>
+          </div>
         </div>
       </div>
       <div class="col-sm-6">
