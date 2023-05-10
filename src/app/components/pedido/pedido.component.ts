@@ -867,7 +867,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   toggleDescuento() {
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
     const canEditDescuento = ccc && this.usuario
-      && !(this.usuario.idUsuario === ccc.cliente.idCredencial && this.usuario.roles.indexOf(Rol.VENDEDOR) >= 0);
+      && (this.authService.userHasAnyOfTheseRoles([Rol.ADMINISTRADOR, Rol.ENCARGADO]) ||
+      !(this.usuario.idUsuario === ccc.cliente.idCredencial && this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR])));
     if (canEditDescuento) {
       this.form.get('descuento').enable();
     } else {
