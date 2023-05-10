@@ -91,7 +91,7 @@ export class BusquedaCuentaCorrienteClienteComponent {
       this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
       return;
     }
-    if (!this.pCcc || !this.pCcc.cliente) { return };
+    if (!this.pCcc?.cliente) { return };
     this.router.navigate(['/clientes/editar', this.pCcc.cliente.idCliente]);
   }
 }

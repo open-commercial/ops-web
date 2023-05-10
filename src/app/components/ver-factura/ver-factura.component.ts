@@ -11,7 +11,6 @@ import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaCompra } from '../../models/factura-compra';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {MensajeService} from '../../services/mensaje.service';
 
 @Component({
