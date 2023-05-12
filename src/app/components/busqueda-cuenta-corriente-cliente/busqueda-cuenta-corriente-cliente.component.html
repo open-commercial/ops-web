@@ -4,9 +4,6 @@
       <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
     </div>
     <div *ngIf="ccc && !refreshing" class="d-flex flex-column">
-      <!-- <span class="me-2">
-        #{{ ccc.cliente.nroCliente }}
-      </span> -->
       <div>
         <span class="badge text-bg-secondary me-2 mb-2">#{{ ccc.cliente.nroCliente }}</span>
         <span class="badge text-bg-{{ ccc.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} mb-2 px-2 py-1">

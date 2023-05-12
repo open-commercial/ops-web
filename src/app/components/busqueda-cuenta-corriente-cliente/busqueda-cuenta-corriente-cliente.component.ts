@@ -78,9 +78,9 @@ export class BusquedaCuentaCorrienteClienteComponent {
 
   clearCcc() { this.ccc = null; }
 
-  addCliente() {
+  async addCliente() {
     if (!this.hasRoleToEditClientes) {
-      this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
       return;
     }
     this.router.navigate(['/clientes/nuevo']);
