@@ -23,16 +23,16 @@
           <span>
             <span class="me-2 codigo">{{ item.codigo }}</span>
             <span *ngIf="item.oferta" class="badge text-bg-success">OFERTA {{ item.porcentajeBonificacionOferta }}%</span>
-            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge text-bg-success">BONIF. {{ item.porcentajeBonificacionPrecio }}%</span>
+            <span *ngIf="!item.oferta && productosService.estaBonificado(item)" class="badge text-bg-success">BONIF. {{ item.porcentajeBonificacionPrecio | number:'1.0-2':'es-AR' }}%</span>
           </span>
           <span class="me-2"><strong>{{ item.descripcion }}</strong></span>
           <span class="me-2">
-            <span>Stock: <strong>{{ getCantidadDisponible(item) }} {{ item.nombreMedida }}</strong></span>
-            <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantDisponibleOtrasSucursales(item) }} {{ item.nombreMedida }}</span>
+            <span>Stock: <strong>{{ getCantidadDisponible(item) | number:'1.0-2':'es-AR' }} {{ item.nombreMedida }}</strong></span>
+            <span *ngIf="!idSucursal"> - Otra Suc: {{ getCantDisponibleOtrasSucursales(item) | number:'1.0-2':'es-AR' }} {{ item.nombreMedida }}</span>
             <span> - Reservado: {{ item.cantidadReservada }} {{ item.nombreMedida }}</span>
           </span>
           <span *ngIf="item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio">
-            <span *ngIf="item.cantMinima > 1">Llevando {{ item.cantMinima }} o más&nbsp;</span>
+            <span *ngIf="item.cantMinima > 1">Llevando {{ item.cantMinima | number:'1.0-2':'es-AR' }} o más&nbsp;</span>
             <span class="precio bonificado">$ {{ item.precioBonificado | number:'1.0-2':'es-AR' }}</span>
           </span>
           <span class="precio" [class.tachado]="!(item.cantMinima > 1) && (item.porcentajeBonificacionOferta || item.porcentajeBonificacionPrecio)">
