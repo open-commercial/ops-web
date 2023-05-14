@@ -78,20 +78,18 @@ export class BusquedaCuentaCorrienteClienteComponent {
 
   clearCcc() { this.ccc = null; }
 
-  async addCliente() {
+  addCliente() {
     if (!this.hasRoleToEditClientes) {
-      await this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
-      return;
+      this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR).then(() => {});
     }
-    this.router.navigate(['/clientes/nuevo']);
+    this.router.navigate(['/clientes/nuevo']).then(() => {});
   }
 
-  editCliente() {
+  async editCliente() {
     if (!this.hasRoleToEditClientes) {
-      this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
-      return;
+      await this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR).then(() => {});
     }
     if (!this.pCcc?.cliente) { return };
-    this.router.navigate(['/clientes/editar', this.pCcc.cliente.idCliente]);
+    this.router.navigate(['/clientes/editar', this.pCcc.cliente.idCliente]).then(() => {});
   }
 }
