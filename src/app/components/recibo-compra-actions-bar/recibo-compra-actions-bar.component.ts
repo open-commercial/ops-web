@@ -51,7 +51,7 @@ export class ReciboCompraActionsBarComponent extends ReciboActionsBarDirective {
             );
           }, () => { return; });
         },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) },
       })
     ;
   }

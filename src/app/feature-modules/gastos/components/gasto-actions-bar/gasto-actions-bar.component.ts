@@ -52,21 +52,21 @@ export class GastoActionsBarComponent implements OnInit {
     });
   }
 
-  verGasto() {
+  async verGasto() {
     if (!this.hasRoleToSee) {
-      this.mensajeService.msg('No posee permiso para ver el gasto', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para ver el gasto', MensajeModalType.ERROR);
       return;
     }
 
-    this.router.navigate(['/gastos/ver', this.gasto.idGasto]);
+    await this.router.navigate(['/gastos/ver', this.gasto.idGasto]);
   }
 
-  eliminarGasto() {
+  async eliminarGasto() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar el gasto', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para eliminar el gasto', MensajeModalType.ERROR);
       return;
     }
-    
+
     const msg = '¿Está seguro que desea eliminar / anular el gasto seleccionado?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
@@ -75,9 +75,9 @@ export class GastoActionsBarComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => this.afterDelete.emit(),
-            error: err => {
+            error: async err => {
               this.loadingOverlayService.deactivate();
-              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+              await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
           })
         ;

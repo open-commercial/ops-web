@@ -68,13 +68,13 @@ export class PedidoActionsBarComponent implements OnInit {
     });
   }
 
-  verPedido() {
-    this.router.navigate(['/pedidos/ver', this.pedido.idPedido]);
+  async verPedido() {
+    await this.router.navigate(['/pedidos/ver', this.pedido.idPedido]);
   }
 
-  cancelarPedido() {
+  async cancelarPedido() {
     if (!this.puedeEliminarPedido) {
-      this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
       return;
     }
 
@@ -94,32 +94,32 @@ export class PedidoActionsBarComponent implements OnInit {
     }, () => { return; });
   }
 
-  editarPedido() {
+  async editarPedido() {
     if (!this.puedeEditarPedido) {
-      this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
       return;
     }
     this.storageService.removeItem(StorageKeys.PEDIDO_EDITAR);
-    this.router.navigate(['/pedidos/editar', this.pedido.idPedido]);
+    await this.router.navigate(['/pedidos/editar', this.pedido.idPedido]);
   }
 
-  clonarPedido() {
+  async clonarPedido() {
     this.storageService.removeItem(StorageKeys.PEDIDO_NUEVO);
-    this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: this.pedido.idPedido }});
+    await this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: this.pedido.idPedido }});
   }
 
-  facturarPedido() {
+  async facturarPedido() {
     if (!this.puedeFacturarPedido) {
-      this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
       return;
     }
     this.storageService.removeItem(StorageKeys.PEDIDO_FACTURAR);
-    this.router.navigate(['/facturas-venta/de-pedido', this.pedido.idPedido]);
+    await this.router.navigate(['/facturas-venta/de-pedido', this.pedido.idPedido]);
   }
 
-  verFacturas() {
+  async verFacturas() {
     if (this.puedeVerFacturas) {
-      this.router.navigate(['/facturas-venta'], { queryParams: { nroPedido: this.pedido.nroPedido }});
+      await this.router.navigate(['/facturas-venta'], { queryParams: { nroPedido: this.pedido.nroPedido }});
     }
   }
 
@@ -133,7 +133,7 @@ export class PedidoActionsBarComponent implements OnInit {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+        error: async () => await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
       })
     ;
   }

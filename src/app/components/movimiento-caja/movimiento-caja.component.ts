@@ -57,7 +57,7 @@ export class MovimientoCajaComponent implements OnInit {
             this.cantMovimientosChange.emit(this.movimientos.length);
           }
         },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); }
       })
     ;
   }
@@ -75,21 +75,22 @@ export class MovimientoCajaComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => this.loadingMovimientos(),
-            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) },
           })
         ;
       }
     });
   }
 
-  verDetalle(m: MovimientoCaja) {
+  async verDetalle(m: MovimientoCaja) {
     if (m.tipoComprobante === TipoDeComprobante.RECIBO) {
-      this.router.navigate(['/recibos/ver/', m.idMovimiento]);
-    }
-    if (m.tipoComprobante === TipoDeComprobante.GASTO) {
-      this.router.navigate(['/gastos/ver/', m.idMovimiento]);
+      await this.router.navigate(['/recibos/ver/', m.idMovimiento]);
+      return;
     }
 
+    if (m.tipoComprobante === TipoDeComprobante.GASTO) {
+      await this.router.navigate(['/gastos/ver/', m.idMovimiento]);
+    }
   }
 
 
@@ -102,7 +103,7 @@ export class MovimientoCajaComponent implements OnInit {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `Recibo.pdf`);
         },
-        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+        error: async () => { await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR) },
       })
     ;
   }

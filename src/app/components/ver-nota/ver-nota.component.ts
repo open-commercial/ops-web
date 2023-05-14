@@ -34,7 +34,10 @@ export class VerNotaComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: nota => this.nota = nota,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR).then(() => this.location.back()),
+        error: async err => {
+          await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.location.back()
+        },
       })
     ;
   }

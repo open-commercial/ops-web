@@ -54,12 +54,12 @@ export class ClienteComponent implements OnInit {
     this.hasRoleVendedor = this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR]);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.createForm();
     if (this.route.snapshot.paramMap.has('id')) {
       if (!this.hasRoleToEditClientes) {
-        this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
-        setTimeout(() => this.volverAlListado(), 1000);
+        await this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR);
+        this.volverAlListado();
         return;
       }
       const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -71,17 +71,16 @@ export class ClienteComponent implements OnInit {
             this.cliente = cliente;
             this.populateForm();
           },
-          error: err => {
-            this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-              .then(() => this.volverAlListado());
+          error: async err => {
+            await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+            this.volverAlListado();
           }
         })
       ;
     } else {
       if (!this.hasRoleToCreateClientes) {
-        this.mensajeService.msg('No tiene permiso para crear clientes.', MensajeModalType.ERROR);
-        setTimeout(() => this.volverAlListado(), 1000);
-        return;
+        await this.mensajeService.msg('No tiene permiso para crear clientes.', MensajeModalType.ERROR);
+        this.volverAlListado();
       }
     }
   }

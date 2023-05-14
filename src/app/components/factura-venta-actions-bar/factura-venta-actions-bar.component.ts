@@ -81,8 +81,8 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     });
   }
 
-  verFactura() {
-    this.router.navigate(['/facturas-venta/ver', this.facturaVenta.idFactura]);
+  async verFactura() {
+    await this.router.navigate(['/facturas-venta/ver', this.facturaVenta.idFactura]);
   }
 
   downloadFacturaPdf() {
@@ -95,48 +95,50 @@ export class FacturaVentaActionsBarComponent implements OnInit {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+        error: async () => {
+          await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+        },
       })
     ;
   }
 
-  enviarPorEmail() {
+  async enviarPorEmail() {
     if (!this.hasRoleToEnviarPorEmail) {
-      this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
       return;
     }
 
     const msg = '¿Está seguro que desea enviar un email con la factura al Cliente?';
 
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+    await this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.facturasVentaService.enviarPorEmail(this.facturaVenta.idFactura)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
-            next: () => this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO),
-            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            next: async () => { await this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO) },
+            error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) }
           })
         ;
       }
     });
   }
 
-  verRemito() {
+  async verRemito() {
     if (this.facturaVenta.remito) {
-      this.router.navigate(['/remitos/ver', this.facturaVenta.remito.idRemito]);
+      await this.router.navigate(['/remitos/ver', this.facturaVenta.remito.idRemito]);
     }
   }
 
-  nuevoRemito() {
+  async nuevoRemito() {
     if (!this.facturaVenta.remito) {
-      this.router.navigate(['/remitos/de-factura', this.facturaVenta.idFactura]);
+      await this.router.navigate(['/remitos/de-factura', this.facturaVenta.idFactura]);
     }
   }
 
-  crearNotaCreditoFactura() {
+  async crearNotaCreditoFactura() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
       return;
     }
 
@@ -157,10 +159,10 @@ export class FacturaVentaActionsBarComponent implements OnInit {
       modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.idCliente = this.facturaVenta.idCliente;
       modalRef2.result.then(
-        (nota: NotaCredito) => {
+        async (nota: NotaCredito) => {
           const message = 'Nota de Crédito creada correctamente.';
           if (nota.idNota) {
-            this.mensajeService.msg(message, MensajeModalType.INFO).then(
+            await this.mensajeService.msg(message, MensajeModalType.INFO).then(
               () => {
                 if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
                   this.doAutorizar(nota.idNota, () => this.afterAutorizar.emit());
@@ -181,23 +183,27 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: habilitada => {
+        next: async habilitada => {
           if (habilitada) {
             this.loadingOverlayService.activate();
             this.notasService.autorizar(idNota)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
-                next: () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
-                  .then(() => callback()),
-                error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-                  .then(() => callback()),
+                next: async () => {
+                  await this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO);
+                  callback();
+                },
+                error: async err => {
+                  await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+                  callback();
+                },
               })
             ;
           } else {
-            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
+            await this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
           }
         },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) },
       })
     ;
   }

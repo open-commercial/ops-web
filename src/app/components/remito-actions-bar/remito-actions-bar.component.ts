@@ -50,25 +50,25 @@ export class RemitoActionsBarComponent implements OnInit {
     });
   }
 
-  verRemito() {
-    this.router.navigate(['/remitos/ver', this.remito.idRemito]);
+  async verRemito() {
+    await this.router.navigate(['/remitos/ver', this.remito.idRemito]);
   }
 
-  eliminarRemito() {
+  async eliminarRemito() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar remitos.', MensajeModalType.ERROR);
+      await this.mensajeService.msg('No posee permiso para eliminar remitos.', MensajeModalType.ERROR);
       return;
     }
 
     const msg = `¿Está seguro que desea eliminar el remito ` + HelperService.formatNumRemito(this.remito.serie, this.remito.nroRemito) + '?';
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+    await this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.remitosService.eliminarRemito(this.remito.idRemito)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => this.afterDelete.emit(),
-            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); },
           })
         ;
       }
@@ -85,7 +85,7 @@ export class RemitoActionsBarComponent implements OnInit {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+        error: async () => { await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR); },
       })
     ;
   }
