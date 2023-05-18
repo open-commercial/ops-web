@@ -71,8 +71,8 @@ export class ClienteComponent implements OnInit {
             this.cliente = cliente;
             this.populateForm();
           },
-          error: async err => {
-            await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          error: err => {
+            (async () => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); })();
             this.volverAlListado();
           }
         })
@@ -130,7 +130,7 @@ export class ClienteComponent implements OnInit {
               .then(() => { this.volverAlListado(); })
             ;
           },
-          error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          error: err => (async () => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) })(),
         })
       ;
     }
