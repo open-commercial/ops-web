@@ -59,7 +59,7 @@ export class ClienteComponent implements OnInit {
     if (this.route.snapshot.paramMap.has('id')) {
       if (!this.hasRoleToEditClientes) {
         this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR)
-          .then(() => this.volverAlListado());
+          .then(() => this.volverAlListado(), () => { return; });
         return;
       }
       const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -73,14 +73,14 @@ export class ClienteComponent implements OnInit {
           },
           error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-              .then(() => this.volverAlListado());
+              .then(() => this.volverAlListado(), () => { return; });
           }
         })
       ;
     } else {
       if (!this.hasRoleToCreateClientes) {
         this.mensajeService.msg('No tiene permiso para crear clientes.', MensajeModalType.ERROR)
-          .then(() => this.volverAlListado());
+          .then(() => this.volverAlListado(), () => { return; });
       }
     }
   }
@@ -127,12 +127,12 @@ export class ClienteComponent implements OnInit {
           next: () => {
             this.mensajeService
               .msg('Los datos del cliente fueron guardados exitosamente.', MensajeModalType.INFO)
-              .then(() => { this.volverAlListado(); })
+              .then(() => this.volverAlListado(), () => { return; })
             ;
           },
           error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-              .then(() => { return; })
+              .then(() => { return; }, () => { return; })
           },
         })
       ;
