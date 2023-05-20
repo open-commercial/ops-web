@@ -93,8 +93,14 @@ export abstract class NotaActionsBarDirective implements OnInit {
             this.notasService.autorizar(this.nota.idNota)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
-                next: async () => { await this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO); },
-                error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); },
+                next: () => {
+                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                  .then(() => { return; }, () => { return; });
+                },
+                error: err => {
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(() => { return; }, () => { return; });
+                },
               })
             ;
           } else {
