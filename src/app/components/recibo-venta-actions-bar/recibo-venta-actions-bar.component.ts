@@ -60,7 +60,10 @@ export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
             }, () => { return; })
           ;
         },
-        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); },
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       });
   }
 
@@ -69,27 +72,31 @@ export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
     this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: async habilitada => {
+        next: habilitada => {
           if (habilitada) {
             this.loadingOverlayService.activate();
             this.notasService.autorizar(idNota)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
-                next: async () => {
-                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO);
-                  callback();
+                next: () => {
+                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                    .then(callback, () => { return; });
                 },
                 error: err => {
-                  this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-                  callback();
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(callback, () => { return; });
                 },
               })
             ;
           } else {
-            await this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
+            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR)
+              .then(() => { return; }, () => { return; });
           }
         },
-        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); },
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       });
   }
 
@@ -103,7 +110,10 @@ export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: async () => { await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR) },
+        error: () => {
+          this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       })
     ;
   }

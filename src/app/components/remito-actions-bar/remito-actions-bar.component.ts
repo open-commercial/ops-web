@@ -68,7 +68,10 @@ export class RemitoActionsBarComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => this.afterDelete.emit(),
-            error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); },
+            error: err => {
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; });
+            },
           })
         ;
       }
@@ -85,7 +88,10 @@ export class RemitoActionsBarComponent implements OnInit {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: async () => { await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR); },
+        error: () => {
+          this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       })
     ;
   }

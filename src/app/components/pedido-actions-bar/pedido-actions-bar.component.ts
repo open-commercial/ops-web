@@ -87,7 +87,10 @@ export class PedidoActionsBarComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => { location.reload(); },
-            error: err => this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR),
+            error: (err) => {
+              this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; });
+            },
           })
         ;
       }
@@ -133,7 +136,10 @@ export class PedidoActionsBarComponent implements OnInit {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: async () => await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
+        error: () => {
+          this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       })
     ;
   }

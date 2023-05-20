@@ -95,8 +95,9 @@ export class FacturaVentaActionsBarComponent implements OnInit {
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
-        error: async () => {
-          await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+        error: () => {
+          this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
         },
       })
     ;
@@ -116,8 +117,14 @@ export class FacturaVentaActionsBarComponent implements OnInit {
         this.facturasVentaService.enviarPorEmail(this.facturaVenta.idFactura)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
-            next: async () => { await this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO) },
-            error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) }
+            next: () => {
+              this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO)
+                .then(() => { return; }, () => { return; });
+            },
+            error: err => {
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; });
+            }
           })
         ;
       }
@@ -159,16 +166,16 @@ export class FacturaVentaActionsBarComponent implements OnInit {
       modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.idCliente = this.facturaVenta.idCliente;
       modalRef2.result.then(
-        async (nota: NotaCredito) => {
+          (nota: NotaCredito) => {
           const message = 'Nota de Crédito creada correctamente.';
           if (nota.idNota) {
-            await this.mensajeService.msg(message, MensajeModalType.INFO).then(
+            this.mensajeService.msg(message, MensajeModalType.INFO).then(
               () => {
                 if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
                   this.doAutorizar(nota.idNota, () => this.afterAutorizar.emit());
                 } else { this.afterNoAutorizar.emit() }
               }
-            );
+            , () => { return; });
           } else {
             throw new Error('La Nota no posee id');
           }
@@ -183,27 +190,31 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: async habilitada => {
+        next: habilitada => {
           if (habilitada) {
             this.loadingOverlayService.activate();
             this.notasService.autorizar(idNota)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
-                next: async () => {
-                  await this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO);
-                  callback();
+                next: () => {
+                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                    .then(callback, () => { return; });
                 },
-                error: async err => {
-                  await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-                  callback();
+                error: err => {
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(callback, () => { return; });
                 },
               })
             ;
           } else {
-            await this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
+            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR)
+              .then(() => { return; }, () => { return; });
           }
         },
-        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) },
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       })
     ;
   }

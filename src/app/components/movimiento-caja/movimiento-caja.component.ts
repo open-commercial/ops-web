@@ -57,7 +57,10 @@ export class MovimientoCajaComponent implements OnInit {
             this.cantMovimientosChange.emit(this.movimientos.length);
           }
         },
-        error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR); }
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });;
+        }
       })
     ;
   }
@@ -75,7 +78,10 @@ export class MovimientoCajaComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => this.loadingMovimientos(),
-            error: async err => { await this.mensajeService.msg(err.error, MensajeModalType.ERROR) },
+            error: err => {
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; });
+            },
           })
         ;
       }
@@ -103,7 +109,10 @@ export class MovimientoCajaComponent implements OnInit {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `Recibo.pdf`);
         },
-        error: async () => { await this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR) },
+        error: () => {
+          this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
       })
     ;
   }

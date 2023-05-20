@@ -75,9 +75,10 @@ export class GastoActionsBarComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => this.afterDelete.emit(),
-            error: async err => {
+            error: err => {
               this.loadingOverlayService.deactivate();
-              await this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; });
             },
           })
         ;
