@@ -83,11 +83,7 @@ export class RemitoActionsBarComponent implements OnInit {
     this.remitosService.getRemitoPdf(this.remito.idRemito)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
+        next: (res) => HelperService.openFileUrlFromBlob(res),
         error: () => {
           this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });

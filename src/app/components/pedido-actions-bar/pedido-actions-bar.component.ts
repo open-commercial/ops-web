@@ -10,6 +10,7 @@ import { Rol } from './../../models/rol';
 import { EstadoPedido } from './../../models/estado-pedido';
 import { Pedido } from './../../models/pedido';
 import { Component, OnInit, Input } from '@angular/core';
+import { HelperService } from 'src/app/services/helper.service';
 
 type PedidoActionButtonName = 'show'|'download'|'edit'|'clone'|'delete'|'invoice'|'show-invoice';
 
@@ -131,11 +132,7 @@ export class PedidoActionsBarComponent implements OnInit {
     this.pedidosService.getPedidoPdf(this.pedido.idPedido)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
+        next: (res) => HelperService.openFileUrlFromBlob(res),
         error: () => {
           this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });

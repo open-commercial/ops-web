@@ -134,4 +134,10 @@ export class HelperService {
     const d = moment.unix(v).local();
     return d.toDate();
   }
+
+  static openFileUrlFromBlob(blob: Blob, type = 'application/pdf') {
+    const file = new Blob([blob], {type: 'application/pdf'});
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL, '_blank');
+  }
 }
