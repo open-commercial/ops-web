@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Caja} from '../../models/caja';
 import {CajasService} from '../../services/cajas.service';
@@ -34,7 +35,8 @@ export class MovimientoCajaComponent implements OnInit {
   estadoCaja = EstadoCaja;
   tipoComprobante = TipoDeComprobante;
 
-  constructor(private cajasService: CajasService,
+  constructor(private router: Router,
+              private cajasService: CajasService,
               private gastosService: GastosService,
               private recibosService: RecibosService,
               private mensajeService: MensajeService,
@@ -48,15 +50,18 @@ export class MovimientoCajaComponent implements OnInit {
     this.loading = true;
     this.cajasService.getMovimientosCaja(this.pCaja.idCaja, this.pIdFormaDePago)
       .pipe(finalize(() => this.loading = false))
-      .subscribe(
-        movimientos => {
+      .subscribe({
+        next: movimientos => {
           this.movimientos = movimientos;
           if (emitChange) {
             this.cantMovimientosChange.emit(this.movimientos.length);
           }
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      )
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });;
+        }
+      })
     ;
   }
 
@@ -71,26 +76,44 @@ export class MovimientoCajaComponent implements OnInit {
         this.loadingOverlayService.activate();
         this.gastosService.eliminarGasto(m.idMovimiento)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe(
-            () => this.loadingMovimientos(),
-            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-          )
+          .subscribe({
+            next: () => this.loadingMovimientos(),
+            error: err => {
+              this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; });
+            },
+          })
         ;
       }
     });
   }
 
+  async verDetalle(m: MovimientoCaja) {
+    if (m.tipoComprobante === TipoDeComprobante.RECIBO) {
+      await this.router.navigate(['/recibos/ver/', m.idMovimiento]);
+      return;
+    }
+
+    if (m.tipoComprobante === TipoDeComprobante.GASTO) {
+      await this.router.navigate(['/gastos/ver/', m.idMovimiento]);
+    }
+  }
+
+
   downloadReciboPdf(idRecibo: number) {
     this.loadingOverlayService.activate();
     this.recibosService.getReporteRecibo(idRecibo)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {
+      .subscribe({
+        next: (res) => {
           const file = new Blob([res], {type: 'application/pdf'});
           saveAs(file, `Recibo.pdf`);
         },
-        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      )
+        error: () => {
+          this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
+      })
     ;
   }
 }

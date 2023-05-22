@@ -13,20 +13,10 @@ import {AuthService} from '../../../../services/auth.service';
 import {ConfiguracionesSucursalService} from '../../../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../../../services/notas.service';
 import {Movimiento} from '../../../../models/movimiento';
-import {Recibo} from '../../../../models/recibo';
 import {Observable} from 'rxjs';
-import {finalize, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Proveedor} from '../../../../models/proveedor';
 import {ProveedoresService} from '../../../../services/proveedores.service';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {
-  NotaDebitoCompraReciboModalComponent
-} from '../../../cuentas-corrientes-proveedor/components/nota-debito-compra-recibo-modal/nota-debito-compra-recibo-modal.component';
-import {NuevaNotaDebitoDeRecibo} from '../../../../models/nueva-nota-debito-de-recibo';
-import {NotaDebito} from '../../../../models/nota';
-import {
-  NotaDebitoCompraDetalleReciboModalComponent
-} from '../../../cuentas-corrientes-proveedor/components/nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
 
 @Component({
   selector: 'app-recibos-compra',
@@ -104,28 +94,7 @@ export class RecibosCompraComponent extends RecibosDirective implements OnInit {
     return ret;
   }
 
-  doCrearNotaDebitoRecibo(r: Recibo) {
-    this.loadingOverlayService.activate();
-    this.proveedoresService.getProveedor(r.idProveedor)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: (p: Proveedor) => {
-          const modalRef = this.modalService.open(NotaDebitoCompraReciboModalComponent, { backdrop: 'static' });
-          modalRef.componentInstance.proveedor = p;
-          modalRef.componentInstance.idRecibo = r.idRecibo;
-          modalRef.result.then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
-            const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleReciboModalComponent, { backdrop: 'static'});
-            modalRef2.componentInstance.nndr = data[0];
-            modalRef2.componentInstance.notaDebito = data[1];
-            modalRef2.componentInstance.proveedor = p;
-            modalRef2.result.then(
-              (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-              () => { return; }
-            );
-          }, () => { return; });
-        },
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+  afterReciboDelete() {
+    location.reload();
   }
 }

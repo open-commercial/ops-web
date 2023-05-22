@@ -4,16 +4,33 @@
     <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', icono]"></fa-icon></span>
     <input type="text" class="form-control" [attr.aria-label]="label" disabled [attr.aria-describedby]="'find-' + getLabelForId() + '-button'"
            tabindex="-1" id="{{ getLabelForId() }}" [value]="getDisplayValue()">
-    <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled || loading" (click)="clearValue()">
-      <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar {{ label }}</span>
-    </button>
-    <button class="btn btn-outline-secondary" type="button" id="find-{{ getLabelForId() }}-button" [disabled]="isDisabled || loading" (click)="select()">
-      <fa-icon [icon]="['fas', 'search']" *ngIf="!loading"></fa-icon>
-      <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
-      <span class="sr-only">Buscar {{ label }}</span>
-    </button>
-    <button class="btn btn-outline-secondary" type="button" (click)="new()" [disabled]="isDisabled || loading" *ngIf="showNewButton">
-      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-    </button>
+    <ng-template [ngIf]="!isDisabled">
+      <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="clearValue()">
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon><span class="sr-only">Quitar {{ label }}</span>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" id="find-{{ getLabelForId() }}-button" [disabled]="loading" (click)="select()">
+        <fa-icon [icon]="['fas', 'search']" *ngIf="!loading"></fa-icon>
+        <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loading"></fa-icon>
+        <span class="sr-only">Buscar {{ label }}</span>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" (click)="new()" [disabled]="loading" *ngIf="showNewButton">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        <span class="sr-only">Nuevo {{ label }}</span>
+      </button>
+    </ng-template>
+    <ng-template [ngIf]="isDisabled">
+      <span class="input-group-text text-muted">
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon>
+        <span class="sr-only">Quitar {{ label }}</span>
+      </span>
+      <span class="input-group-text text-muted">
+        <fa-icon [icon]="['fas', 'search']"></fa-icon>
+        <span class="sr-only">Buscar {{ label }}</span>
+      </span>
+      <span class="input-group-text text-muted" *ngIf="showNewButton">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        <span class="sr-only">Nuevo {{ label }}</span>
+      </span>
+    </ng-template>
   </div>
 </div>

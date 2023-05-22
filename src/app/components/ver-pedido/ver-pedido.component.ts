@@ -1,3 +1,4 @@
+import { EstadoPedido } from './../../models/estado-pedido';
 import { Component, OnInit } from '@angular/core';
 import { Pedido } from '../../models/pedido';
 import { PedidosService } from '../../services/pedidos.service';
@@ -8,8 +9,6 @@ import { RenglonPedido } from '../../models/renglon-pedido';
 import { TipoDeEnvio } from '../../models/tipo-de-envio';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {MensajeService} from '../../services/mensaje.service';
 
 @Component({
   selector: 'app-ver-pedido',
@@ -22,11 +21,15 @@ export class VerPedidoComponent implements OnInit {
 
   tipoDeEnvio = TipoDeEnvio;
 
+  nombreCliente = '';
+  envioLabel = '';
+
+  estado = EstadoPedido;
+
   constructor(private route: ActivatedRoute,
               private pedidosService: PedidosService,
               private location: Location,
-              public loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService) { }
+              public loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -39,35 +42,23 @@ export class VerPedidoComponent implements OnInit {
       .subscribe((v: [Pedido, RenglonPedido[]]) => {
         this.pedido = v[0];
         this.renglones = v[1];
+
+        this.nombreCliente = this.getNombreCliente();
+        this.envioLabel = this.getEnvioLabel();
       })
     ;
   }
 
-  getNombreCliente() {
+  private getNombreCliente() {
     let ret = '';
     if (this.pedido && this.pedido.cliente) {
       const c = this.pedido.cliente;
-      ret = `#${c.nroCliente} - ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
+      ret = `${c.nroCliente} - ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
     }
     return ret;
   }
 
-  downloadPedidoPdf(pedido: Pedido) {
-    this.loadingOverlayService.activate();
-    this.pedidosService.getPedidoPdf(pedido.idPedido)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      )
-    ;
-  }
-
-  getEnvioLabel() {
+  private getEnvioLabel() {
     if (!this.pedido || !this.pedido.tipoDeEnvio) {
       return '';
     }

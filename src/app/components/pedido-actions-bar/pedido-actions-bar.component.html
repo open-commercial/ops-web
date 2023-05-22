@@ -1,0 +1,43 @@
+<ul class="list-inline mb-0 text-center d-inline-block">
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['show']">
+    <a class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" triggers="mouseenter:mouseleave" placement="left"
+        (click)="verPedido()">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </a>
+  </li>
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['download']">
+    <button class="btn btn-primary" (click)="downloadPedidoPdf(pedido)" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="puedeEditarPedido && !hiddenButtonsValues['edit']">
+    <a class="btn btn-primary fake-cursor" ngbPopover="Editar" triggers="mouseenter:mouseleave" placement="left"
+        (click)="editarPedido()">
+      <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+    </a>
+  </li>
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['clone']">
+    <a class="btn btn-primary fake-cursor" ngbPopover="Clonar" triggers="mouseenter:mouseleave" placement="left"
+        (click)="clonarPedido()">
+      <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+    </a>
+  </li>
+  <li class="list-inline-item" *ngIf="puedeEliminarPedido && !hiddenButtonsValues['delete']">
+    <a class="btn btn-primary fake-cursor" ngbPopover="Cancelar" triggers="mouseenter:mouseleave" placement="left"
+        (click)="cancelarPedido()">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+    </a>
+  </li>
+  <li class="list-inline-item" *ngIf="puedeFacturarPedido && !hiddenButtonsValues['invoice']">
+    <a class="btn btn-primary fake-cursor" ngbPopover="Facturar" triggers="mouseenter:mouseleave" placement="left"
+        (click)="facturarPedido()">
+      <fa-icon [icon]="['fas', 'cash-register']"></fa-icon>
+    </a>
+  </li>
+  <li class="list-inline-item" *ngIf="puedeVerFacturas && !hiddenButtonsValues['show-invoice']">
+    <a class="btn btn-primary fake-cursor" ngbPopover="Ver Facturas" triggers="mouseenter:mouseleave" placement="left"
+        (click)="verFacturas()">
+      <fa-icon [icon]="['fas', 'link']"></fa-icon>
+    </a>
+  </li>
+</ul>

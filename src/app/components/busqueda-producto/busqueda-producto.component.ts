@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, finalize } from 'rxjs/operators';
 import { ProductoModalComponent } from '../producto-modal/producto-modal.component';
 import { Producto } from '../../models/producto';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from '../../services/productos.service';
 import {Cliente} from '../../models/cliente';
 import {Movimiento} from '../../models/movimiento';
@@ -54,11 +54,10 @@ export class BusquedaProductoComponent implements OnInit {
 
   loadingProducto = false;
 
-  constructor(modalConfig: NgbModalConfig,
-              private modalService: NgbModal,
+  disabledShowProductoModalButton = false;
+
+  constructor(private modalService: NgbModal,
               private productosService: ProductosService) {
-    modalConfig.backdrop = 'static';
-    modalConfig.keyboard = false;
   }
 
   ngOnInit() {
@@ -76,15 +75,18 @@ export class BusquedaProductoComponent implements OnInit {
 
   showProductoModal($event) {
     $event.preventDefault();
-    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true});
+    this.disabledShowProductoModalButton = true;
+    const modalRef = this.modalService.open(ProductoModalComponent, {scrollable: true, keyboard: true});
     modalRef.componentInstance.cantidadesInicialesPedido = this.pCantidadesInicialesPedido;
     modalRef.componentInstance.cantidadesActualesPedido = this.pCantidadesActualesPedido;
     if (this.cliente) { modalRef.componentInstance.cliente = this.cliente; }
     if (this.movimiento) { modalRef.componentInstance.movimiento = this.movimiento; }
     modalRef.componentInstance.idSucursal = this.idSucursal;
-    modalRef.result.then((p: Producto) => {
-      this.seleccion.emit(p);
-    }, () => { return; });
+    modalRef.result
+      .then((p: Producto) => {
+        this.seleccion.emit(p);
+      }, () => { return; })
+      .finally(() => setTimeout(() => this.disabledShowProductoModalButton = false, 1000));
   }
 
   ingresarProductoDirecto($event) {
@@ -95,8 +97,8 @@ export class BusquedaProductoComponent implements OnInit {
     this.loadingProducto = true;
     this.productosService.getProductoPorCodigo(this.codigo)
       .pipe(finalize(() => this.loadingProducto = false))
-      .subscribe(
-        (p: Producto) => {
+      .subscribe({
+        next: (p: Producto) => {
           if (p) {
             this.directInputSeleccion.emit(p);
             this.codigo = '';
@@ -104,10 +106,10 @@ export class BusquedaProductoComponent implements OnInit {
             this.showMessage(`No existe producto con codigo: "${this.codigo}"`, 'danger');
           }
         },
-        err => {
+        error: err => {
           this.loadingProducto = false;
           this.showMessage(err.error, 'danger');
         }
-      );
+      });
   }
 }

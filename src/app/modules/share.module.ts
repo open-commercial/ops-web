@@ -1,3 +1,5 @@
+import { ReciboVentaActionsBarComponent } from './../components/recibo-venta-actions-bar/recibo-venta-actions-bar.component';
+import { ReciboCompraActionsBarComponent } from '../components/recibo-compra-actions-bar/recibo-compra-actions-bar.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FiltroOrdenamientoComponent} from '../components/filtro-ordenamiento/filtro-ordenamiento.component';
@@ -15,7 +17,7 @@ import {
   faClipboardList, faPlus, faBarcode, faEdit,
   faBoxOpen, faMinus, faStore, faUser,
   faSignOutAlt, faInfoCircle, faQuestionCircle, faTimesCircle,
-  faFileSignature, faFileDownload, faChevronLeft, faIndustry,
+  faFileSignature, faPrint, faChevronLeft, faIndustry,
   faSuitcase, faPen, faEnvelope, faLink,
   faFolderOpen, faCopy, faArrowAltCircleDown, faExchangeAlt,
   faCheckSquare, faLockOpen, faLock, faSyncAlt, faCoins,
@@ -39,6 +41,11 @@ import { UsuarioFormComponent } from '../components/usuario-form/usuario-form.co
 import { ImgPickerComponent } from '../components/img-picker/img-picker.component';
 import { TotalesComponent } from '../components/totales/totales.component';
 import { ListaTableComponent } from '../components/lista-table/lista-table.component';
+import { FacturaVentaActionsBarComponent } from '../components/factura-venta-actions-bar/factura-venta-actions-bar.component';
+import { PedidoActionsBarComponent } from '../components/pedido-actions-bar/pedido-actions-bar.component';
+import { RemitoActionsBarComponent } from '../components/remito-actions-bar/remito-actions-bar.component';
+import { NotaCreditoActionsBarComponent } from '../components/nota-credito-actions-bar/nota-credito-actions-bar.component';
+import { NotaDebitoActionsBarComponent } from '../components/nota-debito-actions-bar/nota-debito-actions-bar.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +67,13 @@ import { ListaTableComponent } from '../components/lista-table/lista-table.compo
     ImgPickerComponent,
     TotalesComponent,
     ListaTableComponent,
+    FacturaVentaActionsBarComponent,
+    PedidoActionsBarComponent,
+    ReciboCompraActionsBarComponent,
+    ReciboVentaActionsBarComponent,
+    RemitoActionsBarComponent,
+    NotaCreditoActionsBarComponent,
+    NotaDebitoActionsBarComponent,
   ],
   imports: [
     CommonModule,
@@ -89,6 +103,13 @@ import { ListaTableComponent } from '../components/lista-table/lista-table.compo
     ImgPickerComponent,
     TotalesComponent,
     ListaTableComponent,
+    FacturaVentaActionsBarComponent,
+    PedidoActionsBarComponent,
+    ReciboCompraActionsBarComponent,
+    ReciboVentaActionsBarComponent,
+    RemitoActionsBarComponent,
+    NotaCreditoActionsBarComponent,
+    NotaDebitoActionsBarComponent,
   ]
 })
 export class ShareModule {
@@ -101,7 +122,7 @@ export class ShareModule {
       faBarcode, faEdit, faBoxOpen, faMinus,
       faStore, faUser, faSignOutAlt, faInfoCircle,
       faQuestionCircle, faTimesCircle, faFileSignature,
-      faFileDownload, faChevronLeft, faIndustry, faSuitcase,
+      faPrint, faChevronLeft, faIndustry, faSuitcase,
       faPen, faEnvelope, faLink, faFolderOpen,
       faCopy, faArrowAltCircleDown, faExchangeAlt, faCheckSquare,
       faLockOpen, faLock, faSyncAlt, faCoins,

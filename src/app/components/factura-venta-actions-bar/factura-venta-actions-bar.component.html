@@ -1,0 +1,38 @@
+<ul class="list-inline mb-0 text-center d-inline-block">
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['show']">
+    <button class="btn btn-primary fake-cursor" (click)="verFactura()"
+      ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['print']">
+    <button class="btn btn-primary fake-cursor" (click)="downloadFacturaPdf()"
+      ngbPopover="Imprimir" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToEnviarPorEmail && !hiddenButtonsValues['email']">
+    <button class="btn btn-primary fake-cursor" (click)="enviarPorEmail()"
+      ngbPopover="Enviar por Email" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'envelope']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="facturaVenta.remito && !hiddenButtonsValues['show-remito']">
+    <button class="btn btn-primary fake-cursor" (click)="verRemito()"
+      ngbPopover="Ver Remito" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'link']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="!facturaVenta.remito && !hiddenButtonsValues['new-remito']">
+    <button class="btn btn-primary fake-cursor" (click)="nuevoRemito()"
+      ngbPopover="Nuevo Remito" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToCrearNota && !hiddenButtonsValues['create-nota-credito']">
+    <button class="btn btn-primary fake-cursor" type="button" (click)="crearNotaCreditoFactura()"
+      ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
+    </button>
+  </li>
+</ul>

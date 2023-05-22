@@ -116,6 +116,6 @@ export abstract class ListaDirective implements OnInit, OnDestroy {
 
   private isAllSelected(): boolean {
     if (!this.batchActionKey) { return false; }
-    return this.pItems.every(i => this.batchActionsService.hasElement(this.pBatchActionKey, this.getItemIdFn(i) as number));
+    return this.pItems.length && this.pItems.every(i => this.batchActionsService.hasElement(this.pBatchActionKey, this.getItemIdFn(i) as number));
   }
 }
