@@ -9,9 +9,18 @@
         <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon>
         Recibo de {{ recibo.idCliente ? 'Venta' : 'Compra' }}
       </h1>
-      <button class="btn btn-primary" (click)="downloadReciboPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave" *ngIf="recibo.idCliente">
-        <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-      </button>
+      <div class="text-nowrap">
+        <app-recibo-compra-actions-bar *ngIf="!recibo.idCliente"
+          [hiddenButtons]="['show']"
+          [recibo]="recibo"
+          (afterDelete)="volverAlListado()">
+        </app-recibo-compra-actions-bar>
+        <app-recibo-venta-actions-bar *ngIf="recibo.idCliente" class="me-2"
+          [hiddenButtons]="['show']"
+          [recibo]="recibo"
+          (afterDelete)="volverAlListado()">
+        </app-recibo-venta-actions-bar>
+      </div>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del recibo</caption>
@@ -27,6 +36,7 @@
       <tr><th scope="row" class="w-25 table-dark">Forma de Pago</th><td>{{ recibo.nombreFormaDePago }}</td></tr>
       <tr><th scope="row" class="w-25 table-dark">Monto</th><td>{{ recibo.monto | currency:'ARS':'symbol':'1.2-2' }}</td></tr>
       <tr><th scope="row" class="w-25 table-dark">Concepto</th><td>{{ recibo.concepto }}</td></tr>
+      <tr><th scope="row" class="w-25 table-dark">Usuario</th><td>{{ recibo.nombreUsuario }}</td></tr>
       </tbody>
     </table>
   </div>

@@ -32,10 +32,13 @@ export class VerNotaComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.notasService.getNota(id)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        nota => this.nota = nota,
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR).then(() => this.location.back()),
-      )
+      .subscribe({
+        next: nota => this.nota = nota,
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => this.location.back(), () => { return; });
+        }
+      })
     ;
   }
 
@@ -43,23 +46,11 @@ export class VerNotaComponent implements OnInit {
     this.location.back();
   }
 
-  dowloadNotaPdf() {
-    if (!this.nota.idCliente) { return; }
-    this.loadingOverlayService.activate();
-    this.notasService.getReporte(this.nota.idNota)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {          
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      )
-    ;
-  }
-
   getTitle(): string {
-    return this.nota.type === 'NotaCredito' ? 'Nota de Crédito' : 'Nota de Débito';    
+    return [
+      this.nota.type === 'NotaCredito' ? 'Nota de Crédito' : 'Nota de Débito',
+      ' de ',
+      this.nota.movimiento === Movimiento.COMPRA ? 'Compra' : 'Venta'
+    ].join('');
   }
 }

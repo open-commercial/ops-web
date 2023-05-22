@@ -11,6 +11,7 @@ import {MensajeService} from '../../services/mensaje.service';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {ActivatedRoute} from '@angular/router';
 import {UFProfile} from '../usuario-form/usuario-form.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-cliente',
@@ -33,32 +34,54 @@ export class ClienteComponent implements OnInit {
 
   ufProfile = UFProfile.CLIENTE;
 
+  allowedRolesToCreateClientes = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
+  allowedRolesToEditClientes = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
+
+  hasRoleToCreateClientes = false;
+  hasRoleToEditClientes = false;
+  hasRoleVendedor = false;
+
   constructor(private fb: UntypedFormBuilder,
               private route: ActivatedRoute,
               private loadingOverlayService: LoadingOverlayService,
               private mensajeService: MensajeService,
               private clientesService: ClientesService,
-              private location: Location
-              ) { }
+              private location: Location,
+              private authService: AuthService,
+              ) {
+    this.hasRoleToCreateClientes = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreateClientes);
+    this.hasRoleToEditClientes = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEditClientes);
+    this.hasRoleVendedor = this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR]);
+  }
 
   ngOnInit() {
     this.createForm();
     if (this.route.snapshot.paramMap.has('id')) {
+      if (!this.hasRoleToEditClientes) {
+        this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR)
+          .then(() => this.volverAlListado(), () => { return; });
+        return;
+      }
       const id = Number(this.route.snapshot.paramMap.get('id'));
       this.loadingOverlayService.activate();
       this.clientesService.getCliente(id)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          cliente => {
+        .subscribe({
+          next: cliente => {
             this.cliente = cliente;
             this.populateForm();
           },
-          err => {
+          error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-              .then(() => this.volverAlListado());
+              .then(() => this.volverAlListado(), () => { return; });
           }
-        )
+        })
       ;
+    } else {
+      if (!this.hasRoleToCreateClientes) {
+        this.mensajeService.msg('No tiene permiso para crear clientes.', MensajeModalType.ERROR)
+          .then(() => this.volverAlListado(), () => { return; });
+      }
     }
   }
 
@@ -69,12 +92,12 @@ export class ClienteComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       puedeComprarAPlazo: false,
-      montoCompraMinima: [0, Validators.min(0)],
+      montoCompraMinima: [{value: 0, disabled: this.hasRoleVendedor}, Validators.min(0)],
       nombreFiscal: ['', Validators.required],
       nombreFantasia: '',
       idFiscal: '',
       categoriaIVA: [null, Validators.required],
-      idViajante: null,
+      idViajante: [{value: null, disabled: this.hasRoleVendedor}],
       telefono: ['', Validators.required],
       contacto: '',
       email: ['', Validators.email],
@@ -100,15 +123,18 @@ export class ClienteComponent implements OnInit {
       this.loadingOverlayService.activate();
       observable
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.mensajeService
               .msg('Los datos del cliente fueron guardados exitosamente.', MensajeModalType.INFO)
-              .then(() => { this.volverAlListado(); })
+              .then(() => this.volverAlListado(), () => { return; })
             ;
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-        )
+          error: err => {
+            this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+              .then(() => { return; }, () => { return; })
+          },
+        })
       ;
     }
   }
@@ -117,7 +143,6 @@ export class ClienteComponent implements OnInit {
     const formValues = this.form.value;
     return {
       idCliente: this.cliente && this.cliente.idCliente ? this.cliente.idCliente : null,
-      // nroCliente: this.cliente && this.cliente.nroCliente ? this.cliente.nroCliente : null,
       nombreFiscal: formValues.nombreFiscal,
       nombreFantasia: formValues.nombreFantasia,
       categoriaIVA: formValues.categoriaIVA,
@@ -127,16 +152,10 @@ export class ClienteComponent implements OnInit {
       email: formValues.email,
       telefono: formValues.telefono,
       contacto: formValues.contacto,
-      // fechaAlta: this.cliente && this.cliente.fechaAlta ? this.cliente.fechaAlta : null,
       idViajante: formValues.idViajante,
-      // nombreViajante: '',
       idCredencial: formValues.idCredencial,
-      // nombreCredencial: '',
       predeterminado: this.cliente && this.cliente.predeterminado ? this.cliente.predeterminado : false,
-      // saldoCuentaCorriente: number,
       montoCompraMinima: formValues.montoCompraMinima,
-      // detalleUbicacionDeFacturacion: string,
-      // detalleUbicacionDeEnvio: string,
       puedeComprarAPlazo: formValues.puedeComprarAPlazo,
     };
   }

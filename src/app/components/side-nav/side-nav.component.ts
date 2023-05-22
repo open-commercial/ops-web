@@ -76,9 +76,9 @@ export class SideNavComponent implements OnDestroy {
       {
         seccion: 'Stock',
         id: 'stock',
-        show: this.tieneRolAdminOEncargado,
+        show: this.tieneRolAdminOEncargado || this.tieneRolVendedor,
         rutas: [
-          { name: 'Productos', icon: ['fas', 'box-open'], route: '/productos', show: true },
+          { name: 'Productos', icon: ['fas', 'box-open'], route: '/productos', show: this.tieneRolAdminOEncargado },
           { name: 'Traspasos', icon: ['fas', 'exchange-alt'], route: '/traspasos', show: true },
         ],
       },
@@ -91,7 +91,7 @@ export class SideNavComponent implements OnDestroy {
             name: 'Clientes',
             icon: ['fas', 'portrait'],
             route: '/clientes',
-            show: this.tieneRolAdminOEncargado
+            show: this.tieneRolAdminOEncargado || this.tieneRolVendedor
           },
           {
             name: 'Facturas',

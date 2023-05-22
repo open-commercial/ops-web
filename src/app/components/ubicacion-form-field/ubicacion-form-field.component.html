@@ -4,12 +4,25 @@
     <span class="input-group-text" aria-hidden="true"><fa-icon [icon]="['fas', 'map-marker-alt']"></fa-icon></span>
     <input type="text" class="form-control" [attr.aria-label]="label" disabled tabindex="-1"
            [value]="getDisplayValue()">
-    <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled" (click)="clearValue()">
-      <fa-icon [icon]="['fas', 'times']"></fa-icon><span class="sr-only">Quitar Ubicación</span>
-    </button>
-    <button class="btn btn-outline-secondary" type="button" [disabled]="isDisabled" (click)="edit()">
-      <fa-icon [icon]="['fas', 'pen']"></fa-icon>
-      <span class="sr-only">Editar Ubicación</span>
-    </button>
+    <ng-template [ngIf]="!isDisabled">
+      <button class="btn btn-outline-secondary" type="button" (click)="clearValue()">
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon>
+        <span class="sr-only">Quitar Ubicación</span>
+      </button>
+      <button class="btn btn-outline-secondary" type="button" (click)="edit()">
+        <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        <span class="sr-only">Editar Ubicación</span>
+      </button>
+    </ng-template>
+    <ng-template [ngIf]="isDisabled">
+      <span class="input-group-text text-muted">
+        <fa-icon [icon]="['fas', 'broom']"></fa-icon>
+        <span class="sr-only">Quitar Ubicación</span>
+      </span>
+      <span class="input-group-text text-muted">
+        <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        <span class="sr-only">Editar Ubicación</span>
+      </span>
+    </ng-template>
   </div>
 </div>

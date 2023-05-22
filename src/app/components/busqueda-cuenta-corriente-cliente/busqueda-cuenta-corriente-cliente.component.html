@@ -4,9 +4,6 @@
       <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
     </div>
     <div *ngIf="ccc && !refreshing" class="d-flex flex-column">
-      <!-- <span class="me-2">
-        #{{ ccc.cliente.nroCliente }}
-      </span> -->
       <div>
         <span class="badge text-bg-secondary me-2 mb-2">#{{ ccc.cliente.nroCliente }}</span>
         <span class="badge text-bg-{{ ccc.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} mb-2 px-2 py-1">
@@ -25,11 +22,11 @@
       <span *ngIf="ccc.cliente.ubicacionEnvio">
         Ubi. envio: {{ helper.formatUbicacion(ccc.cliente.ubicacionEnvio) }}
       </span>
-      <span *ngIf="ccc.cliente.montoCompraMinima">
-        Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
-      </span>
       <span>
         Saldo CC: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.0-2'}}</span>
+      </span>
+      <span>
+        Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}
       </span>
     </div>
     <div *ngIf="!ccc">
@@ -39,8 +36,21 @@
   <div class="p-2" *ngIf="!readOnly">
     <ul class="list-unstyled p-0 m-0">
       <li class="mb-2">
-        <button class="btn btn-primary" type="button" (click)="showCccModal()">
+        <button class="btn btn-primary" type="button" (click)="showCccModal()"
+          ngbPopover="Seleccione un cliente" triggers="mouseenter:mouseleave" placement="left">
           <fa-icon [icon]="['fas', 'search']"></fa-icon>
+        </button>
+      </li>
+      <li class="mb-2" *ngIf="ccc && ccc.cliente && hasRoleToEditClientes">
+        <button class="btn btn-primary" type="button" (click)="editCliente()"
+          ngbPopover="Editar cliente" triggers="mouseenter:mouseleave" placement="left">
+          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        </button>
+      </li>
+      <li class="mb-2" *ngIf="hasRoleToCreateClientes">
+        <button class="btn btn-primary" type="button" (click)="addCliente()"
+          ngbPopover="Nuevo cliente" triggers="mouseenter:mouseleave" placement="left">
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </button>
       </li>
     </ul>

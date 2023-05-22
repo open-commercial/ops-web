@@ -41,7 +41,7 @@ export class ClienteFiltroComponent implements ControlValueAccessor {
   }
 
   select() {
-    const modalRef = this.modalService.open(ClienteModalComponent, {scrollable: true});
+    const modalRef = this.modalService.open(ClienteModalComponent, { scrollable: true, keyboard: true });
     modalRef.result.then((c: Cliente) => {
       this.setCliente(c);
     }, () => { return; });

@@ -34,7 +34,10 @@ export class ProductoModalComponent extends ItemSelectionModalDirective {
       this.loadingOverlayService.activate();
       this.sucursalesService.getSucursal(value)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(s => this.sucursal = s, () => this.sucursal = null)
+        .subscribe({
+          next: s => this.sucursal = s,
+          error: () => this.sucursal = null
+        })
       ;
     }
   }
