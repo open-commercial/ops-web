@@ -1,0 +1,12 @@
+<ul class="list-inline mb-0 text-center d-inline-block">
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['show']">
+    <button class="btn btn-primary fake-cursor" ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verGasto()">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['delete']">
+    <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarGasto()">
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+    </button>
+  </li>
+</ul>

@@ -9,6 +9,7 @@
         <fa-icon [icon]="['fas', 'hand-holding-usd']" [rotate]="180"></fa-icon>
         Gasto
       </h1>
+      <app-gasto-actions-bar [gasto]="gasto" [hiddenButtons]="['show']" (afterDelete)="volverAtras()"></app-gasto-actions-bar>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del Gasto</caption>

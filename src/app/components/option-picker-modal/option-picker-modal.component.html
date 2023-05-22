@@ -12,6 +12,10 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">Cerrar</button>
-  <button type="button" class="btn btn-success" (click)="submit()" [disabled]="form.invalid">Seleccionar</button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss()">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon> Cerrar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit()" [disabled]="form.invalid">
+    <fa-icon [icon]="['fas', 'check']"></fa-icon> Seleccionar
+  </button>
 </div>

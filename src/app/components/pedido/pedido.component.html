@@ -59,7 +59,7 @@
                     <td class="align-middle">
                       <span class="codigo">{{ rp.get('renglonPedido').value.codigoItem }}</span>&nbsp;
                       <span  *ngIf="rp.get('renglonPedido').value.bonificacionPorcentaje > 0" class="badge text-bg-success">
-                        {{ rp.get('renglonPedido').value.oferta ? "OFERTA" : "BONIF." }} {{ rp.get('renglonPedido').value.bonificacionPorcentaje }}%
+                        {{ rp.get('renglonPedido').value.oferta ? "OFERTA" : "BONIF." }} {{ rp.get('renglonPedido').value.bonificacionPorcentaje | number:'1.0-2' }}%
                       </span>
                       <br>
                       <strong>{{ rp.get('renglonPedido').value.descripcionItem }}</strong>

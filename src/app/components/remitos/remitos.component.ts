@@ -19,10 +19,8 @@ import {Transportista} from '../../models/transportista';
 import {TransportistasService} from '../../services/transportistas.service';
 import {UsuariosService} from '../../services/usuarios.service';
 import {ClientesService} from '../../services/clientes.service';
-import {Remito} from '../../models/remito';
 import {Rol} from '../../models/rol';
 import {AuthService} from '../../services/auth.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-remitos',
@@ -202,33 +200,6 @@ export class RemitosComponent extends ListadoDirective implements OnInit {
     return ret;
   }
 
-  verRemito(remito: Remito) {
-    this.router.navigate(['/remitos/ver', remito.idRemito]);
-  }
-
-  eliminarRemito(remito: Remito) {
-    if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar remitos.', MensajeModalType.ERROR);
-      return;
-    }
-
-    const msg = `¿Está seguro que desea eliminar el remito ` + this.helper.formatNumRemito(remito.serie, remito.nroRemito) + '?';
-    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
-      if (result) {
-        this.loadingOverlayService.activate();
-        this.remitosService.eliminarRemito(remito.idRemito)
-          .subscribe(
-            () => location.reload(),
-            err => {
-              this.loadingOverlayService.deactivate();
-              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          )
-        ;
-      }
-    });
-  }
-
   getItemsObservableMethod(terminos): Observable<Pagination> {
     return this.remitosService.buscar(terminos as BusquedaRemitoCriteria);
   }
@@ -243,5 +214,9 @@ export class RemitosComponent extends ListadoDirective implements OnInit {
 
   getClienteInfoAsync(id: number): Observable<string> {
     return this.clientesService.getCliente(id).pipe(map((c: Cliente) => c.nombreFiscal));
+  }
+
+  afterRemitoDelete() {
+    location.reload();
   }
 }

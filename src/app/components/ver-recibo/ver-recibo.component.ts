@@ -41,19 +41,4 @@ export class VerReciboComponent implements OnInit {
   volverAlListado() {
     this.location.back();
   }
-
-  downloadReciboPdf() {
-    this.loadingOverlayService.activate();
-    this.recibosService.getReporteRecibo(this.recibo.idRecibo)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: res => {
-          const file = new Blob([res], {type: 'application/pdf'});          
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        error: () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      })
-    ;
-  }
 }

@@ -1,0 +1,27 @@
+<ul class="list-inline mb-0 text-center d-inline-block">
+  <li class="list-inline-item" *ngIf="!hiddenButtonsValues['show']">
+    <button class="btn btn-primary" (click)="verRecibo()"
+      ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="recibo.idCliente && !hiddenButtonsValues['download']">
+    <button class="btn btn-primary" (click)="downloadReciboPdf()" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave" *ngIf="recibo.idCliente">
+      <fa-icon [icon]="['fas', 'print']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToCrearNota && !hiddenButtonsValues['create-nota-debito']">
+    <button class="btn btn-primary" (click)="crearNotaDeDebitoRecibo()"
+      ngbPopover="Crear Nota de Débito" placement="left" triggers="mouseenter:mouseleave">
+      <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
+    </button>
+  </li>
+  <li class="list-inline-item" *ngIf="hasRoleToDelete && !hiddenButtonsValues['delete']">
+    <button class="btn btn-primary"(click)="eliminarRecibo()"
+      ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave"
+    >
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+    </button>
+  </li>
+</ul>

@@ -28,7 +28,7 @@
                [displayMonths]="1" [navigation]="'select'" [outsideDays]="'visible'"
                [showWeekNumbers]="false" ngbDatepicker #dd="ngbDatepicker" [ngClass]="{ 'is-invalid': submitted && f.fecha.errors }">
         <button class="btn btn-outline-secondary" type="button" (click)="form.get('fecha').setValue(null)">
-          <fa-icon [icon]="['fas', 'times']"></fa-icon>
+          <fa-icon [icon]="['fas', 'broom']"></fa-icon>
         </button>
         <button class="btn btn-outline-secondary" (click)="dd.open()" type="button">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon>

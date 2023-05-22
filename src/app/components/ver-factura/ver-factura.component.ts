@@ -11,7 +11,6 @@ import { Location } from '@angular/common';
 import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaCompra } from '../../models/factura-compra';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {MensajeService} from '../../services/mensaje.service';
 
 @Component({
@@ -55,22 +54,6 @@ export class VerFacturaComponent implements OnInit {
 
   volverAlListado() {
     this.location.back();
-  }
-
-  downloadFacturaPdf() {
-    if (this.factura.type === 'FacturaCompra') { return; }
-    this.loadingOverlayService.activate();
-    this.facturasVentaService.getFacturaPdf(this.factura.idFactura)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (res) => {
-          const file = new Blob([res], {type: 'application/pdf'});
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL, '_blank');
-        },
-        () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-      )
-    ;
   }
 
   getNumeroDeComprobante() {

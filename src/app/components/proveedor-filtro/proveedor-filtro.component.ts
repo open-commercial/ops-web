@@ -48,7 +48,7 @@ export class ProveedorFiltroComponent implements ControlValueAccessor, Validator
   }
 
   select() {
-    const modalRef = this.modalService.open(ProveedorModalComponent, {scrollable: true});
+    const modalRef = this.modalService.open(ProveedorModalComponent, { scrollable: true, keyboard: true });
     modalRef.result.then((p: Proveedor) => {
       this.setProveedor(p);
     }, () => { return; });

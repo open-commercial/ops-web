@@ -1,7 +1,7 @@
-<div class="app-ver-nota my-3">
+<div class="app-ver-nota">
   <div *ngIf="nota">
-    <div class="d-flex flex-column flex-md-row align-items-md-center">
-      <h1 class="h3 flex-fill text-truncate">
+    <div class="my-3 d-flex flex-row align-items-center">
+      <h1 class="h3 flex-fill text-truncate mb-0">
         <a class="btn fake-cursor" placement="right" ngbPopover="Volver atras" triggers="mouseenter:mouseleave"
            (click)="volverAtras()">
           <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
@@ -9,11 +9,12 @@
         <fa-icon [icon]="['fas', (nota.type === 'NotaCredito' ? 'balance-scale-left' : 'balance-scale-right') ]"></fa-icon>
         {{ getTitle() }}
       </h1>
-      <div class="ms-2 text-end" *ngIf="nota.movimiento === movimiento.VENTA">
-        <button class="btn btn-primary" (click)="dowloadNotaPdf()" placement="left" ngbPopover="Descargar Archivo" triggers="mouseenter:mouseleave">
-          <fa-icon [icon]="['fas', 'file-download']"></fa-icon>
-        </button>
-      </div>
+      <app-nota-credito-actions-bar
+        class="text-nowrap"
+        [nota]="nota"
+        (afterDelete)="volverAtras()"
+        [hiddenButtons]="['show']"
+      ></app-nota-credito-actions-bar>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos de la nota</caption>
