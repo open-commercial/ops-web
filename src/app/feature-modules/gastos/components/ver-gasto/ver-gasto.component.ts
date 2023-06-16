@@ -30,7 +30,7 @@ export class VerGastoComponent implements OnInit {
     this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
     if (!this.hasRoleToSee) {
       this.mensajeService.msg('No tiene permisos para ver el gasto.', MensajeModalType.ERROR)
-        .then(() => this.volverAtras());
+        .then(() => this.volverAtras(), () => { return; });
       return;
     }
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -40,7 +40,7 @@ export class VerGastoComponent implements OnInit {
       .subscribe({
         next: gasto => this.gasto = gasto,
         error: err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR).then(() => { return; }, () => { return; });
           this.volverAtras();
         }
       })
