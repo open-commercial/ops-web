@@ -33,12 +33,12 @@
             ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
       <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
-    <button class="btn btn-primary me-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
+    <button class="btn btn-primary me-2" type="button" ngbPopover="Nueva Nota de credito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
     </button>
     <button class="btn btn-primary me-2" type="button"
-            ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
+            ngbPopover="Nueva Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaDebitoRecibo(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
     </button>

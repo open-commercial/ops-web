@@ -33,6 +33,10 @@
   </div>
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
+    <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToVerDetalle"
+            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
     <button class="btn btn-primary me-2" type="button" ngbPopover="Nueva Nota de Crédito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
@@ -45,10 +49,6 @@
     <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToAutorizar && tiposDeComprobantesParaAutorizacion.indexOf(r.tipoComprobante) >= 0"
             ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizar(r)">
       <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
-    </button>
-    <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToVerDetalle"
-            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
-      <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
     <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToDelete"
             ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
