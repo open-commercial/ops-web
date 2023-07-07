@@ -25,7 +25,7 @@
   </div>
   <app-proveedor-detalle [proveedor]="ccp.proveedor"></app-proveedor-detalle>
   <div class="text-end mx-2">
-    SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    ÚLTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
   </div>
   <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
                   [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"

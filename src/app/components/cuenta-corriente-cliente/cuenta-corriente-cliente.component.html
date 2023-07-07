@@ -29,7 +29,7 @@
   </div>
   <app-cliente-detalle [cliente]="ccc.cliente"></app-cliente-detalle>
   <div class="text-end mx-2">
-    ULTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    ÚLTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
   </div>
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
