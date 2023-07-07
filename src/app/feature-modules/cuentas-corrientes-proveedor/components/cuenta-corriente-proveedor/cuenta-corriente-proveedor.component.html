@@ -29,6 +29,10 @@
   </div>
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
+    <button class="btn btn-primary me-2" type="button"
+            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
     <button class="btn btn-primary me-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
@@ -37,10 +41,6 @@
             ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaDebitoRecibo(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
-    </button>
-    <button class="btn btn-primary me-2" type="button"
-            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
-      <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
     <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToDelete && elComprobanteSePuedeEliminar(r.tipoComprobante)"
             ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
