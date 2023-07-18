@@ -10,7 +10,7 @@ export class HomeComponent {
 
   toggleMenu() {
     this.menuOpened = !this.menuOpened;
-    const elems = document.getElementsByClassName('sic-ops-web-app');
+    const elems = document.getElementsByClassName('ops-web-app');
     const appElement = elems.item(0);
     if (this.menuOpened && appElement) {
       appElement.classList.add('menu-opened');
