@@ -51,4 +51,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: opencommercial/sic-ops-web:merceriaguemes
+          tags: opencommercial/ops-web:merceriaguemes
