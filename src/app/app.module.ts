@@ -8,7 +8,6 @@ import { LoginComponent } from './components/login/login.component';
 import { SideNavComponent } from './components/side-nav/side-nav.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { NgSelectModule } from '@ng-select/ng-select';
-
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
@@ -66,7 +65,6 @@ import { RemitoComponent } from './components/remito/remito.component';
 import { CuentasCorrientesClienteComponent } from './components/cuentas-corrientes-cliente/cuentas-corrientes-cliente.component';
 import { CuentasCorrientesClienteHomeComponent } from './components/cuentas-corrientes-cliente-home/cuentas-corrientes-cliente-home.component';
 import { ClienteComponent } from './components/cliente/cliente.component';
-
 import { NewOrUpdateUsuarioModalComponent } from './components/new-or-update-usuario-modal/new-or-update-usuario-modal.component';
 import { OptionPickerModalComponent } from './components/option-picker-modal/option-picker-modal.component';
 import { CuentaCorrienteClienteComponent } from './components/cuenta-corriente-cliente/cuenta-corriente-cliente.component';
@@ -88,7 +86,7 @@ import { NotasCreditoCompraComponent } from './components/notas-credito-compra/n
 import { NotasCreditoCompraHomeComponent } from './components/notas-credito-compra-home/notas-credito-compra-home.component';
 import { NotasDebitoCompraHomeComponent } from './components/notas-debito-compra-home/notas-debito-compra-home.component';
 import { NotasDebitoCompraComponent } from './components/notas-debito-compra/notas-debito-compra.component';
-import {ShareModule} from './modules/share.module';
+import { ShareModule } from './modules/share.module';
 import { VerReciboComponent } from './components/ver-recibo/ver-recibo.component';
 import { SelectableListComponent } from './components/selectable-list/selectable-list.component';
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';

@@ -9,7 +9,7 @@ import { StorageKeys, StorageService } from './services/storage.service';
 })
 export class AppComponent {
   envQA = environment.qa;
-  title = 'sic-ops-web';
+  title = 'ops-web';
   constructor(private storageService: StorageService) {
     this.checkAppVersion();
   }

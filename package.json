@@ -1,5 +1,5 @@
 {
-  "name": "sic-ops-web",
+  "name": "ops-web",
   "version": "0.0.0",
   "engines": {
     "node": "16.13"
