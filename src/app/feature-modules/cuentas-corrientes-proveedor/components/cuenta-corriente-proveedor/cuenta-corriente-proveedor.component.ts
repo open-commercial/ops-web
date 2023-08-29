@@ -7,7 +7,7 @@ import {CuentasCorrientesService} from '../../../../services/cuentas-corrientes.
 import {finalize} from 'rxjs/operators';
 import {CuentaCorrienteProveedor} from '../../../../models/cuenta-corriente';
 import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {combineLatest, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Pagination} from '../../../../models/pagination';
 import {RenglonCuentaCorriente} from '../../../../models/renglon-cuenta-corriente';
 import {HelperService} from '../../../../services/helper.service';
@@ -173,32 +173,6 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
   getItemsObservableMethod(terminos): Observable<Pagination> {
     return this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccp.idCuentaCorriente, terminos.pagina)
   }
-
-  // getRenglones() {
-  //   this.loadingOverlayService.activate();
-
-  //   const obvs = [
-  //     this.cuentasCorrientesService.getCuentaCorrienteProveedorSaldo(this.ccp.proveedor.idProveedor),
-  //     this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccp.idCuentaCorriente, this.page)
-  //   ];
-
-  //   combineLatest(obvs)
-  //     .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-  //     .subscribe({
-  //       next: (data: [number, Pagination]) => {
-  //         this.saldo = data[0];
-  //         this.renglones = data[1].content;
-  //         this.totalElements = data[1].totalElements;
-  //         this.totalPages = data[1].totalPages;
-  //         this.size = data[1].size;
-  //       },
-  //       error: err => {
-  //         this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-  //         this.router.navigate(['/proveedores']);
-  //       }
-  //     })
-  //   ;
-  // }
 
   nuevaNotaCredito() {
     if (!this.hasRoleToCrearNota) {
