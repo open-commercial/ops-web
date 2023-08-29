@@ -38,7 +38,6 @@ import {NotaDebitoVentaDetalleReciboModalComponent} from '../nota-debito-venta-d
 import {HelperService} from '../../services/helper.service';
 import {SucursalesService} from '../../services/sucursales.service';
 import {ReciboClienteModalComponent} from '../recibo-cliente-modal/recibo-cliente-modal.component';
-import { ListaTableKey, TableFieldConfig } from '../lista-table/lista-table.component';
 import { ListadoDirective } from 'src/app/directives/listado.directive';
 
 @Component({
@@ -126,7 +125,14 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
             this.loadingOverlayService.activate();
             this.cuentasCorrientesService.getCuentaCorrienteClienteSaldo(this.ccc.cliente.idCliente)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe(saldo => this.saldo = saldo)
+              .subscribe({
+                next: saldo => this.saldo = saldo,
+                error: err => {
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(() => { return; }, () => { return; });
+                  this.router.navigate(['/clientes']);
+                }
+              })
             ;
           },
           error: err => {

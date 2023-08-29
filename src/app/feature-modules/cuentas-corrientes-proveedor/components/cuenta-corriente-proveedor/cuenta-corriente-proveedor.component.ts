@@ -33,6 +33,8 @@ import {NuevaNotaDebitoDeRecibo} from '../../../../models/nueva-nota-debito-de-r
 import {NotaDebitoCompraDetalleReciboModalComponent} from '../nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
 import {ReciboProveedorModalComponent} from '../../../../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
 import {RecibosService} from '../../../../services/recibos.service';
+import { ListadoDirective } from 'src/app/directives/listado.directive';
+import { SucursalesService } from 'src/app/services/sucursales.service';
 
 @Component({
   selector: 'app-cuenta-corriente-proveedor',
@@ -40,16 +42,12 @@ import {RecibosService} from '../../../../services/recibos.service';
   styleUrls: ['./cuenta-corriente-proveedor.component.scss'],
   providers: [DatePipe]
 })
-export class CuentaCorrienteProveedorComponent implements OnInit {
+export class CuentaCorrienteProveedorComponent extends ListadoDirective implements OnInit {
   ccp: CuentaCorrienteProveedor;
   renglones: RenglonCuentaCorriente[] = [];
   saldo = 0;
 
   displayPage = 1;
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
 
   helper = HelperService;
 
@@ -86,17 +84,20 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     TipoDeComprobante.RECIBO
   ];
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              public loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              protected loadingOverlayService: LoadingOverlayService,
+              protected mensajeService: MensajeService,
               private location: Location,
               private cuentasCorrientesService: CuentasCorrientesService,
               private modalService: NgbModal,
               private authService: AuthService,
               private notasService: NotasService,
               private recibosService: RecibosService,
-              private datePipe: DatePipe) { }
+              private datePipe: DatePipe) {
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+  }
 
   ngOnInit(): void {
     if (this.route.snapshot.paramMap.has('id')) {
@@ -107,7 +108,19 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
         .subscribe({
           next: (ccp: CuentaCorrienteProveedor) => {
             this.ccp = ccp;
-            this.getRenglones();
+            super.ngOnInit();
+            this.loadingOverlayService.activate();
+            this.cuentasCorrientesService.getCuentaCorrienteProveedorSaldo(this.ccp.proveedor.idProveedor)
+              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+              .subscribe({
+                next: saldo => this.saldo = saldo,
+                error: err => {
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(() => { return; }, () => { return; });
+                  this.router.navigate(['/proveedores']);
+                }
+              })
+            ;
           },
           error: (err) => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
@@ -129,37 +142,63 @@ export class CuentaCorrienteProveedorComponent implements OnInit {
     this.location.back();
   }
 
-  getRenglones() {
-    this.loadingOverlayService.activate();
-
-    const obvs = [
-      this.cuentasCorrientesService.getCuentaCorrienteProveedorSaldo(this.ccp.proveedor.idProveedor),
-      this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccp.idCuentaCorriente, this.page)
-    ];
-
-    combineLatest(obvs)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: (data: [number, Pagination]) => {
-          this.saldo = data[0];
-          this.renglones = data[1].content;
-          this.totalElements = data[1].totalElements;
-          this.totalPages = data[1].totalPages;
-          this.size = data[1].size;
-        },
-        error: err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.router.navigate(['/proveedores']);
-        }
-      })
-    ;
+  getItemsFromQueryParams(params = null) {
+    super.getItemsFromQueryParams(params);
+    this.displayPage = this.page + 1;
   }
 
   loadPage(page) {
-    this.displayPage = page;
     this.page = page - 1;
-    this.getRenglones();
+    const qParams = this.getFormValues() as { [key: string]: any };
+    qParams.p = this.page + 1;
+    this.router.navigate([], { relativeTo: this.route, queryParams: qParams });
   }
+
+  populateFilterForm(params) {
+    /*No hace nada ya que no existe formulario de filtro */
+  }
+
+  getTerminosFromQueryParams(params) {
+    return {
+      pagina: this.page,
+    };
+  }
+
+  createFilterForm() { /* No hace nada ya que no existe formulario de filtro */ }
+  resetFilterForm() { /* No hace nada ya que no existe formulario de filtro */ }
+
+  getAppliedFilters() { this.appliedFilters = []; };
+  getFormValues() { return {} };
+
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccp.idCuentaCorriente, terminos.pagina)
+  }
+
+  // getRenglones() {
+  //   this.loadingOverlayService.activate();
+
+  //   const obvs = [
+  //     this.cuentasCorrientesService.getCuentaCorrienteProveedorSaldo(this.ccp.proveedor.idProveedor),
+  //     this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccp.idCuentaCorriente, this.page)
+  //   ];
+
+  //   combineLatest(obvs)
+  //     .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+  //     .subscribe({
+  //       next: (data: [number, Pagination]) => {
+  //         this.saldo = data[0];
+  //         this.renglones = data[1].content;
+  //         this.totalElements = data[1].totalElements;
+  //         this.totalPages = data[1].totalPages;
+  //         this.size = data[1].size;
+  //       },
+  //       error: err => {
+  //         this.mensajeService.msg(err.error, MensajeModalType.ERROR);
+  //         this.router.navigate(['/proveedores']);
+  //       }
+  //     })
+  //   ;
+  // }
 
   nuevaNotaCredito() {
     if (!this.hasRoleToCrearNota) {

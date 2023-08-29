@@ -48,7 +48,7 @@
     </button>
   </ng-template>
 
-  <div class="table-responsive" *ngIf="renglones.length">
+  <div class="table-responsive" *ngIf="items.length">
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Movimientos</caption>
       <thead>
@@ -61,7 +61,7 @@
       </tr>
       </thead>
       <tbody>
-      <ng-template ngFor let-r [ngForOf]="renglones">
+      <ng-template ngFor let-r [ngForOf]="items">
         <tr>
           <td>
             <div class="d-flex flex-row align-items-center flex-wrap">
@@ -96,7 +96,7 @@
       </tbody>
     </table>
   </div>
-  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && renglones.length <= 0">Sin Movimientos.</div>
+  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && items.length <= 0">Sin Movimientos.</div>
   <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
                   [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
                   *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
