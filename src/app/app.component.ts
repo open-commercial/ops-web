@@ -10,7 +10,7 @@ import { PreviousRouteService } from './services/previous-route.service';
 })
 export class AppComponent {
   envQA = environment.qa;
-  title = 'sic-ops-web';
+  title = 'ops-web';
 
   constructor(private storageService: StorageService,
               private previousRouteService: PreviousRouteService) {
