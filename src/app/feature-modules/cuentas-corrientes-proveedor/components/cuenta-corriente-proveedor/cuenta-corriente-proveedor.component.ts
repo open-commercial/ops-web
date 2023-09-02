@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
 import {MensajeService} from '../../../../services/mensaje.service';
-import {DatePipe, Location} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {CuentasCorrientesService} from '../../../../services/cuentas-corrientes.service';
 import {finalize} from 'rxjs/operators';
 import {CuentaCorrienteProveedor} from '../../../../models/cuenta-corriente';
@@ -35,6 +35,9 @@ import {ReciboProveedorModalComponent} from '../../../../components/recibo-prove
 import {RecibosService} from '../../../../services/recibos.service';
 import { ListadoDirective } from 'src/app/directives/listado.directive';
 import { SucursalesService } from 'src/app/services/sucursales.service';
+import { PreviousRouteService } from 'src/app/services/previous-route.service';
+
+const ssCCPPreviousUrlKey = 'CCP_PREVIOUS_URL';
 
 @Component({
   selector: 'app-cuenta-corriente-proveedor',
@@ -89,7 +92,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private location: Location,
+              private previousRouteService: PreviousRouteService,
               private cuentasCorrientesService: CuentasCorrientesService,
               private modalService: NgbModal,
               private authService: AuthService,
@@ -136,10 +139,18 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
     this.hasRoleToCrearRecibo = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearRecibo);
+    this.subscription.add(this.previousRouteService.previousRoute$.subscribe(url => {
+      const urlHaveToBeStored = /(^\/proveedores$|^\/proveedores\?[a-zA-Z0-9=&]+$)/.test(url);
+      console.log(urlHaveToBeStored);
+      if (urlHaveToBeStored) {
+        sessionStorage.setItem(ssCCPPreviousUrlKey, url);
+      }
+    }));
   }
 
   volverAlListado() {
-    this.location.back();
+    const backUrl = sessionStorage.getItem(ssCCPPreviousUrlKey) || '/proveedores';
+    this.router.navigateByUrl(backUrl);
   }
 
   getItemsFromQueryParams(params = null) {
@@ -353,7 +364,10 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
             .pipe(finalize(() => this.loadingOverlayService.deactivate()))
             .subscribe({
               next: () => this.loadPage(this.page + 1),
-              error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+              error: err => {
+                this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                  .then(() => { return; }, () => { return; });
+              },
             })
           ;
         }

@@ -4,7 +4,7 @@ import {CuentasCorrientesService} from '../../services/cuentas-corrientes.servic
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
 import {MensajeService} from '../../services/mensaje.service';
-import {DatePipe, Location} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {finalize} from 'rxjs/operators';
 import {RenglonCuentaCorriente} from '../../models/renglon-cuenta-corriente';
@@ -12,7 +12,6 @@ import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../services/notas.service';
 import {Observable} from 'rxjs';
-import {FacturasVentaService} from '../../services/facturas-venta.service';
 import {RecibosService} from '../../services/recibos.service';
 import {RemitosService} from '../../services/remitos.service';
 import {saveAs} from 'file-saver';
@@ -39,6 +38,9 @@ import {HelperService} from '../../services/helper.service';
 import {SucursalesService} from '../../services/sucursales.service';
 import {ReciboClienteModalComponent} from '../recibo-cliente-modal/recibo-cliente-modal.component';
 import { ListadoDirective } from 'src/app/directives/listado.directive';
+import { PreviousRouteService } from 'src/app/services/previous-route.service';
+
+const ssCCCPreviousUrlKey = 'CCC_PREVIOUS_URL';
 
 @Component({
   selector: 'app-cuenta-corriente-cliente',
@@ -99,17 +101,16 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private location: Location,
+              private previousRouteService: PreviousRouteService,
               private cuentasCorrientesService: CuentasCorrientesService,
               private configuracionesSucursalService: ConfiguracionesSucursalService,
               private notasService: NotasService,
-              private facturasVentaService: FacturasVentaService,
               private recibosService: RecibosService,
               private remitosService: RemitosService,
               private modalService: NgbModal,
               private authService: AuthService,
               private datePipe: DatePipe) {
-    super(route, router, sucursalesService, loadingOverlayService, mensajeService)
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
   ngOnInit() {
@@ -150,6 +151,13 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     this.hasRoleToCrearRecibo = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearRecibo);
+
+    this.subscription.add(this.previousRouteService.previousRoute$.subscribe(url => {
+      const urlHaveToBeStored = /(^\/clientes$|^\/clientes\?[a-zA-Z0-9=&]+$)/.test(url);
+      if (urlHaveToBeStored) {
+        sessionStorage.setItem(ssCCCPreviousUrlKey, url);
+      }
+    }));
   }
 
   /* reescrito de la base para que funcione en esta vista */
@@ -187,7 +195,8 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
 
 
   volverAlListado() {
-    this.location.back();
+    const backUrl = sessionStorage.getItem(ssCCCPreviousUrlKey) || '/clientes';
+    this.router.navigateByUrl(backUrl);
   }
 
   autorizar(r: RenglonCuentaCorriente) {

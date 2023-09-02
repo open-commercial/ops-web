@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
 import { StorageKeys, StorageService } from './services/storage.service';
+import { PreviousRouteService } from './services/previous-route.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,11 @@ import { StorageKeys, StorageService } from './services/storage.service';
 export class AppComponent {
   envQA = environment.qa;
   title = 'sic-ops-web';
-  constructor(private storageService: StorageService) {
+
+  constructor(private storageService: StorageService,
+              private previousRouteService: PreviousRouteService) {
     this.checkAppVersion();
+    this.previousRouteService.init();
   }
 
   checkAppVersion() {
