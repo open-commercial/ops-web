@@ -29,10 +29,15 @@
   </div>
   <app-cliente-detalle [cliente]="ccc.cliente"></app-cliente-detalle>
   <div class="text-end mx-2">
-    ULTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    ÚLTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
   </div>
-  <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
+
+  <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse -->
   <ng-template #actions let-r="r">
+    <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToVerDetalle"
+            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
     <button class="btn btn-primary me-2" type="button" ngbPopover="Nueva Nota de Crédito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
@@ -46,17 +51,13 @@
             ngbPopover="Autorizar" placement="left" triggers="mouseenter:mouseleave" (click)="autorizar(r)">
       <fa-icon [icon]="['fas', 'file-signature']"></fa-icon>
     </button>
-    <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToVerDetalle"
-            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
-      <fa-icon [icon]="['far', 'eye']"></fa-icon>
-    </button>
     <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToDelete"
             ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
       <fa-icon [icon]="['fas', 'trash']"></fa-icon>
     </button>
   </ng-template>
 
-  <div class="table-responsive" *ngIf="renglones.length">
+  <div class="table-responsive" *ngIf="items.length">
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Movimientos</caption>
       <thead>
@@ -69,14 +70,14 @@
       </tr>
       </thead>
       <tbody>
-      <ng-template ngFor let-r [ngForOf]="renglones">
+      <ng-template ngFor let-r [ngForOf]="items">
         <tr>
           <td>
             <div class="d-flex flex-row align-items-center flex-wrap">
               <span class="badge text-bg-secondary me-2">
                 <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ r.fecha | date:'dd/MM/yyyy HH:mm' }}
               </span>
-              <span class="badge text-bg-pill text-bg-light border border-dark me-2 my-1">
+              <span class="badge text-bg-pill text-bg-light text-wrap border border-dark me-2 my-1">
                 {{ helper.tipoComprobanteLabel(r.tipoComprobante) }}
               </span>
               <span class="text-nowrap fw-bold">Nº {{ r.serie }}-{{ r.numero }}</span>
@@ -104,8 +105,9 @@
       </tbody>
     </table>
   </div>
-  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && renglones.length <= 0">Sin Movimientos.</div>
-  <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
+
+  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && items.length <= 0">Sin Movimientos.</div>
+  <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [page]="displayPage"
                   [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
                   *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
 </div>
