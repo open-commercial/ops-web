@@ -305,4 +305,18 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
       ;
     }
   }
+
+  // No se porque tuve que redefinir estos metodos en esta directive
+  // Daba el error de que no existian en las clases que las heredan
+  reset() {
+    super.reset();
+  }
+
+  filter() {
+    super.filter();
+  }
+
+  loadPage(page: any): void {
+    super.loadPage(page);
+  }
 }
