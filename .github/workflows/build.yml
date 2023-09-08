@@ -51,4 +51,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: opencommercial/ops-web:globodeoro
+          tags: opencommercial/ops-web:latest

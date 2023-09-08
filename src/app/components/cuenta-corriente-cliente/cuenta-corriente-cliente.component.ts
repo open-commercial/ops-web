@@ -4,15 +4,14 @@ import {CuentasCorrientesService} from '../../services/cuentas-corrientes.servic
 import {LoadingOverlayService} from '../../services/loading-overlay.service';
 import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
 import {MensajeService} from '../../services/mensaje.service';
-import {DatePipe, Location} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
 import {finalize} from 'rxjs/operators';
 import {RenglonCuentaCorriente} from '../../models/renglon-cuenta-corriente';
 import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
 import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
 import {NotasService} from '../../services/notas.service';
-import {combineLatest, Observable} from 'rxjs';
-import {FacturasVentaService} from '../../services/facturas-venta.service';
+import {Observable} from 'rxjs';
 import {RecibosService} from '../../services/recibos.service';
 import {RemitosService} from '../../services/remitos.service';
 import {saveAs} from 'file-saver';
@@ -38,6 +37,10 @@ import {NotaDebitoVentaDetalleReciboModalComponent} from '../nota-debito-venta-d
 import {HelperService} from '../../services/helper.service';
 import {SucursalesService} from '../../services/sucursales.service';
 import {ReciboClienteModalComponent} from '../recibo-cliente-modal/recibo-cliente-modal.component';
+import { ListadoDirective } from 'src/app/directives/listado.directive';
+import { PreviousRouteService } from 'src/app/services/previous-route.service';
+
+const ssCCCPreviousUrlKey = 'CCC_PREVIOUS_URL';
 
 @Component({
   selector: 'app-cuenta-corriente-cliente',
@@ -45,17 +48,12 @@ import {ReciboClienteModalComponent} from '../recibo-cliente-modal/recibo-client
   styleUrls: ['./cuenta-corriente-cliente.component.scss'],
   providers: [DatePipe]
 })
-export class CuentaCorrienteClienteComponent implements OnInit {
+export class CuentaCorrienteClienteComponent extends ListadoDirective implements OnInit {
 
   ccc: CuentaCorrienteCliente;
-  renglones: RenglonCuentaCorriente[] = [];
-  saldo = 0;
 
+  saldo = 0;
   displayPage = 1;
-  page = 0;
-  totalElements = 0;
-  totalPages = 0;
-  size = 0;
 
   tc = TipoDeComprobante;
 
@@ -98,21 +96,22 @@ export class CuentaCorrienteClienteComponent implements OnInit {
 
   helper = HelperService;
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              public loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
-              private location: Location,
+  constructor(protected route: ActivatedRoute,
+              protected router: Router,
+              protected sucursalesService: SucursalesService,
+              protected loadingOverlayService: LoadingOverlayService,
+              protected mensajeService: MensajeService,
+              private previousRouteService: PreviousRouteService,
               private cuentasCorrientesService: CuentasCorrientesService,
               private configuracionesSucursalService: ConfiguracionesSucursalService,
               private notasService: NotasService,
-              private facturasVentaService: FacturasVentaService,
               private recibosService: RecibosService,
               private remitosService: RemitosService,
               private modalService: NgbModal,
               private authService: AuthService,
-              private datePipe: DatePipe,
-              private sucursalesService: SucursalesService) { }
+              private datePipe: DatePipe) {
+    super(route, router, sucursalesService, loadingOverlayService, mensajeService);
+  }
 
   ngOnInit() {
     if (this.route.snapshot.paramMap.has('id')) {
@@ -120,16 +119,28 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       this.loadingOverlayService.activate();
       this.cuentasCorrientesService.getCuentaCorrienteCliente(id)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          ccc => {
+        .subscribe({
+          next: ccc => {
             this.ccc = ccc;
-            this.getRenglones();
+            super.ngOnInit();
+            this.loadingOverlayService.activate();
+            this.cuentasCorrientesService.getCuentaCorrienteClienteSaldo(this.ccc.cliente.idCliente)
+              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
+              .subscribe({
+                next: saldo => this.saldo = saldo,
+                error: err => {
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(() => { return; }, () => { return; });
+                  this.router.navigate(['/clientes']);
+                }
+              })
+            ;
           },
-          err => {
+          error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             this.router.navigate(['/clientes']);
           },
-        )
+        })
       ;
     } else {
       this.mensajeService.msg('Se debe especificar un id de cliente.', MensajeModalType.ERROR);
@@ -140,43 +151,52 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     this.hasRoleToVerDetalle = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToVerDetalle);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
     this.hasRoleToCrearRecibo = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearRecibo);
+
+    this.subscription.add(this.previousRouteService.previousRoute$.subscribe(url => {
+      const urlHaveToBeStored = /(^\/clientes$|^\/clientes\?[a-zA-Z0-9=&]+$)/.test(url);
+      if (urlHaveToBeStored) {
+        sessionStorage.setItem(ssCCCPreviousUrlKey, url);
+      }
+    }));
   }
 
-  getRenglones() {
-    this.loadingOverlayService.activate();
-
-    const obvs = [
-      this.cuentasCorrientesService.getCuentaCorrienteClienteSaldo(this.ccc.cliente.idCliente),
-      this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, this.page)
-    ];
-
-    // this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, this.page)
-    combineLatest(obvs)
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        (data: [number, Pagination]) => {
-          this.saldo = data[0];
-          this.renglones = data[1].content;
-          this.totalElements = data[1].totalElements;
-          this.totalPages = data[1].totalPages;
-          this.size = data[1].size;
-        },
-        err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-          this.router.navigate(['/clientes']);
-        }
-      )
-    ;
-  }
-
-  volverAlListado() {
-    this.location.back();
+  /* reescrito de la base para que funcione en esta vista */
+  getItemsFromQueryParams(params = null) {
+    super.getItemsFromQueryParams(params);
+    this.displayPage = this.page + 1;
   }
 
   loadPage(page) {
-    this.displayPage = page;
     this.page = page - 1;
-    this.getRenglones();
+    const qParams = this.getFormValues() as { [key: string]: any };
+    qParams.p = this.page + 1;
+    this.router.navigate([], { relativeTo: this.route, queryParams: qParams });
+  }
+
+  populateFilterForm(params) {
+    /*No hace nada ya que no existe formulario de filtro */
+  }
+
+  getTerminosFromQueryParams(params) {
+    return {
+      pagina: this.page,
+    };
+  }
+
+  createFilterForm() { /* No hace nada ya que no existe formulario de filtro */ }
+  resetFilterForm() { /* No hace nada ya que no existe formulario de filtro */ }
+
+  getAppliedFilters() { this.appliedFilters = []; };
+  getFormValues() { return {} };
+
+  getItemsObservableMethod(terminos): Observable<Pagination> {
+    return this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, terminos.pagina);
+  };
+
+
+  volverAlListado() {
+    const backUrl = sessionStorage.getItem(ssCCCPreviousUrlKey) || '/clientes';
+    this.router.navigateByUrl(backUrl);
   }
 
   autorizar(r: RenglonCuentaCorriente) {
@@ -197,25 +217,32 @@ export class CuentaCorrienteClienteComponent implements OnInit {
     this.loadingOverlayService.activate();
     this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(
-        habilitada => {
+      .subscribe({
+        next: habilitada => {
           if (habilitada) {
             this.loadingOverlayService.activate();
             this.notasService.autorizar(idMovimiento)
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe(
-                () => this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
-                  .then(() => callback()),
-                err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-                  .then(() => callback()),
-              )
+              .subscribe({
+                next: () => {
+                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                  .then(() => callback())
+                },
+                error: err => {
+                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                    .then(() => callback())
+                },
+              })
             ;
           } else {
             this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
           }
         },
-        err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      );
+        error: err => {
+          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+            .then(() => { return; }, () => { return; });
+        },
+      });
   }
 
   verDetalle(r: RenglonCuentaCorriente) {
@@ -241,7 +268,7 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       TipoDeComprobante.FACTURA_X,
       TipoDeComprobante.FACTURA_Y,
       TipoDeComprobante.PRESUPUESTO,
-    ];    
+    ];
 
     if (notasDeDebito.indexOf(r.tipoComprobante) >= 0) {
       this.router.navigate(['/notas-debito-venta/ver', r.idMovimiento]);
@@ -253,24 +280,23 @@ export class CuentaCorrienteClienteComponent implements OnInit {
       return;
     }
 
-    if (facturas.indexOf(r.tipoComprobante) >= 0) {      
+    if (facturas.indexOf(r.tipoComprobante) >= 0) {
       this.router.navigate(['/facturas-venta/ver', r.idMovimiento]);
-      return; 
+      return;
     }
 
-    if (r.tipoComprobante === TipoDeComprobante.RECIBO) {      
+    if (r.tipoComprobante === TipoDeComprobante.RECIBO) {
       this.router.navigate(['/recibos/ver', r.idMovimiento]);
-      return; 
+      return;
     }
 
-    if (r.tipoComprobante === TipoDeComprobante.REMITO) {      
+    if (r.tipoComprobante === TipoDeComprobante.REMITO) {
       this.router.navigate(['/remitos/ver', r.idMovimiento]);
-      return; 
     }
   }
 
   exportar() {
-    if (this.ccc && this.ccc.cliente && this.ccc.cliente) {
+    if (this.ccc?.cliente) {
       const options: OPOption[] = [{ value: 'xlsx', text: 'Excel'}, { value: 'pdf', text: 'Pdf' }];
       const modalRef = this.modalService.open(OptionPickerModalComponent);
       modalRef.componentInstance.options = options;
@@ -284,14 +310,17 @@ export class CuentaCorrienteClienteComponent implements OnInit {
         this.loadingOverlayService.activate();
         this.cuentasCorrientesService.getReporte(criteria, formato)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe(
-            (res) => {
+          .subscribe({
+            next: (res) => {
               const mimeType = formato === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
               const file = new Blob([res], {type: mimeType});
               saveAs(file, `CuentaCorrienteCliente.${formato}`);
             },
-            () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-          )
+            error: () => {
+              this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
+                .then(() => { return; }, () => { return; })
+            },
+          })
         ;
       });
     }
@@ -328,10 +357,13 @@ export class CuentaCorrienteClienteComponent implements OnInit {
           this.loadingOverlayService.activate();
           obvs
             .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-            .subscribe(
-              () => this.loadPage(this.page + 1),
-              err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-            )
+            .subscribe({
+              next: () => this.loadPage(this.page + 1),
+              error: err => {
+                this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+                  .then(() => { return; }, () => { return; });
+              },
+            })
           ;
         }
       });

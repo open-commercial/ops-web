@@ -6,7 +6,7 @@
         <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
       </a>
       <fa-icon [icon]="['fas', 'book']"></fa-icon>
-      Cuenta Corriente: {{ ccp.proveedor.razonSocial }}
+      Cuenta Corriente
     </h1>
     <div class="text-end m-0">
       <button class="btn btn-primary ms-2" (click)="nuevaNotaCredito()"
@@ -25,26 +25,22 @@
   </div>
   <app-proveedor-detalle [proveedor]="ccp.proveedor"></app-proveedor-detalle>
   <div class="text-end mx-2">
-    SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    ÚLTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
   </div>
-  <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
-                  [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
-                  *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
-
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
-    <button class="btn btn-primary me-2" type="button" ngbPopover="Nota de credito" placement="left" triggers="mouseenter:mouseleave"
+    <button class="btn btn-primary me-2" type="button"
+            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
+      <fa-icon [icon]="['far', 'eye']"></fa-icon>
+    </button>
+    <button class="btn btn-primary me-2" type="button" ngbPopover="Nueva Nota de credito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaCreditoFactura(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeCredito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-left']"></fa-icon>
     </button>
     <button class="btn btn-primary me-2" type="button"
-            ngbPopover="Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
+            ngbPopover="Nueva Nota de Debito" placement="left" triggers="mouseenter:mouseleave"
             (click)="crearNotaDebitoRecibo(r)" *ngIf="hasRoleToCrearNota && tcParaNotasDeDebito.indexOf(r.tipoComprobante) >= 0">
       <fa-icon [icon]="['fas', 'balance-scale-right']"></fa-icon>
-    </button>
-    <button class="btn btn-primary me-2" type="button"
-            ngbPopover="Ver Detalle" placement="left" triggers="mouseenter:mouseleave" (click)="verDetalle(r)">
-      <fa-icon [icon]="['far', 'eye']"></fa-icon>
     </button>
     <button class="btn btn-primary me-2" type="button" *ngIf="hasRoleToDelete && elComprobanteSePuedeEliminar(r.tipoComprobante)"
             ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminar(r)">
@@ -52,7 +48,7 @@
     </button>
   </ng-template>
 
-  <div class="table-responsive" *ngIf="renglones.length">
+  <div class="table-responsive" *ngIf="items.length">
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Movimientos</caption>
       <thead>
@@ -65,7 +61,7 @@
       </tr>
       </thead>
       <tbody>
-      <ng-template ngFor let-r [ngForOf]="renglones">
+      <ng-template ngFor let-r [ngForOf]="items">
         <tr>
           <td>
             <div class="d-flex flex-row align-items-center flex-wrap">
@@ -78,7 +74,7 @@
               <span class="text-nowrap fw-bold">Nº {{ r.serie }}-{{ r.numero }}</span>
             </div>
             <div class="d-flex flex-row align-items-center flex-wrap">
-              <div class="me-2"><span class="fw-bold">Suc: </span>{{ r.nombreSucursal }}</div>
+              <div class="me-2"><span class="fw-bold">Sucursal: </span>{{ r.nombreSucursal }}</div>
               <div class="me-2" *ngIf="r.descripcion"><span class="fw-bold">Detalle: </span>{{ r.descripcion }}</div>
             </div>
           </td>
@@ -100,7 +96,7 @@
       </tbody>
     </table>
   </div>
-  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && renglones.length <= 0">Sin Movimientos.</div>
+  <div class="alert alert-info lead fst-italic" *ngIf="!loadingOverlayService.isActive() && items.length <= 0">Sin Movimientos.</div>
   <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"
                   [maxSize]="1" [rotate]="false" [ellipses]="false" [boundaryLinks]="true" (pageChange)="loadPage($event)"
                   *ngIf="totalPages > 1" class="d-flex justify-content-center my-2"></ngb-pagination>
