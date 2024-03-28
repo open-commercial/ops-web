@@ -697,9 +697,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
   }
 
   addRenglonPedido(nrp: NuevoRenglonPedido) {
-    const cliente = this.form.get('ccc').value.cliente;
     this.loadingOverlayService.activate();
-    this.pedidosService.calcularRenglones([nrp], cliente.idCliente)
+    this.pedidosService.calcularRenglones([nrp])
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: data => this.handleRenglonPedido(data[0]),
@@ -810,7 +809,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
     if (cliente && renglones.length) {
       this.loadingOverlayService.activate();
-      this.pedidosService.calcularRenglones(renglones, cliente.idCliente)
+      this.pedidosService.calcularRenglones(renglones)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: rps => {
