@@ -4,12 +4,14 @@
 <ng-template #noActions>
   <div class="alert alert-danger">No actions template defined</div>
 </ng-template>
-
-<div class="form-check ms-2 py-2" *ngIf="batchActionKey">
-  <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
-  <label class="form-check-label fw-bold" for="check_all_items">
-    {{ isAllItemsSelected ? 'Deseleccionar' : 'Seleccionar' }} Todos (de ésta página)
-  </label>
+<div class="d-flex align-items-center justify-content-between" *ngIf="batchActionKey">
+  <div class="form-check ms-2 py-2">
+    <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
+    <label class="form-check-label fw-bold" for="check_all_items">
+      {{ isAllItemsSelected ? 'Deseleccionar' : 'Seleccionar' }} Todos (en la página)
+    </label>
+  </div>
+  <app-batch-actions-box [batchActionKey]="batchActionKey" [actions]="batchActionActions"></app-batch-actions-box>
 </div>
 <div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center border-bottom border-top py-2" [class.selected]="isSelected(item)">
   <div class="form-check ms-2" *ngIf="batchActionKey">

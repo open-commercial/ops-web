@@ -27,7 +27,7 @@ export class BatchActionsBoxComponent {
 
   @Output() emptySelection = new EventEmitter<void>();
 
-  constructor(public batchActionsService: BatchActionsService,
+  constructor(private batchActionsService: BatchActionsService,
               private mensajeService: MensajeService) { }
 
   clearAll() {
@@ -62,5 +62,9 @@ export class BatchActionsBoxComponent {
       return a.isVisible;
     }
     return true;
+  }
+
+  get count() {
+    return this.batchActionsService.count(this.batchActionKey);
   }
 }

@@ -31,7 +31,6 @@ import {Sucursal} from '../../models/sucursal';
   styleUrls: ['./productos.component.scss']
 })
 export class ProductosComponent extends ListadoDirective implements OnInit {
-  isBatchActionsBoxCollapsed = true;
   ordenArray = [
     { val: 'fechaUltimaModificacion', text: 'Fecha Últ. Modificación' },
     { val: 'descripcion', text: 'Descripción' },

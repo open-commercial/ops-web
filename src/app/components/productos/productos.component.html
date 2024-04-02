@@ -5,12 +5,6 @@
       <button class="btn btn-primary ms-2 my-1" routerLink="/productos/nuevo" ngbPopover="Nuevo Producto" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToCreate">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ms-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
-              [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="productosBatchActionsBoxCollapse"
-              [class.bg-white]="!isBatchActionsBoxCollapsed"
-              ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="fw-bold">{{ batchActionsService.count(baKey) }}</span>
-      </button>
       <button class="btn btn-primary ms-2" (click)="descargarReporteAlEmail()" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'print']"></fa-icon>
       </button>
@@ -78,10 +72,6 @@
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
-  <div class="productosBatchActionsBoxCollapse" [ngbCollapse]="isBatchActionsBoxCollapsed">
-    <app-batch-actions-box [batchActionKey]="baKey" [actions]="baActions"
-                           (emptySelection)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed" ></app-batch-actions-box>
-  </div>
   <div class="productos my-2 bg-white">
     <ng-template #actions let-item>
       <div ngbDropdown class="actions d-none d-md-inline-block" container="body" placement="left-top">
@@ -157,6 +147,7 @@
     <app-lista-table
       [size]="size" [items]="items"
       [batchActionKey]="baKey"
+      [batchActionActions]="baActions"
       [tableConfig]="tableConfig"
       [listaTableKey]="ltKey"
       [infoTemplate]="info"
