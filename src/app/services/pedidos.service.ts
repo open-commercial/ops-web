@@ -31,8 +31,8 @@ export class PedidosService {
     return this.http.get(`${this.url}/${idPedido}/reporte`, { responseType: 'blob' });
   }
 
-  calcularRenglones(renglones: NuevoRenglonPedido[], idCliente: number): Observable<RenglonPedido[]> {
-    return this.http.post<RenglonPedido[]>(`${this.url}/renglones/clientes/${idCliente}`, renglones);
+  calcularRenglones(renglones: NuevoRenglonPedido[]): Observable<RenglonPedido[]> {
+    return this.http.post<RenglonPedido[]>(`${this.url}/renglones`, renglones);
   }
 
   calcularResultadosPedido(nrp: NuevosResultadosComprobante): Observable<Resultados> {

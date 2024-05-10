@@ -1,12 +1,10 @@
 name: Open Commercial CI
-
 on:
   push:
     branches:
       - master      
   pull_request:
     types: [ opened, synchronize, reopened ]
-
 jobs:
   build-analyze-deploy:
     name: Build, analyze, dockerize, and publish
@@ -33,6 +31,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}       
+      - name: Generate changelog
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: Bullrich/generate-release-changelog@master
+        id: changelog
+        env:
+          REPO: ${{ github.repository }}
+      - name: Get release version
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |
+          echo "RELEASE_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
+      - name: Create Release
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: ${{ env.RELEASE_VERSION }}
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
       - name: Set up QEMU
         if: ${{ github.ref_name == 'master' }}
         uses: docker/setup-qemu-action@v2
@@ -51,4 +69,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: opencommercial/ops-web:latest
+          tags: opencommercial/ops-web:${{ env.RELEASE_VERSION }}
