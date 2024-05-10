@@ -2,12 +2,6 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Ventas</h1>
     <div class="text-end m-0 text-nowrap">
-      <button type="button" class="btn btn-primary ms-2" (click)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed"
-              [attr.aria-expanded]="!isBatchActionsBoxCollapsed" aria-controls="facturasVentaBatchActionsBoxCollapse"
-              [class.bg-white]="!isBatchActionsBoxCollapsed"
-              ngbPopover="Selección" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'check-square']"></fa-icon>&nbsp;<span class="fw-bold">{{ batchActionsService.count(baKey) }}</span>
-      </button>
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasVentaFiltersCollapse"
               [class.bg-white]="!isFiltersCollapsed"
@@ -62,10 +56,7 @@
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
                          [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
-  <div class="facturasVentaBatchActionsBoxCollapse" [ngbCollapse]="isBatchActionsBoxCollapsed">
-    <app-batch-actions-box [batchActionKey]="baKey" [actions]="baActions"
-                           (emptySelection)="isBatchActionsBoxCollapsed = !isBatchActionsBoxCollapsed" ></app-batch-actions-box>
-  </div>
+
   <div class="facturas my-2">
     <ng-template #info let-item let-i="index" id="infoFV">
       <div class="d-flex flex-row flex-wrap">
@@ -105,7 +96,8 @@
         (afterNoAutorizar)="loadPage(0)"
       ></app-factura-venta-actions-bar>
     </ng-template>
-    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions" [batchActionKey]="baKey"
+    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
+               [batchActionKey]="baKey" [batchActionActions]="baActions"
                [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
     <app-totales [loading]="loadingTotalizadores" [data]="totalesData"></app-totales>
   </div>
