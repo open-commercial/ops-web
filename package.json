@@ -1,14 +1,14 @@
 {
   "name": "ops-web",
-  "version": "0.0.0",
+  "version": "1.0.1",
+  "private": true,
   "engines": {
     "node": "16.13"
   },
   "scripts": {
     "build": "ng build --configuration ${ENV_NAME}",
     "start": "ng serve"
-  },
-  "private": true,
+  },  
   "dependencies": {
     "@angular/animations": "^14.2.0",
     "@angular/cdk": "^14.2.0",
