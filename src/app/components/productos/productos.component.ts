@@ -334,7 +334,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
       return;
     }
 
-    const msg = '¿Desea eliminar los productos seleccionandos?';
+    const msg = `¿Desea eliminar los ${this.batchActionsService.count(this.baKey)} productos seleccionandos?`;
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();

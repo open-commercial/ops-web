@@ -1,15 +1,19 @@
-<div class="app-batch-actions-box d-flex flex-row flex-wrap align-items-center justify-content-end">
-    <span class="mx-2">({{ count }} selecc.)</span>
-    <button class="btn btn-outline-secondary m-1" type="button"
-            ngbPopover="Limpiar Seleccionados" triggers="mouseenter:mouseleave" placement="left"
-            (click)="clearAll()" [disabled]="!count">
-      <fa-icon [icon]="['fas', 'broom']"></fa-icon>
-    </button>
+<div ngbDropdown placement="bottom-right" class="ms-2 d-inline-block toggle-columns-dropdown">
+  <button type="button" class="btn btn-primary" ngbDropdownToggle>
+    <fa-icon [icon]="['fas', 'square-check']"></fa-icon>
+    {{ count }}<span class="visually-hidden" id="selection-options">Opciones de Selección</span>
+  </button>
+  <div ngbDropdownMenu aria-labelledby="selection-options">
     <ng-container *ngFor="let a of actions">
-      <button class="btn btn-primary m-1" type="button" *ngIf="isButtonVisible(a)"
-              [ngbPopover]="a.description" triggers="mouseenter:mouseleave" placement="left"
-              (click)="actionClick(a)" [disabled]="!count">
-        <fa-icon [icon]="a.icon"></fa-icon>
+      <button ngbDropdownItem type="button" *ngIf="isButtonVisible(a)"
+        (click)="actionClick(a)" [disabled]="!count"
+      >
+        <fa-icon [icon]="a.icon"></fa-icon> {{ a.description }}
       </button>
     </ng-container>
+    <button ngbDropdownItem type="button"
+        (click)="clearAll()" [disabled]="!count">
+      <fa-icon [icon]="['fas', 'broom']"></fa-icon> Limpiar seleccionados
+    </button>
+  </div>
 </div>
