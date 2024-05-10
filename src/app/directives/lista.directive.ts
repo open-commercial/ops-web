@@ -1,6 +1,7 @@
 import { Subscription } from 'rxjs';
 import { EventEmitter, Input, Output, TemplateRef, OnInit, OnDestroy, Directive } from '@angular/core';
 import {BatchActionKey, BatchActionsService} from '../services/batch-actions.service';
+import { ActionConfiguration } from '../components/batch-actions-box/batch-actions-box.component';
 
 @Directive()
 export abstract class ListaDirective implements OnInit, OnDestroy {
@@ -48,6 +49,10 @@ export abstract class ListaDirective implements OnInit, OnDestroy {
     if (this.pBatchActionKey) { this.getItemIdFn = BatchActionsService.getItemIdFn(this.pBatchActionKey); }
   }
   get batchActionKey(): BatchActionKey { return this.pBatchActionKey; }
+
+  private pBatchActionActions: ActionConfiguration[];
+  @Input() set batchActionActions(value: ActionConfiguration[]) { this.pBatchActionActions = value; }
+  get batchActionActions(): ActionConfiguration[] { return this.pBatchActionActions; }
 
   private subscription: Subscription;
 
@@ -117,5 +122,9 @@ export abstract class ListaDirective implements OnInit, OnDestroy {
   private isAllSelected(): boolean {
     if (!this.batchActionKey) { return false; }
     return this.pItems.length && this.pItems.every(i => this.batchActionsService.hasElement(this.pBatchActionKey, this.getItemIdFn(i) as number));
+  }
+
+  get selectedCount(): number {
+    return this.batchActionsService.count(this.batchActionKey);
   }
 }

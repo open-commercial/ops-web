@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as SecureLS from 'secure-ls';
+import { EncryptStorage } from 'encrypt-storage';
 
 export enum StorageKeys {
   ID_SUCURSAL = 'idSucursal',
@@ -15,21 +15,25 @@ export enum StorageKeys {
   providedIn: 'root'
 })
 export class StorageService {
-  private ls = new SecureLS({ encodingType: 'aes' });
+  private es = new EncryptStorage(StorageService.getSK());
 
   getItem(key: string) {
-    return this.ls.get(key);
+    return this.es.getItem(key);
   }
 
   setItem(key: string, data: any) {
-    this.ls.set(key, data);
+    this.es.setItem(key, data);
   }
 
   removeItem(key: string) {
-    this.ls.remove(key);
+    this.es.removeItem(key);
   }
 
   clear() {
-    this.ls.clear();
+    this.es.clear();
+  }
+
+  static getSK() {
+    return 'MaritoPagaElAsado2025!';
   }
 }
