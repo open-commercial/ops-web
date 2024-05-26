@@ -79,6 +79,7 @@ export class FacturasVentaComponent extends ListadoDirective implements OnInit {
       clickFn: () => this.router.navigate(['/remitos/nuevo']),
     }
   ];
+  isBatchActionsBoxCollapsed = true;
 
   tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
     TipoDeComprobante.NOTA_CREDITO_A,

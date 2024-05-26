@@ -9,7 +9,7 @@
   <th scope="col" *ngFor="let c of tableConfig" [ngClass]="{ 'd-none': c.hidden }">{{ c.name }}</th>
 </ng-template>
 
-<div class="d-flex flex-row flex-wrap justify-content-between">
+<div class="d-flex flex-row">
   <div class="flex-fill">
     <div class="form-check ms-2 py-2" *ngIf="batchActionKey">
       <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
@@ -18,9 +18,8 @@
       </label>
     </div>
   </div>
-  <div class="flex-fill d-flex flex-row align-items-center justify-content-end">
-    <app-batch-actions-box [batchActionKey]="batchActionKey" [actions]="batchActionActions"></app-batch-actions-box>
-    <div ngbDropdown placement="bottom-right" class="ms-2 d-inline-block toggle-columns-dropdown" *ngIf="hasColumnsThatCanBeHidden">
+  <div>
+    <div ngbDropdown placement="bottom-right" class="d-inline-block toggle-columns-dropdown" *ngIf="hasColumnsThatCanBeHidden">
       <button type="button" class="btn btn-primary" ngbDropdownToggle  ngbPopover="Mostrar/Esconder columnas" placement="left" triggers="mouseenter:mouseleave">
         <fa-icon [icon]="['fas', 'toggle-on']"></fa-icon>
         <span class="visually-hidden">Mostrar/Esconder columnas</span>

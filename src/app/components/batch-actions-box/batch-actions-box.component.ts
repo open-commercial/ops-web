@@ -27,11 +27,11 @@ export class BatchActionsBoxComponent {
 
   @Output() emptySelection = new EventEmitter<void>();
 
-  constructor(private batchActionsService: BatchActionsService,
+  constructor(public batchActionsService: BatchActionsService,
               private mensajeService: MensajeService) { }
 
   clearAll() {
-    const msg = `¿Desea quitar los ${this.count} elementos de la selección?`;
+    const msg = '¿Desea quitar todos los elementos de la selección?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.batchActionsService.clear(this.batchActionKey);
@@ -42,7 +42,7 @@ export class BatchActionsBoxComponent {
 
   removeItem(elementId: number) {
     this.batchActionsService.removeElememt(this.batchActionKey, elementId);
-    if (!this.count) {
+    if (!this.batchActionsService.count(this.batchActionKey)) {
       this.emptySelection.emit();
     }
   }
@@ -62,9 +62,5 @@ export class BatchActionsBoxComponent {
       return a.isVisible;
     }
     return true;
-  }
-
-  get count() {
-    return this.batchActionsService.count(this.batchActionKey);
   }
 }

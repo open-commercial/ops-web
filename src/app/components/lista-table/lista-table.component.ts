@@ -140,6 +140,4 @@ export class ListaTableComponent extends ListaDirective implements OnInit {
 
     this.tableContainer.nativeElement.scrollLeft = this.scrollLeft - walk;
   }
-
-
 }

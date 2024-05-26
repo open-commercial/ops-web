@@ -137,12 +137,10 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
         this.loadingOverlayService.activate();
         this.ubicacionesService.getLocalidades(value)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe({
-            next: localidades => this.localidades = localidades,
-            error: err => {
-              this.mensajeService.msg(err.error, MensajeModalType.ERROR);
-            },
-          })
+          .subscribe(
+            localidades => this.localidades = localidades,
+            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+          )
         ;
       })
     ;
@@ -166,8 +164,9 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     }
 
     if (values.idViajante) {
-      this.appliedFilters.push({ label: 'Viajante', value: values.idRubro, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
+      this.appliedFilters.push({ label: 'Rubro', value: values.idRubro, asyncFn: this.getUsuarioInfoAsync(values.idViajante) });
     }
+
 
     setTimeout(() => {
       if (values.idProvincia) {

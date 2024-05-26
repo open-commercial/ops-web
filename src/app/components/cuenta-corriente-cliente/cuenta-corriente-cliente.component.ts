@@ -94,31 +94,6 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     TipoDeComprobante.NOTA_DEBITO_C,
   ];
 
-  tiposDeComprobantesDebe: TipoDeComprobante[] = [
-    TipoDeComprobante.FACTURA_A,
-    TipoDeComprobante.FACTURA_B,
-    TipoDeComprobante.FACTURA_C,
-    TipoDeComprobante.FACTURA_X,
-    TipoDeComprobante.FACTURA_Y,
-    TipoDeComprobante.PRESUPUESTO,
-    TipoDeComprobante.NOTA_DEBITO_A,
-    TipoDeComprobante.NOTA_DEBITO_B,
-    TipoDeComprobante.NOTA_DEBITO_C,
-    TipoDeComprobante.NOTA_DEBITO_X,
-    TipoDeComprobante.NOTA_DEBITO_Y,
-    TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO,
-  ];
-
-  tiposDeComprobantesHaber: TipoDeComprobante[] = [
-    TipoDeComprobante.RECIBO,
-    TipoDeComprobante.NOTA_CREDITO_A,
-    TipoDeComprobante.NOTA_CREDITO_B,
-    TipoDeComprobante.NOTA_CREDITO_C,
-    TipoDeComprobante.NOTA_CREDITO_X,
-    TipoDeComprobante.NOTA_CREDITO_Y,
-    TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO,
-  ];
-
   helper = HelperService;
 
   constructor(protected route: ActivatedRoute,
@@ -555,17 +530,5 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     modalRef.componentInstance.cliente = this.ccc.cliente;
     modalRef.componentInstance.saldo = saldo;
     modalRef.result.then(() => this.loadPage(1), () => { return; });
-  }
-
-  enDebeOHaber(r: RenglonCuentaCorriente): string {
-    if (this.tiposDeComprobantesDebe.indexOf(r.tipoComprobante) >= 0) {
-      return 'D';
-    }
-
-    if (this.tiposDeComprobantesHaber.indexOf(r.tipoComprobante) >= 0) {
-      return 'H';
-    }
-
-    return '';
   }
 }
