@@ -71,4 +71,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
       this.usuariosService.setSucursalPredeterminadaDeUsuario(this.usuario.idUsuario, s.idSucursal).subscribe();
     }
   }
+
+  get logo(): string {
+    return this.sucursalSeleccionada?.logo ? this.sucursalSeleccionada.logo : 'assets/logo-opensource.png';
+  }
 }
