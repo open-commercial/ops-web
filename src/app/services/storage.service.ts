@@ -15,6 +15,7 @@ export enum StorageKeys {
   providedIn: 'root'
 })
 export class StorageService {
+
   getItem(key: string) {
     return this.decrypt(localStorage.getItem(key));
   }
