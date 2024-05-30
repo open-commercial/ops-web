@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule,  CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -92,6 +92,9 @@ import { SelectableListComponent } from './components/selectable-list/selectable
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
+import { ChartComponent } from './components/chart/chart.component';
+import { NgChartsModule } from 'ng2-charts';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -182,6 +185,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         FacturaCompraComponent,
         NuevoRenglonFacturaModalComponent,
         ConfiguracionComponent,
+        ChartComponent,
+        DashboardComponent,
     ],
     imports: [
         BrowserModule,
@@ -189,12 +194,15 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         HttpClientModule,
         NgSelectModule,
         AppRoutingModule,
-        ShareModule
+        ShareModule,
+        NgChartsModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
-    bootstrap: [AppComponent]
+    
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}
