@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   apiUrl: 'https://api.globodeoro.com',
-  appVersion: 18,
+  appVersion: 19,
   qa: false,
 };
