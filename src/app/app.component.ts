@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
-import { StorageKeys, StorageService } from './services/storage.service';
 import { PreviousRouteService } from './services/previous-route.service';
 
 @Component({
@@ -9,19 +8,16 @@ import { PreviousRouteService } from './services/previous-route.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  envQA = environment.qa;
-  title = 'ops-web';
 
-  constructor(private storageService: StorageService,
-              private previousRouteService: PreviousRouteService) {
+  constructor(private previousRouteService: PreviousRouteService) {
     this.checkAppVersion();
     this.previousRouteService.init();
   }
 
   checkAppVersion() {
-    if (environment.appVersion !== this.storageService.getItem('appVersion')) {
-      this.storageService.clear();
-      this.storageService.setItem(StorageKeys.APP_VERSION, environment.appVersion);
+    if (environment.appVersion !== localStorage.getItem('appVersion')) {
+      localStorage.clear();
+      localStorage.setItem('appVersion', environment.appVersion);
     }
   }
 }

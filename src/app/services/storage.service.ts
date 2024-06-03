@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import * as crypto from 'crypto-js';
 
 export enum StorageKeys {
+  
   ID_SUCURSAL = 'idSucursal',
-  APP_VERSION = 'appVersion',
   TOKEN = 'token',
   PEDIDO_NUEVO = 'nuevoPedido',
   PEDIDO_EDITAR = 'editarPedido',
