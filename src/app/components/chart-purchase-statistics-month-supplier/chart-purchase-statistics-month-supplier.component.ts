@@ -64,6 +64,8 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
             ...data.datasets[0],
             backgroundColor: '#f0c71b',
             borderColor: '#f0c71b',
+            hoverBackgroundColor: '#f0c71b',
+            hoverBorderColor: '#f0c71b',
             borderWidth: 1
           }
         ]
