@@ -1,4 +1,5 @@
 export interface ChartInterface {
     "periodo": string;
-    "monto": number
+    "monto": number;
+    "entidad": string;
 }

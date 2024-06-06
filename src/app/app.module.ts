@@ -92,9 +92,12 @@ import { SelectableListComponent } from './components/selectable-list/selectable
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
-import { ChartComponent } from './components/chart/chart.component';
+import { ChartPurchaseStatisticsYearComponent } from './components/chart-purchase-statistics-year/chart-purchase-statistics-year.component';
 import { NgChartsModule } from 'ng2-charts';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ChartPurchaseStatisticsMonthComponent } from './components/chart-purchase-statistics-month/chart-purchase-statistics-month.component';
+import { ChartPurchaseStatisticsYearSupplierComponent } from './components/chart-purchase-statistics-year-supplier/chart-purchase-statistics-year-supplier.component';
+import { ChartPurchaseStatisticsMonthSupplierComponent } from './components/chart-purchase-statistics-month-supplier/chart-purchase-statistics-month-supplier.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -185,8 +188,11 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         FacturaCompraComponent,
         NuevoRenglonFacturaModalComponent,
         ConfiguracionComponent,
-        ChartComponent,
         DashboardComponent,
+        ChartPurchaseStatisticsYearComponent,
+        ChartPurchaseStatisticsMonthComponent,
+        ChartPurchaseStatisticsYearSupplierComponent,
+        ChartPurchaseStatisticsMonthSupplierComponent,
     ],
     imports: [
         BrowserModule,
