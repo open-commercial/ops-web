@@ -17,7 +17,13 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
   public barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
-      { data: [], label: '' }
+      {
+        data: [],
+        label: '',
+        backgroundColor: 'rgb(242, 220, 71)',
+        borderColor: 'rgb(242, 220, 71)',
+        borderWidth: 0.5
+      }
     ]
   };
 
