@@ -1,19 +1,27 @@
-// .app-home {
-//     padding: 0;
-//     .content-container {
-//       app-side-nav {
-//         position: fixed;
-//         top: 0;
-//         bottom: 0;
-//         right: -16rem;
-//         z-index: 2;
-//         transition: right .25s;
-//         &.opened {
-//           right: 0;
-//         }
-//         box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
-//         -webkit-box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
-//         -moz-box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
-//       }
-//     }
-//   }
+:host ::ng-deep {
+    .accordion-item {
+        background-color: whitesmoke;
+    }
+
+    .accordion-header {
+        color: #536070;
+        font-weight: bold;
+        font-size: 18px;  
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .ops-accordion .accordion-button {
+            color: #000000 !important;
+            font-weight: bold;
+            font-size: 16px;
+    }
+}
+
+span {
+    color: #000000;
+    font-weight: bold;
+    font-size: 16px;
+}

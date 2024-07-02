@@ -50,11 +50,11 @@ import {ConfiguracionComponent} from './components/configuracion/configuracion.c
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'pedidos', component: PedidosHomeComponent,
         children: [
           { path: '', component: PedidosComponent },

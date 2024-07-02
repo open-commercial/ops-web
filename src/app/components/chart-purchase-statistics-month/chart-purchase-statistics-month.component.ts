@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { ChartService } from 'src/app/services/chart.service';
 
@@ -9,7 +9,17 @@ import { ChartService } from 'src/app/services/chart.service';
 })
 export class ChartPurchaseStatisticsMonthComponent implements OnInit {
 
-  constructor(private chartData: ChartService) { }
+  years: number[] = [];
+  selectedYear: number = new Date().getFullYear();
+
+  constructor(private chartData: ChartService,
+              private changeDetectorRef: ChangeDetectorRef) { }
+
+  
+  ngOnInit(): void {
+    this.years = this.generateYearsData();
+    this.loadChartDataMonth(this.selectedYear);
+  }
 
   public barChartLegend = true;
   public barChartPlugins = [];
@@ -40,16 +50,15 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
     }
   };
 
-  ngOnInit(): void {
-    this.loadChartDataMonth();
-  }
-  loadChartDataMonth() {
-    this.chartData.getChartDataMonth().subscribe(data => {
+  loadChartDataMonth(year: number):void {
+    this.chartData.getChartDataMonth(year).subscribe(data => {
+      console.log(data)
       this.barChartData = {
-        ...this.barChartData, labels: data.labels,
+        labels: data.labels,
         datasets: [
           {
-            ...data.datasets[0],
+            data: data.datasets[0].data,
+            label: data.datasets[0].label,
             backgroundColor: '#f0c71b',
             borderColor: '#f0c71b',
             hoverBackgroundColor: '#f0c71b',
@@ -58,8 +67,22 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
           }
         ]
       };
-      console.log(data)
+      this.changeDetectorRef.detectChanges();
     })
   }
 
+  onYearChange($event) {
+    this.selectedYear = $event.target.value;
+    this.loadChartDataMonth(this.selectedYear);
+  }
+
+  generateYearsData(): number[] {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 10;
+    const yearsData = [];
+    for (let i = startYear; i <= currentYear; i++) {
+      yearsData.push(i);  
+    }
+    return yearsData;
+  }
 }

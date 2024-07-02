@@ -1,20 +1,31 @@
-<app-nav-bar [sideNavOpened]="menuOpened" (menuButtonClick)="toggleMenu()"></app-nav-bar>
-<!-- <app-side-nav class="app-side-nav flex-shrink-0 flex-sm-grow-0" [class.opened]="menuOpened" (menuOptionClick)="toggleMenu()"></app-side-nav> -->
-<h3>Estadisticas</h3>
 <ngb-accordion class="ops-accordion" #acc="ngbAccordion" activeIds="ngb-purchase-0">
 	<ngb-panel title="Compras">
 		<ng-template ngbPanelContent>
-      <app-chart-purchase-statistics-year></app-chart-purchase-statistics-year>
-      <app-chart-purchase-statistics-year-supplier></app-chart-purchase-statistics-year-supplier>
-      <app-chart-purchase-statistics-month></app-chart-purchase-statistics-month>
-      <app-chart-purchase-statistics-month-supplier></app-chart-purchase-statistics-month-supplier>
+			<div class="conteiner">
+				<div class="row">
+					<div class="col">
+						<app-chart-purchase-statistics-year></app-chart-purchase-statistics-year>
+					</div>
+					<div class="col">
+					<app-chart-purchase-statistics-year-supplier></app-chart-purchase-statistics-year-supplier>
+					</div>
+					<div class="row">
+					<div class="col">
+						<app-chart-purchase-statistics-month></app-chart-purchase-statistics-month>
+					</div>
+					<div class="col">
+						<app-chart-purchase-statistics-month-supplier></app-chart-purchase-statistics-month-supplier>
+						</div>
+					</div>
+				</div>
+			</div>
 		</ng-template>
 	</ngb-panel>
-	<ngb-panel>
+	<!-- <ngb-panel>
 		<ng-template ngbPanelTitle>
 			<span>Ventas</span>
 		</ng-template>
 		<ng-template ngbPanelContent>
 		</ng-template>
-	</ngb-panel>
+	</ngb-panel> -->
 </ngb-accordion>
