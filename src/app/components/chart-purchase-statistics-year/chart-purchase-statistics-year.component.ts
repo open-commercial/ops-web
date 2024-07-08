@@ -30,9 +30,11 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    aspectRatio: 1.5,
+    aspectRatio: 1.3,
     plugins: {
       legend: {
+        position: 'bottom',
+        align: 'start',
         labels: {
           color: 'rgb(0,0, 0)'
         }
@@ -45,8 +47,11 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
   }
   loadChartDataAnnual() {
     this.chartData.getChartDataAnnual().subscribe(data => {
+      let labels = this.generateYearsFilter();
+
       this.barChartData = {
-        ...this.barChartData, labels: data.labels,
+        ...this.barChartData, 
+        labels: labels,
         datasets: [
           {
             ...data.datasets[0],
@@ -58,8 +63,13 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
           }
         ]
       };
-      console.log(data)
     })
+  }
+
+  generateYearsFilter() {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 11 + 1;
+    return Array.from({length: 11}, (_, i)=> startYear + i); 
   }
 
 }

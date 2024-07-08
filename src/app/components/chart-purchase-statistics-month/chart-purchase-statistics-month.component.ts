@@ -13,7 +13,7 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
   selectedYear: number = new Date().getFullYear();
 
   constructor(private chartData: ChartService,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              ) { }
 
   
   ngOnInit(): void {
@@ -43,18 +43,27 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
     aspectRatio: 1.5,
     plugins: {
       legend: {
+        position: 'bottom',
+        align: 'start',
         labels: {
-          color: 'rgb(0,0, 0)'
+          color: 'rgb(0,0, 0)',
+
         }
       }
     }
   };
 
   loadChartDataMonth(year: number):void {
-    this.chartData.getChartDataMonth(year).subscribe(data => {
-      console.log(data)
+    const monthList = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    this.chartData.getChartDataMonth().subscribe(data => {
+      const monthLabels = data.labels.map(label => {
+        const monthNumber = parseInt(label);
+        return monthList[monthNumber - 1];
+      });
+
       this.barChartData = {
-        labels: data.labels,
+        labels: monthLabels,
         datasets: [
           {
             data: data.datasets[0].data,
@@ -67,7 +76,6 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
           }
         ]
       };
-      this.changeDetectorRef.detectChanges();
     })
   }
 
@@ -79,10 +87,7 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
   generateYearsData(): number[] {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 10;
-    const yearsData = [];
-    for (let i = startYear; i <= currentYear; i++) {
-      yearsData.push(i);  
-    }
+    const yearsData = Array.from({length: currentYear - startYear + 1}, (_, i)=> currentYear - i);
     return yearsData;
   }
 }

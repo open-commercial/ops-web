@@ -1,22 +1,41 @@
 .container {
-        background-color: aquamarine;
+        padding: 12px;
         border-right: black solid 1px;
         border-top: black solid 1px;
+}
+
+.canvasStyle {
+    position: relative;
+    margin: auto;
+    height: 30vh;
+    width: 30vw;
 }
 
 span {
     font-size: 16px;
     font-weight: bold;
-    margin: 20px 0px 20px 0px;
 }
 
 .form-select {
+    padding: 6px;
     background-color: whitesmoke;
+    border: 1px solid rgb(206, 212, 218);
+
 }
 
-.styleChart {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.form-select:hover {
+    background-color: rgba(245, 245, 245, 0.788);
+    border: 2px solid rgb(206, 212, 218);
+    box-shadow: none;
+    outline: none;
 }
+
+.form-select:focus {
+    background-color: whitesmoke;
+    border: 2px solid rgb(206, 212, 218) ;
+    box-shadow: none;
+    outline: none;
+}
+
+
 

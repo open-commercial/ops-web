@@ -44,6 +44,8 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
     },
     plugins: {
       legend: {
+        position: 'bottom',
+        align: 'start',
         labels: {
           color: 'rgb(0,0, 0)'
         }
@@ -57,8 +59,10 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
 
   loadChartDataMonthSupplier(): void {
     this.chartData.getChartDataMonthSupplier().subscribe(data => {
+      console.log('Datos recibidos del servicio:', data);
       this.barChartData = {
-        ...this.barChartData, labels: data.labels,
+        ...this.barChartData, 
+        labels: data.labels,
         datasets: [
           {
             ...data.datasets[0],
@@ -70,7 +74,6 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
           }
         ]
       };
-      console.log(data)
     })
   }
 

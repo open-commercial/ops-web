@@ -4,9 +4,9 @@
         <option>Selecciona un año</option>
         <option *ngFor="let year of years" [value]="year">{{ year }}</option>
     </select>
-    <section class="styleChart">
+    <div class="canvasStyle">
         <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
             [legend]="barChartLegend" [type]="'bar'">
         </canvas>
-    </section>
+    </div>
 </section>

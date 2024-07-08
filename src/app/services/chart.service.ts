@@ -10,12 +10,13 @@ import { SucursalesService } from './sucursales.service';
 })
 export class ChartService {
   urlPurchasingStatistics = environment.apiUrl + '/api/v1/estadisticas/compras'
+
   constructor(private http: HttpClient,
               private sucursalesService: SucursalesService) {
 
   }
 
-    //urlAnnualBuysStats = environment.apiUrl + '/api/v1/estadisticas/compras/monto-neto-anual/sucursales/1'
+  //Compras por año
   getChartDataAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
         const idSucursal = this.sucursalesService.getIdSucursal();
         const url = `${this.urlPurchasingStatistics}/monto-neto-anual/sucursales/${idSucursal}`;
@@ -33,7 +34,7 @@ export class ChartService {
     );
   }
 
-    //urlAnnualBuysStatsSupplier = environment.apiUrl + '/api/v1/estadisticas/compras/proveedores/monto-neto-anual/sucursales/1?anio=2020'
+  //Compras por año por proveedor
   getChartDataAnnualSupplier (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     const anio = new Date().getFullYear();
@@ -52,11 +53,11 @@ export class ChartService {
     );
   }
 
-   //urlMonthBuysStats = environment.apiUrl + '/api/v1/estadisticas/compras/monto-neto-mensual/sucursales/1?anio=2021'
-
-  getChartDataMonth (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  //compras por mes
+  getChartDataMonth (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    const url = `${this.urlPurchasingStatistics}/monto-neto-mensual/sucursales/${idSucursal}?anio=${year}`;
+    const years = new Date().getFullYear();
+    const url = `${this.urlPurchasingStatistics}/monto-neto-mensual/sucursales/${idSucursal}?anio=${years}`;
     return this.http.get<ChartInterface[]>(url).pipe(
       map(data => {
         const labels = data.map(item => item.periodo);
@@ -71,25 +72,27 @@ export class ChartService {
     );
   }
 
-  //urlMonthBuysStatsSupplier = environment.apiUrl + '/api/v1/estadisticas/compras/proveedores/monto-neto-mensual/sucursales/1?anio=2020&mes=2'
-  getChartDataMonthSupplier (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  //Compras por mes por proveedor
+  getChartDataMonthSupplier(): Observable<{ labels: string[], datasets: { data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    const anio = new Date().getFullYear();
-    const mes = new Date().getMonth();
-    const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-mensual/sucursales/${idSucursal}?anio=${anio}&mes=${mes}`;
-    console.log('Request url: ', url)
+    const years = new Date().getFullYear();
+    const months = new Date().getMonth(); 
+    const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-mensual/sucursales/${idSucursal}?anio=${years}&mes=${months}`;
+ 
     return this.http.get<ChartInterface[]>(url).pipe(
       map(data => {
         const labels = data.map(item => item.entidad);
         const dataset = data.map(item => item.monto);
-        return{
+  
+        return {
           labels,
           datasets: [
-            {data: dataset, label: 'Estadistica de compras por mes por proveedor'}
+            { data: dataset, label: 'Estadistica de compras por mes por proveedor' }
           ]
-        }
+        };
       })
     );
   }
+  
 
 }

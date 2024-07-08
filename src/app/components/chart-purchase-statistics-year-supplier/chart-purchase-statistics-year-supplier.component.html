@@ -1,8 +1,8 @@
-<canvas class="styleChart"
-        baseChart
-        [data]="barChartData"
-        [options]="barChartOptions"
-        [plugins]="barChartPlugins"
-        [legend]="barChartLegend"
-        [type]="'bar'">
-</canvas>
+<section>
+        <span>Estadisticas de compras por año por proveedor</span>
+        <div class="canvasStyle">
+                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+                        [legend]="barChartLegend" [type]="'bar'">
+                </canvas>
+        </div>
+</section>

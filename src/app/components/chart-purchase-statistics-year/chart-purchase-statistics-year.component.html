@@ -1,9 +1,8 @@
 <section class="styleChart">
-    <canvas baseChart
-        [data]="barChartData"
-        [options]="barChartOptions"
-        [plugins]="barChartPlugins"
-        [legend]="barChartLegend"
-        [type]="'bar'">
-    </canvas>
+    <span>Estadisticas de compras por año</span>
+    <div class="canvasStyle">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+            [legend]="barChartLegend" [type]="'bar'">
+        </canvas>
+    </div>
 </section>
