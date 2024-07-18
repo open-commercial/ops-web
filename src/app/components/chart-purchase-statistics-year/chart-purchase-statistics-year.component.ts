@@ -30,7 +30,7 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    aspectRatio: 1.3,
+    aspectRatio: 1.5,
     plugins: {
       legend: {
         position: 'bottom',
@@ -68,8 +68,8 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
 
   generateYearsFilter() {
     const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 11 + 1;
-    return Array.from({length: 11}, (_, i)=> startYear + i); 
+    const startYear = currentYear - 6 + 1;
+    return Array.from({length: 6}, (_, i)=> startYear + i); 
   }
 
 }

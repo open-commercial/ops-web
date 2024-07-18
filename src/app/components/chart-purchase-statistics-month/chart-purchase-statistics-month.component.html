@@ -1,7 +1,6 @@
 <section class="container">
-    <span>Estadisticas de compras por mes</span>
+    <!-- <span>Estadisticas de compras por mes</span> -->
     <select name="purchasePerMonth" class="form-select form-select-sm" (change)="onYearChange($event)">
-        <option>Selecciona un año</option>
         <option *ngFor="let year of years" [value]="year">{{ year }}</option>
     </select>
     <div class="canvasStyle">

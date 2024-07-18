@@ -12,11 +12,9 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
   years: number[] = [];
   selectedYear: number = new Date().getFullYear();
 
-  constructor(private chartData: ChartService,
-              ) { }
+  constructor(private chartData: ChartService) { }
 
-  
-  ngOnInit(): void {
+    ngOnInit(): void {
     this.years = this.generateYearsData();
     this.loadChartDataMonth(this.selectedYear);
   }
@@ -55,8 +53,8 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
 
   loadChartDataMonth(year: number):void {
     const monthList = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-    this.chartData.getChartDataMonth().subscribe(data => {
+       
+    this.chartData.getChartDataMonth(year).subscribe(data => {
       const monthLabels = data.labels.map(label => {
         const monthNumber = parseInt(label);
         return monthList[monthNumber - 1];
@@ -79,11 +77,12 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
     })
   }
 
-  onYearChange($event) {
-    this.selectedYear = $event.target.value;
+  onYearChange($event: Event): void {
+    const year = parseInt(($event.target as HTMLSelectElement).value, 10);
+    this.selectedYear = year;
     this.loadChartDataMonth(this.selectedYear);
-  }
 
+  }
   generateYearsData(): number[] {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 10;

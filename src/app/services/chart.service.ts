@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { ChartInterface } from '../models/chart-interface';
 import { environment } from 'src/environments/environment';
 import { SucursalesService } from './sucursales.service';
@@ -20,6 +20,7 @@ export class ChartService {
   getChartDataAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
         const idSucursal = this.sucursalesService.getIdSucursal();
         const url = `${this.urlPurchasingStatistics}/monto-neto-anual/sucursales/${idSucursal}`;
+
     return this.http.get<ChartInterface[]>(url).pipe(
       map(data => {
         const labels = data.map(item => item.periodo);
@@ -27,7 +28,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Estadistica de compras por año'}
+            {data: dataset, label: 'Por año'}
           ]
         }
       })
@@ -35,10 +36,10 @@ export class ChartService {
   }
 
   //Compras por año por proveedor
-  getChartDataAnnualSupplier (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  getChartDataAnnualSupplier (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    const anio = new Date().getFullYear();
-    const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-anual/sucursales/${idSucursal}?anio=${anio}`;
+    const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-anual/sucursales/${idSucursal}?anio=${year}`;
+    
     return this.http.get<ChartInterface[]>(url).pipe(
       map(data => {
         const labels = data.map(item => item.entidad);
@@ -46,7 +47,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Estadistica de compras por año por proveedor'}
+            {data: dataset, label: 'Por año por proveedor'}
           ]
         }
       })
@@ -54,10 +55,10 @@ export class ChartService {
   }
 
   //compras por mes
-  getChartDataMonth (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  getChartDataMonth (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    const years = new Date().getFullYear();
-    const url = `${this.urlPurchasingStatistics}/monto-neto-mensual/sucursales/${idSucursal}?anio=${years}`;
+    const url = `${this.urlPurchasingStatistics}/monto-neto-mensual/sucursales/${idSucursal}?anio=${year}`;
+    
     return this.http.get<ChartInterface[]>(url).pipe(
       map(data => {
         const labels = data.map(item => item.periodo);
@@ -65,7 +66,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Estadistica de compras por mes'}
+            {data: dataset, label: 'Por mes'}
           ]
         }
       })
@@ -73,11 +74,10 @@ export class ChartService {
   }
 
   //Compras por mes por proveedor
-  getChartDataMonthSupplier(): Observable<{ labels: string[], datasets: { data: number[], label: string }[] }> {
+  getChartDataMonthSupplier(year: number, month: number): Observable<{ labels: string[], datasets: { data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    const years = new Date().getFullYear();
-    const months = new Date().getMonth(); 
-    const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-mensual/sucursales/${idSucursal}?anio=${years}&mes=${months}`;
+    console.log(year, month, idSucursal)
+    const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-mensual/sucursales/${idSucursal}?anio=${year}&mes=${month}`;
  
     return this.http.get<ChartInterface[]>(url).pipe(
       map(data => {
@@ -87,12 +87,11 @@ export class ChartService {
         return {
           labels,
           datasets: [
-            { data: dataset, label: 'Estadistica de compras por mes por proveedor' }
+            { data: dataset, label: 'Por mes por proveedor' }
           ]
         };
       })
     );
   }
-  
 
 }

@@ -9,8 +9,17 @@ import { ChartService } from 'src/app/services/chart.service';
 })
 export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
 
+  years: number[] = [];
+  selectedYear: number = new Date().getFullYear();
+  selectedMonth: number | null = new Date().getMonth() + 1;
+  months: { value: number, name: string } [] = [];
+  
   constructor(private chartData: ChartService) { }
 
+  ngOnInit(): void {
+    this.years = this.generateYearData_1();
+    this.months = this.generateMonthsSupplierData();
+  }
 
   public barChartLegend = true;
   public barChartPlugins = [];
@@ -53,13 +62,8 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.loadChartDataMonthSupplier();
-  }
-
-  loadChartDataMonthSupplier(): void {
-    this.chartData.getChartDataMonthSupplier().subscribe(data => {
-      console.log('Datos recibidos del servicio:', data);
+  loadChartDataMonthSupplier(year: number, month: number): void {
+    this.chartData.getChartDataMonthSupplier(year, month).subscribe(data => {
       this.barChartData = {
         ...this.barChartData, 
         labels: data.labels,
@@ -75,6 +79,32 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
         ]
       };
     })
+  }
+  onYearChange($event: Event): void {
+    const year = parseInt(($event.target as HTMLSelectElement).value, 10);
+    this.selectedYear = year;
+    this.selectedMonth = null;
+  }
+
+  onMonthChange($event: Event): void {
+    const month = parseInt(($event.target as HTMLSelectElement).value, 10);
+    this.selectedMonth = month;
+    if (this.selectedYear !== null) {
+      this.loadChartDataMonthSupplier(this.selectedYear, this.selectedMonth);
+    }
+  }
+  generateYearData_1(): number[] {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 10;
+    const yearsData = Array.from({length: currentYear - startYear + 1}, (_, i)=> currentYear - i);
+    return yearsData;
+  } 
+
+  generateMonthsSupplierData(): { value: number, name: string }[] {
+    const monthsSupplierNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    console.log('Meses generados',monthsSupplierNames);
+    return monthsSupplierNames.map((name, index) => ({
+      value: index + 1, name }))
   }
 
 }

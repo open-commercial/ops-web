@@ -1,5 +1,8 @@
-<section>
-        <span>Estadisticas de compras por año por proveedor</span>
+<section class="container">
+        <select name="yearSupplier" class="form-select form-select-sm" (change)="onYearSupplierChange($event)">
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
+        <!-- <span>Por año por proveedor</span> -->
         <div class="canvasStyle">
                 <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
                         [legend]="barChartLegend" [type]="'bar'">
