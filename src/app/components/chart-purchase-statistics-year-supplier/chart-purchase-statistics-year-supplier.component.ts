@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
+import { ChartInterface } from 'src/app/models/chart-interface';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { ChartService } from 'src/app/services/chart.service';
 export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
   years: number[] = [];
   selectedYearSupplier: number = new Date().getFullYear();
+  proveedores: ChartInterface[] = [];
 
   constructor(private chartData: ChartService) { }
 
@@ -62,20 +64,10 @@ export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
 
   loadChartDataAnnualSupplier(year: number): void {
     this.chartData.getChartDataAnnualSupplier(year).subscribe(data => {
-      this.barChartData = {
-        ...this.barChartData, 
-        labels: data.labels,
-        datasets: [
-          {
-            ...data.datasets[0],
-            backgroundColor: '#f0c71b',
-            borderColor: '#f0c71b',
-            hoverBackgroundColor: '#f0c71b',
-            hoverBorderColor: '#f0c71b',
-            borderWidth: 1
-          }
-        ]
-      };
+      this.proveedores = data.datasets[0].data.map((monto, index) =>({
+        entidad: data.labels[index],
+        monto: monto
+      }));
     })
   }
 

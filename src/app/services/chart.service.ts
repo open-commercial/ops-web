@@ -28,7 +28,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Por año'}
+            {data: dataset, label: 'Monto'}
           ]
         }
       })
@@ -47,7 +47,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Por año por proveedor'}
+            {data: dataset, label: 'Monto'}
           ]
         }
       })
@@ -66,7 +66,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Por mes'}
+            {data: dataset, label: 'Monto'}
           ]
         }
       })
@@ -87,7 +87,7 @@ export class ChartService {
         return {
           labels,
           datasets: [
-            { data: dataset, label: 'Por mes por proveedor' }
+            { data: dataset, label: 'Monto' }
           ]
         };
       })

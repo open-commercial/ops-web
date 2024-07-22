@@ -1,11 +1,24 @@
 <section class="container">
+        <span>Compras por año por proveedor</span>
         <select name="yearSupplier" class="form-select form-select-sm" (change)="onYearSupplierChange($event)">
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
         </select>
-        <!-- <span>Por año por proveedor</span> -->
-        <div class="canvasStyle">
-                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
-                        [legend]="barChartLegend" [type]="'bar'">
-                </canvas>
+        <div class="table-responsive custom-table-responsive">
+                <table class="table table-striped">
+                        <thead>
+                                <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Proveedor</th>
+                                        <th scope="col">Monto $</th>
+                                </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                                <tr *ngFor="let proveedor of proveedores; let i = index">
+                                        <th scope="row">{{i + 1}}</th>
+                                        <td>{{proveedor.entidad}}</td>
+                                        <td>{{proveedor.monto | currency:'ARS':'symbol':'1.0-2'}}</td>
+                                </tr>
+                        </tbody>
+                </table>
         </div>
 </section>
