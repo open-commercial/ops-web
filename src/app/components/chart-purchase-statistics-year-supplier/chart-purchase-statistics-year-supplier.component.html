@@ -13,10 +13,10 @@
                                 </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                                <tr *ngFor="let proveedor of proveedores; let i = index">
-                                        <th scope="row">{{i + 1}}</th>
-                                        <td>{{proveedor.entidad}}</td>
-                                        <td>{{proveedor.monto | currency:'ARS':'symbol':'1.0-2'}}</td>
+                                <tr *ngFor="let supplier of suppliers; let i = index">
+                                        <td scope="row">{{i + 1}}</td>
+                                        <td>{{supplier.entidad}}</td>
+                                        <td>{{supplier.monto | currency:'ARS':'symbol':'1.0-2'}}</td>
                                 </tr>
                         </tbody>
                 </table>

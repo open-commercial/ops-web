@@ -68,8 +68,8 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
 
   generateYearsFilter() {
     const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 6 + 1;
-    return Array.from({length: 6}, (_, i)=> startYear + i); 
+    const startYear = currentYear - 5 + 1;
+    return Array.from({length: 5}, (_, i)=> startYear + i); 
   }
 
 }

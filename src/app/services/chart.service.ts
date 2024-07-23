@@ -76,7 +76,6 @@ export class ChartService {
   //Compras por mes por proveedor
   getChartDataMonthSupplier(year: number, month: number): Observable<{ labels: string[], datasets: { data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
-    console.log(year, month, idSucursal)
     const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-mensual/sucursales/${idSucursal}?anio=${year}&mes=${month}`;
  
     return this.http.get<ChartInterface[]>(url).pipe(

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
+import { ChartInterface } from 'src/app/models/chart-interface';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
@@ -13,77 +14,32 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
   selectedYear: number = new Date().getFullYear();
   selectedMonth: number | null = new Date().getMonth() + 1;
   months: { value: number, name: string } [] = [];
-  
+  suppliers: ChartInterface[] = [];
+
   constructor(private chartData: ChartService) { }
 
   ngOnInit(): void {
     this.years = this.generateYearData_1();
     this.months = this.generateMonthsSupplierData();
-  }
-
-  public barChartLegend = true;
-  public barChartPlugins = [];
-
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        label: '',
-        backgroundColor: 'rgb(242, 220, 71)',
-        borderColor: 'rgb(242, 220, 71)',
-        borderWidth: 0.5
-      }
-    ]
-  }
-
-  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    aspectRatio: 1.5,
-    scales: {
-      x: {
-        ticks: {
-          callback: function (value) {
-            const label = this.getLabelForValue(value as number);
-            return label.length > 10 ? label.substring(0, 10) + '...' : label;
-          }
-        },
-      }
-    },
-    plugins: {
-      legend: {
-        position: 'bottom',
-        align: 'start',
-        labels: {
-          color: 'rgb(0,0, 0)'
-        }
-      }
+    if (this.selectedYear && this.selectedMonth) {
+      this.loadChartDataMonthSupplier(this.selectedYear, this.selectedMonth);
     }
   }
-
   loadChartDataMonthSupplier(year: number, month: number): void {
     this.chartData.getChartDataMonthSupplier(year, month).subscribe(data => {
-      this.barChartData = {
-        ...this.barChartData, 
-        labels: data.labels,
-        datasets: [
-          {
-            ...data.datasets[0],
-            backgroundColor: '#f0c71b',
-            borderColor: '#f0c71b',
-            hoverBackgroundColor: '#f0c71b',
-            hoverBorderColor: '#f0c71b',
-            borderWidth: 1
-          }
-        ]
-      };
+      this.suppliers = data.labels.map((label, index)=> ({
+        entidad: label,
+        monto: data.datasets[0].data[index],
+      }));
     })
   }
   onYearChange($event: Event): void {
     const year = parseInt(($event.target as HTMLSelectElement).value, 10);
     this.selectedYear = year;
-    this.selectedMonth = null;
+    this.selectedMonth = new Date().getMonth() + 1;
+    if (this.selectedYear && this.selectedMonth) {
+      this.loadChartDataMonthSupplier(this.selectedYear, this.selectedMonth);
+    }
   }
 
   onMonthChange($event: Event): void {
@@ -102,7 +58,7 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
 
   generateMonthsSupplierData(): { value: number, name: string }[] {
     const monthsSupplierNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    console.log('Meses generados',monthsSupplierNames);
+
     return monthsSupplierNames.map((name, index) => ({
       value: index + 1, name }))
   }

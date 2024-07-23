@@ -33,3 +33,8 @@ span {
     box-shadow: none;
     outline: none;
 }
+
+.custom-table-responsive {
+    height: 40vh;
+    overflow-y: auto;
+}
