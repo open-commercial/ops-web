@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbAccordion, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Rol } from 'src/app/models/rol';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -11,7 +12,6 @@ import { AuthService } from 'src/app/services/auth.service';
 export class DashboardComponent implements OnInit {
   menuOpened = false;
   rol = Rol;
-
   allowedRolesToView = [Rol.ADMINISTRADOR, Rol.ENCARGADO]
 
   constructor(private authService: AuthService,
@@ -22,5 +22,4 @@ export class DashboardComponent implements OnInit {
        this.router.navigate(['/pedidos']);
     }
   }
-
 }

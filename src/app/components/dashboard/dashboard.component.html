@@ -1,10 +1,15 @@
 <section>
 	<div class="d-flex flex-row align-items-center">
-		<fa-icon [icon]="['fas', 'chart-line']" class="icon"></fa-icon>
-		<h3>Estadisticas</h3>
+		<h3><fa-icon [icon]="['fas', 'chart-line']" class="icon"></fa-icon> Estadisticas</h3>
 	</div>
 	<ngb-accordion class="ops-accordion custom-accordion" [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-purchase-0">
-		<ngb-panel title="Compras">
+		<ngb-panel>
+			<ng-template ngbPanelTitle>
+				<div class="d-flex align-items-center justify-content-between w-100">
+				<span class="me-auto">Compras</span>
+				<fa-icon [icon]="['fas', acc.isExpanded('ngb-purchase-0') ? 'chevron-down' : 'chevron-up']" class="me-2"></fa-icon>
+			</div>
+			</ng-template>
 			<ng-template ngbPanelContent>
 				<div class="container-fluid">
 					<div class="row p-0 gap-3 mt-2">
