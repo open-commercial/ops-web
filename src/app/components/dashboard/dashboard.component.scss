@@ -8,7 +8,7 @@
     .accordion-header {
         color: #536070;
         font-weight: bold;
-        font-size: 18px;  
+        font-size: 18px;
     }
 
     .accordion-button:focus {
@@ -16,28 +16,67 @@
     }
 
     .ops-accordion .accordion-button {
-            color: #000000 !important;
-            font-weight: bold;
-            font-size: 16px;
+        color: #000000 !important;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .accordion-body {
+        padding: 0;
     }
 }
 
-.conteiner {
-    margin: 60px;
+@media (min-width: 1024px) {
+    .icon {
+        font-size: 1.75rem;
+        padding-right: 6px;
+        padding-left: 3px;
+        color: #000000;
+        font-weight: bold;
+    }
+
+    h3 {
+        font-size: 1.75rem;
+        color: #000000;
+        margin: 0;
+    }
 }
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .icon {
+        font-size: 1.5rem;
+        padding-right: 6px;
+        padding-left: 3px;
+        color: #000000;
+        font-weight: bold;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        color: #000000;
+        margin: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .icon {
+        font-size: 1.3rem;
+        padding-right: 6px;
+        color: #000000;
+        font-weight: bold;
+        padding-left: 3px;
+    }
+
+    h3 {
+        font-size: 1.3rem;
+        color: #000000;
+        margin: 0;
+    }
+}
+
 
 span {
     color: #000000;
     font-weight: bold;
     font-size: 16px;
 }
-
-// h4 {
-//     color: #000000;
-//     font-weight: bold;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     background-color: $primary;
-//     padding: 10px;
-// }

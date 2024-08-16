@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartConfiguration } from 'chart.js';
 import { ChartInterface } from 'src/app/models/chart-interface';
 import { ChartService } from 'src/app/services/chart.service';
 
@@ -25,14 +24,23 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
       this.loadChartDataMonthSupplier(this.selectedYear, this.selectedMonth);
     }
   }
+
   loadChartDataMonthSupplier(year: number, month: number): void {
     this.chartData.getChartDataMonthSupplier(year, month).subscribe(data => {
-      this.suppliers = data.labels.map((label, index)=> ({
-        entidad: label,
-        monto: data.datasets[0].data[index],
-      }));
-    })
+      if (data && data.labels.length > 0 && data.datasets[0].data.length > 0) {
+        this.suppliers = data.labels.map((label, index) => ({
+          entidad: label,
+          monto: data.datasets[0].data[index],
+        }));
+      } else {
+        this.suppliers = []; 
+      }
+    }, error => {
+      console.error('Error al cargar los datos', error);
+      this.suppliers = []; 
+    });
   }
+  
   onYearChange($event: Event): void {
     const year = parseInt(($event.target as HTMLSelectElement).value, 10);
     this.selectedYear = year;

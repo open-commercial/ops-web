@@ -76,7 +76,6 @@ export class ChartPurchaseStatisticsMonthComponent implements OnInit {
       };
     })
   }
-
   onYearChange($event: Event): void {
     const year = parseInt(($event.target as HTMLSelectElement).value, 10);
     this.selectedYear = year;

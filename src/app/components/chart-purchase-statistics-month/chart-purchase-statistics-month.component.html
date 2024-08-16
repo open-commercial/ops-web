@@ -1,5 +1,5 @@
 <section class="container">
-        <span>Compras por mes</span>
+    <span>Compras por mes</span>
     <select name="purchasePerMonth" class="form-select form-select-sm" (change)="onYearChange($event)">
         <option *ngFor="let year of years" [value]="year">{{ year }}</option>
     </select>

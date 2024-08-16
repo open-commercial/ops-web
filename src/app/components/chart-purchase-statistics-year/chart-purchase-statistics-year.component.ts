@@ -11,6 +11,10 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
 
   constructor(private chartData: ChartService) { }
 
+  ngOnInit(): void {
+    this.loadChartDataAnnual();
+  }
+
   public barChartLegend = true;
   public barChartPlugins = [];
 
@@ -42,16 +46,13 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
     }
   };
 
-  ngOnInit(): void {
-    this.loadChartDataAnnual();
-  }
   loadChartDataAnnual() {
     this.chartData.getChartDataAnnual().subscribe(data => {
       let labels = this.generateYearsFilter();
 
       this.barChartData = {
         ...this.barChartData, 
-        labels: labels,
+        labels: labels,    
         datasets: [
           {
             ...data.datasets[0],
@@ -68,8 +69,7 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
 
   generateYearsFilter() {
     const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 5 + 1;
-    return Array.from({length: 5}, (_, i)=> startYear + i); 
+    const startYear = currentYear - 4 + 1;
+    return Array.from({length: 4}, (_, i)=> startYear + i); 
   }
-
 }

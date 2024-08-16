@@ -23,7 +23,7 @@ export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
       this.suppliers = data.datasets[0].data.map((monto, index) =>({
         entidad: data.labels[index],
         monto: monto
-      }));
+      })) || [];
     })
   }
 

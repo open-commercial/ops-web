@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Rol } from 'src/app/models/rol';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,20 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
   menuOpened = false;
+  rol = Rol;
 
-  constructor() { }
+  allowedRolesToView = [Rol.ADMINISTRADOR, Rol.ENCARGADO]
+
+  constructor(private authService: AuthService,
+              private router: Router  ) { }
 
   ngOnInit(): void {
-  }
-
-  toggleMenu(){
-    this.menuOpened = !this.menuOpened;
-    const elems = document.getElementsByClassName('ops-web-app');
-    const appElement = elems.item(0);
-    if (this.menuOpened && appElement) {
-      appElement.classList.add('menu-opened');
-    } else {
-      appElement.classList.remove('menu-opened');
+    if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
+       this.router.navigate(['/pedidos']);
     }
   }
 
