@@ -4,6 +4,10 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
+  <div *ngIf="tieneRolAdminOEncargado" class="ops-accordion styleEstadisticas d-flex align-items-center" routerLink="/dashboard">
+    <fa-icon [icon]="['fas', 'chart-line']" class="icon ps-3"></fa-icon>
+    <span>Estadísticas</span>
+  </div>
   <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId" (panelChange)="beforeChange($event)">
     <ng-template ngFor let-m [ngForOf]="menuData">
       <ngb-panel [id]="m.id" *ngIf="m.show">
