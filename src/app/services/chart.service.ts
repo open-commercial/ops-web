@@ -28,7 +28,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Monto'}
+            {data: dataset, label: '$ Monto'}
           ]
         }
       })
@@ -66,7 +66,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: 'Monto'}
+            {data: dataset, label: '$ Monto'}
           ]
         }
       })

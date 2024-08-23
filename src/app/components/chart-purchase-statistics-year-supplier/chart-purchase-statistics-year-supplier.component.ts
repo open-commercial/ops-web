@@ -8,6 +8,7 @@ import { ChartService } from 'src/app/services/chart.service';
   styleUrls: ['./chart-purchase-statistics-year-supplier.component.scss']
 })
 export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
+
   years: number[] = [];
   selectedYearSupplier: number = new Date().getFullYear();
   suppliers: ChartInterface[] = [];
@@ -19,12 +20,19 @@ export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
   }
 
   loadChartDataAnnualSupplier(year: number): void {
-    this.chartData.getChartDataAnnualSupplier(year).subscribe(data => {
-      this.suppliers = data.datasets[0].data.map((monto, index) =>({
-        entidad: data.labels[index],
-        monto: monto
-      })) || [];
-    })
+    this.chartData.getChartDataAnnualSupplier(year).subscribe({
+      next: (data) => {
+        this.suppliers = data.datasets[0].data.map((monto, index) => ({
+          entidad: data.labels[index],
+          monto: monto
+        })) || [];
+      },
+      error: (error) => {
+        console.error('Error al cargar los datos', error);
+      },
+      complete: () => {
+      }
+    });
   }
 
   onYearSupplierChange($event: Event): void {
@@ -33,10 +41,10 @@ export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
     this.loadChartDataAnnualSupplier(this.selectedYearSupplier);
   }
 
-  generateYearsData_2():number[]{
+  generateYearsData_2(): number[] {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 10;
-    const yearsData = Array.from({length: currentYear - startYear + 1}, (_, i)=> currentYear - i);
+    const yearsData = Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
     return yearsData;
   }
 }

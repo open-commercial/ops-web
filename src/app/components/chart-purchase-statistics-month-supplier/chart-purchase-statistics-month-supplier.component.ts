@@ -8,11 +8,10 @@ import { ChartService } from 'src/app/services/chart.service';
   styleUrls: ['./chart-purchase-statistics-month-supplier.component.scss']
 })
 export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
-
   years: number[] = [];
   selectedYear: number = new Date().getFullYear();
   selectedMonth: number | null = new Date().getMonth() + 1;
-  months: { value: number, name: string } [] = [];
+  months: { value: number, name: string }[] = [];
   suppliers: ChartInterface[] = [];
 
   constructor(private chartData: ChartService) { }
@@ -26,21 +25,33 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
   }
 
   loadChartDataMonthSupplier(year: number, month: number): void {
-    this.chartData.getChartDataMonthSupplier(year, month).subscribe(data => {
-      if (data && data.labels.length > 0 && data.datasets[0].data.length > 0) {
-        this.suppliers = data.labels.map((label, index) => ({
-          entidad: label,
-          monto: data.datasets[0].data[index],
-        }));
-      } else {
-        this.suppliers = []; 
+    this.chartData.getChartDataMonthSupplier(year, month).subscribe(
+      data => {
+        if (data && data.labels && data.datasets && data.datasets.length > 0) {
+          const labels = data.labels;
+          const datasetData = data.datasets[0].data;
+
+          if (labels.length === datasetData.length) {
+            this.suppliers = labels.map((label, index) => ({
+              entidad: label,
+              monto: datasetData[index],
+            }));
+          } else {
+            console.error('Desajuste en la longitud de los datos');
+            this.suppliers = [];
+          }
+        } else {
+          this.suppliers = [];
+        }
+      },
+      error => {
+        console.error('Error al cargar los datos', error);
+        this.suppliers = [];
       }
-    }, error => {
-      console.error('Error al cargar los datos', error);
-      this.suppliers = []; 
-    });
+    );
   }
-  
+
+
   onYearChange($event: Event): void {
     const year = parseInt(($event.target as HTMLSelectElement).value, 10);
     this.selectedYear = year;
@@ -60,15 +71,16 @@ export class ChartPurchaseStatisticsMonthSupplierComponent implements OnInit {
   generateYearData_1(): number[] {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 10;
-    const yearsData = Array.from({length: currentYear - startYear + 1}, (_, i)=> currentYear - i);
+    const yearsData = Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
     return yearsData;
-  } 
+  }
 
   generateMonthsSupplierData(): { value: number, name: string }[] {
     const monthsSupplierNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
     return monthsSupplierNames.map((name, index) => ({
-      value: index + 1, name }))
+      value: index + 1, name
+    }))
   }
 
 }

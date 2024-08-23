@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ChartConfiguration, ChartOptions, ChartType } from "chart.js";
+import { Component, OnInit } from '@angular/core';
+import { ChartConfiguration } from "chart.js";
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
@@ -51,8 +51,8 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
       let labels = this.generateYearsFilter();
 
       this.barChartData = {
-        ...this.barChartData, 
-        labels: labels,    
+        ...this.barChartData,
+        labels: labels,
         datasets: [
           {
             ...data.datasets[0],
@@ -70,6 +70,6 @@ export class ChartPurchaseStatisticsYearComponent implements OnInit {
   generateYearsFilter() {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 4 + 1;
-    return Array.from({length: 4}, (_, i)=> startYear + i); 
+    return Array.from({ length: 4 }, (_, i) => startYear + i);
   }
 }

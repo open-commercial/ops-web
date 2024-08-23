@@ -147,6 +147,10 @@ export class SideNavComponent implements OnDestroy {
           });
 
           this.accordionActiveId = elemento.length ? elemento[0].id : '';
+
+          if (url === '/dashboard') {
+            this.closeSidenav();
+          }
         })
     );
   }
@@ -163,5 +167,9 @@ export class SideNavComponent implements OnDestroy {
     if (this.accordion.isExpanded($event.panelId)) {
       $event.preventDefault();
     }
+  }
+
+  private closeSidenav() {
+    this.menuOptionClick.emit()
   }
 }
