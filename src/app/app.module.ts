@@ -98,6 +98,10 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartPurchaseStatisticsMonthComponent } from './components/chart-purchase-statistics-month/chart-purchase-statistics-month.component';
 import { ChartPurchaseStatisticsYearSupplierComponent } from './components/chart-purchase-statistics-year-supplier/chart-purchase-statistics-year-supplier.component';
 import { ChartPurchaseStatisticsMonthSupplierComponent } from './components/chart-purchase-statistics-month-supplier/chart-purchase-statistics-month-supplier.component';
+import { ChartSalesStatisticsMonthComponent } from './components/chart-sales-statistics-month/chart-sales-statistics-month.component';
+import { ChartSalesStatisticsMonthSupplierComponent } from './components/chart-sales-statistics-month-supplier/chart-sales-statistics-month-supplier.component';
+import { ChartSalesStatisticsYearComponent } from './components/chart-sales-statistics-year/chart-sales-statistics-year.component';
+import { ChartSalesStatisticsYearSupplierComponent } from './components/chart-sales-statistics-year-supplier/chart-sales-statistics-year-supplier.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -193,6 +197,10 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ChartPurchaseStatisticsMonthComponent,
         ChartPurchaseStatisticsYearSupplierComponent,
         ChartPurchaseStatisticsMonthSupplierComponent,
+        ChartSalesStatisticsMonthComponent,
+        ChartSalesStatisticsMonthSupplierComponent,
+        ChartSalesStatisticsYearComponent,
+        ChartSalesStatisticsYearSupplierComponent,
     ],
     imports: [
         BrowserModule,

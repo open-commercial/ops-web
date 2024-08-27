@@ -1,0 +1,43 @@
+.container {
+    padding-left: 4px;
+    padding-right: 4px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-table-responsive{
+    height: 40vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
+}
+
+span {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-select {
+    padding: 6px;
+    background-color: whitesmoke;
+    border: 1px solid rgb(206, 212, 218);
+
+}
+
+.form-select:hover {
+    background-color: rgba(245, 245, 245, 0.788);
+    border: 2px solid rgb(206, 212, 218);
+    box-shadow: none;
+    outline: none;
+}
+
+.form-select:focus {
+    background-color: whitesmoke;
+    border: 2px solid rgb(206, 212, 218) ;
+    box-shadow: none;
+    outline: none;
+}

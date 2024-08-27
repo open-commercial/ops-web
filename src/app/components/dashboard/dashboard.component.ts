@@ -36,7 +36,11 @@ export class DashboardComponent implements OnInit {
         lastValueFrom(this.chartService.getChartDataAnnual()),
         lastValueFrom(this.chartService.getChartDataAnnualSupplier(currentYear)),
         lastValueFrom(this.chartService.getChartDataMonth(currentYear)),
-        lastValueFrom(this.chartService.getChartDataMonthSupplier(currentYear, currentMonth))
+        lastValueFrom(this.chartService.getChartDataMonthSupplier(currentYear, currentMonth)),
+        lastValueFrom(this.chartService.getChartDataSalesAnnual()),
+        lastValueFrom(this.chartService.getChartDataSalesAnnualSupplier(currentYear)),
+        lastValueFrom(this.chartService.getChartDataSalesMonth(currentYear)),
+        lastValueFrom(this.chartService.getChartDataSalesMonthSupplier(currentYear, currentMonth)),
       ];
 
       const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
