@@ -1,6 +1,7 @@
 <section>
-	<div class="d-flex flex-row align-items-center h3 m-0 flex-fill text-truncate">
-		<h1><fa-icon [icon]="['fas', 'square-poll-vertical']" class="icon"></fa-icon> Estadísticas</h1>
+	<div class="d-flex flex-row align-items-center my-3">
+		<h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'square-poll-vertical']"></fa-icon>
+			Estadísticas</h1>
 	</div>
 	<ngb-accordion class="ops-accordion custom-accordion" [closeOthers]="true" #acc="ngbAccordion"
 		activeIds="ngb-purchase-0">
@@ -41,44 +42,38 @@
 		</ngb-panel>
 		<ngb-panel id="ngb-purchase-2">
 			<ng-template ngbPanelTitle>
-			<div class="d-flex align-items-center justify-content-between w-100">
-				<span class="me-auto">Ventas</span>
-				<fa-icon *ngIf="acc.isExpanded('ngb-purchase-2')" [icon]="['fas', 'chevron-up']"
-					class="chevronStyle me-2"></fa-icon>
-				<fa-icon *ngIf="!acc.isExpanded('ngb-purchase-2')" [icon]="['fas', 'chevron-down']"
-					class="chevronStyle me-2"></fa-icon>
-			</div>
-		</ng-template>
-		<ng-template ngbPanelContent>
-			<!-- <span>Resto de componentes a crear</span> -->
-			<!-- <app-chart-sales-statistics-year></app-chart-sales-statistics-year>//Funciona bien  -->
-			<!-- <app-chart-sales-statistics-month></app-chart-sales-statistics-month>//Funciona bien -->
-			<!-- <app-chart-sales-statistics-year-supplier></app-chart-sales-statistics-year-supplier> -->
-			<!-- <app-chart-sales-statistics-month-supplier></app-chart-sales-statistics-month-supplier> -->
-			<div *ngIf="loadingData">
-				<fa-icon class="spinner-primary d-flex align-items-center justify-content-center"
-					[icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-			</div>
-			<div *ngIf="!loadingData" class="container-fluid">
-				<div class="row p-0 gap-4 mt-2">
-					<div class="col-sm-12 col-md col-lg p-0">
-						<app-chart-sales-statistics-year></app-chart-sales-statistics-year>
+				<div class="d-flex align-items-center justify-content-between w-100">
+					<span class="me-auto">Ventas</span>
+					<fa-icon *ngIf="acc.isExpanded('ngb-purchase-2')" [icon]="['fas', 'chevron-up']"
+						class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="!acc.isExpanded('ngb-purchase-2')" [icon]="['fas', 'chevron-down']"
+						class="chevronStyle me-2"></fa-icon>
+				</div>
+			</ng-template>
+			<ng-template ngbPanelContent>
+				<div *ngIf="loadingData">
+					<fa-icon class="spinner-primary d-flex align-items-center justify-content-center"
+						[icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+				</div>
+				<div *ngIf="!loadingData" class="container-fluid">
+					<div class="row p-0 gap-4 mt-2">
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-chart-sales-statistics-year></app-chart-sales-statistics-year>
+						</div>
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-chart-sales-statistics-year-supplier></app-chart-sales-statistics-year-supplier>
+						</div>
 					</div>
-					<div class="col-sm-12 col-md col-lg p-0">
-						<app-chart-sales-statistics-year-supplier></app-chart-sales-statistics-year-supplier>
+					<div class="row gap-4 p-0 mt-4">
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-chart-sales-statistics-month></app-chart-sales-statistics-month>
+						</div>
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-chart-sales-statistics-month-supplier></app-chart-sales-statistics-month-supplier>
+						</div>
 					</div>
 				</div>
-				<div class="row gap-4 p-0 mt-4">
-					<div class="col-sm-12 col-md col-lg p-0">
-						<app-chart-sales-statistics-month></app-chart-sales-statistics-month>
-					</div>
-					<div class="col-sm-12 col-md col-lg p-0">
-						<app-chart-sales-statistics-month-supplier></app-chart-sales-statistics-month-supplier>
-					</div>
-				</div>
-			</div>
-		</ng-template>
+			</ng-template>
 		</ngb-panel>
-
 	</ngb-accordion>
 </section>

@@ -15,7 +15,7 @@ export class ChartService {
   constructor(private http: HttpClient,
               private sucursalesService: SucursalesService) {
   }
-  
+
   //************************* COMPRAS ********************************* */
   //Compras por año
   getChartDataAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
@@ -29,7 +29,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: '$ Monto'}
+            {data: dataset, label: '$ Monto en peso'}
           ]
         }
       })
@@ -48,7 +48,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: '$ Monto'}
+            {data: dataset, label: '$ Monto en peso'}
           ]
         }
       })
@@ -67,7 +67,7 @@ export class ChartService {
         return{
           labels,
           datasets: [
-            {data: dataset, label: '$ Monto'}
+            {data: dataset, label: '$ Monto en peso'}
           ]
         }
       })
@@ -87,7 +87,7 @@ export class ChartService {
         return {
           labels,
           datasets: [
-            { data: dataset, label: '$ Monto' }
+            { data: dataset, label: '$ Monto en peso' }
           ]
         };
       })
@@ -104,7 +104,7 @@ export class ChartService {
       return{
         labels,
         datasets: [
-          {data: dataset, label: '$ Monto'}
+          {data: dataset, label: '$ Monto en peso'}
         ]
       }
     }))
@@ -120,7 +120,7 @@ export class ChartService {
       return{
         labels,
         datasets: [
-          {data: dataset, label: '$ Monto'}
+          {data: dataset, label: '$ Monto en peso'}
         ]
       }
     }))
@@ -137,7 +137,7 @@ export class ChartService {
       return{
         labels,
         datasets: [
-          {data: dataset, label: '$ Monto'}
+          {data: dataset, label: '$ Monto en peso'}
         ]
       }
     }))
@@ -153,7 +153,7 @@ export class ChartService {
       return{
         labels,
         datasets: [
-          {data: dataset, label: '$ Monto'}
+          {data: dataset, label: '$ Monto en peso'}
         ]
       }
     }))

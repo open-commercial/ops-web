@@ -27,12 +27,15 @@ span {
     font-weight: bold;
     display: flex;
     align-items: center;
-    justify-content: center
+    justify-content: center;
+    padding-bottom: 6px;
 }
 
 .form-select {
     background-color: whitesmoke;
     border: 1px solid rgb(206, 212, 218);
+    margin-bottom: 6px;
+    height: 35px;
 
 }
 

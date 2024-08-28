@@ -26,58 +26,6 @@
     }
 }
 
-@media (min-width: 1024px) {
-    .icon {
-        font-size: 1.75rem;
-        color: #000000;
-        font-weight: bold;
-        padding-left: 3px;
-    }
-
-    h1 {
-        font-size: 1.75rem;
-        color: #000000;
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        font-weight: 500;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-    .icon {
-        font-size: 1.5rem;
-        color: #000000;
-        font-weight: bold;
-        padding-left: 3px;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-        color: #000000;
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        font-weight: 500;
-    }
-}
-
-@media (max-width: 767px) {
-    .icon {
-        font-size: 1.3rem;
-        color: #000000;
-        font-weight: bold;
-        padding-left: 3px;
-    }
-
-    h1 {
-        font-size: 1.3rem;
-        color: #000000;
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        font-weight: 500;
-    }
-}
-
-
 span {
     color: #000000;
     font-weight: bold;
