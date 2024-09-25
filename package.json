@@ -1,6 +1,6 @@
 {
   "name": "ops-web",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "private": true,
   "engines": {
     "node": "16.13"
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "ng build --configuration ${ENV_NAME}",
     "start": "ng serve"
-  },  
+  },
   "dependencies": {
     "@angular/animations": "^14.2.0",
     "@angular/cdk": "^14.2.0",
@@ -34,7 +34,7 @@
     "chart.js": "^3.8.0",
     "ng2-charts": "^3.1.0",
     "core-js": "^3.25.0",
-    "encrypt-storage": "^2.12.22",
+    "crypto-js": "^4.2.0",
     "file-saver": "^2.0.5",
     "moment": "^2.29.4",
     "rxjs": "~7.5.6",

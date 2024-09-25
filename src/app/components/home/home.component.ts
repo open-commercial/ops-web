@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Rol } from 'src/app/models/rol';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,11 +10,14 @@ import { Rol } from 'src/app/models/rol';
 export class HomeComponent implements OnInit {
   menuOpened = false;
   rol = Rol;
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private authService: AuthService) { 
+  }
 
   ngOnInit() {
     this.redirectBasedOnRole();
   }
+
     toggleMenu() {
     this.menuOpened = !this.menuOpened;
     const elems = document.getElementsByClassName('ops-web-app');
@@ -25,7 +29,7 @@ export class HomeComponent implements OnInit {
     }
   }
   redirectBasedOnRole() {
-    if ( Rol.ADMINISTRADOR || Rol.ENCARGADO) {
+    if (this.authService.userHasAnyOfTheseRoles ([Rol.ADMINISTRADOR, Rol.ENCARGADO]))  {
       this.router.navigate(['/dashboard']);
     } else {
       this.router.navigate(['/pedidos']);

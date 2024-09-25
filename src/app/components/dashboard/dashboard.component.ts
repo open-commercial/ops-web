@@ -4,11 +4,11 @@ import { lastValueFrom } from 'rxjs';
 import { Rol } from 'src/app/models/rol';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChartService } from 'src/app/services/chart.service';
+import { NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
 
@@ -19,7 +19,11 @@ export class DashboardComponent implements OnInit {
   constructor(private authService: AuthService,
               private router: Router,
               private cdr: ChangeDetectorRef,
-              private chartService: ChartService) { }
+              private chartService: ChartService,
+              accordionConfig: NgbAccordionConfig) {
+          
+                accordionConfig.type = 'dark';
+  }
 
   ngOnInit(): void {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
@@ -46,7 +50,7 @@ export class DashboardComponent implements OnInit {
       const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
       Promise.all(componentPromises).then(() => {
-        return delay(1000);
+        return delay(300);
       }).then(() => {
         this.loadingData = false;
         this.cdr.detectChanges();

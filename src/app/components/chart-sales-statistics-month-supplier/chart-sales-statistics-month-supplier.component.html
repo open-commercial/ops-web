@@ -1,7 +1,7 @@
 <section class="container">
     <span>Ventas por mes por proveedor</span>
     <div class="styleSelect">
-            <select name="year" class="form-select form-select-sm" (change)="onYearChange($event)">
+            <select name="year" class="form-select form-select-sm ng-pristine ng-invalid ng-touched" (change)="onYearChange($event)">
                     <option *ngFor="let year of years" [value]="year">{{year}}</option>
             </select>
             <select name="month" class="form-select form-select-sm" [(ngModel)]="selectedMonth"

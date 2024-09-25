@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { EncryptStorage } from 'encrypt-storage';
+import * as crypto from 'crypto-js';
 
 export enum StorageKeys {
+  
   ID_SUCURSAL = 'idSucursal',
-  APP_VERSION = 'appVersion',
   TOKEN = 'token',
   PEDIDO_NUEVO = 'nuevoPedido',
   PEDIDO_EDITAR = 'editarPedido',
@@ -15,25 +15,34 @@ export enum StorageKeys {
   providedIn: 'root'
 })
 export class StorageService {
-  private es = new EncryptStorage(StorageService.getSK());
 
   getItem(key: string) {
-    return this.es.getItem(key);
+    return this.decrypt(localStorage.getItem(key));
   }
 
   setItem(key: string, data: any) {
-    this.es.setItem(key, data);
+    localStorage.setItem(key, this.encrypt(data));
   }
 
   removeItem(key: string) {
-    this.es.removeItem(key);
+    localStorage.removeItem(key);
   }
 
   clear() {
-    this.es.clear();
+    localStorage.clear();
   }
 
-  static getSK() {
+  private static getSK() {
     return 'MaritoPagaElAsado2025!';
+  }
+
+  private encrypt(data: any): string {
+    return crypto.AES.encrypt(JSON.stringify(data), StorageService.getSK()).toString();
+  }
+
+  private decrypt(data: string) {
+    if (data === null || data === undefined) { return null; }
+    const bytes = crypto.AES.decrypt(data, StorageService.getSK());
+    return JSON.parse(bytes.toString(crypto.enc.Utf8));
   }
 }

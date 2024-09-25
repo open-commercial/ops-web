@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.example.com',
-  appVersion: 18,
+  apiUrl: 'https://api.globodeoro.com',
+  appVersion: '20',
   qa: false,
 };

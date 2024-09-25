@@ -4,7 +4,7 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <div *ngIf="tieneRolAdminOEncargado" class="ops-accordion styleEstadisticas d-flex align-items-center" routerLink="/dashboard">
+  <div *ngIf="tieneRolAdministrador || tieneRolAdminOEncargado" class="ops-accordion styleEstadisticas d-flex align-items-center" routerLink="/dashboard">
     <fa-icon [icon]="['fas', 'square-poll-vertical']" class="icon ps-3"></fa-icon>
     <span>Estadísticas</span>
   </div>

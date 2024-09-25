@@ -2,7 +2,7 @@ name: Open Commercial CI
 on:
   push:
     branches:
-      - master      
+      - master
   pull_request:
     types: [ opened, synchronize, reopened ]
 jobs:
