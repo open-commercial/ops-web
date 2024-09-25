@@ -139,7 +139,6 @@ export class SideNavComponent implements OnDestroy {
         .pipe(filter(event => event instanceof NavigationEnd))
         .subscribe((event: NavigationEnd) => {
           let url = '/' + event.urlAfterRedirects.split('/')[1];
-          console.log(url);
 
           if (url.indexOf('?') >= 0) {
             url = url.split('?')[0];
