@@ -5,7 +5,7 @@
                     <option *ngFor="let year of years" [value]="year">{{year}}</option>
             </select>
             <select name="month" class="form-select form-select-sm" [(ngModel)]="selectedMonth"
-                    (change)="onMonthChange($event)">
+                    (change)="OnMonthChange($event)">
                     <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
             </select>
     </div>

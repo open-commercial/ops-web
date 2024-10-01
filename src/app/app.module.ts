@@ -103,6 +103,7 @@ import { ChartSalesStatisticsMonthSupplierComponent } from './components/chart-s
 import { ChartSalesStatisticsYearComponent } from './components/chart-sales-statistics-year/chart-sales-statistics-year.component';
 import { ChartSalesStatisticsYearSupplierComponent } from './components/chart-sales-statistics-year-supplier/chart-sales-statistics-year-supplier.component';
 
+
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
 @NgModule({
@@ -200,7 +201,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ChartSalesStatisticsMonthComponent,
         ChartSalesStatisticsMonthSupplierComponent,
         ChartSalesStatisticsYearComponent,
-        ChartSalesStatisticsYearSupplierComponent,
+        ChartSalesStatisticsYearSupplierComponent
     ],
     imports: [
         BrowserModule,
