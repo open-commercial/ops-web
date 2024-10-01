@@ -1,6 +1,6 @@
 <section class="container">
         <span>Compras por año por proveedor</span>
-        <select name="yearSupplier" class="form-select form-select-sm ng-pristine ng-invalid ng-touched" (change)="onYearSupplierChange($event)">
+        <select name="yearSupplier" class="form-select form-select-sm ng-pristine ng-invalid ng-touched" (change)="onYearChange($event)">
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
         </select>
         <div class="table-responsive custom-table-responsive">

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
 import { ChartInterface } from 'src/app/models/chart-interface';
 import { ChartService } from 'src/app/services/chart.service';
 
@@ -7,19 +8,11 @@ import { ChartService } from 'src/app/services/chart.service';
   templateUrl: './chart-purchase-statistics-year-supplier.component.html',
   styleUrls: ['./chart-purchase-statistics-year-supplier.component.scss']
 })
-export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
-
-  years: number[] = [];
-  selectedYearSupplier: number = new Date().getFullYear();
-  suppliers: ChartInterface[] = [];
-
-  constructor(private chartData: ChartService) { }
-  ngOnInit(): void {
-    this.years = this.generateYearsData_2();
-    this.loadChartDataAnnualSupplier(this.selectedYearSupplier);
+export class ChartPurchaseStatisticsYearSupplierComponent extends ChartDirectiveDirective {
+  constructor(protected chartData: ChartService) {
+    super(chartData);
   }
-
-  loadChartDataAnnualSupplier(year: number): void {
+  loadChartData(year: number): void {
     this.chartData.getChartDataAnnualSupplier(year).subscribe({
       next: (data) => {
         this.suppliers = data.datasets[0].data.map((monto, index) => ({
@@ -33,18 +26,5 @@ export class ChartPurchaseStatisticsYearSupplierComponent implements OnInit {
       complete: () => {
       }
     });
-  }
-
-  onYearSupplierChange($event: Event): void {
-    const year = parseInt(($event.target as HTMLSelectElement).value, 10);
-    this.selectedYearSupplier = year;
-    this.loadChartDataAnnualSupplier(this.selectedYearSupplier);
-  }
-
-  generateYearsData_2(): number[] {
-    const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 10;
-    const yearsData = Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
-    return yearsData;
   }
 }
