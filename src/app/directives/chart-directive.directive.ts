@@ -1,6 +1,7 @@
 import { Directive, OnInit } from '@angular/core';
 import { ChartInterface } from '../models/chart-interface';
 import { ChartService } from '../services/chart.service';
+import { ChartConfiguration } from 'chart.js';
 
 @Directive({
   selector: '[appChartDirective]'
@@ -13,6 +14,37 @@ export abstract class ChartDirectiveDirective implements OnInit {
   months: { value: number, name: string }[] = [];
   suppliers: ChartInterface[] = [];
 
+  public barChartLegend = true;
+  public barChartPlugins = [];
+
+  public barChartData: ChartConfiguration<'bar'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: '',
+        backgroundColor: 'rgb(242, 220, 71)',
+        borderColor: 'rgb(242, 220, 71)',
+        borderWidth: 0.5
+      }
+    ]
+  };
+
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    aspectRatio: 1.5,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        align: 'start',
+        labels: {
+          color: 'rgb(0,0, 0)',
+
+        }
+      }
+    }
+  }
 
   constructor(protected chartData: ChartService) { }
 
@@ -55,6 +87,23 @@ export abstract class ChartDirectiveDirective implements OnInit {
     return monthsNames.map((name, index) => ({
       value: index + 1, name
     }))
+  }
+
+  updateChart(data: any, labels: string[]): void {
+    this.barChartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: data.datasets[0].data,
+          label: data.datasets[0].label,
+          backgroundColor: '#f0c71b',
+          borderColor: '#f0c71b',
+          hoverBackgroundColor: '#f0c71b',
+          hoverBorderColor: '#f0c71b',
+          borderWidth: 1
+        }
+      ]
+    };
   }
 
 }
