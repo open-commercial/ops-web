@@ -1,11 +1,12 @@
 <section class="container">
         <span>Compras por mes por proveedor</span>
         <div class="styleSelect">
-                <select name="year" class="form-select form-select-sm ng-pristine ng-invalid ng-touched" (change)="onYearChange($event)">
+                <select name="year" class="form-select form-select-sm ng-pristine ng-invalid ng-touched"
+                        (change)="onYearChange($event)">
                         <option *ngFor="let year of years" [value]="year">{{year}}</option>
                 </select>
-                <select name="month" class="form-select form-select-sm ng-pristine ng-invalid ng-touched" [(ngModel)]="selectedMonth"
-                        (change)="OnMonthChange($event)">
+                <select name="month" class="form-select form-select-sm ng-pristine ng-invalid ng-touched"
+                        [(ngModel)]="selectedMonth" (change)="OnMonthChange($event)">
                         <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
                 </select>
         </div>

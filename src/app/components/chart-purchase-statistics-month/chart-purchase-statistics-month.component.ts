@@ -8,7 +8,8 @@ import { ChartService } from 'src/app/services/chart.service';
   styleUrls: ['./chart-purchase-statistics-month.component.scss']
 })
 export class ChartPurchaseStatisticsMonthComponent extends ChartDirectiveDirective {
-
+  chartDataArray: any[] = [];
+  noDataAvailable: boolean = false;
   constructor(protected chartData: ChartService) {
     super(chartData);
   }
@@ -17,8 +18,15 @@ export class ChartPurchaseStatisticsMonthComponent extends ChartDirectiveDirecti
     const allList = this.generateMonthsData().map(m => m.name);
 
     this.chartData.getChartDataMonth(year).subscribe(data => {
-      const monthList = data.labels.map(labels => allList[parseInt(labels) - 1]);
-      this.updateChart(data, monthList);
+      if (data && data.labels.length > 0) {
+        const monthList = data.labels.map(labels => allList[parseInt(labels) - 1]);
+        this.updateChart(data, monthList);
+        this.chartDataArray = data.labels;
+        this.noDataAvailable = false;
+      } else {
+        this.chartDataArray = [];
+        this.noDataAvailable = true;
+      }
     });
   }
 }
