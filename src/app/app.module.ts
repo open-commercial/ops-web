@@ -95,10 +95,9 @@ import { ConfiguracionComponent } from './components/configuracion/configuracion
 import { ChartPurchaseStatisticsYearComponent } from './components/chart-purchase-statistics-year/chart-purchase-statistics-year.component';
 import { NgChartsModule } from 'ng2-charts';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ChartPurchaseStatisticsMonthComponent } from './components/chart-purchase-statistics-month/chart-purchase-statistics-month.component';
+import { ChartStatisticsMonthComponent } from './components/chart-statistics-month/chart-statistics-month.component';
 import { ChartPurchaseStatisticsYearSupplierComponent } from './components/chart-purchase-statistics-year-supplier/chart-purchase-statistics-year-supplier.component';
 import { ChartPurchaseStatisticsMonthSupplierComponent } from './components/chart-purchase-statistics-month-supplier/chart-purchase-statistics-month-supplier.component';
-import { ChartSalesStatisticsMonthComponent } from './components/chart-sales-statistics-month/chart-sales-statistics-month.component';
 import { ChartSalesStatisticsMonthSupplierComponent } from './components/chart-sales-statistics-month-supplier/chart-sales-statistics-month-supplier.component';
 import { ChartSalesStatisticsYearComponent } from './components/chart-sales-statistics-year/chart-sales-statistics-year.component';
 import { ChartSalesStatisticsYearSupplierComponent } from './components/chart-sales-statistics-year-supplier/chart-sales-statistics-year-supplier.component';
@@ -195,10 +194,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ConfiguracionComponent,
         DashboardComponent,
         ChartPurchaseStatisticsYearComponent,
-        ChartPurchaseStatisticsMonthComponent,
+        ChartStatisticsMonthComponent,
         ChartPurchaseStatisticsYearSupplierComponent,
         ChartPurchaseStatisticsMonthSupplierComponent,
-        ChartSalesStatisticsMonthComponent,
         ChartSalesStatisticsMonthSupplierComponent,
         ChartSalesStatisticsYearComponent,
         ChartSalesStatisticsYearSupplierComponent
