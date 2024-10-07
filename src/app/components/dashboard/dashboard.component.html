@@ -33,7 +33,7 @@
 							<app-chart-statistics-month [title]="'Compras por mes'" [chartType]="'compras'"></app-chart-statistics-month>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-purchase-statistics-month-supplier></app-chart-purchase-statistics-month-supplier>
+							<app-chart-statistics-month-supplier [title]="'Compras por mes por proveedor'" [dataType]="'compras'"></app-chart-statistics-month-supplier>
 						</div>
 					</div>
 				</div>
@@ -66,10 +66,9 @@
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
 							<app-chart-statistics-month [title]="'Ventas por mes'" [chartType]="'ventas'"></app-chart-statistics-month>
-							<!-- <app-chart-sales-statistics-month [title]="'Ventas por mes'" [chartType]="'ventas'"></app-chart-sales-statistics-month> -->
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-sales-statistics-month-supplier></app-chart-sales-statistics-month-supplier>
+							<app-chart-statistics-month-supplier [title]="'Ventas por mes por proveedor'" [dataType]="'ventas'"></app-chart-statistics-month-supplier>
 						</div>
 					</div>
 				</div>

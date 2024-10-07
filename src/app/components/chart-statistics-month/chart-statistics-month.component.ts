@@ -43,22 +43,4 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
     }
   }
 
-
-
-  // override loadChartData(year: number): void {
-  //   const allList = this.generateMonthsData().map(m => m.name);
-
-  //   this.chartData.getChartDataMonth(year).subscribe(data => {
-  //     if (data && data.labels.length > 0) {
-  //       const monthList = data.labels.map(labels => allList[parseInt(labels) - 1]);
-  //       this.updateChart(data, monthList);
-  //       this.chartDataArray = data.labels;
-  //       this.noDataAvailable = false;
-  //     } else {
-  //       this.chartDataArray = [];
-  //       this.noDataAvailable = true;
-  //     }
-  //   });
-  // }
-
 }

@@ -97,10 +97,9 @@ import { NgChartsModule } from 'ng2-charts';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartStatisticsMonthComponent } from './components/chart-statistics-month/chart-statistics-month.component';
 import { ChartPurchaseStatisticsYearSupplierComponent } from './components/chart-purchase-statistics-year-supplier/chart-purchase-statistics-year-supplier.component';
-import { ChartPurchaseStatisticsMonthSupplierComponent } from './components/chart-purchase-statistics-month-supplier/chart-purchase-statistics-month-supplier.component';
-import { ChartSalesStatisticsMonthSupplierComponent } from './components/chart-sales-statistics-month-supplier/chart-sales-statistics-month-supplier.component';
 import { ChartSalesStatisticsYearComponent } from './components/chart-sales-statistics-year/chart-sales-statistics-year.component';
 import { ChartSalesStatisticsYearSupplierComponent } from './components/chart-sales-statistics-year-supplier/chart-sales-statistics-year-supplier.component';
+import { ChartStatisticsMonthSupplierComponent } from './components/chart-statistics-month-supplier/chart-statistics-month-supplier.component';
 
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -196,10 +195,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ChartPurchaseStatisticsYearComponent,
         ChartStatisticsMonthComponent,
         ChartPurchaseStatisticsYearSupplierComponent,
-        ChartPurchaseStatisticsMonthSupplierComponent,
-        ChartSalesStatisticsMonthSupplierComponent,
         ChartSalesStatisticsYearComponent,
-        ChartSalesStatisticsYearSupplierComponent
+        ChartSalesStatisticsYearSupplierComponent,
+        ChartStatisticsMonthSupplierComponent
     ],
     imports: [
         BrowserModule,
