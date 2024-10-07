@@ -95,10 +95,9 @@ import { ConfiguracionComponent } from './components/configuracion/configuracion
 import { NgChartsModule } from 'ng2-charts';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartStatisticsMonthComponent } from './components/chart-statistics-month/chart-statistics-month.component';
-import { ChartPurchaseStatisticsYearSupplierComponent } from './components/chart-purchase-statistics-year-supplier/chart-purchase-statistics-year-supplier.component';
-import { ChartSalesStatisticsYearSupplierComponent } from './components/chart-sales-statistics-year-supplier/chart-sales-statistics-year-supplier.component';
 import { ChartStatisticsMonthSupplierComponent } from './components/chart-statistics-month-supplier/chart-statistics-month-supplier.component';
 import { ChartStatisticsYearComponent } from './components/chart-statistics-year/chart-statistics-year.component';
+import { ChartStatisticsYearSupplierComponent } from './components/chart-statistics-year-supplier/chart-statistics-year-supplier.component';
 
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -192,10 +191,9 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ConfiguracionComponent,
         DashboardComponent,
         ChartStatisticsMonthComponent,
-        ChartPurchaseStatisticsYearSupplierComponent,
-        ChartSalesStatisticsYearSupplierComponent,
         ChartStatisticsMonthSupplierComponent,
-        ChartStatisticsYearComponent
+        ChartStatisticsYearComponent,
+        ChartStatisticsYearSupplierComponent
     ],
     imports: [
         BrowserModule,

@@ -18,7 +18,7 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
 
   override loadChartData(): void {
     if (this.chartType === 'compras') {
-      this.chartData.getChartDataAnnual().subscribe(data => {
+      this.chartData.getChartDataPurchaseAnnual().subscribe(data => {
         this.handleData(data);
       });
     } else if (this.chartType === 'ventas') {

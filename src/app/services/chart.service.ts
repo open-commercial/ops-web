@@ -18,7 +18,7 @@ export class ChartService {
 
   //************************* COMPRAS ********************************* */
   //Compras por año
-  getChartDataAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  getChartDataPurchaseAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
         const idSucursal = this.sucursalesService.getIdSucursal();
         const url = `${this.urlPurchasingStatistics}/monto-neto-anual/sucursales/${idSucursal}`;
 
@@ -37,7 +37,7 @@ export class ChartService {
   }
 
   //Compras por año por proveedor
-  getChartDataAnnualSupplier (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  getChartDataPurchaseAnnualSupplier (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-anual/sucursales/${idSucursal}?anio=${year}`;
     
@@ -56,7 +56,7 @@ export class ChartService {
   }
 
   //compras por mes
-  getChartDataMonth (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
+  getChartDataPurchaseMonth (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     const url = `${this.urlPurchasingStatistics}/monto-neto-mensual/sucursales/${idSucursal}?anio=${year}`;
     
@@ -75,7 +75,7 @@ export class ChartService {
   }
 
   //Compras por mes por proveedor
-  getChartDataMonthSupplier(year: number, month: number): Observable<{ labels: string[], datasets: { data: number[], label: string }[] }> {
+  getChartDataPurchaseMonthSupplier(year: number, month: number): Observable<{ labels: string[], datasets: { data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     const url = `${this.urlPurchasingStatistics}/proveedores/monto-neto-mensual/sucursales/${idSucursal}?anio=${year}&mes=${month}`;
  
@@ -94,6 +94,7 @@ export class ChartService {
     );
   }
 
+    //************************* VENTAS ********************************* */
   //Ventas por año
   getChartDataSalesAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
@@ -126,7 +127,6 @@ export class ChartService {
     }))
   }
 
-  //************************* VENTAS ********************************* */
   //Ventas por mes
   getChartDataSalesMonth (year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();

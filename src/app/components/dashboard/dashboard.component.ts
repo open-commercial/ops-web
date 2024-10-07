@@ -37,10 +37,10 @@ export class DashboardComponent implements OnInit {
       const currentMonth = new Date().getMonth() + 1;
 
       const componentPromises = [
-        lastValueFrom(this.chartService.getChartDataAnnual()),
-        lastValueFrom(this.chartService.getChartDataAnnualSupplier(currentYear)),
-        lastValueFrom(this.chartService.getChartDataMonth(currentYear)),
-        lastValueFrom(this.chartService.getChartDataMonthSupplier(currentYear, currentMonth)),
+        lastValueFrom(this.chartService.getChartDataPurchaseAnnual()),
+        lastValueFrom(this.chartService.getChartDataPurchaseAnnualSupplier(currentYear)),
+        lastValueFrom(this.chartService.getChartDataPurchaseMonth(currentYear)),
+        lastValueFrom(this.chartService.getChartDataPurchaseMonthSupplier(currentYear, currentMonth)),
         lastValueFrom(this.chartService.getChartDataSalesAnnual()),
         lastValueFrom(this.chartService.getChartDataSalesAnnualSupplier(currentYear)),
         lastValueFrom(this.chartService.getChartDataSalesMonth(currentYear)),

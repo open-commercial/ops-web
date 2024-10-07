@@ -21,7 +21,7 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
     const allList = this.generateMonthsData().map(m => m.name);
 
     if (this.chartType === 'compras') {
-      this.chartData.getChartDataMonth(year).subscribe(data => {
+      this.chartData.getChartDataPurchaseMonth(year).subscribe(data => {
         this.handleData(data, allList);
       });
     } else if (this.chartType === 'ventas') {

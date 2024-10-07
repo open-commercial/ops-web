@@ -1,34 +1,33 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
-  selector: 'app-chart-statistics-month-supplier',
-  templateUrl: './chart-statistics-month-supplier.component.html',
-  styleUrls: ['./chart-statistics-month-supplier.component.scss']
+  selector: 'app-chart-statistics-year-supplier',
+  templateUrl: './chart-statistics-year-supplier.component.html',
+  styleUrls: ['./chart-statistics-year-supplier.component.scss']
 })
-export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirective {
+export class ChartStatisticsYearSupplierComponent extends ChartDirectiveDirective {
   @Input() dataType: 'compras' | 'ventas';
   @Input() title: string = '';
+
   constructor(protected chartData: ChartService) {
     super(chartData);
-  }
+   }
 
-  loadChartData(year: number, month: number): void {
-    let chartDataPurchaseSale;
+  loadChartData(year: number): void {
+    let chartDataPurchaseSaleSupplier;
 
     if (this.dataType === 'compras') {
-      chartDataPurchaseSale = this.chartData.getChartDataPurchaseMonthSupplier(year, month);
+      chartDataPurchaseSaleSupplier = this.chartData.getChartDataPurchaseAnnualSupplier(year)
     } else if (this.dataType === 'ventas') {
-      chartDataPurchaseSale = this.chartData.getChartDataSalesMonthSupplier(year, month);
+      chartDataPurchaseSaleSupplier = this.chartData.getChartDataSalesAnnualSupplier(year)
     }
-
-    chartDataPurchaseSale.subscribe({
+    chartDataPurchaseSaleSupplier.subscribe({
       next: (data) => {
         if (data && data.labels && data.datasets && data.datasets.length > 0) {
           const labels = data.labels;
           const datasetData = data.datasets[0].data;
-
           if (labels.length === datasetData.length) {
             this.suppliers = labels.map((label, index) => ({
               entidad: label,
@@ -41,9 +40,8 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
           }
         }
       },
-      error: (err) => {
-        console.log('Error al cargar los datos', err);
-        this.suppliers = [];
+      error: (error) => {
+        console.error('Error al cargar los datos', error);
       }
     })
   }
