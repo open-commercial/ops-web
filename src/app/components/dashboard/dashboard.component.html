@@ -22,7 +22,7 @@
 				<div *ngIf="!loadingData" class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-purchase-statistics-year></app-chart-purchase-statistics-year>
+							<app-chart-statistics-year [title]="'Compras por año'" [chartType]="'compras'"></app-chart-statistics-year>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
 							<app-chart-purchase-statistics-year-supplier></app-chart-purchase-statistics-year-supplier>
@@ -57,7 +57,7 @@
 				<div *ngIf="!loadingData" class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-sales-statistics-year></app-chart-sales-statistics-year>
+							<app-chart-statistics-year [title]="'Ventas por año'" [chartType]="'ventas'"></app-chart-statistics-year>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
 							<app-chart-sales-statistics-year-supplier></app-chart-sales-statistics-year-supplier>
