@@ -49,30 +49,59 @@ export abstract class ChartDirectiveDirective implements OnInit {
   constructor(protected chartData: ChartService) { }
 
   ngOnInit(): void {
-    
     this.years = this.generateYearData();
     this.months = this.generateMonthsData();
-    if (this.selectedYear && this.selectedMonth) {
-      this.loadChartData(this.selectedYear, this.selectedMonth!);
+
+    this.selectedMonth = this.selectedMonth || (new Date().getMonth() + 1);
+
+    if (this.selectedYear && (this.selectedMonth || this.isMonthOptional())) {
+      this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
 
-  abstract loadChartData(year: number, month: number): void;
+  abstract loadChartData(year: number, month?: number | null): void;
 
-  onYearChange($event: Event): void {
-    const year = parseInt(($event.target as HTMLSelectElement).value, 10);
-    this.selectedYear = year;
-    this.selectedMonth = new Date().getMonth() + 1;
-    if (this.selectedYear && this.selectedMonth) {
-      this.loadChartData(this.selectedYear, this.selectedMonth!);
+  isMonthOptional(): boolean {
+    return true;
+  }
+
+  onYearChange(year: number | Event): void {
+    if (typeof year === 'number') {
+      this.selectedYear = year;
+      this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
+      if (this.selectedYear && this.selectedMonth) {
+        this.loadChartData(this.selectedYear, this.selectedMonth!);
+      }
+    } else if (year instanceof Event) {
+      const target = (year.target as HTMLSelectElement);
+      if (target && target.value) {
+        const parsedYear = parseInt(target.value, 10);
+        this.selectedYear = parsedYear;
+        this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
+        if (this.selectedYear && this.selectedMonth) {
+          this.loadChartData(this.selectedYear, this.selectedMonth!);
+        }
+      } else {
+        console.error("Error: El evento no tiene un valor válido", year);
+      }
+    } else {
+      console.error("Error: Tipo inesperado de parámetro en onYearChange", year);
     }
   }
 
-  OnMonthChange($event: Event): void {
-    const month = parseInt(($event.target as HTMLSelectElement).value, 10);
-    this.selectedMonth = month;
+  onMonthChange(month: number | Event): void {
+    if (typeof month === 'number') {
+      this.selectedMonth = month;
+    } else if (month instanceof Event) {
+      const target = (month.target as HTMLSelectElement);
+      if (target && target.value) {
+        this.selectedMonth = parseInt(target.value, 10);
+      }
+    }
+    this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
+
     if (this.selectedYear && this.selectedMonth) {
-      this.loadChartData(this.selectedYear, this.selectedMonth!);
+      this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
 
@@ -84,6 +113,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
 
   generateMonthsData(): { value: number, name: string }[] {
     const monthsNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
     return monthsNames.map((name, index) => ({
       value: index + 1, name
     }))
@@ -104,6 +134,24 @@ export abstract class ChartDirectiveDirective implements OnInit {
         }
       ]
     };
+  }
+
+  protected handleChartData(data: any): void {
+    if (data && data.labels && data.datasets && data.datasets.length > 0) {
+      const labels = data.labels;
+      const datasetData = data.datasets[0].data;
+
+      if (labels.length === datasetData.length) {
+        this.suppliers = labels.map((label, index) => ({
+          entidad: label,
+          monto: datasetData[index],
+        }));
+        this.updateChart(data, labels);
+      } else {
+        console.log('Desajuste en la longitud de los datos');
+        this.suppliers = [];
+      }
+    }
   }
 
 }

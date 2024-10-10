@@ -93,11 +93,14 @@ import { FacturaCompraComponent } from './components/factura-compra/factura-comp
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
 import { NgChartsModule } from 'ng2-charts';
+import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartStatisticsMonthComponent } from './components/chart-statistics-month/chart-statistics-month.component';
 import { ChartStatisticsMonthSupplierComponent } from './components/chart-statistics-month-supplier/chart-statistics-month-supplier.component';
 import { ChartStatisticsYearComponent } from './components/chart-statistics-year/chart-statistics-year.component';
 import { ChartStatisticsYearSupplierComponent } from './components/chart-statistics-year-supplier/chart-statistics-year-supplier.component';
+import { ChartTableSupplierComponent } from './components/chart-table-supplier/chart-table-supplier.component';
+
 
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -193,7 +196,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ChartStatisticsMonthComponent,
         ChartStatisticsMonthSupplierComponent,
         ChartStatisticsYearComponent,
-        ChartStatisticsYearSupplierComponent
+        ChartStatisticsYearSupplierComponent,
+        ChartTableSupplierComponent
     ],
     imports: [
         BrowserModule,
@@ -202,7 +206,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NgSelectModule,
         AppRoutingModule,
         ShareModule,
-        NgChartsModule
+        NgChartsModule,
+        FormsModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },

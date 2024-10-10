@@ -2,50 +2,33 @@ import { Component, Input } from '@angular/core';
 import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
 import { ChartService } from 'src/app/services/chart.service';
 
+
 @Component({
   selector: 'app-chart-statistics-month-supplier',
-  templateUrl: './chart-statistics-month-supplier.component.html',
-  styleUrls: ['./chart-statistics-month-supplier.component.scss']
+  templateUrl: './chart-statistics-month-supplier.component.html'
 })
+
 export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirective {
+  @Input() title: string;
   @Input() dataType: 'compras' | 'ventas';
-  @Input() title: string = '';
+
   constructor(protected chartData: ChartService) {
     super(chartData);
   }
 
   loadChartData(year: number, month: number): void {
-    let chartDataPurchaseSale;
-
-    if (this.dataType === 'compras') {
-      chartDataPurchaseSale = this.chartData.getChartDataPurchaseMonthSupplier(year, month);
-    } else if (this.dataType === 'ventas') {
-      chartDataPurchaseSale = this.chartData.getChartDataSalesMonthSupplier(year, month);
-    }
+    const chartDataPurchaseSale = this.dataType === 'compras' ?
+      this.chartData.getChartDataPurchaseMonthSupplier(year, month) :
+      this.chartData.getChartDataSalesMonthSupplier(year, month);
 
     chartDataPurchaseSale.subscribe({
-      next: (data) => {
-        if (data && data.labels && data.datasets && data.datasets.length > 0) {
-          const labels = data.labels;
-          const datasetData = data.datasets[0].data;
-
-          if (labels.length === datasetData.length) {
-            this.suppliers = labels.map((label, index) => ({
-              entidad: label,
-              monto: datasetData[index],
-            }));
-            this.updateChart(data, labels);
-          } else {
-            console.log('Desajuste en la longitud de los datos');
-            this.suppliers = [];
-          }
-        }
-      },
-      error: (err) => {
-        console.log('Error al cargar los datos', err);
-        this.suppliers = [];
-      }
-    })
+      next: (data) => this.handleChartData(data),
+      error: (err) => console.log('Error al cargar datos',err),
+      });
   }
 
+  isMonthOptional(): boolean {
+    return false;
+  }
+     
 }

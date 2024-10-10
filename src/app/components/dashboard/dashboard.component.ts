@@ -17,12 +17,12 @@ export class DashboardComponent implements OnInit {
   allowedRolesToView = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
 
   constructor(private authService: AuthService,
-              private router: Router,
-              private cdr: ChangeDetectorRef,
-              private chartService: ChartService,
-              accordionConfig: NgbAccordionConfig) {
-          
-                accordionConfig.type = 'dark';
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private chartService: ChartService,
+    accordionConfig: NgbAccordionConfig) {
+
+    accordionConfig.type = 'dark';
   }
 
   ngOnInit(): void {

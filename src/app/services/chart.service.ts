@@ -115,6 +115,7 @@ export class ChartService {
   getChartDataSalesAnnualSupplier(year: number): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {
     const idSucursal = this.sucursalesService.getIdSucursal();
     const url = `${this.urlSalesStatistics}/rubros/monto-neto-anual/sucursales/${idSucursal}?anio=${year}`;
+   
     return this.http.get<ChartInterface[]>(url).pipe( map(data => {
       const labels = data.map(item => item.entidad);
       const dataset = data.map(item => item.monto);

@@ -43,4 +43,9 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
     }
   }
 
+  // onYearChange(year: string): void {
+  //   this.selectedYear = parseInt(year, 10);
+  //   this.loadInitialChartData();
+  // }
+
 }
