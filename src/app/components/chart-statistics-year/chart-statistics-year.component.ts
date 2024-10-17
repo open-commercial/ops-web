@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
 import { ChartService } from 'src/app/services/chart.service';
 
@@ -30,7 +30,7 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
 
   handleData(data: any): void {
     if (data && data.labels.length > 0) {
-      const labels = this.generateYearData().slice(0, 4);
+      const labels = this.generateYearData().slice(0, 4).reverse();
       this.updateChart(data, labels.map(String));
       this.chartDataArray = data.labels;
       this.noDataAvailable = false;

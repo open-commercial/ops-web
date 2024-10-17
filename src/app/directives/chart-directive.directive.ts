@@ -66,26 +66,38 @@ export abstract class ChartDirectiveDirective implements OnInit {
   }
 
   onYearChange(year: number | Event): void {
-    if (typeof year === 'number') {
-      this.selectedYear = year;
-      this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
-      if (this.selectedYear && this.selectedMonth) {
-        this.loadChartData(this.selectedYear, this.selectedMonth!);
-      }
-    } else if (year instanceof Event) {
-      const target = (year.target as HTMLSelectElement);
-      if (target && target.value) {
-        const parsedYear = parseInt(target.value, 10);
-        this.selectedYear = parsedYear;
-        this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
-        if (this.selectedYear && this.selectedMonth) {
-          this.loadChartData(this.selectedYear, this.selectedMonth!);
-        }
-      } else {
-        console.error("Error: El evento no tiene un valor válido", year);
-      }
+    if (this.isValidNumber(year)) {
+      this.updateYearAndMonth(year as number);
+    } else if (this.isValidEvent(year)) {
+      this.handleYearEvent(year as Event);
     } else {
       console.error("Error: Tipo inesperado de parámetro en onYearChange", year);
+    }
+  }
+  
+  private isValidNumber(year: number | Event): boolean {
+    return typeof year === 'number';
+  }
+  
+  private isValidEvent(event: number | Event): boolean {
+    return event instanceof Event && (event.target as HTMLSelectElement)?.value !== undefined;
+  }
+  
+  private updateYearAndMonth(year: number): void {
+    this.selectedYear = year;
+    this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
+    this.loadChartDataIfNeeded();
+  }
+  
+  private handleYearEvent(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const parsedYear = parseInt(target.value, 10);
+    this.updateYearAndMonth(parsedYear);
+  }
+  
+  private loadChartDataIfNeeded(): void {
+    if (this.selectedYear && this.selectedMonth) {
+      this.loadChartData(this.selectedYear, this.selectedMonth!);
     }
   }
 

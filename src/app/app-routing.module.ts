@@ -54,7 +54,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'pedidos', component: PedidosHomeComponent,
         children: [
           { path: '', component: PedidosComponent },

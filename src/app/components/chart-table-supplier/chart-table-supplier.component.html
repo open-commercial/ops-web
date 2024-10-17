@@ -2,11 +2,13 @@
     <span>{{ title }}</span>
     <div class="styleSelect">
         <select name="year" class="form-select form-select-sm" (change)="onYearChange($event)">
-            <option *ngFor="let year of years" [value]="year">{{year}}</option>
+            <option value="selected"> Seleccione un año </option>
+            <option *ngFor="let year of years" [value]="year"> {{year}}</option>
         </select>
         <select *ngIf="showMonthSelector" name="month" class="form-select form-select-sm"
-        [(ngModel)]="selectedMonth" (change)="onMonthChange($event)">
-            <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
+            (change)="onMonthChange($event)">
+            <option value="selected"> Seleccione un mes </option>
+            <option *ngFor="let month of months" [value]="month.value"> {{month.name}}</option>
         </select>
     </div>
     <div *ngIf="suppliers.length === 0" class="alert alert-secondary mt-2 text-center">
@@ -23,7 +25,7 @@
             </thead>
             <tbody class="table-group-divider">
                 <tr *ngFor="let supplier of suppliers; let i = index">
-                    <td scope="row">{{i + 1}}</td>
+                    <td>{{i + 1}}</td>
                     <td>{{supplier.entidad}}</td>
                     <td>{{supplier.monto | currency:'ARS':'symbol':'1.0-2'}}</td>
                 </tr>

@@ -4,16 +4,19 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <div *ngIf="tieneRolAdministrador || tieneRolAdminOEncargado" class="ops-accordion styleEstadisticas d-flex align-items-center" routerLink="/dashboard">
+  <div *ngIf="tieneRolAdministrador" class="ops-accordion styleEstadisticas d-flex align-items-center"
+    routerLink="/dashboard">
     <fa-icon [icon]="['fas', 'square-poll-vertical']" class="icon ps-3"></fa-icon>
-    <span>Estadísticas</span>
+    <span>Dashboard</span>
   </div>
-  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId" (panelChange)="beforeChange($event)">
+  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId"
+    (panelChange)="beforeChange($event)">
     <ng-template ngFor let-m [ngForOf]="menuData">
       <ngb-panel [id]="m.id" *ngIf="m.show">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']"
+              class="me-2"></fa-icon>
             <span>{{ m.seccion }}</span>
           </span>
         </ng-template>

@@ -28,8 +28,9 @@ export class HomeComponent implements OnInit {
       appElement.classList.remove('menu-opened');
     }
   }
+  
   redirectBasedOnRole() {
-    if (this.authService.userHasAnyOfTheseRoles ([Rol.ADMINISTRADOR, Rol.ENCARGADO]))  {
+    if (this.authService.userHasAnyOfTheseRoles ([Rol.ADMINISTRADOR]))  {
       this.router.navigate(['/dashboard']);
     } else {
       this.router.navigate(['/pedidos']);

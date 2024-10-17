@@ -12,9 +12,13 @@ import { NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DashboardComponent implements OnInit {
 
-  loadingData = true;
+  loadingPurchaseData = true;
+  loadingSalesData = true;
   rol = Rol;
-  allowedRolesToView = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
+  allowedRolesToView = [Rol.ADMINISTRADOR];
+
+  purchaseData: any = null;
+  salesData: any = null;
 
   constructor(private authService: AuthService,
     private router: Router,
@@ -29,37 +33,57 @@ export class DashboardComponent implements OnInit {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
       this.router.navigate(['/pedidos']);
     }
-    else {
-      this.loadingData = true;
-      this.cdr.detectChanges();
-
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
-
-      const componentPromises = [
-        lastValueFrom(this.chartService.getChartDataPurchaseAnnual()),
-        lastValueFrom(this.chartService.getChartDataPurchaseAnnualSupplier(currentYear)),
-        lastValueFrom(this.chartService.getChartDataPurchaseMonth(currentYear)),
-        lastValueFrom(this.chartService.getChartDataPurchaseMonthSupplier(currentYear, currentMonth)),
-        lastValueFrom(this.chartService.getChartDataSalesAnnual()),
-        lastValueFrom(this.chartService.getChartDataSalesAnnualSupplier(currentYear)),
-        lastValueFrom(this.chartService.getChartDataSalesMonth(currentYear)),
-        lastValueFrom(this.chartService.getChartDataSalesMonthSupplier(currentYear, currentMonth)),
-      ];
-
-      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-      Promise.all(componentPromises).then(() => {
-        return delay(300);
-      }).then(() => {
-        this.loadingData = false;
-        this.cdr.detectChanges();
-      }).catch(error => {
-        console.error('Error loading data:', error);
-        this.loadingData = false;
-        this.cdr.detectChanges();
-      });
-    }
   }
 
+  loadPurchaseData(): void {
+    if (this.purchaseData) return
+
+    this.loadingPurchaseData = true;
+    this.cdr.detectChanges();
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+
+    const componentPromises = [
+      lastValueFrom(this.chartService.getChartDataPurchaseAnnual()),
+      lastValueFrom(this.chartService.getChartDataPurchaseAnnualSupplier(currentYear)),
+      lastValueFrom(this.chartService.getChartDataPurchaseMonth(currentYear)),
+      lastValueFrom(this.chartService.getChartDataPurchaseMonthSupplier(currentYear, currentMonth)),
+    ];
+
+    Promise.all(componentPromises).then((data) => {
+      this.purchaseData = data;
+      this.loadingPurchaseData = false;
+      this.cdr.detectChanges();
+    }).catch(error => {
+      console.error('Error cargando datos de compra:', error);
+      this.loadingPurchaseData = false;
+      this.cdr.detectChanges();
+    })
+  }
+
+  loadSalesData(): void {
+    if (this.salesData) return
+
+    this.loadingSalesData = true;
+    this.cdr.detectChanges();
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+
+    const componentPromises = [
+      lastValueFrom(this.chartService.getChartDataSalesAnnual()),
+      lastValueFrom(this.chartService.getChartDataSalesAnnualSupplier(currentYear)),
+      lastValueFrom(this.chartService.getChartDataSalesMonth(currentYear)),
+      lastValueFrom(this.chartService.getChartDataSalesMonthSupplier(currentYear, currentMonth)),
+    ];
+    Promise.all(componentPromises).then((data) => {
+      this.salesData = data;
+      this.loadingSalesData = false;
+      this.cdr.detectChanges();
+    }).catch(error => {
+      console.error('Error cargando datos de venta:', error);
+      this.loadingSalesData = false;
+      this.cdr.detectChanges();
+    })
+  }
+  
 }
