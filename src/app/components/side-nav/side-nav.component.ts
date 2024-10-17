@@ -16,6 +16,7 @@ export class SideNavComponent implements OnDestroy {
   tieneRolAdminOEncargado = false;
   tieneRolVendedor = false;
 
+
   menuData = [];
 
   @Output() menuOptionClick = new EventEmitter<void>();
@@ -138,15 +139,20 @@ export class SideNavComponent implements OnDestroy {
         .pipe(filter(event => event instanceof NavigationEnd))
         .subscribe((event: NavigationEnd) => {
           let url = '/' + event.urlAfterRedirects.split('/')[1];
+
           if (url.indexOf('?') >= 0) {
             url = url.split('?')[0];
           }
-
           const elemento = this.menuData.filter(m => {
             return m.rutas.filter(r => r.route.indexOf(url) === 0).length > 0;
           });
 
           this.accordionActiveId = elemento.length ? elemento[0].id : '';
+          
+          if (url === '/dashboard') {
+            this.closeSidenav();
+          }
+          
         })
     );
   }
@@ -163,5 +169,9 @@ export class SideNavComponent implements OnDestroy {
     if (this.accordion.isExpanded($event.panelId)) {
       $event.preventDefault();
     }
+  }
+
+  private closeSidenav() {
+    this.menuOptionClick.emit()
   }
 }

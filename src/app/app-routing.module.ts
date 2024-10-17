@@ -47,12 +47,14 @@ import {NotasDebitoCompraComponent} from './components/notas-debito-compra/notas
 import {VerReciboComponent} from './components/ver-recibo/ver-recibo.component';
 import {FacturaCompraComponent} from './components/factura-compra/factura-compra.component';
 import {ConfiguracionComponent} from './components/configuracion/configuracion.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
-      { path: '', redirectTo: '/pedidos', pathMatch: 'full' },
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'pedidos', component: PedidosHomeComponent,
         children: [
           { path: '', component: PedidosComponent },

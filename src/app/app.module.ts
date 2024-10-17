@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule,  CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -92,6 +92,16 @@ import { SelectableListComponent } from './components/selectable-list/selectable
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
+import { NgChartsModule } from 'ng2-charts';
+import { FormsModule } from '@angular/forms';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ChartStatisticsMonthComponent } from './components/chart-statistics-month/chart-statistics-month.component';
+import { ChartStatisticsMonthSupplierComponent } from './components/chart-statistics-month-supplier/chart-statistics-month-supplier.component';
+import { ChartStatisticsYearComponent } from './components/chart-statistics-year/chart-statistics-year.component';
+import { ChartStatisticsYearSupplierComponent } from './components/chart-statistics-year-supplier/chart-statistics-year-supplier.component';
+import { ChartTableSupplierComponent } from './components/chart-table-supplier/chart-table-supplier.component';
+
+
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -182,6 +192,12 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         FacturaCompraComponent,
         NuevoRenglonFacturaModalComponent,
         ConfiguracionComponent,
+        DashboardComponent,
+        ChartStatisticsMonthComponent,
+        ChartStatisticsMonthSupplierComponent,
+        ChartStatisticsYearComponent,
+        ChartStatisticsYearSupplierComponent,
+        ChartTableSupplierComponent
     ],
     imports: [
         BrowserModule,
@@ -189,12 +205,16 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         HttpClientModule,
         NgSelectModule,
         AppRoutingModule,
-        ShareModule
+        ShareModule,
+        NgChartsModule,
+        FormsModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
-    bootstrap: [AppComponent]
+    
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}
