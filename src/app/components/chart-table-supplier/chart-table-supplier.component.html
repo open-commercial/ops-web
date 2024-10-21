@@ -1,14 +1,14 @@
 <section class="container">
     <span>{{ title }}</span>
     <div class="styleSelect">
+        <button class="buttonStyle mr-2"><span>Año:</span></button>        
         <select name="year" class="form-select form-select-sm" (change)="onYearChange($event)">
-            <option value="selected"> Seleccione un año </option>
             <option *ngFor="let year of years" [value]="year"> {{year}}</option>
         </select>
+        <button *ngIf="showMonthSelector" class="buttonStyle mr-2"><span>Mes:</span></button>
         <select *ngIf="showMonthSelector" name="month" class="form-select form-select-sm"
-            (change)="onMonthChange($event)">
-            <option value="selected"> Seleccione un mes </option>
-            <option *ngFor="let month of months" [value]="month.value"> {{month.name}}</option>
+                [(ngModel)]="selectedMonth" (change)="onMonthChange($event)">
+            <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
         </select>
     </div>
     <div *ngIf="suppliers.length === 0" class="alert alert-secondary mt-2 text-center">

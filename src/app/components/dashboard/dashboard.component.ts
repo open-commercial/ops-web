@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { Rol } from 'src/app/models/rol';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChartService } from 'src/app/services/chart.service';
 import { NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
+import { SucursalesService } from 'src/app/services/sucursales.service';
+import { Sucursal } from 'src/app/models/sucursal';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,25 +21,40 @@ export class DashboardComponent implements OnInit {
 
   purchaseData: any = null;
   salesData: any = null;
+  sucursalSeleccionada: Sucursal = null;
+  subscription: Subscription;
 
   constructor(private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private chartService: ChartService,
+    private sucursalesService: SucursalesService,
+
     accordionConfig: NgbAccordionConfig) {
 
     accordionConfig.type = 'dark';
+    this.subscription = new Subscription();
   }
 
   ngOnInit(): void {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
       this.router.navigate(['/pedidos']);
     }
+    this.subscription.add(
+      this.sucursalesService.sucursal$.subscribe((sucursal: Sucursal) => {
+      this.sucursalSeleccionada = sucursal;
+      this.purchaseData = null;
+      this.salesData = null;
+      this.loadPurchaseData();
+      this.loadSalesData();
+      
+    })
+   )
+    this.loadPurchaseData();
+    this.loadSalesData();
   }
 
   loadPurchaseData(): void {
-    if (this.purchaseData) return
-
     this.loadingPurchaseData = true;
     this.cdr.detectChanges();
     const currentYear = new Date().getFullYear();
@@ -62,8 +79,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSalesData(): void {
-    if (this.salesData) return
-
     this.loadingSalesData = true;
     this.cdr.detectChanges();
     const currentYear = new Date().getFullYear();
@@ -85,5 +100,9 @@ export class DashboardComponent implements OnInit {
       this.cdr.detectChanges();
     })
   }
-  
+
+  ngOnDestroy(): void {
+      this.subscription.unsubscribe();
+    }
 }
+  

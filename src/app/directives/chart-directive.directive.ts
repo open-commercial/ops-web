@@ -52,6 +52,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
     this.years = this.generateYearData();
     this.months = this.generateMonthsData();
 
+    this.selectedYear = this.selectedYear || new Date().getFullYear();
     this.selectedMonth = this.selectedMonth || (new Date().getMonth() + 1);
 
     if (this.selectedYear && (this.selectedMonth || this.isMonthOptional())) {
@@ -110,7 +111,6 @@ export abstract class ChartDirectiveDirective implements OnInit {
         this.selectedMonth = parseInt(target.value, 10);
       }
     }
-    this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
 
     if (this.selectedYear && this.selectedMonth) {
       this.loadChartData(this.selectedYear, this.selectedMonth);

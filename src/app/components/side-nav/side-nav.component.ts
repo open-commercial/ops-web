@@ -149,9 +149,9 @@ export class SideNavComponent implements OnDestroy {
 
           this.accordionActiveId = elemento.length ? elemento[0].id : '';
           
-          if (url === '/dashboard') {
-            this.closeSidenav();
-          }
+          // if (url === '/dashboard') {
+          //   this.closeSidenav();
+          // }
           
         })
     );

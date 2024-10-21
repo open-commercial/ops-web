@@ -15,11 +15,11 @@
 				</div>
 			</ng-template>
 			<ng-template ngbPanelContent>
-				<div *ngIf="loadingData">
+				<div *ngIf="loadingPurchaseData">
 					<fa-icon class="spinner-primary d-flex align-items-center justify-content-center"
 						[icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
 				</div>
-				<div *ngIf="!loadingData" class="container-fluid">
+				<div *ngIf="!loadingPurchaseData" class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
 							<app-chart-statistics-year [title]="'Compras por año'"
@@ -54,11 +54,11 @@
 				</div>
 			</ng-template>
 			<ng-template ngbPanelContent>
-				<div *ngIf="loadingData">
+				<div *ngIf="loadingSalesData">
 					<fa-icon class="spinner-primary d-flex align-items-center justify-content-center"
 						[icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
 				</div>
-				<div *ngIf="!loadingData" class="container-fluid">
+				<div *ngIf="!loadingSalesData" class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
 							<app-chart-statistics-year [title]="'Ventas por año'"
