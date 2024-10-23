@@ -19,20 +19,20 @@ export class ChartTableSupplierComponent {
   @Output() yearChange = new EventEmitter<number>();
   @Output() monthChange = new EventEmitter<number>();
 
-  onYearChange($event: Event): void {
+onYearChange($event: Event): void {
     const target = $event.target as HTMLSelectElement;
-    if (target && target.value) {
-        const year = parseInt(target.value, 10);
+    const year = parseInt(target?.value ?? '', 10); 
+    if (!isNaN(year)) {
         this.yearChange.emit(year);
     } else {
         console.error("Error: El evento no tiene un valor válido", $event);
     }
 }
 
-  onMonthChange($event: Event): void {
-        const target = $event.target as HTMLSelectElement;
-    if (target && target.value) {
-        const month = parseInt(target.value, 10);
+onMonthChange($event: Event): void {
+    const target = $event.target as HTMLSelectElement;
+    const month = parseInt(target?.value ?? '', 10); 
+    if (!isNaN(month)) {
         this.monthChange.emit(month);
     } else {
         console.error("Error: El evento no tiene un valor válido", $event);

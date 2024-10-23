@@ -36,10 +36,9 @@ export class HomeComponent implements OnInit {
       if (currentUrl === '/' || currentUrl === '/home') {
         this.router.navigate(['/dashboard']);
      }
-    } else {
+    } 
       if (currentUrl === '/' || currentUrl === '/home') {
         this.router.navigate(['/pedidos']);
       }
-    }
   }
 }

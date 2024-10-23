@@ -32,7 +32,7 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
   }
 
   handleData(data: any, allList: string[]): void {
-    if (data && data.labels && data.labels.length > 0) {
+    if (data?.labels?.length > 0) {
       const monthList = data.labels.map(labels => allList[parseInt(labels) - 1]);
       this.updateChart(data, monthList);
       this.chartDataArray = data.labels;
@@ -42,10 +42,5 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
       this.noDataAvailable = true;
     }
   }
-
-  // onYearChange(year: string): void {
-  //   this.selectedYear = parseInt(year, 10);
-  //   this.loadInitialChartData();
-  // }
 
 }
