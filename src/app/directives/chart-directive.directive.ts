@@ -34,17 +34,32 @@ export abstract class ChartDirectiveDirective implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     aspectRatio: 1.5,
+    scales: {
+      y: {
+        ticks: {
+          callback: function (value: number) {
+            return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+          }
+        }
+      }
+    },
     plugins: {
       legend: {
         position: 'bottom',
         align: 'start',
         labels: {
           color: 'rgb(0,0, 0)',
-
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(tooltipItem.raw as number);
+          }
         }
       }
     }
-  }
+  };
 
   constructor(protected chartData: ChartService) { }
 
@@ -75,27 +90,27 @@ export abstract class ChartDirectiveDirective implements OnInit {
       console.error("Error: Tipo inesperado de parámetro en onYearChange", year);
     }
   }
-  
+
   private isValidNumber(year: number | Event): boolean {
     return typeof year === 'number';
   }
-  
+
   private isValidEvent(event: number | Event): boolean {
     return event instanceof Event && (event.target as HTMLSelectElement)?.value !== undefined;
   }
-  
+
   private updateYearAndMonth(year: number): void {
     this.selectedYear = year;
     this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
     this.loadChartDataIfNeeded();
   }
-  
+
   private handleYearEvent(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const parsedYear = parseInt(target.value, 10);
     this.updateYearAndMonth(parsedYear);
   }
-  
+
   private loadChartDataIfNeeded(): void {
     if (this.selectedYear && this.selectedMonth) {
       this.loadChartData(this.selectedYear, this.selectedMonth!);

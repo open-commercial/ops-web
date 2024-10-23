@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
-      this.router.navigate(['/pedidos']);
+      this.router.navigate(['pedidos']);
     }
     this.subscription.add(
       this.sucursalesService.sucursal$.subscribe((sucursal: Sucursal) => {

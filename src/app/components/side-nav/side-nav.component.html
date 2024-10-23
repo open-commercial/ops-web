@@ -5,7 +5,7 @@
     </button>
   </div>
   <div *ngIf="tieneRolAdministrador" class="ops-accordion styleEstadisticas d-flex align-items-center"
-    routerLink="/dashboard">
+    routerLink="/dashboard" (click)="optionClick(); closeSidenav()">
     <fa-icon [icon]="['fas', 'square-poll-vertical']" class="icon ps-3"></fa-icon>
     <span>Dashboard</span>
   </div>

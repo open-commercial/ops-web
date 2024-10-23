@@ -1,9 +1,9 @@
 import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { NgbAccordion, NgbAccordionConfig, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
-import { Component, EventEmitter, Output, ViewChild, OnDestroy } from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {Rol} from '../../models/rol';
+import { Component, EventEmitter, Output, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { Rol } from '../../models/rol';
 
 @Component({
   selector: 'app-side-nav',
@@ -15,7 +15,7 @@ export class SideNavComponent implements OnDestroy {
   tieneRolAdministrador = false;
   tieneRolAdminOEncargado = false;
   tieneRolVendedor = false;
-
+  isSidenavOpen = false;
 
   menuData = [];
 
@@ -24,12 +24,13 @@ export class SideNavComponent implements OnDestroy {
   @ViewChild('accordion') accordion: NgbAccordion;
 
   subscription: Subscription;
-  url='';
-  accordionActiveId='';
+  url = '';
+  accordionActiveId = '';
 
   constructor(private authService: AuthService,
-              private router: Router,
-              accordionConfig: NgbAccordionConfig) {
+    private router: Router,
+    accordionConfig: NgbAccordionConfig,
+    private changeDetectorRef: ChangeDetectorRef) {
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
 
@@ -148,17 +149,48 @@ export class SideNavComponent implements OnDestroy {
           });
 
           this.accordionActiveId = elemento.length ? elemento[0].id : '';
-          
-          // if (url === '/dashboard') {
-          //   this.closeSidenav();
-          // }
-          
+
+          this.handleSidenavState(url);
+
         })
     );
   }
 
+  ngOnInit(): void {
+    const currentUrl = this.router.url;
+    this.handleSidenavState(currentUrl);
+  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  handleSidenavState(url: string) {
+    const routesCloseSideNav = ['/dashboard']
+    if (routesCloseSideNav.includes(url)) {
+      this.setSidenavState(false);
+    } else {
+      this.setSidenavState(this.isSidenavOpen);
+    }
+
+    this.changeDetectorRef.detectChanges();
+
+  }
+
+  setSidenavState(open: boolean) {
+    if (this.isSidenavOpen !== open) {
+      this.isSidenavOpen = open;
+      if (!open) {
+        this.menuOptionClick.emit();
+      }
+    }
+  }
+  openSideNav() {
+    this.setSidenavState(true);
+  }
+
+  closeSidenav() {
+    this.setSidenavState(false);
   }
 
   optionClick() {
@@ -169,9 +201,5 @@ export class SideNavComponent implements OnDestroy {
     if (this.accordion.isExpanded($event.panelId)) {
       $event.preventDefault();
     }
-  }
-
-  private closeSidenav() {
-    this.menuOptionClick.emit()
   }
 }

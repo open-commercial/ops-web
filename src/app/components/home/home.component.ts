@@ -30,10 +30,16 @@ export class HomeComponent implements OnInit {
   }
   
   redirectBasedOnRole() {
+    const currentUrl = this.router.url;
+
     if (this.authService.userHasAnyOfTheseRoles ([Rol.ADMINISTRADOR]))  {
-      this.router.navigate(['/dashboard']);
+      if (currentUrl === '/' || currentUrl === '/home') {
+        this.router.navigate(['/dashboard']);
+     }
     } else {
-      this.router.navigate(['/pedidos']);
+      if (currentUrl === '/' || currentUrl === '/home') {
+        this.router.navigate(['/pedidos']);
+      }
     }
   }
 }
