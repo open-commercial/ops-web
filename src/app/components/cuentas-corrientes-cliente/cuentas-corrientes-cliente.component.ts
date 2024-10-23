@@ -50,6 +50,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
 
   rol = Rol;
 
+  
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   allowedRolesToSetPredeterminado: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToDelete = false;
