@@ -5,9 +5,11 @@
     </button>
   </div>
   <div *ngIf="tieneRolAdministrador" class="ops-accordion styleEstadisticas d-flex align-items-center"
-    routerLink="/dashboard" (click)="optionClick(); closeSidenav()">
-    <fa-icon [icon]="['fas', 'square-poll-vertical']" class="icon ps-3"></fa-icon>
-    <span>Dashboard</span>
+       (keydown)="handleKeyDown($event)">
+    <a style="text-decoration: none;" routerLink="/dashboard" (click)="optionClick(); closeSidenav()">
+      <fa-icon [icon]="['fas', 'square-poll-vertical']" class="icon ps-3"></fa-icon>
+      <span>Dashboard</span>
+    </a>
   </div>
   <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId"
     (panelChange)="beforeChange($event)">

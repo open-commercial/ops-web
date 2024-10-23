@@ -202,4 +202,11 @@ export class SideNavComponent implements OnDestroy {
       $event.preventDefault();
     }
   }
+
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.optionClick(); 
+    }
+  }
+  
 }
