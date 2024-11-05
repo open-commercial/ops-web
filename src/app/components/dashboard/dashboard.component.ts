@@ -13,14 +13,12 @@ import { Sucursal } from 'src/app/models/sucursal';
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-
   loadingPurchaseData = true;
   loadingSalesData = true;
+  purchaseData: any[] = [];
+  salesData: any[] = [];
   rol = Rol;
   allowedRolesToView = [Rol.ADMINISTRADOR];
-
-  purchaseData: any = null;
-  salesData: any = null;
   sucursalSeleccionada: Sucursal = null;
   subscription: Subscription;
 
@@ -40,14 +38,14 @@ export class DashboardComponent implements OnInit {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
       this.router.navigate(['pedidos']);
     }
+    
     this.subscription.add(
       this.sucursalesService.sucursal$.subscribe((sucursal: Sucursal) => {
       this.sucursalSeleccionada = sucursal;
-      this.purchaseData = null;
-      this.salesData = null;
+      this.resetData();
       this.loadPurchaseData();
       this.loadSalesData();
-      
+      this.cdr.detectChanges()
     })
    )
     this.loadPurchaseData();
@@ -55,8 +53,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadPurchaseData(): void {
+    if(this.purchaseData.length > 0) {
+      this.loadingPurchaseData = false;
+      return;
+    }
+
     this.loadingPurchaseData = true;
-    this.cdr.detectChanges();
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
@@ -79,8 +81,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSalesData(): void {
+    if(this.salesData.length > 0) {
+      this.loadingSalesData = false;
+      return;
+    }
     this.loadingSalesData = true;
-    this.cdr.detectChanges();
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
@@ -97,8 +102,16 @@ export class DashboardComponent implements OnInit {
     }).catch(error => {
       console.error('Error cargando datos de venta:', error);
       this.loadingSalesData = false;
+
       this.cdr.detectChanges();
     })
+  }
+
+  resetData(): void {
+    this.purchaseData = [];
+    this.salesData = [];
+    this.loadingPurchaseData = true;
+    this.loadingSalesData = true;
   }
 
   ngOnDestroy(): void {

@@ -7,11 +7,11 @@
 		<ngb-panel id="ngb-purchase-1" (shown)="loadPurchaseData()">
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
-					<span class="me-auto">Compras</span>
 					<fa-icon *ngIf="acc.isExpanded('ngb-purchase-1')" [icon]="['fas', 'chevron-up']"
-						class="chevronStyle me-2"></fa-icon>
+					class="chevronStyle me-2"></fa-icon>
 					<fa-icon *ngIf="!acc.isExpanded('ngb-purchase-1')" [icon]="['fas', 'chevron-down']"
-						class="chevronStyle me-2"></fa-icon>
+					class="chevronStyle me-2"></fa-icon>
+					<span class="me-auto">Compras</span>
 				</div>
 			</ng-template>
 			<ng-template ngbPanelContent>
@@ -46,11 +46,11 @@
 		<ngb-panel id="ngb-purchase-2" (shown)="loadSalesData()">
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
-					<span class="me-auto">Ventas</span>
 					<fa-icon *ngIf="acc.isExpanded('ngb-purchase-2')" [icon]="['fas', 'chevron-up']"
 						class="chevronStyle me-2"></fa-icon>
 					<fa-icon *ngIf="!acc.isExpanded('ngb-purchase-2')" [icon]="['fas', 'chevron-down']"
 						class="chevronStyle me-2"></fa-icon>
+					<span class="me-auto">Ventas</span>
 				</div>
 			</ng-template>
 			<ng-template ngbPanelContent>

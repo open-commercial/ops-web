@@ -13,6 +13,7 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
 
   chartDataArray: any[] = [];
   noDataAvailable: boolean = false;
+
   constructor(protected chartData: ChartService) {
     super(chartData);
   }
@@ -20,13 +21,17 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
   override loadChartData(year: number): void {
     const allList = this.generateMonthsData().map(m => m.name);
 
+    this.setLoadingState(true); 
+
     if (this.chartType === 'compras') {
       this.chartData.getChartDataPurchaseMonth(year).subscribe(data => {
         this.handleData(data, allList);
+        this.setLoadingState(false); 
       });
     } else if (this.chartType === 'ventas') {
       this.chartData.getChartDataSalesMonth(year).subscribe(data => {
         this.handleData(data, allList);
+        this.setLoadingState(false); 
       });
     }
   }
@@ -41,6 +46,7 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
       this.chartDataArray = [];
       this.noDataAvailable = true;
     }
+    this.setLoadingState(false);
   }
 
 }

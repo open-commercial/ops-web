@@ -12,18 +12,22 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
   @Input() chartType: 'compras' | 'ventas' = 'compras';
   chartDataArray: any[] = [];
   noDataAvailable: boolean = false;
+
   constructor(protected chartData: ChartService) {
     super(chartData);
   }
 
   override loadChartData(): void {
+    this.setLoadingState(true);
     if (this.chartType === 'compras') {
       this.chartData.getChartDataPurchaseAnnual().subscribe(data => {
         this.handleData(data);
+        this.setLoadingState(false);
       });
     } else if (this.chartType === 'ventas') {
       this.chartData.getChartDataSalesAnnual().subscribe(data => {
         this.handleData(data);
+        this.setLoadingState(false);
       });
     }
   }
@@ -38,5 +42,6 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
       this.chartDataArray = [];
       this.noDataAvailable = true;
     }
+    this.setLoadingState(false);
   }
 }

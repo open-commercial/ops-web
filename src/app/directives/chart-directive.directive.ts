@@ -17,6 +17,9 @@ export abstract class ChartDirectiveDirective implements OnInit {
   public barChartLegend = true;
   public barChartPlugins = [];
 
+  protected loadingData: boolean = false;
+
+
   public barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
@@ -77,6 +80,9 @@ export abstract class ChartDirectiveDirective implements OnInit {
 
   abstract loadChartData(year: number, month?: number | null): void;
 
+  protected setLoadingState(isloading: boolean): void {
+    this.loadingData = isloading;
+  }
   isMonthOptional(): boolean {
     return true;
   }
