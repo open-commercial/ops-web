@@ -23,11 +23,11 @@ export class ChartStatisticsYearSupplierComponent extends ChartDirectiveDirectiv
       this.loadingDataChange.emit(true)
 
     chartDataPurchaseSaleSupplier.subscribe({
-      next: (data) => { this.handleChartData(data),
+      next: (data) => { this.handleChartData(data);
                         this.loadingData = false;
                         this.loadingDataChange.emit(false);
       },
-      error: (err) => {console.log('Error al cargar datos', err),
+      error: (err) => {console.log('Error al cargar datos', err);
                         this.loadingData = false;
                         this.loadingDataChange.emit(false);
       }
