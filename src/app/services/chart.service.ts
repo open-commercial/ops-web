@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ChartInterface } from '../models/chart-interface';
 import { environment } from 'src/environments/environment';
 import { SucursalesService } from './sucursales.service';

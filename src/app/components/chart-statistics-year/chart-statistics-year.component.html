@@ -5,7 +5,7 @@
             [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
     </div>
     <div *ngIf="!loadingData && chartDataArray.length === 0" class="alert alert-secondary mt-2 text-center w-fit">
-        No hay información disponible para este periodo.
+        No hay información disponible para este período.
     </div>
     <div class="canvasStyle" *ngIf="!loadingData && chartDataArray.length > 0">
         <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
