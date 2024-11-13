@@ -1,30 +1,30 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoDirective} from '../../directives/listado.directive';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../services/sucursales.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {Observable} from 'rxjs';
-import {Pagination} from '../../models/pagination';
-import {UntypedFormBuilder} from '@angular/forms';
-import {BusquedaCuentaCorrienteClienteCriteria} from '../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
-import {CuentasCorrientesService} from '../../services/cuentas-corrientes.service';
-import {FiltroOrdenamientoComponent} from '../filtro-ordenamiento/filtro-ordenamiento.component';
-import {finalize, map} from 'rxjs/operators';
-import {Usuario} from '../../models/usuario';
-import {UsuariosService} from '../../services/usuarios.service';
-import {Rol} from '../../models/rol';
-import {Provincia} from '../../models/provincia';
-import {Localidad} from '../../models/localidad';
-import {UbicacionesService} from '../../services/ubicaciones.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {Cliente} from '../../models/cliente';
-import {ClientesService} from '../../services/clientes.service';
-import {AuthService} from '../../services/auth.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {OPOption, OptionPickerModalComponent} from '../option-picker-modal/option-picker-modal.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ListadoDirective } from '../../directives/listado.directive';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SucursalesService } from '../../services/sucursales.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { MensajeService } from '../../services/mensaje.service';
+import { Observable } from 'rxjs';
+import { Pagination } from '../../models/pagination';
+import { UntypedFormBuilder } from '@angular/forms';
+import { BusquedaCuentaCorrienteClienteCriteria } from '../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
+import { CuentasCorrientesService } from '../../services/cuentas-corrientes.service';
+import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-ordenamiento.component';
+import { finalize, map } from 'rxjs/operators';
+import { Usuario } from '../../models/usuario';
+import { UsuariosService } from '../../services/usuarios.service';
+import { Rol } from '../../models/rol';
+import { Provincia } from '../../models/provincia';
+import { Localidad } from '../../models/localidad';
+import { UbicacionesService } from '../../services/ubicaciones.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { Cliente } from '../../models/cliente';
+import { ClientesService } from '../../services/clientes.service';
+import { AuthService } from '../../services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OPOption, OptionPickerModalComponent } from '../option-picker-modal/option-picker-modal.component';
 import { saveAs } from 'file-saver';
-import {HelperService} from '../../services/helper.service';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-cuentas-corrientes-cliente',
@@ -67,13 +67,13 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: UntypedFormBuilder,
-              private ccService: CuentasCorrientesService,
-              private usuariosService: UsuariosService,
-              private ubicacionesService: UbicacionesService,
-              private clientesService: ClientesService,
-              private authService: AuthService,
-              private modalService: NgbModal) {
+              private readonly fb: UntypedFormBuilder,
+              private readonly ccService: CuentasCorrientesService,
+              private readonly usuariosService: UsuariosService,
+              private readonly ubicacionesService: UbicacionesService,
+              private readonly clientesService: ClientesService,
+              private readonly authService: AuthService,
+              private readonly modalService: NgbModal) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
@@ -112,6 +112,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
       terminos.nroDeCliente = ps.nroONom;
       terminos.nombreFantasia = ps.nroONom;
       terminos.nombreFiscal = ps.nroONom;
+      terminos.idFiscal = ps.nroONom;
     }
 
     return terminos;
