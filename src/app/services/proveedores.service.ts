@@ -16,7 +16,9 @@ export class ProveedoresService {
   constructor(private http: HttpClient) { }
 
   getProveedores(input, page = 0): Observable<Pagination> {
-    const criteria: BusquedaProveedorCriteria = { nroProveedor: input, razonSocial: input, pagina: page };
+    const criteria: BusquedaProveedorCriteria = {
+      nroProveedor: input, razonSocial: input, idFiscal: input, pagina: page
+    };
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 

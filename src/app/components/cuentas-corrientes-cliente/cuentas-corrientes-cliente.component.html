@@ -21,7 +21,7 @@
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <div class="mb-3">
-            <label for="nroONom" class="form-label">Nº Cliente/Nombre</label>
+            <label for="nroONom" class="form-label">Nº Cliente/Nombre/CUIT o DNI</label>
             <input type="text" class="form-control" id="nroONom" formControlName="nroONom">
           </div>
           <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>

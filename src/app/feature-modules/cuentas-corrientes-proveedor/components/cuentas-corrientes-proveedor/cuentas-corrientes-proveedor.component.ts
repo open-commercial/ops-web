@@ -100,6 +100,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     if (ps.nroONom) {
       terminos.nroProveedor = ps.nroONom;
       terminos.razonSocial = ps.nroONom;
+      terminos.idFiscal = ps.nroONom;
     }
 
     return terminos;

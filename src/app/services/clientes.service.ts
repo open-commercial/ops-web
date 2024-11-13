@@ -21,7 +21,7 @@ export class ClientesService {
 
   getClientes(input, page = 0): Observable<Pagination> {
     const criteria: BusquedaClienteCriteria = {
-      nombreFiscal: input, nombreFantasia: input, nroDeCliente: input, pagina: page
+      nombreFiscal: input, nombreFantasia: input, nroDeCliente: input, idFiscal: input, pagina: page
     };
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
