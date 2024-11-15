@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { BusquedaCuentaCorrienteClienteCriteria } from '../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
-import {CuentaCorrienteCliente, CuentaCorrienteProveedor} from '../models/cuenta-corriente';
-import {HelperService} from './helper.service';
-import {BusquedaCuentaCorrienteProveedorCriteria} from '../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
+import { CuentaCorrienteCliente, CuentaCorrienteProveedor } from '../models/cuenta-corriente';
+import { HelperService } from './helper.service';
+import { BusquedaCuentaCorrienteProveedorCriteria } from '../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class CuentasCorrientesService {
   urlBusquedaCuentasCorrienteCliente = this.url + '/clientes/busqueda/criteria';
   urlBusquedaCuentasCorrienteProveedor = this.url + '/proveedores/busqueda/criteria';
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   buscarCuentasCorrientesCliente(criteria: BusquedaCuentaCorrienteClienteCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusquedaCuentasCorrienteCliente, criteria);
@@ -24,7 +24,7 @@ export class CuentasCorrientesService {
 
   getCuentasCorrientesCliente(input, page: number = 0): Observable<Pagination> {
     const criteria: BusquedaCuentaCorrienteClienteCriteria = {
-      nombreFiscal: input, nombreFantasia: input, nroDeCliente: input, pagina: page
+      nombreFiscal: input, nombreFantasia: input, idFiscal: input, nroDeCliente: input, pagina: page
     };
     return this.buscarCuentasCorrientesCliente(criteria);
   }
@@ -56,7 +56,6 @@ export class CuentasCorrientesService {
     return this.http.post<Blob>(`${this.url}/clientes/reporte/criteria?formato=${formato}`, criteria, { responseType: 'blob' as 'json'});
   }
 
-  // POVEEDORES ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   buscarCuentasCorrientesProveedores(criteria: BusquedaCuentaCorrienteProveedorCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusquedaCuentasCorrienteProveedor, criteria);
   }

@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class CuentaCorrienteClienteModalComponent extends ItemSelectionModalDirective {
   constructor(public activeModal: NgbActiveModal,
-              private cuentasCorrienteService: CuentasCorrientesService) {
+              private readonly cuentasCorrienteService: CuentasCorrientesService) {
     super(activeModal);
     this.searchInputPlaceholder = 'Buscar Cliente...';
   }

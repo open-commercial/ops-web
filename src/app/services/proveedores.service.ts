@@ -13,10 +13,12 @@ export class ProveedoresService {
   url = environment.apiUrl + '/api/v1/proveedores';
   urlBusqueda = this.url + '/busqueda/criteria';
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   getProveedores(input, page = 0): Observable<Pagination> {
-    const criteria: BusquedaProveedorCriteria = { nroProveedor: input, razonSocial: input, pagina: page };
+    const criteria: BusquedaProveedorCriteria = {
+      nroProveedor: input, razonSocial: input, idFiscal: input, pagina: page
+    };
     return this.http.post<Pagination>(this.urlBusqueda, criteria);
   }
 

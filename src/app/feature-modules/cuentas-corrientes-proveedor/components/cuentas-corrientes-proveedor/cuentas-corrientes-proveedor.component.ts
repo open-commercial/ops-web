@@ -1,25 +1,25 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoDirective} from '../../../../directives/listado.directive';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../../../services/sucursales.service';
-import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
-import {MensajeService} from '../../../../services/mensaje.service';
-import {Observable} from 'rxjs';
-import {Pagination} from '../../../../models/pagination';
-import {UntypedFormBuilder} from '@angular/forms';
-import {Provincia} from '../../../../models/provincia';
-import {Localidad} from '../../../../models/localidad';
-import {BusquedaCuentaCorrienteProveedorCriteria} from '../../../../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {UbicacionesService} from '../../../../services/ubicaciones.service';
-import {FiltroOrdenamientoComponent} from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
-import {CuentasCorrientesService} from '../../../../services/cuentas-corrientes.service';
-import {Proveedor} from '../../../../models/proveedor';
-import {HelperService} from '../../../../services/helper.service';
-import {Rol} from '../../../../models/rol';
-import {AuthService} from '../../../../services/auth.service';
-import {ProveedoresService} from '../../../../services/proveedores.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ListadoDirective } from '../../../../directives/listado.directive';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SucursalesService } from '../../../../services/sucursales.service';
+import { LoadingOverlayService } from '../../../../services/loading-overlay.service';
+import { MensajeService } from '../../../../services/mensaje.service';
+import { Observable } from 'rxjs';
+import { Pagination } from '../../../../models/pagination';
+import { UntypedFormBuilder } from '@angular/forms';
+import { Provincia } from '../../../../models/provincia';
+import { Localidad } from '../../../../models/localidad';
+import { BusquedaCuentaCorrienteProveedorCriteria } from '../../../../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
+import { finalize } from 'rxjs/operators';
+import { MensajeModalType } from '../../../../components/mensaje-modal/mensaje-modal.component';
+import { UbicacionesService } from '../../../../services/ubicaciones.service';
+import { FiltroOrdenamientoComponent } from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
+import { CuentasCorrientesService } from '../../../../services/cuentas-corrientes.service';
+import { Proveedor } from '../../../../models/proveedor';
+import { HelperService } from '../../../../services/helper.service';
+import { Rol } from '../../../../models/rol';
+import { AuthService } from '../../../../services/auth.service';
+import { ProveedoresService } from '../../../../services/proveedores.service';
 
 @Component({
   selector: 'app-cuentas-corrientes-proveedor',
@@ -56,11 +56,11 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private fb: UntypedFormBuilder,
-              private ubicacionesService: UbicacionesService,
-              private cuentasCorrientesService: CuentasCorrientesService,
-              private proveedoresService: ProveedoresService,
-              private authService: AuthService) {
+              private readonly fb: UntypedFormBuilder,
+              private readonly ubicacionesService: UbicacionesService,
+              private readonly cuentasCorrientesService: CuentasCorrientesService,
+              private readonly proveedoresService: ProveedoresService,
+              private readonly authService: AuthService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
@@ -100,6 +100,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     if (ps.nroONom) {
       terminos.nroProveedor = ps.nroONom;
       terminos.razonSocial = ps.nroONom;
+      terminos.idFiscal = ps.nroONom;
     }
 
     return terminos;
@@ -148,7 +149,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     this.appliedFilters = [];
 
     if (values.nroONom) {
-      this.appliedFilters.push({ label: 'Nº de Proveedor/Nombre', value: values.nroONom });
+      this.appliedFilters.push({ label: 'Nº Proveedor/Razón Social/CUIT o DNI', value: values.nroONom });
     }
 
     setTimeout(() => {

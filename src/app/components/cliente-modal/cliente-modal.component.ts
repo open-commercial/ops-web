@@ -11,7 +11,7 @@ import { Pagination } from '../../models/pagination';
 })
 export class ClienteModalComponent extends ItemSelectionModalDirective {
   constructor(public activeModal: NgbActiveModal,
-              private clientesService: ClientesService) {
+              private readonly clientesService: ClientesService) {
     super(activeModal);
     this.searchInputPlaceholder = 'Buscar Cliente...';
   }
