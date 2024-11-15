@@ -149,7 +149,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
     this.appliedFilters = [];
 
     if (values.nroONom) {
-      this.appliedFilters.push({ label: 'Nº de Proveedor/Nombre', value: values.nroONom });
+      this.appliedFilters.push({ label: 'Nº Proveedor/Razón Social/CUIT o DNI', value: values.nroONom });
     }
 
     setTimeout(() => {

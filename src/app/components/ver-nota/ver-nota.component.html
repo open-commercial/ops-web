@@ -67,19 +67,19 @@
         <th scope="row" class="w-25 table-dark">Subtotal</th><td>{{ nota.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr *ngIf="nota.type === 'NotaCredito'">
-        <th scope="row" class="w-25 table-dark">Descuento ({{ nota.descuentoPorcentaje | number: '1.0-2' }} %)</th><td>{{ nota.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+        <th scope="row" class="w-25 table-dark">Descuento {{ nota.descuentoPorcentaje | number: '1.0-2' }}%</th><td>{{ nota.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr *ngIf="nota.type === 'NotaCredito'">
-        <th scope="row" class="w-25 table-dark">Recargo ({{ nota.recargoPorcentaje | number: '1.0-2' }} %)</th><td>{{ nota.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+        <th scope="row" class="w-25 table-dark">Recargo {{ nota.recargoPorcentaje | number: '1.0-2' }}%</th><td>{{ nota.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
         <th scope="row" class="w-25 table-dark">Subtotal Bruto</th><td>{{ nota.subTotalBruto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
-        <th scope="row" class="w-25 table-dark">IVA (10.5 %)</th><td>{{ nota.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+        <th scope="row" class="w-25 table-dark">IVA 10.5%</th><td>{{ nota.iva105Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
-        <th scope="row" class="w-25 table-dark">IVA (21 %)</th><td>{{ nota.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
+        <th scope="row" class="w-25 table-dark">IVA 21%</th><td>{{ nota.iva21Neto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr *ngIf="nota.type === 'NotaDebito'">
         <th scope="row" class="w-25 table-dark">No Gravado</th><td>{{ nota.montoNoGravado | currency: 'ARS':'symbol':'1.0-2' }}</td>

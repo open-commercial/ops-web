@@ -60,7 +60,7 @@
         <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge text-bg-pill text-bg-light ms-2 mb-2 px-2 py-1" id="tipoComprobanteFC_{{ i }}">
+        <span class="badge text-bg-light border border-secondary ms-2 mb-2" id="tipoComprobanteFC_{{ i }}">
           {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
         <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
@@ -69,8 +69,8 @@
         <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
           #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
-        <span class="badge text-bg-secondary ms-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
-          CAE: {{ item.cae }} (vto: {{ item.vencimientoCAE | date:'dd/MM/yyyy HH:mm' }})
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
+          #CAE: {{ item.cae }}
         </span>
       </div>
       <div class="px-2 flex-fill">

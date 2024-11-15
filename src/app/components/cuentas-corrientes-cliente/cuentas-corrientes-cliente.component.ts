@@ -163,7 +163,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     this.appliedFilters = [];
 
     if (values.nroONom) {
-      this.appliedFilters.push({ label: 'Nº de Cliente/Nombre', value: values.nroONom });
+      this.appliedFilters.push({ label: 'Nº Cliente/Nombre/CUIT o DNI', value: values.nroONom });
     }
 
     if (values.idViajante) {
