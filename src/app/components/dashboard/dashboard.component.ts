@@ -13,8 +13,6 @@ import { Sucursal } from 'src/app/models/sucursal';
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-  loadingPurchaseData = true;
-  loadingSalesData = true;
   purchaseData: any[] = [];
   salesData: any[] = [];
   rol = Rol;
@@ -53,12 +51,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadPurchaseData(): void {
-    if(this.purchaseData.length > 0) {
-      this.loadingPurchaseData = false;
-      return;
-    }
-
-    this.loadingPurchaseData = true;
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
@@ -71,21 +63,14 @@ export class DashboardComponent implements OnInit {
 
     Promise.all(componentPromises).then((data) => {
       this.purchaseData = data;
-      this.loadingPurchaseData = false;
       this.cdr.detectChanges();
     }).catch(error => {
       console.error('Error cargando datos de compra:', error);
-      this.loadingPurchaseData = false;
       this.cdr.detectChanges();
     })
   }
 
   loadSalesData(): void {
-    if(this.salesData.length > 0) {
-      this.loadingSalesData = false;
-      return;
-    }
-    this.loadingSalesData = true;
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
@@ -97,11 +82,9 @@ export class DashboardComponent implements OnInit {
     ];
     Promise.all(componentPromises).then((data) => {
       this.salesData = data;
-      this.loadingSalesData = false;
       this.cdr.detectChanges();
     }).catch(error => {
       console.error('Error cargando datos de venta:', error);
-      this.loadingSalesData = false;
 
       this.cdr.detectChanges();
     })
@@ -110,8 +93,8 @@ export class DashboardComponent implements OnInit {
   resetData(): void {
     this.purchaseData = [];
     this.salesData = [];
-    this.loadingPurchaseData = true;
-    this.loadingSalesData = true;
+    this.loadPurchaseData();
+    this.loadSalesData();
   }
 
   ngOnDestroy(): void {

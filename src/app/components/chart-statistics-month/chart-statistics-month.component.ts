@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
+import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { ChartService } from 'src/app/services/chart.service';
 export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
   @Input() title: string = '';
   @Input() chartType: 'ventas' | 'compras' = 'compras';
-
+  @Input() sucursal: Sucursal;
   chartDataArray: any[] = [];
   noDataAvailable: boolean = false;
 
@@ -47,6 +48,13 @@ export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
       this.noDataAvailable = true;
     }
     this.setLoadingState(false);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
+      const currentYear = new Date().getFullYear();
+    this.loadChartData(currentYear);
+    }
   }
 
 }

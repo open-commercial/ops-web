@@ -15,28 +15,24 @@
 				</div>
 			</ng-template>
 			<ng-template ngbPanelContent>
-				<div *ngIf="loadingPurchaseData">
-					<fa-icon class="spinner-primary d-flex align-items-center justify-content-center"
-						[icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-				</div>
-				<div *ngIf="!loadingPurchaseData" class="container-fluid">
+				<div class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year [title]="'Compras por año'"
+							<app-chart-statistics-year [title]="'Compras por año'" [sucursal]="sucursalSeleccionada"
 								[chartType]="'compras'"></app-chart-statistics-year>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year-supplier [title]="'Compras por año por proveedor'"
+							<app-chart-statistics-year-supplier [title]="'Compras por año por proveedor'" [sucursal]="sucursalSeleccionada"
 								[dataType]="'compras'"></app-chart-statistics-year-supplier>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month [title]="'Compras por mes'"
+							<app-chart-statistics-month [title]="'Compras por mes'" [sucursal]="sucursalSeleccionada"
 								[chartType]="'compras'"></app-chart-statistics-month>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month-supplier [title]="'Compras por mes por proveedor'"
+							<app-chart-statistics-month-supplier [title]="'Compras por mes por proveedor'" [sucursal]="sucursalSeleccionada"
 								[dataType]="'compras'"></app-chart-statistics-month-supplier>
 						</div>
 					</div>
@@ -54,28 +50,24 @@
 				</div>
 			</ng-template>
 			<ng-template ngbPanelContent>
-				<div *ngIf="loadingSalesData">
-					<fa-icon class="spinner-primary d-flex align-items-center justify-content-center"
-						[icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
-				</div>
-				<div *ngIf="!loadingSalesData" class="container-fluid">
+				<div class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year [title]="'Ventas por año'"
+							<app-chart-statistics-year [title]="'Ventas por año'" [sucursal]="sucursalSeleccionada"
 								[chartType]="'ventas'"></app-chart-statistics-year>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year-supplier [title]="'Ventas por año por proveedor'"
+							<app-chart-statistics-year-supplier [title]="'Ventas por año por proveedor'" [sucursal]="sucursalSeleccionada"
 								[dataType]="'ventas'"></app-chart-statistics-year-supplier>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month [title]="'Ventas por mes'"
+							<app-chart-statistics-month [title]="'Ventas por mes'" [sucursal]="sucursalSeleccionada"
 								[chartType]="'ventas'"></app-chart-statistics-month>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month-supplier [title]="'Ventas por mes por proveedor'"
+							<app-chart-statistics-month-supplier [title]="'Ventas por mes por proveedor'" [sucursal]="sucursalSeleccionada"
 								[dataType]="'ventas'"></app-chart-statistics-month-supplier>
 						</div>
 					</div>

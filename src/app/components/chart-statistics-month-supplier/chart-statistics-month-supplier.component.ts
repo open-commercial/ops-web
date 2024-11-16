@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
+import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
@@ -10,6 +11,7 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
   @Input() title: string;
   @Input() dataType: 'compras' | 'ventas';
   @Input() loadingData: boolean = false;
+  @Input() sucursal: Sucursal;
   @Output() loadingDataChange = new EventEmitter<boolean>();
 
   constructor(protected chartData: ChartService) {
@@ -43,5 +45,13 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
   isMonthOptional(): boolean {
     return false;
   }
-     
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      this.loadChartData(currentYear, currentMonth);
+    }
+  }
+    
 }
