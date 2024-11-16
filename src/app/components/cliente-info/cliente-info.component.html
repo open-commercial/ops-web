@@ -3,7 +3,7 @@
     <span class="numero">#{{ cliente.nroCliente }}</span>
   </span>
   <span>
-    <span *ngIf="cliente.idFiscal">CUIT ó DNI: {{ cliente.idFiscal }}<br></span>
+    <span *ngIf="cliente.idFiscal">CUIT o DNI: {{ cliente.idFiscal }}<br></span>
     <strong>{{ cliente.nombreFiscal }}</strong><em *ngIf="cliente.nombreFantasia"> - {{ cliente.nombreFantasia }}</em>
   </span>
   <span *ngIf="cliente.ubicacionFacturacion">

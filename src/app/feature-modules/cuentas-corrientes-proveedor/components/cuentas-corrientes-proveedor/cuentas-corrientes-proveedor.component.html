@@ -20,7 +20,7 @@
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <div class="mb-3">
-            <label for="nroONom" class="form-label">Nº Proveedor o Razón Social</label>
+            <label for="nroONom" class="form-label">Nº Proveedor/Razón Social/CUIT o DNI</label>
             <input type="text" class="form-control" id="nroONom" formControlName="nroONom">
           </div>
           <div class="mb-3">
@@ -54,8 +54,8 @@
     <ng-template #info let-item>
       <div class="row">
         <div class="col-lg-6">
-          <span class="badge text-bg-secondary me-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
-          <span class="badge text-bg-dark me-2 mb-2">CUIT: {{item.proveedor.idFiscal}}</span>
+          <span class="badge text-bg-dark me-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
+          <span class="badge text-bg-dark me-2 mb-2">CUIT o DNI: {{item.proveedor.idFiscal}}</span>
           <span class="badge text-bg-dark me-2 mb-2">{{ helper.categoriaIVALabel(item.proveedor.categoriaIVA) }}</span>
           <div class="ms-2 mb-2 fst-italic fw-bold nombre">
             {{ item.proveedor.razonSocial }}

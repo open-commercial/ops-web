@@ -15,14 +15,14 @@
       <div class="d-flex flex-column flex-md-row">
         <div class="me-2"><span class="fw-bold">Cant: </span>{{ r.cantidad | number:'1.0-2' }}</div>
         <div class="me-2"><span class="fw-bold">P.U.: </span>{{ r.precioUnitario | currency: 'ARS':'symbol':'1.0-2' }}</div>
-        <div class="me-2" *ngIf="r.descuentoPorcentaje"><span class="fw-bold">% Desc.: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}</div>
+        <div class="me-2" *ngIf="r.descuentoPorcentaje"><span class="fw-bold">Desc: </span>{{ r.descuentoPorcentaje | number:'1.0-2' }}%</div>
         <div class="flex-fill text-end"><span class="fw-bold">Importe </span>{{ r.importe | currency: 'ARS':'symbol':'1.0-2' }}</div>
       </div>
     </div>
   </div>
   <form [formGroup]="form" (submit)="submit()" *ngIf="form && !loading">
     <div class="mb-3">
-      <label for="motivo" class="form-label">Motivo</label>
+      <label for="motivo" class="fw-bold">Motivo</label>
       <input type="text" class="form-control" id="motivo" formControlName="motivo"
              [ngClass]="{ 'is-invalid': submitted && f.motivo.errors }">
       <div class="invalid-feedback" *ngIf="submitted && f.motivo.errors">
@@ -38,12 +38,12 @@
       <td>{{ notaCredito.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25 table-dark">% Descuento</th>
-      <td>{{ notaCredito.descuentoNeto | currency: 'ARS':'symbol':'1.0-2'  }} ({{ notaCredito.descuentoPorcentaje | number:'1.0-2' }} %)</td>
+      <th scope="row" class="w-25 table-dark">Descuento {{ notaCredito.descuentoPorcentaje | number:'1.0-2' }}%</th>
+      <td>{{ notaCredito.descuentoNeto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
-      <th scope="row" class="w-25 table-dark">% Recargo</th>
-      <td>{{ notaCredito.recargoNeto | currency: 'ARS':'symbol':'1.0-2'  }} ({{ notaCredito.recargoPorcentaje | number:'1.0-2' }} %)</td>
+      <th scope="row" class="w-25 table-dark">Recargo {{ notaCredito.recargoPorcentaje | number:'1.0-2' }}%</th>
+      <td>{{ notaCredito.recargoNeto | currency: 'ARS':'symbol':'1.0-2'  }}</td>
     </tr>
     <tr>
       <th scope="row" class="w-25 table-dark">Subtotal Bruto</th>

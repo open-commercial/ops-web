@@ -67,11 +67,11 @@
       <tr><th scope="row" class="table-dark">Observaciones</th><td>{{ factura.observaciones }}</td></tr>
       <tr><th scope="row" class="table-dark">Subtotal</th><td>{{ factura.subTotal | currency: 'ARS':'symbol':'1.0-2' }}</td></tr>
       <tr>
-        <th scope="row" class="table-dark">Descuento &nbsp;<span *ngIf="factura.descuentoPorcentaje > 0">({{ factura.descuentoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <th scope="row" class="table-dark">Descuento&nbsp;<span>{{ factura.descuentoPorcentaje | number:'1.0-2' }}%</span></th>
         <td><span *ngIf="factura.descuentoNeto > 0">-&nbsp;</span>{{ factura.descuentoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
-        <th scope="row" class="table-dark">Recargo&nbsp;<span *ngIf="factura.recargoPorcentaje > 0">({{ factura.recargoPorcentaje | number:'1.0-2' }} %)</span></th>
+        <th scope="row" class="table-dark">Recargo&nbsp;<span>{{ factura.recargoPorcentaje | number:'1.0-2' }}%</span></th>
         <td>{{ factura.recargoNeto | currency: 'ARS':'symbol':'1.0-2' }}</td>
       </tr>
       <tr>
