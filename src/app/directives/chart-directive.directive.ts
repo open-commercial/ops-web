@@ -119,7 +119,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
 
   private loadChartDataIfNeeded(): void {
     if (this.selectedYear && this.selectedMonth) {
-      this.loadChartData(this.selectedYear, this.selectedMonth!);
+      this.loadChartData(this.selectedYear);
     }
   }
 

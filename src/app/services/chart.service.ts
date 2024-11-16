@@ -149,5 +149,4 @@ export class ChartService {
       }
     }))
   }
-
 }

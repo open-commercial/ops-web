@@ -208,5 +208,4 @@ export class SideNavComponent implements OnDestroy {
       this.optionClick(); 
     }
   }
-  
 }
