@@ -27,7 +27,6 @@ export class DashboardComponent implements OnInit {
     private sucursalesService: SucursalesService,
 
     accordionConfig: NgbAccordionConfig) {
-
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
   }
@@ -36,18 +35,17 @@ export class DashboardComponent implements OnInit {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
       this.router.navigate(['pedidos']);
     }
-    
+    this.loadPurchaseData();
+    this.loadSalesData();
+
     this.subscription.add(
       this.sucursalesService.sucursal$.subscribe((sucursal: Sucursal) => {
       this.sucursalSeleccionada = sucursal;
       this.resetData();
-      this.loadPurchaseData();
-      this.loadSalesData();
       this.cdr.detectChanges()
     })
    )
-    this.loadPurchaseData();
-    this.loadSalesData();
+
   }
 
   loadPurchaseData(): void {
