@@ -8,7 +8,7 @@
     <div class="d-flex flex-row py-2 align-items-center border-bottom" *ngFor="let fdp of formasDePago" [ngClass]="{ 'bg-primary' : fdp.predeterminado }">
       <div class="forma-de-pago flex-fill p-2">
         <span class="lead me-2" [class.fw-bold]="fdp.predeterminado">{{ fdp.nombre }}</span>
-        <span class="badge text-bg-info me-2" *ngIf="fdp.predeterminado">Predeterminado</span>
+        <span class="badge text-bg-secondary me-2" *ngIf="fdp.predeterminado">Predeterminado</span>
         <span class="badge text-bg-secondary" *ngIf="fdp.afectaCaja">Afecta la Caja</span>
       </div>
       <ul class="list-unstyled mb-0">

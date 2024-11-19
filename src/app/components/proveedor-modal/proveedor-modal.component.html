@@ -16,7 +16,7 @@
     <ng-template #itemTemplate let-item>
       <div class="flex-fill d-flex flex-column proveedor">
         <span class="me-2 numero">#{{ item.nroProveedor }}</span>
-        <span class="me-2" *ngIf="item.idFiscal">CUIT {{ item.idFiscal }}</span>
+        <span class="me-2" *ngIf="item.idFiscal">CUIT o DNI {{ item.idFiscal }}</span>
         <span class="me-2 nombre"><strong>{{ item.razonSocial }}</strong></span>
       </div>
     </ng-template>

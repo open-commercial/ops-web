@@ -21,7 +21,7 @@
       <div class="row" [formGroup]="filterForm">
         <div class="col-md-6">
           <div class="mb-3">
-            <label for="nroONom" class="form-label">Nº Cliente/Nombre</label>
+            <label for="nroONom" class="form-label">Nº Cliente/Nombre/CUIT o DNI</label>
             <input type="text" class="form-control" id="nroONom" formControlName="nroONom">
           </div>
           <app-usuario-filtro formControlName="idViajante" [roles]="[rol.VIAJANTE]" [label]="'Viajante'"></app-usuario-filtro>
@@ -55,7 +55,7 @@
   <div class="ccc my-2 bg-white">
     <ng-template #info let-item>
       <div>
-        <span class="badge text-bg-secondary ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
+        <span class="badge text-bg-dark ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
         <span class="badge text-bg-light border border-secondary ms-2 mb-2">
           Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
         </span>
@@ -64,7 +64,7 @@
           <fa-icon [icon]="['fas', 'times']" *ngIf="!item.cliente.puedeComprarAPlazo"></fa-icon>
           &nbsp;{{ item.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
         </span>
-        <span class="badge text-bg-info ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
+        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
           Cliente Predeterminado
         </span>
       </div>
@@ -74,7 +74,7 @@
             {{ item.cliente.nombreFiscal }} <span *ngIf="item.cliente.nombreFantasia">({{ item.cliente.nombreFantasia }})</span>
           </div>
           <div class="ms-2" *ngIf="item.cliente.idFiscal">
-            <span class="fw-bold">CUIT o CUIL: </span>{{ item.cliente.idFiscal }}
+            <span class="fw-bold">CUIT o DNI: </span>{{ item.cliente.idFiscal }}
           </div>
           <div class="ms-2">
             <span class="fw-bold">Categoría IVA: </span>{{ helper.categoriaIVALabel(item.cliente.categoriaIVA) }}
