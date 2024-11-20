@@ -17,8 +17,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.redirectBasedOnRole();
   }
-
-    toggleMenu() {
+  toggleMenu() {
     this.menuOpened = !this.menuOpened;
     const elems = document.getElementsByClassName('ops-web-app');
     const appElement = elems.item(0);

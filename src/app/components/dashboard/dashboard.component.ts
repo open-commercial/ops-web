@@ -19,7 +19,6 @@ export class DashboardComponent implements OnInit {
   allowedRolesToView = [Rol.ADMINISTRADOR];
   sucursalSeleccionada: Sucursal = null;
   subscription: Subscription;
-
   constructor(private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -99,4 +98,3 @@ export class DashboardComponent implements OnInit {
       this.subscription.unsubscribe();
     }
 }
-  

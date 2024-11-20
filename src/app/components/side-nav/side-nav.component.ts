@@ -28,9 +28,9 @@ export class SideNavComponent implements OnDestroy {
   accordionActiveId = '';
 
   constructor(private authService: AuthService,
-    private router: Router,
-    accordionConfig: NgbAccordionConfig,
-    private changeDetectorRef: ChangeDetectorRef) {
+              private router: Router,
+              accordionConfig: NgbAccordionConfig,
+              private changeDetectorRef: ChangeDetectorRef) {
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
 
