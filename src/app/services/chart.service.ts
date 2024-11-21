@@ -12,8 +12,8 @@ export class ChartService {
   urlPurchasingStatistics = environment.apiUrl + '/api/v1/estadisticas/compras';
   urlSalesStatistics = environment.apiUrl + '/api/v1/estadisticas/ventas'
 
-  constructor(private http: HttpClient,
-              private sucursalesService: SucursalesService) {
+  constructor(private readonly http: HttpClient,
+              private readonly sucursalesService: SucursalesService) {
   }
 
   getChartDataPurchaseAnnual (): Observable<{labels: string[], datasets:{data: number[], label: string }[] }> {

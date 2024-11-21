@@ -30,7 +30,7 @@ export class SideNavComponent implements OnDestroy {
   constructor(private authService: AuthService,
               private router: Router,
               accordionConfig: NgbAccordionConfig,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private readonly changeDetectorRef: ChangeDetectorRef) {
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
 

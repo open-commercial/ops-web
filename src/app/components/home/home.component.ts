@@ -10,8 +10,8 @@ import { AuthService } from 'src/app/services/auth.service';
 export class HomeComponent implements OnInit {
   menuOpened = false;
   rol = Rol;
-  constructor(private router: Router,
-              private authService: AuthService) { 
+  constructor(private readonly router: Router,
+              private readonly authService: AuthService) { 
   }
 
   ngOnInit() {

@@ -128,7 +128,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
       this.selectedMonth = month;
     } else if (month instanceof Event) {
       const target = (month.target as HTMLSelectElement);
-      if (target && target.value) {
+      if (target?.value) {
         this.selectedMonth = parseInt(target.value, 10);
       }
     }
@@ -170,7 +170,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
   }
 
   protected handleChartData(data: any): void {
-    if (data && data.labels && data.datasets && data.datasets.length > 0) {
+    if (data?.labels && data?.datasets.length > 0) {
       const labels = data.labels;
       const datasetData = data.datasets[0].data;
 

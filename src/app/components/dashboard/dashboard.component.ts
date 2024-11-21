@@ -19,11 +19,12 @@ export class DashboardComponent implements OnInit {
   allowedRolesToView = [Rol.ADMINISTRADOR];
   sucursalSeleccionada: Sucursal = null;
   subscription: Subscription;
-  constructor(private authService: AuthService,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-    private chartService: ChartService,
-    private sucursalesService: SucursalesService,
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly chartService: ChartService,
+    private readonly sucursalesService: SucursalesService,
 
     accordionConfig: NgbAccordionConfig) {
     accordionConfig.type = 'dark';
