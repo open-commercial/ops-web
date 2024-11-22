@@ -7,19 +7,15 @@ import { ChartConfiguration } from 'chart.js';
   selector: '[appChartDirective]'
 })
 export abstract class ChartDirectiveDirective implements OnInit {
-
   years: number[] = []
   selectedYear: number = new Date().getFullYear();
   selectedMonth: number | null = new Date().getMonth() + 1;
   months: { value: number, name: string }[] = [];
   suppliers: ChartInterface[] = [];
 
+  protected loadingData: boolean = false;
   public barChartLegend = true;
   public barChartPlugins = [];
-
-  protected loadingData: boolean = false;
-
-
   public barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
@@ -65,7 +61,6 @@ export abstract class ChartDirectiveDirective implements OnInit {
   };
 
   constructor(protected chartData: ChartService) { }
-
   ngOnInit(): void {
     this.years = this.generateYearData();
     this.months = this.generateMonthsData();
@@ -79,62 +74,44 @@ export abstract class ChartDirectiveDirective implements OnInit {
   }
 
   abstract loadChartData(year: number, month?: number | null): void;
-
   protected setLoadingState(isloading: boolean): void {
     this.loadingData = isloading;
   }
   isMonthOptional(): boolean {
     return true;
   }
-
   onYearChange(year: number | Event): void {
-    if (this.isValidNumber(year)) {
-      this.updateYearAndMonth(year as number);
-    } else if (this.isValidEvent(year)) {
-      this.handleYearEvent(year as Event);
-    } else {
-      console.error("Error: Tipo inesperado de parámetro en onYearChange", year);
+    let parsedYear: number | null = null;
+  
+    if (typeof year === 'number') {
+      parsedYear = year;
+    } else if (year instanceof Event) {
+      const target = year.target as HTMLSelectElement;
+      parsedYear = parseInt(target.value, 10);
     }
-  }
-
-  private isValidNumber(year: number | Event): boolean {
-    return typeof year === 'number';
-  }
-
-  private isValidEvent(event: number | Event): boolean {
-    return event instanceof Event && (event.target as HTMLSelectElement)?.value !== undefined;
-  }
-
-  private updateYearAndMonth(year: number): void {
-    this.selectedYear = year;
-    this.selectedMonth = this.selectedMonth || new Date().getMonth() + 1;
-    this.loadChartDataIfNeeded();
-  }
-
-  private handleYearEvent(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const parsedYear = parseInt(target.value, 10);
-    this.updateYearAndMonth(parsedYear);
-  }
-
-  private loadChartDataIfNeeded(): void {
-    if (this.selectedYear && this.selectedMonth) {
-      this.loadChartData(this.selectedYear);
+      if (parsedYear && parsedYear !== this.selectedYear) {
+      this.selectedYear = parsedYear;
+      this.selectedMonth = this.selectedMonth || 1;
+      this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
 
   onMonthChange(month: number | Event): void {
+    let parsedMonth: number | null = null;
+  
     if (typeof month === 'number') {
-      this.selectedMonth = month;
+      parsedMonth = month;
     } else if (month instanceof Event) {
-      const target = (month.target as HTMLSelectElement);
-      if (target?.value) {
-        this.selectedMonth = parseInt(target.value, 10);
-      }
+      const target = month.target as HTMLSelectElement;
+      parsedMonth = parseInt(target.value, 10);
     }
-
-    if (this.selectedYear && this.selectedMonth) {
-      this.loadChartData(this.selectedYear, this.selectedMonth);
+      if (parsedMonth && parsedMonth !== this.selectedMonth) {
+      this.selectedMonth = parsedMonth;
+      if (this.selectedYear) {
+        this.loadChartData(this.selectedYear, this.selectedMonth);
+      } else {
+        console.error("Error: No se puede seleccionar un mes sin un año válido.");
+      }
     }
   }
 
@@ -143,7 +120,6 @@ export abstract class ChartDirectiveDirective implements OnInit {
     const startYear = currentYear - 10;
     return Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
   }
-
   generateMonthsData(): { value: number, name: string }[] {
     const monthsNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
@@ -151,7 +127,6 @@ export abstract class ChartDirectiveDirective implements OnInit {
       value: index + 1, name
     }))
   }
-
   updateChart(data: any, labels: string[]): void {
     this.barChartData = {
       labels: labels,
@@ -168,7 +143,6 @@ export abstract class ChartDirectiveDirective implements OnInit {
       ]
     };
   }
-
   protected handleChartData(data: any): void {
     if (data?.labels && data?.datasets.length > 0) {
       const labels = data.labels;

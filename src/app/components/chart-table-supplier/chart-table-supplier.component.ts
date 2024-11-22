@@ -27,7 +27,6 @@ onYearChange($event: Event): void {
         console.error("Error: El evento no tiene un valor válido", $event);
     }
 }
-
 onMonthChange($event: Event): void {
     const target = $event.target as HTMLSelectElement;
     const month = parseInt(target?.value ?? '', 10); 
