@@ -16,6 +16,9 @@ export class DashboardComponent implements OnInit {
   purchaseData: any[] = [];
   salesData: any[] = [];
   rol = Rol;
+  fechaSeleccionada: Date = new Date();
+  selectedYear: number;
+  selectedMonth: number;
   allowedRolesToView = [Rol.ADMINISTRADOR];
   sucursalSeleccionada: Sucursal = null;
   subscription: Subscription;
@@ -35,10 +38,7 @@ export class DashboardComponent implements OnInit {
     if (!this.authService.userHasAnyOfTheseRoles(this.allowedRolesToView)) {
       this.router.navigate(['pedidos']);
     }
-    this.loadPurchaseData();
-    this.loadSalesData();
-
-    this.subscription.add(
+     this.subscription.add(
       this.sucursalesService.sucursal$.subscribe((sucursal: Sucursal) => {
       this.sucursalSeleccionada = sucursal;
       this.resetData();
@@ -49,16 +49,14 @@ export class DashboardComponent implements OnInit {
   }
 
   loadPurchaseData(): void {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1;
-
+    const currentYear = this.fechaSeleccionada.getFullYear();
+    const currentMonth = this.fechaSeleccionada.getMonth() + 1;
     const componentPromises = [
       lastValueFrom(this.chartService.getChartDataPurchaseAnnual()),
       lastValueFrom(this.chartService.getChartDataPurchaseAnnualSupplier(currentYear)),
       lastValueFrom(this.chartService.getChartDataPurchaseMonth(currentYear)),
       lastValueFrom(this.chartService.getChartDataPurchaseMonthSupplier(currentYear, currentMonth)),
     ];
-
     Promise.all(componentPromises).then((data) => {
       this.purchaseData = data;
       this.cdr.detectChanges();
@@ -69,9 +67,8 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSalesData(): void {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1;
-
+    const currentYear = this.fechaSeleccionada.getFullYear();
+    const currentMonth = this.fechaSeleccionada.getMonth() + 1;
     const componentPromises = [
       lastValueFrom(this.chartService.getChartDataSalesAnnual()),
       lastValueFrom(this.chartService.getChartDataSalesAnnualSupplier(currentYear)),
@@ -83,12 +80,17 @@ export class DashboardComponent implements OnInit {
       this.cdr.detectChanges();
     }).catch(error => {
       console.error('Error cargando datos de venta:', error);
-
       this.cdr.detectChanges();
     })
   }
 
+  updateData(): void {
+    this.fechaSeleccionada = new Date();
+  }
   resetData(): void {
+    this.updateData();
+    this.selectedYear = this.fechaSeleccionada.getFullYear();
+    this.selectedMonth = this.fechaSeleccionada.getMonth() + 1;
     this.purchaseData = [];
     this.salesData = [];
     this.loadPurchaseData();

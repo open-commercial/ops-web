@@ -11,6 +11,7 @@ export class ChartStatisticsYearSupplierComponent extends ChartDirectiveDirectiv
   @Input() title: string;
   @Input() dataType: 'compras' | 'ventas';
   @Input() sucursal: Sucursal;
+  @Input() selectedYear: number;
   @Output() loadingDataChange = new EventEmitter<boolean>();
 
   constructor(protected chartData: ChartService) {
@@ -45,7 +46,8 @@ export class ChartStatisticsYearSupplierComponent extends ChartDirectiveDirectiv
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();
-      this.loadChartData(currentYear);
+      this.selectedYear = currentYear;
+      this.loadChartData(this.selectedYear);
     }
   }
 

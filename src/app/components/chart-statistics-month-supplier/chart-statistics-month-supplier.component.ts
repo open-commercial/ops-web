@@ -12,6 +12,8 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
   @Input() dataType: 'compras' | 'ventas';
   @Input() loadingData: boolean = false;
   @Input() sucursal: Sucursal;
+  @Input() selectedMonth: number;
+  @Input() selectedYear: number;
   @Output() loadingDataChange = new EventEmitter<boolean>();
   constructor(protected chartData: ChartService) {
     super(chartData);
@@ -42,7 +44,9 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();
       const currentMonth = new Date().getMonth() + 1;
-      this.loadChartData(currentYear, currentMonth);
+      this.selectedYear = currentYear;
+      this.selectedMonth = currentMonth;
+      this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
     

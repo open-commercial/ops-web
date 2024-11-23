@@ -11,8 +11,8 @@ export class ChartTableSupplierComponent {
   @Input() suppliers: ChartInterface[] = [];
   @Input() years: number[] = [];
   @Input() months: {value: number, name: string}[] = [];
-  @Input() selectedYear: number | null = null;
-  @Input() selectedMonth: number | null = null;
+  @Input() selectedYear: number;
+  @Input() selectedMonth: number;
   @Input() showMonthSelector: boolean = true;
   @Input() loadingData: boolean = false;
   @Output() yearChange = new EventEmitter<number>();
