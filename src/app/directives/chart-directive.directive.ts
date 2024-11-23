@@ -91,7 +91,6 @@ export abstract class ChartDirectiveDirective implements OnInit {
     }
       if (parsedYear && parsedYear !== this.selectedYear) {
       this.selectedYear = parsedYear;
-      this.selectedMonth = this.selectedMonth;
       this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
