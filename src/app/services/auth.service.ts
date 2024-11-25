@@ -15,6 +15,7 @@ import { Rol } from '../models/rol';
   providedIn: 'root'
 })
 export class AuthService {
+  
   urlLogin = environment.apiUrl + '/api/v1/login';
   urlLogout = environment.apiUrl + '/api/v1/logout';
   jwtHelper = new JwtHelperService();
