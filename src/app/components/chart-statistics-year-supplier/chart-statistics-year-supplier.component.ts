@@ -17,6 +17,7 @@ export class ChartStatisticsYearSupplierComponent extends ChartDirectiveDirectiv
   constructor(protected chartData: ChartService) {
     super(chartData);
   }
+
   loadChartData(year: number): void {
     this.loadingData = true;
     const chartDataPurchaseSaleSupplier = this.dataType === 'compras' ?
@@ -43,6 +44,7 @@ export class ChartStatisticsYearSupplierComponent extends ChartDirectiveDirectiv
   isMonthOptional(): boolean {
     return true;
   }
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();

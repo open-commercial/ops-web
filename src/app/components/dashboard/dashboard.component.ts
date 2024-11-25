@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   allowedRolesToView = [Rol.ADMINISTRADOR];
   sucursalSeleccionada: Sucursal = null;
   subscription: Subscription;
+
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
@@ -87,6 +88,7 @@ export class DashboardComponent implements OnInit {
   updateData(): void {
     this.fechaSeleccionada = new Date();
   }
+  
   resetData(): void {
     this.updateData();
     this.selectedYear = this.fechaSeleccionada.getFullYear();

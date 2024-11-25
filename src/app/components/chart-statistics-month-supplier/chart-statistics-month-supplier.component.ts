@@ -15,9 +15,11 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
   @Input() selectedMonth: number;
   @Input() selectedYear: number;
   @Output() loadingDataChange = new EventEmitter<boolean>();
+
   constructor(protected chartData: ChartService) {
     super(chartData);
   }
+
   loadChartData(year: number, month: number): void {
     this.loadingData = true;
     this.loadingDataChange.emit(true);
@@ -25,14 +27,14 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
       this.chartData.getChartDataPurchaseMonthSupplier(year, month) :
       this.chartData.getChartDataSalesMonthSupplier(year, month);
 
-
-    chartDataPurchaseSale.subscribe({
-      next: (data) => { this.handleChartData(data);
+        chartDataPurchaseSale.subscribe({
+          next: (data) => { this.handleChartData(data);
                         this.loadingData = false;
                         this.loadingDataChange.emit(false);
       },
       });
   }
+
   setLoadingData(isloading: boolean) {
     this.loadingData = isloading;
   }
@@ -40,6 +42,7 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
   isMonthOptional(): boolean {
     return false;
   }
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();

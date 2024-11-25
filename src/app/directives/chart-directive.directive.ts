@@ -61,6 +61,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
   };
 
   constructor(protected chartData: ChartService) { }
+
   ngOnInit(): void {
     this.years = this.generateYearData();
     this.months = this.generateMonthsData();
@@ -77,19 +78,21 @@ export abstract class ChartDirectiveDirective implements OnInit {
   protected setLoadingState(isloading: boolean): void {
     this.loadingData = isloading;
   }
+
   isMonthOptional(): boolean {
     return true;
   }
+
   onYearChange(year: number | Event): void {
     let parsedYear: number | null = null;
-  
+
     if (typeof year === 'number') {
       parsedYear = year;
     } else if (year instanceof Event) {
       const target = year.target as HTMLSelectElement;
       parsedYear = parseInt(target.value, 10);
     }
-      if (parsedYear && parsedYear !== this.selectedYear) {
+    if (parsedYear && parsedYear !== this.selectedYear) {
       this.selectedYear = parsedYear;
       this.loadChartData(this.selectedYear, this.selectedMonth);
     }
@@ -97,14 +100,14 @@ export abstract class ChartDirectiveDirective implements OnInit {
 
   onMonthChange(month: number | Event): void {
     let parsedMonth: number | null = null;
-  
+
     if (typeof month === 'number') {
       parsedMonth = month;
     } else if (month instanceof Event) {
       const target = month.target as HTMLSelectElement;
       parsedMonth = parseInt(target.value, 10);
     }
-      if (parsedMonth && parsedMonth !== this.selectedMonth) {
+    if (parsedMonth && parsedMonth !== this.selectedMonth) {
       this.selectedMonth = parsedMonth;
       if (this.selectedYear) {
         this.loadChartData(this.selectedYear, this.selectedMonth);
@@ -119,6 +122,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
     const startYear = currentYear - 10;
     return Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
   }
+
   generateMonthsData(): { value: number, name: string }[] {
     const monthsNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
@@ -126,6 +130,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
       value: index + 1, name
     }))
   }
+
   updateChart(data: any, labels: string[]): void {
     this.barChartData = {
       labels: labels,
@@ -142,6 +147,7 @@ export abstract class ChartDirectiveDirective implements OnInit {
       ]
     };
   }
+  
   protected handleChartData(data: any): void {
     if (data?.labels && data?.datasets.length > 0) {
       const labels = data.labels;

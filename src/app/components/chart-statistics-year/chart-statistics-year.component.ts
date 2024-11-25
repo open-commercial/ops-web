@@ -12,6 +12,7 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
   @Input() title: string = '';
   @Input() chartType: 'compras' | 'ventas' = 'compras';
   @Input() sucursal: Sucursal;
+
   chartDataArray: any[] = [];
   noDataAvailable: boolean = false;
 
@@ -46,7 +47,6 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
     }
     this.setLoadingState(false);
   }
-
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
