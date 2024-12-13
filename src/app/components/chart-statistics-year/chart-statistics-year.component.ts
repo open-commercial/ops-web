@@ -37,9 +37,17 @@ export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
 
   handleData(data: any): void {
     if (data && data.labels.length > 0) {
-      const labels = this.generateYearData().slice(0, 4).reverse();
-      this.updateChart(data, labels.map(String));
-      this.chartDataArray = data.labels;
+      const labels = this.generateYearData().slice(0, 4).reverse().map(String);
+      const yearDataMap = this.generateYearData().slice(0, 4).map((year, index)=> ({year:String(year), value: data.datasets[0].data[index]}));
+      const synchronizedData = labels.map((label) => {
+        const mapped = yearDataMap.find((item) => item.year === label);
+        return mapped ? mapped.value : 0;
+      });
+      const invertedDatasets = data.datasets.map((dataset: any) => ({...dataset, 
+        data: synchronizedData,
+      }));
+      this.updateChart({...data, labels, datasets: invertedDatasets}, labels);
+      this.chartDataArray = invertedDatasets;
       this.noDataAvailable = false;
     } else {
       this.chartDataArray = [];
