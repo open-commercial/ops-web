@@ -10,7 +10,13 @@
   </div>
   <form [formGroup]="form" class="mt-2" *ngIf="form">
     <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="general" (panelChange)="panelBeforeChange($event)">
-      <ngb-panel id="general" title="General">
+      <ngb-panel id="general">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('general') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <span>General</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6 col-lg-4 align-self-center">
@@ -60,7 +66,13 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="precios" title="Precios">
+      <ngb-panel id="precios">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('precios') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <span>Precios</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div class="mb-0">
             <label class="form-label sr-only" for="calculosPrecio">Precios</label>
@@ -68,7 +80,13 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="cantidades" title="Cantidades">
+      <ngb-panel id="cantidades">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('cantidades') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <span>Cantidades</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <label class="form-label">Cantidad en sucursales</label>
           <div formArrayName="cantidadEnSucursal">
@@ -95,7 +113,13 @@
           </div>
         </ng-template>
       </ngb-panel>
-      <ngb-panel id="propiedades" title="Propiedades">
+      <ngb-panel id="propiedades">
+        <ng-template ngbPanelTitle>
+          <span class="d-flex align-items-center">
+            <fa-icon [icon]="['fas', accordion.isExpanded('propiedades') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <span>Propiedades</span>
+          </span>
+        </ng-template>
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6">
