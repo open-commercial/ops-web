@@ -139,7 +139,7 @@ export class ProductoComponent implements OnInit {
       idRubro: [null, Validators.required],
       calculosPrecio: [CalculosPrecio.getEmtpyValues(), Validators.required],
       cantidadEnSucursal: this.fb.array([]),
-      cantMinima: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]],
+      cantMinima: [{ value: 3, disabled: true }, [Validators.required, Validators.min(1)]],
       publico: false,
       paraCatalogo: false,
       fechaVencimiento: null,
