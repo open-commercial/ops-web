@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule,  CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -11,8 +11,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
-import localeEsAR from '@angular/common/locales/es-AR';
-import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 import { ProductoFiltroComponent } from './components/producto-filtro/producto-filtro.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
@@ -100,8 +98,8 @@ import { ChartStatisticsMonthSupplierComponent } from './components/chart-statis
 import { ChartStatisticsYearComponent } from './components/chart-statistics-year/chart-statistics-year.component';
 import { ChartStatisticsYearSupplierComponent } from './components/chart-statistics-year-supplier/chart-statistics-year-supplier.component';
 import { ChartTableSupplierComponent } from './components/chart-table-supplier/chart-table-supplier.component';
-
-
+import localeEsAR from '@angular/common/locales/es-AR';
+import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -213,8 +211,7 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
-    
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }

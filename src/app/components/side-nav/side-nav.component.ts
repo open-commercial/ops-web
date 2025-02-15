@@ -16,28 +16,22 @@ export class SideNavComponent implements OnDestroy {
   tieneRolAdminOEncargado = false;
   tieneRolVendedor = false;
   isSidenavOpen = false;
-
   menuData = [];
-
   @Output() menuOptionClick = new EventEmitter<void>();
-
   @ViewChild('accordion') accordion: NgbAccordion;
-
   subscription: Subscription;
   url = '';
   accordionActiveId = '';
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              accordionConfig: NgbAccordionConfig,
-              private readonly changeDetectorRef: ChangeDetectorRef) {
+  constructor(private readonly authService: AuthService,
+              private readonly router: Router,              
+              private readonly changeDetectorRef: ChangeDetectorRef,
+              accordionConfig: NgbAccordionConfig,) {
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
-
     this.tieneRolAdministrador = this.authService.userHasAnyOfTheseRoles([Rol.ADMINISTRADOR]);
     this.tieneRolAdminOEncargado = this.authService.userHasAnyOfTheseRoles([Rol.ADMINISTRADOR, Rol.ENCARGADO]);
     this.tieneRolVendedor = this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR]);
-
     this.menuData = [
       {
         seccion: 'Administración',
@@ -205,7 +199,7 @@ export class SideNavComponent implements OnDestroy {
 
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      this.optionClick(); 
+      this.optionClick();
     }
   }
 }
