@@ -18,22 +18,22 @@
 				<div class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year [title]="'Compras por año'" [sucursal]="sucursalSeleccionada"
-								[chartType]="'compras'"></app-chart-statistics-year>
+							<app-chart-bar-graph-yearly [title]="'Compras por año'" [sucursal]="sucursalSeleccionada"
+								[chartType]="'compras'"></app-chart-bar-graph-yearly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year-supplier [title]="'Compras por año por proveedor'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'compras'"></app-chart-statistics-year-supplier>
+							<app-chart-table-yearly [title]="'Compras por año por proveedor'" [sucursal]="sucursalSeleccionada"
+								[dataType]="'compras'"></app-chart-table-yearly>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month [title]="'Compras por mes'" [sucursal]="sucursalSeleccionada"
-								[chartType]="'compras'"></app-chart-statistics-month>
+							<app-chart-bar-graph-monthly [title]="'Compras por mes'" [sucursal]="sucursalSeleccionada"
+								[chartType]="'compras'"></app-chart-bar-graph-monthly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month-supplier [title]="'Compras por mes por proveedor'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'compras'"></app-chart-statistics-month-supplier>
+							<app-chart-table-monthly [title]="'Compras por mes por proveedor'" [sucursal]="sucursalSeleccionada"
+								[dataType]="'compras'"></app-chart-table-monthly>
 						</div>
 					</div>
 				</div>
@@ -53,22 +53,22 @@
 				<div class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year [title]="'Ventas por año'" [sucursal]="sucursalSeleccionada"
-								[chartType]="'ventas'"></app-chart-statistics-year>
+							<app-chart-bar-graph-yearly [title]="'Ventas por año'" [sucursal]="sucursalSeleccionada"
+								[chartType]="'ventas'"></app-chart-bar-graph-yearly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-year-supplier [title]="'Ventas por año por cliente'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'ventas'"></app-chart-statistics-year-supplier>
+							<app-chart-table-yearly [title]="'Ventas por año por cliente'" [sucursal]="sucursalSeleccionada"
+								[dataType]="'ventas'"></app-chart-table-yearly>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month [title]="'Ventas por mes'" [sucursal]="sucursalSeleccionada"
-								[chartType]="'ventas'"></app-chart-statistics-month>
+							<app-chart-bar-graph-monthly [title]="'Ventas por mes'" [sucursal]="sucursalSeleccionada"
+								[chartType]="'ventas'"></app-chart-bar-graph-monthly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-statistics-month-supplier [title]="'Ventas por mes por cliente'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'ventas'"></app-chart-statistics-month-supplier>
+							<app-chart-table-monthly [title]="'Ventas por mes por cliente'" [sucursal]="sucursalSeleccionada"
+								[dataType]="'ventas'"></app-chart-table-monthly>
 						</div>
 					</div>
 				</div>

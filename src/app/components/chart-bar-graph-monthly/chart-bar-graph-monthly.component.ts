@@ -1,14 +1,14 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
+import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
-  selector: 'app-chart-statistics-month',
-  templateUrl: './chart-statistics-month.component.html',
-  styleUrls: ['./chart-statistics-month.component.scss']
+  selector: 'app-chart-bar-graph-monthly',
+  templateUrl: './chart-bar-graph-monthly.component.html',
+  styleUrls: ['./chart-bar-graph-monthly.component.scss']
 })
-export class ChartStatisticsMonthComponent extends ChartDirectiveDirective {
+export class ChartBarGraphMonthlyComponent extends ChartDirective {
   @Input() title: string = '';
   @Input() chartType: 'ventas' | 'compras' = 'compras';
   @Input() sucursal: Sucursal;

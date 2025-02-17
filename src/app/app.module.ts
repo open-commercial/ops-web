@@ -93,6 +93,7 @@ import { ConfiguracionComponent } from './components/configuracion/configuracion
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+<<<<<<< HEAD
 import { ChartStatisticsMonthComponent } from './components/chart-statistics-month/chart-statistics-month.component';
 import { ChartStatisticsMonthSupplierComponent } from './components/chart-statistics-month-supplier/chart-statistics-month-supplier.component';
 import { ChartStatisticsYearComponent } from './components/chart-statistics-year/chart-statistics-year.component';
@@ -100,6 +101,15 @@ import { ChartStatisticsYearSupplierComponent } from './components/chart-statist
 import { ChartTableSupplierComponent } from './components/chart-table-supplier/chart-table-supplier.component';
 import localeEsAR from '@angular/common/locales/es-AR';
 import localeEsARExtra from '@angular/common/locales/extra/es-AR';
+=======
+import { ChartBarGraphMonthlyComponent } from './components/chart-bar-graph-monthly/chart-bar-graph-monthly.component';
+import { ChartTableMonthlyComponent } from './components/chart-table-monthly/chart-table-monthly.component';
+import { ChartBarGraphYearlyComponent } from './components/chart-bar-graph-yearly/chart-bar-graph-yearly.component';
+import { ChartTableYearlyComponent } from './components/chart-table-yearly/chart-table-yearly.component';
+import { ChartTableComponent } from './components/chart-table/chart-table.component';
+
+
+>>>>>>> 0198fab (Adds correction of requested component names)
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -191,11 +201,11 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NuevoRenglonFacturaModalComponent,
         ConfiguracionComponent,
         DashboardComponent,
-        ChartStatisticsMonthComponent,
-        ChartStatisticsMonthSupplierComponent,
-        ChartStatisticsYearComponent,
-        ChartStatisticsYearSupplierComponent,
-        ChartTableSupplierComponent
+        ChartBarGraphMonthlyComponent,
+        ChartTableMonthlyComponent,
+        ChartBarGraphYearlyComponent,
+        ChartTableYearlyComponent,
+        ChartTableComponent
     ],
     imports: [
         BrowserModule,

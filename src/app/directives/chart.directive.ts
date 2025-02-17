@@ -4,9 +4,9 @@ import { ChartService } from '../services/chart.service';
 import { ChartConfiguration } from 'chart.js';
 
 @Directive({
-  selector: '[appChartDirective]'
+  selector: '[appChart]'
 })
-export abstract class ChartDirectiveDirective implements OnInit {
+export abstract class ChartDirective implements OnInit {
   years: number[] = []
   selectedYear: number = new Date().getFullYear();
   selectedMonth: number | null = new Date().getMonth() + 1;

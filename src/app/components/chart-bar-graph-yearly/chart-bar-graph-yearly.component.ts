@@ -1,14 +1,14 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
+import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
-  selector: 'app-chart-statistics-year',
-  templateUrl: './chart-statistics-year.component.html',
-  styleUrls: ['./chart-statistics-year.component.scss']
+  selector: 'app-chart-bar-graph-yearly',
+  templateUrl: './chart-bar-graph-yearly.component.html',
+  styleUrls: ['./chart-bar-graph-yearly.component.scss']
 })
-export class ChartStatisticsYearComponent extends ChartDirectiveDirective {
+export class ChartBarGraphYearlyComponent extends ChartDirective {
   @Input() title: string = '';
   @Input() chartType: 'compras' | 'ventas' = 'compras';
   @Input() sucursal: Sucursal;

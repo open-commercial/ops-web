@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChartInterface } from 'src/app/models/chart-interface';
 
 @Component({
-  selector: 'app-chart-table-supplier',
-  templateUrl: './chart-table-supplier.component.html',
-  styleUrls: ['./chart-table-supplier.component.scss']
+  selector: 'app-chart-table',
+  templateUrl: './chart-table.component.html',
+  styleUrls: ['./chart-table.component.scss']
 })
-export class ChartTableSupplierComponent {
+export class ChartTableComponent {
   @Input() title: string = '';
   @Input() suppliers: ChartInterface[] = [];
   @Input() years: number[] = [];

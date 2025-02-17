@@ -1,18 +1,16 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { ChartDirectiveDirective } from 'src/app/directives/chart-directive.directive';
+import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
-  selector: 'app-chart-statistics-month-supplier',
-  templateUrl: './chart-statistics-month-supplier.component.html'
+  selector: 'app-chart-table-yearly',
+  templateUrl: './chart-table-yearly.component.html'
 })
-export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirective {
+export class ChartTableYearlyComponent extends ChartDirective {
   @Input() title: string;
   @Input() dataType: 'compras' | 'ventas';
-  @Input() loadingData: boolean = false;
   @Input() sucursal: Sucursal;
-  @Input() selectedMonth: number;
   @Input() selectedYear: number;
   @Output() loadingDataChange = new EventEmitter<boolean>();
 
@@ -20,19 +18,23 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
     super(chartData);
   }
 
-  loadChartData(year: number, month: number): void {
+  loadChartData(year: number): void {
     this.loadingData = true;
-    this.loadingDataChange.emit(true);
-    const chartDataPurchaseSale = this.dataType === 'compras' ?
-      this.chartData.getChartDataPurchaseMonthSupplier(year, month) :
-      this.chartData.getChartDataSalesMonthSupplier(year, month);
+    const chartDataPurchaseSaleSupplier = this.dataType === 'compras' ?
+      this.chartData.getChartDataPurchaseAnnualSupplier(year) :
+      this.chartData.getChartDataSalesAnnualSupplier(year);
+      this.loadingDataChange.emit(true)
 
-        chartDataPurchaseSale.subscribe({
-          next: (data) => { this.handleChartData(data);
+    chartDataPurchaseSaleSupplier.subscribe({
+      next: (data) => { this.handleChartData(data);
                         this.loadingData = false;
                         this.loadingDataChange.emit(false);
       },
-      });
+      error: (err) => {console.log('Error al cargar datos', err);
+                        this.loadingData = false;
+                        this.loadingDataChange.emit(false);
+      }
+    })
   }
 
   setLoadingData(isloading: boolean) {
@@ -40,17 +42,15 @@ export class ChartStatisticsMonthSupplierComponent extends ChartDirectiveDirecti
   }
 
   isMonthOptional(): boolean {
-    return false;
+    return true;
   }
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
       this.selectedYear = currentYear;
-      this.selectedMonth = currentMonth;
-      this.loadChartData(this.selectedYear, this.selectedMonth);
+      this.loadChartData(this.selectedYear);
     }
   }
-    
+
 }
