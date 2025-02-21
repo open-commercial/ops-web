@@ -16,8 +16,8 @@ export class ChartBarGraphMonthlyComponent extends ChartDirective {
   chartDataArray: any[] = [];
   noDataAvailable: boolean = false;
 
-  constructor(protected chartData: ChartService) {
-    super(chartData);
+  constructor(private readonly chartService: ChartService) {
+    super()
   }
 
   override loadChartData(year: number): void {
@@ -26,12 +26,12 @@ export class ChartBarGraphMonthlyComponent extends ChartDirective {
     this.setLoadingState(true); 
 
     if (this.chartType === 'compras') {
-      this.chartData.getChartDataPurchaseMonth(year).subscribe(data => {
+      this.chartService.getChartDataPurchaseMonth(year).subscribe(data => {
         this.handleData(data, allList);
         this.setLoadingState(false); 
       });
     } else if (this.chartType === 'ventas') {
-      this.chartData.getChartDataSalesMonth(year).subscribe(data => {
+      this.chartService.getChartDataSalesMonth(year).subscribe(data => {
         this.handleData(data, allList);
         this.setLoadingState(false); 
       });

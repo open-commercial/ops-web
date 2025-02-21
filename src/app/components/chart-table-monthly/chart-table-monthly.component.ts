@@ -16,16 +16,16 @@ export class ChartTableMonthlyComponent extends ChartDirective {
   @Input() selectedYear: number;
   @Output() loadingDataChange = new EventEmitter<boolean>();
 
-  constructor(protected chartData: ChartService) {
-    super(chartData);
+  constructor(private readonly chartService: ChartService) {
+    super();
   }
 
   loadChartData(year: number, month: number): void {
     this.loadingData = true;
     this.loadingDataChange.emit(true);
     const chartDataPurchaseSale = this.dataType === 'compras' ?
-      this.chartData.getChartDataPurchaseMonthSupplier(year, month) :
-      this.chartData.getChartDataSalesMonthSupplier(year, month);
+      this.chartService.getChartDataPurchaseMonthSupplier(year, month) :
+      this.chartService.getChartDataSalesMonthSupplier(year, month);
 
         chartDataPurchaseSale.subscribe({
           next: (data) => { this.handleChartData(data);

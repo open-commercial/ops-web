@@ -1,11 +1,8 @@
 import { Directive, OnInit } from '@angular/core';
 import { ChartInterface } from '../models/chart-interface';
-import { ChartService } from '../services/chart.service';
 import { ChartConfiguration } from 'chart.js';
 
-@Directive({
-  selector: '[appChart]'
-})
+@Directive()
 export abstract class ChartDirective implements OnInit {
   years: number[] = []
   selectedYear: number = new Date().getFullYear();
@@ -60,8 +57,6 @@ export abstract class ChartDirective implements OnInit {
     }
   };
 
-  constructor(protected chartData: ChartService) { }
-
   ngOnInit(): void {
     this.years = this.generateYearData();
     this.months = this.generateMonthsData();
@@ -75,6 +70,7 @@ export abstract class ChartDirective implements OnInit {
   }
 
   abstract loadChartData(year: number, month?: number | null): void;
+
   protected setLoadingState(isloading: boolean): void {
     this.loadingData = isloading;
   }

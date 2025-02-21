@@ -14,15 +14,15 @@ export class ChartTableYearlyComponent extends ChartDirective {
   @Input() selectedYear: number;
   @Output() loadingDataChange = new EventEmitter<boolean>();
 
-  constructor(protected chartData: ChartService) {
-    super(chartData);
+  constructor(private readonly chartService: ChartService) {
+    super();
   }
 
   loadChartData(year: number): void {
     this.loadingData = true;
     const chartDataPurchaseSaleSupplier = this.dataType === 'compras' ?
-      this.chartData.getChartDataPurchaseAnnualSupplier(year) :
-      this.chartData.getChartDataSalesAnnualSupplier(year);
+      this.chartService.getChartDataPurchaseAnnualSupplier(year) :
+      this.chartService.getChartDataSalesAnnualSupplier(year);
       this.loadingDataChange.emit(true)
 
     chartDataPurchaseSaleSupplier.subscribe({

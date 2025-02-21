@@ -16,19 +16,19 @@ export class ChartBarGraphYearlyComponent extends ChartDirective {
   chartDataArray: any[] = [];
   noDataAvailable: boolean = false;
 
-  constructor(protected chartData: ChartService) {
-    super(chartData);
+  constructor(private readonly chartService: ChartService) {
+    super();
   }
 
   override loadChartData(): void {
     this.setLoadingState(true);
     if (this.chartType === 'compras') {
-      this.chartData.getChartDataPurchaseAnnual().subscribe(data => {
+      this.chartService.getChartDataPurchaseAnnual().subscribe(data => {
         this.handleData(data);
         this.setLoadingState(false);
       });
     } else if (this.chartType === 'ventas') {
-      this.chartData.getChartDataSalesAnnual().subscribe(data => {
+      this.chartService.getChartDataSalesAnnual().subscribe(data => {
         this.handleData(data);
         this.setLoadingState(false);
       });

@@ -193,8 +193,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         ConfiguracionComponent,
         DashboardComponent,
         ChartBarGraphMonthlyComponent,
-        ChartTableMonthlyComponent,
         ChartBarGraphYearlyComponent,
+        ChartTableMonthlyComponent,
         ChartTableYearlyComponent,
         ChartTableComponent
     ],
