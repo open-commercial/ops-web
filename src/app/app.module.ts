@@ -94,12 +94,11 @@ import { NgChartsModule } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartBarGraphMonthlyComponent } from './components/chart-bar-graph-monthly/chart-bar-graph-monthly.component';
-import { ChartTableMonthlyComponent } from './components/chart-table-monthly/chart-table-monthly.component';
 import { ChartBarGraphYearlyComponent } from './components/chart-bar-graph-yearly/chart-bar-graph-yearly.component';
-import { ChartTableYearlyComponent } from './components/chart-table-yearly/chart-table-yearly.component';
-import { ChartTableComponent } from './components/chart-table/chart-table.component';
 import localeEsAR from '@angular/common/locales/es-AR';
 import localeEsARExtra from '@angular/common/locales/extra/es-AR';
+import { ChartTableYearlyComponent } from './components/chart-table-yearly/chart-table-yearly.component';
+import { ChartTableMonthlyComponent } from './components/chart-table-monthly/chart-table-monthly.component';
 
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
@@ -194,9 +193,8 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         DashboardComponent,
         ChartBarGraphMonthlyComponent,
         ChartBarGraphYearlyComponent,
-        ChartTableMonthlyComponent,
         ChartTableYearlyComponent,
-        ChartTableComponent
+        ChartTableMonthlyComponent
     ],
     imports: [
         BrowserModule,

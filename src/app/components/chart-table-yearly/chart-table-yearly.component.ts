@@ -1,21 +1,32 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, SimpleChanges, Input } from '@angular/core';
 import { ChartDirective } from 'src/app/directives/chart.directive';
+import { ChartInterface } from 'src/app/models/chart-interface';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
+
 @Component({
   selector: 'app-chart-table-yearly',
-  templateUrl: './chart-table-yearly.component.html'
+  templateUrl: './chart-table-yearly.component.html',
+  styleUrls: ['./chart-table-yearly.component.scss']
 })
 export class ChartTableYearlyComponent extends ChartDirective {
-  @Input() title: string;
+  @Input() title: string = '';
   @Input() dataType: 'compras' | 'ventas';
-  @Input() sucursal: Sucursal;
+  @Input() years: number[] = [];
   @Input() selectedYear: number;
-  @Output() loadingDataChange = new EventEmitter<boolean>();
+  @Input() suppliers: ChartInterface[] = [];
+  @Input() sucursal: Sucursal;
 
-  constructor(private readonly chartService: ChartService) {
+
+  constructor(private readonly chartService: ChartService) { 
     super();
+  }
+
+  ngOnInit(): void {
+    this.years = this.generateYearData();
+    this.selectedYear = new Date().getFullYear();
+    this.loadChartData(this.selectedYear);
   }
 
   loadChartData(year: number): void {
@@ -23,16 +34,13 @@ export class ChartTableYearlyComponent extends ChartDirective {
     const chartDataPurchaseSaleSupplier = this.dataType === 'compras' ?
       this.chartService.getChartDataPurchaseAnnualSupplier(year) :
       this.chartService.getChartDataSalesAnnualSupplier(year);
-      this.loadingDataChange.emit(true)
 
     chartDataPurchaseSaleSupplier.subscribe({
       next: (data) => { this.handleChartData(data);
                         this.loadingData = false;
-                        this.loadingDataChange.emit(false);
       },
       error: (err) => {console.log('Error al cargar datos', err);
                         this.loadingData = false;
-                        this.loadingDataChange.emit(false);
       }
     })
   }
@@ -41,16 +49,12 @@ export class ChartTableYearlyComponent extends ChartDirective {
     this.loadingData = isloading;
   }
 
-  isMonthOptional(): boolean {
-    return true;
-  }
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
-      const currentYear = new Date().getFullYear();
-      this.selectedYear = currentYear;
-      this.loadChartData(this.selectedYear);
+   ngOnChanges(changes: SimpleChanges): void {
+      if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
+        const currentYear = new Date().getFullYear();
+        this.selectedYear = currentYear;
+        this.loadChartData(this.selectedYear);
+      }
     }
-  }
 
 }

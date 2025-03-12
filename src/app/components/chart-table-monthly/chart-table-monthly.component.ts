@@ -1,48 +1,47 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
 
 @Component({
   selector: 'app-chart-table-monthly',
-  templateUrl: './chart-table-monthly.component.html'
+  templateUrl: './chart-table-monthly.component.html',
+  styleUrls: ['./chart-table-monthly.component.scss']
 })
 export class ChartTableMonthlyComponent extends ChartDirective {
   @Input() title: string;
   @Input() dataType: 'compras' | 'ventas';
   @Input() loadingData: boolean = false;
-  @Input() sucursal: Sucursal;
   @Input() selectedMonth: number;
   @Input() selectedYear: number;
-  @Output() loadingDataChange = new EventEmitter<boolean>();
+  @Input() sucursal: Sucursal;
 
   constructor(private readonly chartService: ChartService) {
     super();
   }
 
+  ngOnInit(): void {
+    this.years = this.generateYearData();
+    this.selectedYear = new Date().getFullYear();
+    this.months = this.generateMonthsData();
+    this.selectedMonth = new Date().getMonth() + 1;
+    this.loadChartData(this.selectedYear, this.selectedMonth);
+  }
+
   loadChartData(year: number, month: number): void {
     this.loadingData = true;
-    this.loadingDataChange.emit(true);
     const chartDataPurchaseSale = this.dataType === 'compras' ?
-      this.chartService.getChartDataPurchaseMonthSupplier(year, month) :
-      this.chartService.getChartDataSalesMonthSupplier(year, month);
+    this.chartService.getChartDataPurchaseMonthSupplier(year, month) :
+    this.chartService.getChartDataSalesMonthSupplier(year, month);
 
-        chartDataPurchaseSale.subscribe({
-          next: (data) => { this.handleChartData(data);
-                        this.loadingData = false;
-                        this.loadingDataChange.emit(false);
+    chartDataPurchaseSale.subscribe({
+      next: (data) => {
+        this.handleChartData(data);
+        this.loadingData = false;
       },
-      });
+    });
   }
 
-  setLoadingData(isloading: boolean) {
-    this.loadingData = isloading;
-  }
-
-  isMonthOptional(): boolean {
-    return false;
-  }
-  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();
@@ -52,5 +51,5 @@ export class ChartTableMonthlyComponent extends ChartDirective {
       this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
-    
+
 }

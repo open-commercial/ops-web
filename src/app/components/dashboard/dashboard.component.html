@@ -8,9 +8,9 @@
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
 					<fa-icon *ngIf="acc.isExpanded('ngb-accordion-1')" [icon]="['fas', 'chevron-up']"
-					class="chevronStyle me-2"></fa-icon>
+						class="chevronStyle me-2"></fa-icon>
 					<fa-icon *ngIf="!acc.isExpanded('ngb-accordion-1')" [icon]="['fas', 'chevron-down']"
-					class="chevronStyle me-2"></fa-icon>
+						class="chevronStyle me-2"></fa-icon>
 					<span class="me-auto">Compras</span>
 				</div>
 			</ng-template>
@@ -22,8 +22,8 @@
 								[chartType]="'compras'"></app-chart-bar-graph-yearly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-yearly [title]="'Compras por año por proveedor'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'compras'"></app-chart-table-yearly>
+							<app-chart-table-yearly [title]="'Compras por año por proveedor'"
+								[sucursal]="sucursalSeleccionada" [dataType]="'compras'"></app-chart-table-yearly>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
@@ -32,8 +32,8 @@
 								[chartType]="'compras'"></app-chart-bar-graph-monthly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-monthly [title]="'Compras por mes por proveedor'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'compras'"></app-chart-table-monthly>
+							<app-chart-table-monthly [title]="'Compras por mes por proveedor'"
+								[sucursal]="sucursalSeleccionada" [dataType]="'compras'"></app-chart-table-monthly>
 						</div>
 					</div>
 				</div>
@@ -57,8 +57,8 @@
 								[chartType]="'ventas'"></app-chart-bar-graph-yearly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-yearly [title]="'Ventas por año por cliente'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'ventas'"></app-chart-table-yearly>
+							<app-chart-table-yearly [title]="'Ventas por año por cliente'"
+								[sucursal]="sucursalSeleccionada" [dataType]="'ventas'"></app-chart-table-yearly>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
@@ -67,8 +67,8 @@
 								[chartType]="'ventas'"></app-chart-bar-graph-monthly>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-monthly [title]="'Ventas por mes por cliente'" [sucursal]="sucursalSeleccionada"
-								[dataType]="'ventas'"></app-chart-table-monthly>
+							<app-chart-table-monthly [title]="'Ventas por mes por cliente'"
+								[sucursal]="sucursalSeleccionada" [dataType]="'ventas'"></app-chart-table-monthly>
 						</div>
 					</div>
 				</div>
