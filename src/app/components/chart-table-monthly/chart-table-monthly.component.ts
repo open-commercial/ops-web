@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
