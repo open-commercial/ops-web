@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import {environment} from '../../environments/environment';
-import {SucursalesService} from './sucursales.service';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {ConfiguracionSucursal} from '../models/configuracion-sucursal';
+import { environment } from '../../environments/environment';
+import { SucursalesService } from './sucursales.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ConfiguracionSucursal } from '../models/configuracion-sucursal';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class ConfiguracionesSucursalService {
   url = environment.apiUrl + '/api/v1/configuraciones-sucursal';
   constructor(private http: HttpClient,

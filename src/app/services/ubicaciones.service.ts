@@ -1,16 +1,14 @@
 import { Pagination } from './../models/pagination';
 import { BusquedaLocalidadCriteria } from './../models/criterias/busqueda-localidad-criteria';
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Ubicacion} from '../models/ubicacion';
-import {Observable} from 'rxjs';
-import {Provincia} from '../models/provincia';
-import {Localidad} from '../models/localidad';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Ubicacion } from '../models/ubicacion';
+import { Observable } from 'rxjs';
+import { Provincia } from '../models/provincia';
+import { Localidad } from '../models/localidad';
 import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class UbicacionesService {
 
   url = environment.apiUrl + '/api/v1/ubicaciones';

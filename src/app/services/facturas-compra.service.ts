@@ -4,17 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pagination } from '../models/pagination';
 import { BusquedaFacturaCompraCriteria } from '../models/criterias/busqueda-factura-compra-criteria';
-import {TipoDeComprobante} from '../models/tipo-de-comprobante';
-import {SucursalesService} from './sucursales.service';
-import {NuevoRenglonFactura} from '../models/nuevo-renglon-factura';
-import {RenglonFactura} from '../models/renglon-factura';
-import {HelperService} from './helper.service';
-import {NuevaFacturaCompra} from '../models/nueva-factura-compra';
-import {FacturaCompra} from '../models/factura-compra';
+import { TipoDeComprobante } from '../models/tipo-de-comprobante';
+import { SucursalesService } from './sucursales.service';
+import { NuevoRenglonFactura } from '../models/nuevo-renglon-factura';
+import { RenglonFactura } from '../models/renglon-factura';
+import { HelperService } from './helper.service';
+import { NuevaFacturaCompra } from '../models/nueva-factura-compra';
+import { FacturaCompra } from '../models/factura-compra';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class FacturasCompraService {
   url = environment.apiUrl + '/api/v1/facturas/compras';
   urlBusqueda = this.url + '/busqueda/criteria';

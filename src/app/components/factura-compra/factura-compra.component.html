@@ -9,7 +9,8 @@
     </h1>
   </div>
   <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
-    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="proveedorPanel" (panelChange)="panelBeforeChange($event)">
+    <ngb-accordion class="ops-accordion" #accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="proveedorPanel"
+      (panelChange)="panelBeforeChange($event)">
       <ngb-panel id="proveedorPanel">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
@@ -30,15 +31,15 @@
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
             <fa-icon [icon]="['fas', accordion.isExpanded('tipoDeComprobantePanel') ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
-            <span>Tipo de Comprobante{{ (form.get('tipoDeComprobante') && form.get('tipoDeComprobante').value) ? ': ' + form.get('tipoDeComprobante').value.toString().replace('_', ' ') : '' }}</span>
+            <span>Tipo de Comprobante: {{ getTipoComprobanteLabel() }}</span>
           </span>
         </ng-template>
         <ng-template ngbPanelContent>
           <div class="mb-3">
-            <label for="tipoDeComprobante" class="form-label">Tipo de Factura</label>
+            <label for="tipoDeComprobante" class="form-label">Seleccione un Tipo de Comprobante</label>
             <select class="form-select" id="tipoDeComprobante" formControlName="tipoDeComprobante"
-                    [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">
-              <option *ngFor="let tc of tiposDeComprobantes" [value]="tc">{{ helper.tipoComprobanteLabel(tc) }}</option>
+                    [ngClass]="{ 'is-invalid': submitted && f.tipoDeComprobante.errors }">              
+              <option *ngFor="let tc of tiposDeComprobanteLabesForCombo" [value]="tc.val">{{ tc.text }}</option>
             </select>
             <div class="invalid-feedback" *ngIf="submitted && f.tipoDeComprobante.errors">
               <div *ngIf="f.tipoDeComprobante.errors.required">Requerido</div>
@@ -56,7 +57,6 @@
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-6">
-              <span>Nº de Factura</span>
               <div class="border rounded p-2 mb-3">
                 <div class="row">
                   <div class="col-4">

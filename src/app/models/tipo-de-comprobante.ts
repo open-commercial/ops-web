@@ -6,7 +6,7 @@ export enum TipoDeComprobante {
   FACTURA_Y = 'FACTURA_Y', // notas de credito
   PEDIDO = 'PEDIDO',
   PRESUPUESTO = 'PRESUPUESTO', // notas de credito
-  RECIBO = 'RECIBO', // NOtas de debito
+  RECIBO = 'RECIBO', // notas de debito
   GASTO = 'GASTO',
   NOTA_CREDITO_A = 'NOTA_CREDITO_A',
   NOTA_CREDITO_B = 'NOTA_CREDITO_B',

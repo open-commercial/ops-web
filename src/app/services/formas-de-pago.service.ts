@@ -4,9 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FormaDePago } from '../models/forma-de-pago';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class FormasDePagoService {
   url = environment.apiUrl + '/api/v1/formas-de-pago';
 

@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
-import {environment} from '../../environments/environment';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Nota, NotaCredito, NotaDebito} from '../models/nota';
-import {BusquedaNotaCriteria} from '../models/criterias/busqueda-nota-criteria';
-import {Pagination} from '../models/pagination';
-import {TipoDeComprobante} from '../models/tipo-de-comprobante';
-import {NuevaNotaCreditoSinFactura} from '../models/nueva-nota-credito-sin-factura';
-import {HelperService} from './helper.service';
-import {NuevaNotaCreditoDeFactura} from '../models/nueva-nota-credito-de-factura';
-import {NuevaNotaDebitoSinRecibo} from '../models/nueva-nota-debito-sin-recibo';
-import {NuevaNotaDebitoDeRecibo} from '../models/nueva-nota-debito-de-recibo';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Nota, NotaCredito, NotaDebito } from '../models/nota';
+import { BusquedaNotaCriteria } from '../models/criterias/busqueda-nota-criteria';
+import { Pagination } from '../models/pagination';
+import { TipoDeComprobante } from '../models/tipo-de-comprobante';
+import { NuevaNotaCreditoSinFactura } from '../models/nueva-nota-credito-sin-factura';
+import { HelperService } from './helper.service';
+import { NuevaNotaCreditoDeFactura } from '../models/nueva-nota-credito-de-factura';
+import { NuevaNotaDebitoSinRecibo } from '../models/nueva-nota-debito-sin-recibo';
+import { NuevaNotaDebitoDeRecibo } from '../models/nueva-nota-debito-de-recibo';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class NotasService {
   url = environment.apiUrl + '/api/v1/notas';
 

@@ -4,14 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BusquedaRemitoCriteria } from '../models/criterias/busqueda-remito-criteria';
 import { Pagination } from '../models/pagination';
-import {Remito} from '../models/remito';
-import {RenglonRemito} from '../models/renglon-remito';
-import {NuevoRemito} from '../models/nuevo-remito';
+import { Remito } from '../models/remito';
+import { RenglonRemito } from '../models/renglon-remito';
+import { NuevoRemito } from '../models/nuevo-remito';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class RemitosService {
+
   url = environment.apiUrl + '/api/v1/remitos';
   urlBusqueda = this.url + '/busqueda/criteria';
 

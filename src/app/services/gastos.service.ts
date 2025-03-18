@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import {environment} from '../../environments/environment';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Gasto} from '../models/gasto';
-import {NuevoGasto} from '../models/nuevo-gasto';
-import {BusquedaGastoCriteria} from '../models/criterias/busqueda-gasto-criteria';
-import {Pagination} from '../models/pagination';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Gasto } from '../models/gasto';
+import { NuevoGasto } from '../models/nuevo-gasto';
+import { BusquedaGastoCriteria } from '../models/criterias/busqueda-gasto-criteria';
+import { Pagination } from '../models/pagination';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class GastosService {
 
   url = environment.apiUrl + '/api/v1/gastos';

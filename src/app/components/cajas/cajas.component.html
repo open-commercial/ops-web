@@ -35,16 +35,16 @@
   <div class="cajas my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge ms-2 mb-2 px-2 py-1"
+        <span class="badge ms-2 mb-2"
               [class.text-bg-success]="item.estado === estado.ABIERTA"
               [class.text-bg-danger]="item.estado === estado.CERRADA">
           {{ item.estado }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
           Apertura: {{ item.fechaApertura | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.fechaCierre">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.fechaCierre">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
           Cierre: {{ item.fechaCierre | date:'dd/MM/yyyy HH:mm' }}
         </span>

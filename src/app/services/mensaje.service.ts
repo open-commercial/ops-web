@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { MensajeModalComponent, MensajeModalType } from '../components/mensaje-modal/mensaje-modal.component';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class MensajeService {
 
-  constructor(config: NgbModalConfig, private modalService: NgbModal) {
+  constructor(config: NgbModalConfig, private readonly modalService: NgbModal) {
     config.backdrop = 'static';
     config.keyboard = false;
   }

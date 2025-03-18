@@ -6,10 +6,9 @@ import { Pagination } from '../models/pagination';
 import { BusquedaProveedorCriteria } from '../models/criterias/busqueda-proveedor-criteria';
 import { Proveedor } from '../models/proveedor';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class ProveedoresService {
+  
   url = environment.apiUrl + '/api/v1/proveedores';
   urlBusqueda = this.url + '/busqueda/criteria';
 

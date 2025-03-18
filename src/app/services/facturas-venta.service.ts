@@ -12,9 +12,7 @@ import { SucursalesService } from './sucursales.service';
 import { NuevaFacturaVenta } from '../models/nueva-factura-venta';
 import { HelperService } from './helper.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class FacturasVentaService {
   url = environment.apiUrl + '/api/v1/facturas/ventas';
   urlBusqueda = this.url + '/busqueda/criteria';

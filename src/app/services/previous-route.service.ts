@@ -2,9 +2,7 @@ import { Router, RoutesRecognized } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, pairwise } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class PreviousRouteService {
 
   public previousRoute$ = new BehaviorSubject<string>('');

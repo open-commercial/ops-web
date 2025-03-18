@@ -16,9 +16,7 @@ export interface BatchActionElement {
   description: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class BatchActionsService {
   static getBatchElementFn(key: BatchActionKey): (item: any) => BatchActionElement {
     if (key === BatchActionKey.PRODUCTOS) {

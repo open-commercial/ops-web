@@ -59,13 +59,13 @@
         <span class="badge text-bg-light border border-secondary ms-2 mb-2">
           Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
         </span>
-        <span class="badge text-bg-{{ item.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-{{ item.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} ms-2 mb-2">
           <fa-icon [icon]="['fas', 'check']" *ngIf="item.cliente.puedeComprarAPlazo"></fa-icon>
           <fa-icon [icon]="['fas', 'times']" *ngIf="!item.cliente.puedeComprarAPlazo"></fa-icon>
           &nbsp;{{ item.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.cliente.predeterminado">
-          Cliente Predeterminado
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.cliente.predeterminado">
+          Predeterminado
         </span>
       </div>
       <div class="row">

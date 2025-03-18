@@ -5,8 +5,8 @@
     </div>
     <div *ngIf="ccc && !refreshing" class="d-flex flex-column">
       <div>
-        <span class="badge text-bg-secondary me-2 mb-2">#{{ ccc.cliente.nroCliente }}</span>
-        <span class="badge text-bg-{{ ccc.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} mb-2 px-2 py-1">
+        <span class="badge text-bg-dark me-2 mb-2">#{{ ccc.cliente.nroCliente }}</span>
+        <span class="badge text-bg-{{ ccc.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} mb-2">
           <fa-icon [icon]="['fas', 'check']" *ngIf="ccc.cliente.puedeComprarAPlazo"></fa-icon>
           <fa-icon [icon]="['fas', 'times']" *ngIf="!ccc.cliente.puedeComprarAPlazo"></fa-icon>
           &nbsp;{{ ccc.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
@@ -37,19 +37,19 @@
     <ul class="list-unstyled p-0 m-0">
       <li class="mb-2">
         <button class="btn btn-primary" type="button" (click)="showCccModal()"
-          ngbPopover="Seleccione un cliente" triggers="mouseenter:mouseleave" placement="left">
+          ngbPopover="Buscar Cliente" triggers="mouseenter:mouseleave" placement="left">
           <fa-icon [icon]="['fas', 'search']"></fa-icon>
         </button>
       </li>
       <li class="mb-2" *ngIf="ccc && ccc.cliente && hasRoleToEditClientes">
         <button class="btn btn-primary" type="button" (click)="editCliente()"
-          ngbPopover="Editar cliente" triggers="mouseenter:mouseleave" placement="left">
+          ngbPopover="Editar Cliente" triggers="mouseenter:mouseleave" placement="left">
           <fa-icon [icon]="['fas', 'pen']"></fa-icon>
         </button>
       </li>
       <li class="mb-2" *ngIf="hasRoleToCreateClientes">
         <button class="btn btn-primary" type="button" (click)="addCliente()"
-          ngbPopover="Nuevo cliente" triggers="mouseenter:mouseleave" placement="left">
+          ngbPopover="Nuevo Cliente" triggers="mouseenter:mouseleave" placement="left">
           <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </button>
       </li>

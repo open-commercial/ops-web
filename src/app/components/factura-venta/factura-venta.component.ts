@@ -1,11 +1,11 @@
 import { FormasDePagoService } from './../../services/formas-de-pago.service';
 import { FormaDePago } from './../../models/forma-de-pago';
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacturasService } from '../../services/facturas.service';
 import { HelperService } from '../../services/helper.service';
-import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordion, NgbAccordionConfig, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Location } from '@angular/common';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
@@ -27,9 +27,9 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
 import { FacturaVenta } from '../../models/factura-venta';
 import { Transportista } from '../../models/transportista';
 import { Subscription, combineLatest } from 'rxjs';
-import {Usuario} from '../../models/usuario';
-import {AuthService} from '../../services/auth.service';
-import {Rol} from '../../models/rol';
+import { Usuario } from '../../models/usuario';
+import { AuthService } from '../../services/auth.service';
+import { Rol } from '../../models/rol';
 
 @Component({
   selector: 'app-factura-venta',
@@ -41,56 +41,48 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;
   submitted = false;
   loading = false;
-
   helper = HelperService;
-
   localStorageKey = StorageKeys.PEDIDO_FACTURAR;
   tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
-
-  tiposDeComprobanteLabels = [
-    { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
-    { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
-    { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
-    { val: TipoDeComprobante.FACTURA_Y, text: 'Factura Y' },
-    { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' },
-  ];
-
   loadingResultados = false;
   resultados: Resultados;
   recalculandoRenglones = false;
-
   verificandoPedido = false;
   pedido: Pedido = null;
-
   saving = false;
-
   transportistaSeleccionado: Transportista = null;
-
-  @ViewChild('accordion') accordion: NgbAccordion;
-  @ViewChild('checkAllToggler') checkAllToggler: ElementRef;
   checkingAll = false;
   checkingRenglon = false;
-
   subscription: Subscription;
-
   usuario: Usuario = null;
-
   formasDePago: FormaDePago[] = [];
   formaDePagoPredeterminada: FormaDePago;
 
-  constructor(private fb: UntypedFormBuilder,
-              modalConfig: NgbModalConfig,
+  tiposDeComprobanteLabels = [
+    { val: TipoDeComprobante.FACTURA_A,   text: 'Factura A'   },
+    { val: TipoDeComprobante.FACTURA_B,   text: 'Factura B'   },
+    { val: TipoDeComprobante.FACTURA_C,   text: 'Factura C'   },
+    { val: TipoDeComprobante.FACTURA_X,   text: 'Factura X'   },
+    { val: TipoDeComprobante.FACTURA_Y,   text: 'Factura Y'   },
+    { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' }
+  ];
+
+  @ViewChild('accordion') accordion: NgbAccordion;
+  @ViewChild('checkAllToggler') checkAllToggler: ElementRef;  
+
+  constructor(modalConfig: NgbModalConfig,
               accordionConfig: NgbAccordionConfig,
-              private facturasService: FacturasService,
-              private facturasVentaService: FacturasVentaService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private location: Location,
-              private cuentasCorrienteService: CuentasCorrientesService,
-              private mensajeService: MensajeService,
-              private sucursalesService: SucursalesService,
-              private storageService: StorageService,
-              private pedidosService: PedidosService,
+              private readonly fb: UntypedFormBuilder,
+              private readonly facturasService: FacturasService,
+              private readonly facturasVentaService: FacturasVentaService,
+              private readonly route: ActivatedRoute,
+              private readonly router: Router,
+              private readonly location: Location,
+              private readonly cuentasCorrienteService: CuentasCorrientesService,
+              private readonly mensajeService: MensajeService,
+              private readonly sucursalesService: SucursalesService,
+              private readonly storageService: StorageService,
+              private readonly pedidosService: PedidosService,
               public loadingOverlayService: LoadingOverlayService,
               public formasDePagoService: FormasDePagoService,
               public authService: AuthService) {
@@ -120,10 +112,9 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
           this.verificarPedido();
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+      });
 
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.handleTiposComprobantes()));
+    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.getTiposDeComprobante()));
   }
 
   ngOnDestroy() {
@@ -179,17 +170,16 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
             next: (ccc: CuentaCorrienteCliente) => {
               data.ccc = ccc;
               this.storageService.setItem(this.localStorageKey, data);
-              this.ininicializarForm();
+              this.inicializarForm();
             },
             error: err => {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-                .then(() => this.router.navigate(['/pedidos']))
-              ;
+                .then(() => this.router.navigate(['/pedidos']));
             }
           })
         ;
       } else {
-        this.ininicializarForm();
+        this.inicializarForm();
       }
     } else {
       this.mensajeService.msg('No se ha especificado un pedido', MensajeModalType.ERROR)
@@ -236,16 +226,15 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
     });
   }
 
-  ininicializarForm() {
+  inicializarForm() {
     this.form.get('ccc').valueChanges.subscribe(() => {
-      this.handleTiposComprobantes();
+      this.getTiposDeComprobante();
     });
 
     this.loadForm();
 
     this.form.get('tipoDeComprobante').valueChanges
-      .subscribe(() => { this.recalcularRenglones(); })
-    ;
+      .subscribe(() => this.recalcularRenglones());
 
     this.form.get('descuento').valueChanges
       .pipe(debounceTime(700))
@@ -267,8 +256,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
           return;
         }
         this.calcularResultados();
-      })
-    ;
+      });
 
     this.form.valueChanges.subscribe(v => this.storageService.setItem(this.localStorageKey, v));
   }
@@ -306,26 +294,22 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   get f() { return this.form.controls; }
 
-  handleTiposComprobantes() {
-    const ccc: CuentaCorrienteCliente = this.form && this.form.get('ccc') && this.form.get('ccc').value ?
+  getTiposDeComprobante() {
+    const ccc: CuentaCorrienteCliente = this.form?.get('ccc')?.value ?
       this.form.get('ccc').value : null;
-    const cliente = ccc && ccc.cliente ? ccc.cliente : null;
+    const cliente = ccc?.cliente ?? null;
     if (!cliente) { return; }
     this.loadingOverlayService.activate();
     this.facturasVentaService.getTiposDeComprobante(cliente.idCliente)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((tipos: TipoDeComprobante[]) => {
-        let tdc = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value
-          ? this.form.get('tipoDeComprobante').value : null;
-        this.tiposDeComprobanteLabesForCombo = this.createTiposDeComprobantesForCombo(tipos);
-        if (tipos.indexOf(tdc) < 0) { tdc = tipos.length ? tipos[0] : null; }
+        let tdc = this.form?.get('tipoDeComprobante')?.value ?? null;
+        this.tiposDeComprobanteLabesForCombo = this.tiposDeComprobanteLabels.filter(tcl => tipos?.indexOf(tcl.val) >= 0);
+        if (tipos.indexOf(tdc) < 0) {
+          tdc = tipos.length ? tipos[0] : null;
+        }
         this.form.get('tipoDeComprobante').setValue(tdc);
-      })
-    ;
-  }
-
-  createTiposDeComprobantesForCombo(tipos: TipoDeComprobante[]) {
-    return this.tiposDeComprobanteLabels.filter(tcl => tipos.indexOf(tcl.val) >= 0);
+      });
   }
 
   get renglones() {
@@ -365,7 +349,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   }
 
   recalcularRenglones() {
-    const tipoDeComprobante = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value ?
+    const tipoDeComprobante = this.form?.get('tipoDeComprobante')?.value ?
       this.form.get('tipoDeComprobante').value : null;
 
     if (!tipoDeComprobante) { return; }
@@ -502,7 +486,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   }
 
   getTipoComprobanteLabel() {
-    const tipoDeComprobante = this.form && this.form.get('tipoDeComprobante') && this.form.get('tipoDeComprobante').value ?
+    const tipoDeComprobante = this.form?.get('tipoDeComprobante')?.value ?
       this.form.get('tipoDeComprobante').value : null;
     if (tipoDeComprobante) {
       const aux = this.tiposDeComprobanteLabels.filter(tc => tc.val === tipoDeComprobante);
@@ -512,7 +496,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   }
 
   esComprobanteDivido() {
-    if (!this.form || !this.form.get('renglones')) {
+    if (!this.form?.get('renglones')) {
       return false;
     }
     const formValue = this.form.value;

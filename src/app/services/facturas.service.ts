@@ -7,9 +7,7 @@ import { NuevosResultadosComprobante } from '../models/nuevos-resultados-comprob
 import { Resultados } from '../models/resultados';
 import { RenglonFactura } from '../models/renglon-factura';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class FacturasService {
   url = environment.apiUrl + '/api/v1/facturas';
 

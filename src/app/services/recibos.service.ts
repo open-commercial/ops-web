@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import {environment} from '../../environments/environment';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Recibo} from '../models/recibo';
-import {BusquedaReciboCriteria} from '../models/criterias/busqueda-recibo-criteria';
-import {Pagination} from '../models/pagination';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Recibo } from '../models/recibo';
+import { BusquedaReciboCriteria } from '../models/criterias/busqueda-recibo-criteria';
+import { Pagination } from '../models/pagination';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class RecibosService {
 
   url = environment.apiUrl + '/api/v1/recibos';

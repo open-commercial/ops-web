@@ -4,9 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Medida } from '../models/medida';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class MedidasService {
 
   url = environment.apiUrl + '/api/v1/medidas';
