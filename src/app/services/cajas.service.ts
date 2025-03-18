@@ -4,14 +4,12 @@ import { BusquedaCajaCriteria } from '../models/criterias/busqueda-caja-criteria
 import { Pagination } from '../models/pagination';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {Caja} from '../models/caja';
-import {SucursalesService} from './sucursales.service';
-import {MovimientoCaja} from '../models/movimiento-caja';
-import {HelperService} from './helper.service';
+import { Caja } from '../models/caja';
+import { SucursalesService } from './sucursales.service';
+import { MovimientoCaja } from '../models/movimiento-caja';
+import { HelperService } from './helper.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class CajasService {
   url = environment.apiUrl + '/api/v1/cajas';
   urlBusqueda = this.url + '/busqueda/criteria';

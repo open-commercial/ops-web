@@ -11,9 +11,7 @@ import { StorageKeys, StorageService } from './storage.service';
 import { LoadingOverlayService } from './loading-overlay.service';
 import { Rol } from '../models/rol';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class AuthService {
 
   urlLogin = environment.apiUrl + '/api/v1/login';

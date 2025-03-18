@@ -11,7 +11,6 @@ import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
 import { BusquedaFacturaCompraCriteria } from '../../models/criterias/busqueda-factura-compra-criteria';
 import { SucursalesService } from '../../services/sucursales.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
 import { Observable, combineLatest } from 'rxjs';
 import { Producto } from '../../models/producto';
 import { ProveedoresService } from '../../services/proveedores.service';
@@ -23,6 +22,7 @@ import { FiltroOrdenamientoComponent } from '../filtro-ordenamiento/filtro-orden
 import { ListadoDirective } from '../../directives/listado.directive';
 import { MensajeService } from '../../services/mensaje.service';
 import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-facturas-compra',
@@ -75,10 +75,10 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
-              private facturasCompraService: FacturasCompraService,
-              private fb: UntypedFormBuilder,
-              private proveedoresService: ProveedoresService,
-              private productosService: ProductosService,
+              private readonly facturasCompraService: FacturasCompraService,
+              private readonly fb: UntypedFormBuilder,
+              private readonly proveedoresService: ProveedoresService,
+              private readonly productosService: ProductosService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
               protected authService: AuthService) {
@@ -86,7 +86,6 @@ export class FacturasCompraComponent extends ListadoDirective implements OnInit 
     this.hasRoleToSee = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSee);
     this.hasRoleToCreate = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreate);
     this.hasRoleToSeeTotales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSeeTotales);
-
     this.totalesData[0].hasRole = this.hasRoleToSeeTotales;
     this.totalesData[1].hasRole = this.hasRoleToSeeTotales;
   }

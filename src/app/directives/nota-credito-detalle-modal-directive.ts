@@ -48,7 +48,7 @@ export default abstract class NotaCreditoDetalleModalDirective implements OnInit
         title += '"P"';
         break;
       default:
-        throw new Error('El tipo de comprobante no es una nota de crédito.');
+        throw new Error('El tipo de comprobante no es una Nota de Crédito.');
         // break;
     }
     return title;

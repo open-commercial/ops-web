@@ -8,9 +8,7 @@ import { CuentaCorrienteCliente, CuentaCorrienteProveedor } from '../models/cuen
 import { HelperService } from './helper.service';
 import { BusquedaCuentaCorrienteProveedorCriteria } from '../models/criterias/busqueda-cuenta-corriente-proveedor-criteria';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class CuentasCorrientesService {
   url = environment.apiUrl + '/api/v1/cuentas-corriente';
   urlBusquedaCuentasCorrienteCliente = this.url + '/clientes/busqueda/criteria';

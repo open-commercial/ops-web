@@ -51,13 +51,13 @@
               [class.text-bg-danger]="item.estado === estado.CANCELADO">
           {{ item.estado }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.fechaVencimiento">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.fechaVencimiento">
           Venc.: {{ item.fechaVencimiento | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           #{{ item.nroPedido }}
         </span>
       </div>

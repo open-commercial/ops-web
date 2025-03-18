@@ -6,9 +6,7 @@ import { Cliente } from '../models/cliente';
 import { Pagination } from '../models/pagination';
 import { BusquedaClienteCriteria } from '../models/criterias/busqueda-cliente-criteria';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class ClientesService {
   url = environment.apiUrl + '/api/v1/clientes';
   urlBusqueda = this.url + '/busqueda/criteria';

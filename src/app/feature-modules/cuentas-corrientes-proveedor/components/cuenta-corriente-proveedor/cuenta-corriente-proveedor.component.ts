@@ -1,38 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
-import {MensajeService} from '../../../../services/mensaje.service';
-import {DatePipe} from '@angular/common';
-import {CuentasCorrientesService} from '../../../../services/cuentas-corrientes.service';
-import {finalize} from 'rxjs/operators';
-import {CuentaCorrienteProveedor} from '../../../../models/cuenta-corriente';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
-import {Observable} from 'rxjs';
-import {Pagination} from '../../../../models/pagination';
-import {RenglonCuentaCorriente} from '../../../../models/renglon-cuenta-corriente';
-import {HelperService} from '../../../../services/helper.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NotaCreditoCompraSinFacturaModalComponent} from '../nota-credito-compra-sin-factura-modal/nota-credito-compra-sin-factura-modal.component';
-import {NuevaNotaCreditoSinFactura} from '../../../../models/nueva-nota-credito-sin-factura';
-import {Nota, NotaCredito, NotaDebito} from '../../../../models/nota';
-import {NotaCreditoCompraDetalleSinFacturaModalComponent} from '../nota-credito-compra-detalle-sin-factura-modal/nota-credito-compra-detalle -sin-factura-modal.component';
-import {TipoDeComprobante} from '../../../../models/tipo-de-comprobante';
-import {Rol} from '../../../../models/rol';
-import {AuthService} from '../../../../services/auth.service';
-import {NotasService} from '../../../../services/notas.service';
-import {
-  NotaDebitoCompraSinReciboModalComponent
-} from '../nota-debito-compra-sin-recibo-modal/nota-debito-compra-sin-recibo-modal.component';
-import {NuevaNotaDebitoSinRecibo} from '../../../../models/nueva-nota-debito-sin-recibo';
-import {NotaDebitoCompraDetalleSinReciboModalComponent} from '../nota-debito-compra-detalle-sin-recibo-modal/nota-debito-compra-detalle-sin-recibo-modal.component';
-import {NotaCreditoCompraFacturaModalComponent} from '../nota-credito-compra-factura-modal/nota-credito-compra-factura-modal.component';
-import {NuevaNotaCreditoDeFactura} from '../../../../models/nueva-nota-credito-de-factura';
-import {NotaCreditoCompraDetalleFacturaModalComponent} from '../nota-credito-compra-detalle-factura-modal/nota-credito-compra-detalle-factura-modal.component';
-import {NotaDebitoCompraReciboModalComponent} from '../nota-debito-compra-recibo-modal/nota-debito-compra-recibo-modal.component';
-import {NuevaNotaDebitoDeRecibo} from '../../../../models/nueva-nota-debito-de-recibo';
-import {NotaDebitoCompraDetalleReciboModalComponent} from '../nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
-import {ReciboProveedorModalComponent} from '../../../../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
-import {RecibosService} from '../../../../services/recibos.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingOverlayService } from '../../../../services/loading-overlay.service';
+import { MensajeService } from '../../../../services/mensaje.service';
+import { DatePipe } from '@angular/common';
+import { CuentasCorrientesService } from '../../../../services/cuentas-corrientes.service';
+import { finalize } from 'rxjs/operators';
+import { CuentaCorrienteProveedor } from '../../../../models/cuenta-corriente';
+import { MensajeModalType } from '../../../../components/mensaje-modal/mensaje-modal.component';
+import { Observable } from 'rxjs';
+import { Pagination } from '../../../../models/pagination';
+import { RenglonCuentaCorriente } from '../../../../models/renglon-cuenta-corriente';
+import { HelperService } from '../../../../services/helper.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NotaCreditoCompraSinFacturaModalComponent } from '../nota-credito-compra-sin-factura-modal/nota-credito-compra-sin-factura-modal.component';
+import { NuevaNotaCreditoSinFactura } from '../../../../models/nueva-nota-credito-sin-factura';
+import { Nota, NotaCredito, NotaDebito } from '../../../../models/nota';
+import { NotaCreditoCompraDetalleSinFacturaModalComponent } from '../nota-credito-compra-detalle-sin-factura-modal/nota-credito-compra-detalle -sin-factura-modal.component';
+import { TipoDeComprobante } from '../../../../models/tipo-de-comprobante';
+import { Rol } from '../../../../models/rol';
+import { AuthService } from '../../../../services/auth.service';
+import { NotasService } from '../../../../services/notas.service';
+import { NotaDebitoCompraSinReciboModalComponent } from '../nota-debito-compra-sin-recibo-modal/nota-debito-compra-sin-recibo-modal.component';
+import { NuevaNotaDebitoSinRecibo } from '../../../../models/nueva-nota-debito-sin-recibo';
+import { NotaDebitoCompraDetalleSinReciboModalComponent } from '../nota-debito-compra-detalle-sin-recibo-modal/nota-debito-compra-detalle-sin-recibo-modal.component';
+import { NotaCreditoCompraFacturaModalComponent } from '../nota-credito-compra-factura-modal/nota-credito-compra-factura-modal.component';
+import { NuevaNotaCreditoDeFactura } from '../../../../models/nueva-nota-credito-de-factura';
+import { NotaCreditoCompraDetalleFacturaModalComponent } from '../nota-credito-compra-detalle-factura-modal/nota-credito-compra-detalle-factura-modal.component';
+import { NotaDebitoCompraReciboModalComponent } from '../nota-debito-compra-recibo-modal/nota-debito-compra-recibo-modal.component';
+import { NuevaNotaDebitoDeRecibo } from '../../../../models/nueva-nota-debito-de-recibo';
+import { NotaDebitoCompraDetalleReciboModalComponent } from '../nota-debito-compra-detalle-recibo-modal/nota-debito-compra-detalle-recibo-modal.component';
+import { ReciboProveedorModalComponent } from '../../../../components/recibo-proveedor-modal/recibo-proveedor-modal.component';
+import { RecibosService } from '../../../../services/recibos.service';
 import { ListadoDirective } from 'src/app/directives/listado.directive';
 import { SucursalesService } from 'src/app/services/sucursales.service';
 import { PreviousRouteService } from 'src/app/services/previous-route.service';
@@ -92,13 +90,13 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
               protected sucursalesService: SucursalesService,
               protected loadingOverlayService: LoadingOverlayService,
               protected mensajeService: MensajeService,
-              private previousRouteService: PreviousRouteService,
-              private cuentasCorrientesService: CuentasCorrientesService,
-              private modalService: NgbModal,
-              private authService: AuthService,
-              private notasService: NotasService,
-              private recibosService: RecibosService,
-              private datePipe: DatePipe) {
+              private readonly previousRouteService: PreviousRouteService,
+              private readonly cuentasCorrientesService: CuentasCorrientesService,
+              private readonly modalService: NgbModal,
+              private readonly authService: AuthService,
+              private readonly notasService: NotasService,
+              private readonly recibosService: RecibosService,
+              private readonly datePipe: DatePipe) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 

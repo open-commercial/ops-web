@@ -53,7 +53,7 @@ export abstract class NotaDebitoDetalleModalDirective implements OnInit {
         title += '"P"';
         break;
       default:
-        throw new Error('El tipo de comprobante no es una nota de débito.');
+        throw new Error('El tipo de comprobante no es una Nota de Débito.');
       // break;
     }
     return title;

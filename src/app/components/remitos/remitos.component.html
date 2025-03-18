@@ -47,10 +47,10 @@
   <div class="remitos my-2">
     <ng-template #info let-item let-i="index" id="infoR">
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           #{{ helper.formatNumRemito(item.serie, item.nroRemito) }}
         </span>
       </div>

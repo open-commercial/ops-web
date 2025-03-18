@@ -10,10 +10,10 @@ import { NuevosResultadosComprobante } from '../models/nuevos-resultados-comprob
 import { Resultados } from '../models/resultados';
 import { DetallePedido } from '../models/detalle-pedido';
 import { BusquedaPedidoCriteria } from '../models/criterias/busqueda-pedido-criteria';
-@Injectable({
-  providedIn: 'root'
-})
+
+@Injectable({providedIn: 'root'})
 export class PedidosService {
+  
   url = environment.apiUrl + '/api/v1/pedidos';
   urlBusqueda = this.url + '/busqueda/criteria';
 

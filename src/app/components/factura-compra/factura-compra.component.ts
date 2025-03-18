@@ -1,29 +1,29 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {Location} from '@angular/common';
-import {AuthService} from '../../services/auth.service';
-import {FacturasCompraService} from '../../services/facturas-compra.service';
-import {debounceTime, finalize} from 'rxjs/operators';
-import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
-import {HelperService} from '../../services/helper.service';
-import {RenglonFactura} from '../../models/renglon-factura';
-import {NgbAccordion, NgbAccordionConfig, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NuevoRenglonFacturaModalComponent} from '../nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {NuevoRenglonFactura} from '../../models/nuevo-renglon-factura';
-import {Subscription} from 'rxjs';
-import {FacturasService} from '../../services/facturas.service';
-import {NuevosResultadosComprobante} from '../../models/nuevos-resultados-comprobante';
-import {Resultados} from '../../models/resultados';
-import {StorageKeys, StorageService} from '../../services/storage.service';
-import {NuevaFacturaCompra} from '../../models/nueva-factura-compra';
-import {SucursalesService} from '../../services/sucursales.service';
-import {Rol} from '../../models/rol';
-import {Proveedor} from '../../models/proveedor';
-import {Transportista} from '../../models/transportista';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { MensajeService } from '../../services/mensaje.service';
+import { Location } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { FacturasCompraService } from '../../services/facturas-compra.service';
+import { debounceTime, finalize } from 'rxjs/operators';
+import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
+import { HelperService } from '../../services/helper.service';
+import { RenglonFactura } from '../../models/renglon-factura';
+import { NgbAccordion, NgbAccordionConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NuevoRenglonFacturaModalComponent } from '../nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { NuevoRenglonFactura } from '../../models/nuevo-renglon-factura';
+import { Subscription } from 'rxjs';
+import { FacturasService } from '../../services/facturas.service';
+import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
+import { Resultados } from '../../models/resultados';
+import { StorageKeys, StorageService } from '../../services/storage.service';
+import { NuevaFacturaCompra } from '../../models/nueva-factura-compra';
+import { SucursalesService } from '../../services/sucursales.service';
+import { Rol } from '../../models/rol';
+import { Proveedor } from '../../models/proveedor';
+import { Transportista } from '../../models/transportista';
 
 @Component({
   selector: 'app-factura-compra',
@@ -35,9 +35,12 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
   submitted = false;
   saving = false;
   helper = HelperService;
-
-  tiposDeComprobantes: TipoDeComprobante[] = [];
+  allowedRolesToCrearFactura: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  tiposDeComprobanteLabesForCombo: { val: TipoDeComprobante, text: string }[] = [];
+  hasRoleToCrearFactura = false;
   subscription: Subscription;
+  proveedorSeleccionado: Proveedor;
+  transportistaSeleccionado: Transportista;
 
   resultados: Resultados = {
     descuentoPorcentaje: 0,
@@ -51,27 +54,29 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
     total: 0,
   };
 
-  allowedRolesToCrearFactura: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
-  hasRoleToCrearFactura = false;
+  tiposDeComprobanteLabels = [
+    { val: TipoDeComprobante.FACTURA_A,   text: 'Factura A'   },
+    { val: TipoDeComprobante.FACTURA_B,   text: 'Factura B'   },
+    { val: TipoDeComprobante.FACTURA_C,   text: 'Factura C'   },
+    { val: TipoDeComprobante.FACTURA_X,   text: 'Factura X'   },
+    { val: TipoDeComprobante.FACTURA_Y,   text: 'Factura Y'   },
+    { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' }
+  ];
 
-  @ViewChild('accordion') accordion: NgbAccordion;
+  @ViewChild('accordion') accordion: NgbAccordion;  
 
-  proveedorSeleccionado: Proveedor;
-  transportistaSeleccionado: Transportista;
-
-  constructor(private fb: UntypedFormBuilder,
-              private route: ActivatedRoute,
-              private router: Router,
-              private loadingOverlayService: LoadingOverlayService,
-              private modalService: NgbModal,
-              accordionConfig: NgbAccordionConfig,
-              private mensajeService: MensajeService,
-              private location: Location,
-              private authService: AuthService,
-              private storageService: StorageService,
-              private facturasService: FacturasService,
-              private sucursalesService: SucursalesService,
-              private facturasCompraService: FacturasCompraService) {
+  constructor(accordionConfig: NgbAccordionConfig,
+    private readonly fb: UntypedFormBuilder,
+    private readonly router: Router,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly modalService: NgbModal,
+    private readonly mensajeService: MensajeService,
+    private readonly location: Location,
+    private readonly authService: AuthService,
+    private readonly storageService: StorageService,
+    private readonly facturasService: FacturasService,
+    private readonly sucursalesService: SucursalesService,
+    private readonly facturasCompraService: FacturasCompraService) {
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
   }
@@ -93,15 +98,26 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  getTiposDeComprobantes(idProveedor: number) {
+  getTipoComprobanteLabel() {
+    const tipoDeComprobante = this.form?.get('tipoDeComprobante')?.value ?
+      this.form.get('tipoDeComprobante').value : null;
+    if (tipoDeComprobante) {
+      const aux = this.tiposDeComprobanteLabels.filter(tc => tc.val === tipoDeComprobante);
+      return aux.length ? aux[0].text : '';
+    }
+    return '';
+  }
+
+  getTiposDeComprobante(idProveedor: number) {
     this.loadingOverlayService.activate();
     this.facturasCompraService.getTiposDeComprobante(idProveedor)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe(data => {
-        this.tiposDeComprobantes = data;
-        if (data.length) { this.form.get('tipoDeComprobante').setValue(data[0]); }
-      })
-    ;
+      .subscribe(tipos => {
+        this.tiposDeComprobanteLabesForCombo = this.tiposDeComprobanteLabels.filter(tcl => tipos?.indexOf(tcl.val) >= 0);
+        if (tipos.length) {
+          this.form.get('tipoDeComprobante').setValue(tipos[0]);
+        }
+      });
   }
 
   loadLSData() {
@@ -142,8 +158,8 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
     this.subscription.add(this.form.get('idProveedor').valueChanges
       .subscribe(value => {
         this.form.get('tipoDeComprobante').setValue(null);
-        if (!value) { this.tiposDeComprobantes = []; return; }
-        this.getTiposDeComprobantes(value);
+        if (!value) return;        
+        this.getTiposDeComprobante(value);
       })
     );
 

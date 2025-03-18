@@ -2,13 +2,14 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Facturas de Compra</h1>
     <div class="text-end m-0 text-nowrap">
-      <button type="button" class="btn btn-primary ms-2" routerLink="/facturas-compra/nuevo" ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToCreate">
+      <button type="button" class="btn btn-primary ms-2" routerLink="/facturas-compra/nuevo"
+        ngbPopover="Nueva Factura de Compra" triggers="mouseenter:mouseleave" placement="left" *ngIf="hasRoleToCreate">
         <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
       <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
               [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="facturasCompraFiltersCollapse"
-              [class.bg-white]="!isFiltersCollapsed"
-              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
+              [class.bg-white]="!isFiltersCollapsed" ngbPopover="Filtros" 
+              triggers="mouseenter:mouseleave" placement="left">
         <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
@@ -44,8 +45,12 @@
           <app-rango-fecha-filtro formControlName="rangoFechaFactura" [label]="'Fecha Factura'"></app-rango-fecha-filtro>
           <app-rango-fecha-filtro formControlName="rangoFechaAlta" [label]="'Fecha Alta'"></app-rango-fecha-filtro>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorFC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorFC></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoFC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorFC" [values]="ordenArray" [label]="'Ordenar Por'" 
+                                     formControlName="ordenarPor" #ordernarPorFC>
+            </app-filtro-ordenamiento>
+            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoFC" [values]="sentidoArray" [label]="'Sentido'" 
+                                     formControlName="sentido" #sentidoFC>
+            </app-filtro-ordenamiento>
           </div>
         </div>
       </div>
@@ -53,23 +58,24 @@
     <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
   </div>
   <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
-                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado">
+  </app-filtros-aplicados>
   <div class="facturas my-2">
     <ng-template #info let-item let-i="index" id="infoFC">
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="fechaFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" id="fechaFC_{{ i }}">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
         <span class="badge text-bg-light border border-secondary ms-2 mb-2" id="tipoComprobanteFC_{{ i }}">
           {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="nroComprobanteInternoFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" id="nroComprobanteInternoFC_{{ i }}">
           #INTERNO: {{ helper.formatNumFactura(item.numSerie, item.numFactura ) }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.numSerieAfip" id="nroComprobanteAfipFC_{{ i }}">
           #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numFacturaAfip) }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.cae" id="caeFC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.cae" id="caeFC_{{ i }}">
           #CAE: {{ item.cae }}
         </span>
       </div>

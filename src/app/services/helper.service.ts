@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Ubicacion } from '../models/ubicacion';
 import * as moment from 'moment';
-import {TipoDeComprobante} from '../models/tipo-de-comprobante';
-import {CategoriaIVA} from '../models/categoria-iva';
+import { TipoDeComprobante } from '../models/tipo-de-comprobante';
+import { CategoriaIVA } from '../models/categoria-iva';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class HelperService {
 
   static getQueryString(terminos: {}) {
@@ -86,11 +84,15 @@ export class HelperService {
     const callback = config.callback || ((v) => v);
 
     if (!value) {
-      if (!!defaultValue) { terminos[name] = defaultValue; }
+      if (!!defaultValue) {
+        terminos[name] = defaultValue;
+      }
       return;
     }
     if (checkNaN) {
-      if (isNaN(value)) { return; }
+      if (isNaN(value)) {
+        return;
+      }
       value = Number(value);
     }
     terminos[name] = callback(value);
@@ -118,7 +120,6 @@ export class HelperService {
       }
     }
 
-    // set defaults
     for (const k in config) {
       if (config.hasOwnProperty(k) && !!config[k].defaultValue) {
         if (!output.hasOwnProperty(k)) {

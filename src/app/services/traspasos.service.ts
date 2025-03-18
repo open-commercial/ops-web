@@ -8,10 +8,9 @@ import { Traspaso } from '../models/traspaso';
 import { RenglonTraspaso } from '../models/renglon-traspaso';
 import { NuevoTraspaso } from '../models/nuevo-traspaso';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class TraspasosService {
+  
   public url = environment.apiUrl + '/api/v1/traspasos';
   urlBusqueda = this.url + '/busqueda/criteria';
 

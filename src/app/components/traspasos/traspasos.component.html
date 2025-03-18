@@ -50,13 +50,13 @@
   <div class="traspasos my-2">
     <ng-template #info let-item>
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fechaDeAlta | date:'dd/MM/yyyy HH:mm' }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1">
+        <span class="badge text-bg-dark ms-2 mb-2">
           #{{ item.nroTraspaso }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.nroPedido">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.nroPedido">
           #Pedido: {{ item.nroPedido }}
         </span>
       </div>

@@ -54,19 +54,19 @@
   <div class="notas-debito-venta my-2 bg-white">
     <ng-template #info let-item let-i>
       <div class="d-flex flex-row flex-wrap">
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" id="fechaNC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" id="fechaNC_{{ i }}">
           <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
         </span>
         <span class="badge text-bg-light border border-secondary ms-2 mb-2" id="tipoComprobanteNC_{{ i }}">
           {{ helper.tipoComprobanteLabel(item.tipoComprobante) }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.serie > 0" id="nroComprobanteInternoNC_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.serie > 0" id="nroComprobanteInternoNC_{{ i }}">
           #INTERNO: {{ helper.formatNumFactura(item.serie, item.nroNota ) }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.numSerieAfip" id="nroComprobanteAfip_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.numSerieAfip" id="nroComprobanteAfip_{{ i }}">
           #AFIP: {{ helper.formatNumFactura(item.numSerieAfip, item.numNotaAfip) }}
         </span>
-        <span class="badge text-bg-dark ms-2 mb-2 px-2 py-1" *ngIf="item.cae" id="cae_{{ i }}">
+        <span class="badge text-bg-dark ms-2 mb-2" *ngIf="item.cae" id="cae_{{ i }}">
           #CAE: {{ item.cae }}
         </span>
       </div>

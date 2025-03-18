@@ -7,10 +7,9 @@ import { environment } from '../../environments/environment';
 import { HelperService } from './helper.service';
 import { StorageKeys, StorageService } from './storage.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class SucursalesService {
+  
   public url = environment.apiUrl + '/api/v1/sucursales';
 
   private sucursalSubject = new Subject<Sucursal>();
