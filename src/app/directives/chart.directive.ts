@@ -64,7 +64,7 @@ export abstract class ChartDirective implements OnInit {
     this.selectedYear = this.selectedYear || new Date().getFullYear();
     this.selectedMonth = this.selectedMonth || (new Date().getMonth() + 1);
 
-    if (this.selectedYear && (this.selectedMonth || this.isMonthOptional())) {
+    if (this.selectedYear && (this.selectedMonth)) {
       this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
@@ -73,10 +73,6 @@ export abstract class ChartDirective implements OnInit {
 
   protected setLoadingState(isloading: boolean): void {
     this.loadingData = isloading;
-  }
-
-  isMonthOptional(): boolean {
-    return true;
   }
 
   onYearChange(year: number | Event): void {

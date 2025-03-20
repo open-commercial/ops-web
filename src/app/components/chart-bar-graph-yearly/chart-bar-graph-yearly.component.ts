@@ -36,23 +36,35 @@ export class ChartBarGraphYearlyComponent extends ChartDirective {
   }
 
   handleData(data: any): void {
-    if (data && data.labels.length > 0) {
-      const labels = this.generateYearData().slice(0, 4).reverse().map(String);
-      const yearDataMap = this.generateYearData().slice(0, 4).map((year, index)=> ({year:String(year), value: data.datasets[0].data[index]}));
-      const synchronizedData = labels.map((label) => {
-        const mapped = yearDataMap.find((item) => item.year === label);
-        return mapped ? mapped.value : 0;
-      });
-      const invertedDatasets = data.datasets.map((dataset: any) => ({...dataset, 
+
+    if (data && data.labels && data.datasets) {
+      const labels = this.generateYearData().slice(0, 4).map(String).sort();
+      const dataMap = new Map(
+        data.labels.map((label: number | string, index: number) => [String(label), data.datasets[0].data[index]])
+      );
+      const synchronizedData = labels.map((label) => dataMap.get(label) ?? 0);
+
+      if (!Array.isArray(data.datasets) || data.datasets.length === 0) {
+        this.chartDataArray = [];
+        this.noDataAvailable = true;
+        this.setLoadingState(false);
+        return;
+      }
+
+      const updatedDatasets = data.datasets.map((dataset: any) => ({
+        ...dataset,
         data: synchronizedData,
       }));
-      this.updateChart({...data, labels, datasets: invertedDatasets}, labels);
-      this.chartDataArray = invertedDatasets;
+
+      this.updateChart({ ...data, labels, datasets: updatedDatasets }, labels);
+      this.chartDataArray = updatedDatasets;
       this.noDataAvailable = false;
     } else {
+      console.warn("No hay datos válidos para el gráfico.");
       this.chartDataArray = [];
       this.noDataAvailable = true;
     }
+
     this.setLoadingState(false);
   }
   
