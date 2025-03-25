@@ -76,31 +76,18 @@ export abstract class ChartDirective implements OnInit {
   }
 
   onYearChange(year: number | Event): void {
-    let parsedYear: number | null = null;
-
-    if (typeof year === 'number') {
-      parsedYear = year;
-    } else if (year instanceof Event) {
-      const target = year.target as HTMLSelectElement;
-      parsedYear = parseInt(target.value, 10);
-    }
-    if (parsedYear && parsedYear !== this.selectedYear) {
+    const parsedYear = this.parseInputToNumber(year);
+    if (Number.isInteger(parsedYear) && parsedYear !== this.selectedYear) {
       this.selectedYear = parsedYear;
       this.loadChartData(this.selectedYear, this.selectedMonth);
     }
   }
-
+  
   onMonthChange(month: number | Event): void {
-    let parsedMonth: number | null = null;
-
-    if (typeof month === 'number') {
-      parsedMonth = month;
-    } else if (month instanceof Event) {
-      const target = month.target as HTMLSelectElement;
-      parsedMonth = parseInt(target.value, 10);
-    }
-    if (parsedMonth && parsedMonth !== this.selectedMonth) {
+    const parsedMonth = this.parseInputToNumber(month);
+    if (Number.isInteger(parsedMonth) && parsedMonth !== this.selectedMonth) {
       this.selectedMonth = parsedMonth;
+  
       if (this.selectedYear) {
         this.loadChartData(this.selectedYear, this.selectedMonth);
       } else {
@@ -108,7 +95,18 @@ export abstract class ChartDirective implements OnInit {
       }
     }
   }
-
+  
+  private parseInputToNumber(input: number | Event): number | null {
+    if (typeof input === 'number') {
+      return input;
+    } else if (input instanceof Event) {
+      const target = input.target as HTMLSelectElement;
+      const value = parseInt(target?.value, 10);
+      return Number.isNaN(value) ? null : value;
+    }
+    return null;
+  }
+  
   generateYearData(): number[] {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 10;

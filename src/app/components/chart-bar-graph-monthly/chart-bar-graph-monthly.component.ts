@@ -54,8 +54,10 @@ export class ChartBarGraphMonthlyComponent extends ChartDirective {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();
-      this.selectedYear = currentYear;
-    this.loadChartData(this.selectedYear);
+      if (this.selectedYear !== currentYear) {
+        this.selectedYear = currentYear;
+        this.loadChartData(this.selectedYear);
+      }
     }
   }
 

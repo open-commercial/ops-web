@@ -20,12 +20,16 @@ export class ChartTableMonthlyComponent extends ChartDirective {
     super();
   }
 
-  ngOnInit(): void {
-    this.years = this.generateYearData();
-    this.selectedYear = new Date().getFullYear();
-    this.months = this.generateMonthsData();
-    this.selectedMonth = new Date().getMonth() + 1;
-    this.loadChartData(this.selectedYear, this.selectedMonth);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      if (this.selectedYear !== currentYear || this.selectedMonth !== currentMonth) {
+        this.selectedYear = currentYear;
+        this.selectedMonth = currentMonth;
+        this.loadChartData(this.selectedYear, this.selectedMonth);
+      }
+    }
   }
 
   loadChartData(year: number, month: number): void {
@@ -40,16 +44,6 @@ export class ChartTableMonthlyComponent extends ChartDirective {
         this.loadingData = false;
       },
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
-      this.selectedYear = currentYear;
-      this.selectedMonth = currentMonth;
-      this.loadChartData(this.selectedYear, this.selectedMonth);
-    }
   }
 
 }

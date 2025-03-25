@@ -18,15 +18,18 @@ export class ChartTableYearlyComponent extends ChartDirective {
   @Input() suppliers: ChartInterface[] = [];
   @Input() sucursal: Sucursal;
 
-
   constructor(private readonly chartService: ChartService) { 
     super();
   }
 
-  ngOnInit(): void {
-    this.years = this.generateYearData();
-    this.selectedYear = new Date().getFullYear();
-    this.loadChartData(this.selectedYear);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
+      const currentYear = new Date().getFullYear();
+      if (this.selectedYear !== currentYear) {
+        this.selectedYear = currentYear;
+        this.loadChartData(this.selectedYear);
+      }
+    }
   }
 
   loadChartData(year: number): void {
@@ -48,13 +51,5 @@ export class ChartTableYearlyComponent extends ChartDirective {
   setLoadingData(isloading: boolean) {
     this.loadingData = isloading;
   }
-
-   ngOnChanges(changes: SimpleChanges): void {
-      if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
-        const currentYear = new Date().getFullYear();
-        this.selectedYear = currentYear;
-        this.loadChartData(this.selectedYear);
-      }
-    }
 
 }
