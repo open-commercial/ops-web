@@ -34,28 +34,30 @@ export class ChartBarGraphYearlyComponent extends ChartDirective {
       });
     }
   }
-
+  
   handleData(data: any): void {
-
-    if (data && data.labels && data.datasets) {
-      const labels = this.generateYearData().slice(0, 4).map(String).sort();
+    if (data?.labels && data?.datasets) {
+      const labels = this.generateYearData()
+        .slice(0, 4)
+        .map(String)
+        .sort((a, b) => a.localeCompare(b));
+  
       const dataMap = new Map(
         data.labels.map((label: number | string, index: number) => [String(label), data.datasets[0].data[index]])
       );
       const synchronizedData = labels.map((label) => dataMap.get(label) ?? 0);
-
+  
       if (!Array.isArray(data.datasets) || data.datasets.length === 0) {
         this.chartDataArray = [];
         this.noDataAvailable = true;
         this.setLoadingState(false);
         return;
       }
-
+  
       const updatedDatasets = data.datasets.map((dataset: any) => ({
         ...dataset,
         data: synchronizedData,
       }));
-
       this.updateChart({ ...data, labels, datasets: updatedDatasets }, labels);
       this.chartDataArray = updatedDatasets;
       this.noDataAvailable = false;
@@ -64,10 +66,10 @@ export class ChartBarGraphYearlyComponent extends ChartDirective {
       this.chartDataArray = [];
       this.noDataAvailable = true;
     }
-
+  
     this.setLoadingState(false);
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
       const currentYear = new Date().getFullYear();
