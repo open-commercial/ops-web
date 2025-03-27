@@ -4,7 +4,7 @@
 			Dashboard</h1>
 	</div>
 	<ngb-accordion class="ops-accordion" [closeOthers]="false" #acc="ngbAccordion" activeIds="ngb-accordion-2">
-		<ngb-panel id="ngb-accordion-1" (shown)="loadPurchaseData()">
+		<ngb-panel id="ngb-accordion-1">
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
 					<fa-icon *ngIf="acc.isExpanded('ngb-accordion-1')" [icon]="['fas', 'chevron-up']"
@@ -39,7 +39,7 @@
 				</div>
 			</ng-template>
 		</ngb-panel>
-		<ngb-panel id="ngb-accordion-2" (shown)="loadSalesData()">
+		<ngb-panel id="ngb-accordion-2">
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
 					<fa-icon *ngIf="acc.isExpanded('ngb-accordion-2')" [icon]="['fas', 'chevron-up']"
