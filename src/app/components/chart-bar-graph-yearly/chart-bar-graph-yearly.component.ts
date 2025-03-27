@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChange, SimpleChanges } from '@angular/core';
 import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
@@ -71,11 +71,24 @@ export class ChartBarGraphYearlyComponent extends ChartDirective {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
+    if (changes['sucursal'] && this.shouldReloadChartData(changes['sucursal'])) {
       const currentYear = new Date().getFullYear();
-      this.selectedYear = currentYear;
+      if (this.selectedYear !== currentYear) {
+        this.selectedYear = currentYear;
+      }
       this.loadChartData();
     }
+  
+    if (changes['chartType'] && !changes['chartType'].firstChange) {
+      this.loadChartData();
+    }
+  }
+
+  private shouldReloadChartData(change: SimpleChange): boolean {
+    const { previousValue, currentValue } = change;
+    if (!currentValue) return false;
+    if (!previousValue) return true;
+    return previousValue.id !== currentValue.id || previousValue.nombre !== currentValue.nombre;
   }
 
 }
