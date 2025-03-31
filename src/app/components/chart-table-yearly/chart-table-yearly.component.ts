@@ -1,4 +1,4 @@
-import { Component, SimpleChanges, Input } from '@angular/core';
+import { Component, SimpleChanges, Input, SimpleChange } from '@angular/core';
 import { ChartDirective } from 'src/app/directives/chart.directive';
 import { ChartInterface } from 'src/app/models/chart-interface';
 import { Sucursal } from 'src/app/models/sucursal';
@@ -22,16 +22,6 @@ export class ChartTableYearlyComponent extends ChartDirective {
     super();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
-      const currentYear = new Date().getFullYear();
-      if (this.selectedYear !== currentYear) {
-        this.selectedYear = currentYear;
-        this.loadChartData(this.selectedYear);
-      }
-    }
-  }
-
   loadChartData(year: number): void {
     this.loadingData = true;
     const chartDataPurchaseSaleSupplier = this.dataType === 'compras' ?
@@ -48,8 +38,26 @@ export class ChartTableYearlyComponent extends ChartDirective {
     })
   }
 
-  setLoadingData(isloading: boolean) {
-    this.loadingData = isloading;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && this.shouldReloadChartData(changes['sucursal'])) {
+      const currentYear = new Date().getFullYear();
+      if (this.selectedYear !== currentYear) {
+        this.selectedYear = currentYear;
+      }
+      this.loadChartData(this.selectedYear);
+    }
+
+    if (changes['dataType'] && !changes['dataType'].firstChange) {
+      this.loadChartData(this.selectedYear);
+    }
+  }
+
+  private shouldReloadChartData(change: SimpleChange): boolean {
+    const { previousValue, currentValue } = change;
+    if (!currentValue) return false;
+    if (!previousValue) return true;
+
+    return previousValue.id !== currentValue.id || previousValue.nombre !== currentValue.nombre;
   }
 
 }

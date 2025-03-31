@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChange, SimpleChanges } from '@angular/core';
 import { ChartDirective } from 'src/app/directives/chart.directive';
 import { Sucursal } from 'src/app/models/sucursal';
 import { ChartService } from 'src/app/services/chart.service';
@@ -11,25 +11,12 @@ import { ChartService } from 'src/app/services/chart.service';
 export class ChartTableMonthlyComponent extends ChartDirective {
   @Input() title: string;
   @Input() dataType: 'compras' | 'ventas';
-  @Input() loadingData: boolean = false;
   @Input() selectedMonth: number;
   @Input() selectedYear: number;
   @Input() sucursal: Sucursal;
 
   constructor(private readonly chartService: ChartService) {
     super();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && changes['sucursal'].currentValue !== changes['sucursal'].previousValue) {
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
-      if (this.selectedYear !== currentYear || this.selectedMonth !== currentMonth) {
-        this.selectedYear = currentYear;
-        this.selectedMonth = currentMonth;
-        this.loadChartData(this.selectedYear, this.selectedMonth);
-      }
-    }
   }
 
   loadChartData(year: number, month: number): void {
@@ -44,6 +31,30 @@ export class ChartTableMonthlyComponent extends ChartDirective {
         this.loadingData = false;
       },
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sucursal'] && this.shouldReloadChartData(changes['sucursal'])) {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      if (this.selectedYear !== currentYear || this.selectedMonth !== currentMonth) {
+        this.selectedYear = currentYear;
+        this.selectedMonth = currentMonth;
+      }
+      this.loadChartData(this.selectedYear, this.selectedMonth);
+    }
+
+    if (changes['dataType'] && !changes['dataType'].firstChange) {
+      this.loadChartData(this.selectedYear, this.selectedMonth);
+    }
+  }
+
+  private shouldReloadChartData(change: SimpleChange): boolean {
+    const { previousValue, currentValue } = change;
+    if (!currentValue) return false;
+    if (!previousValue) return true;
+
+    return previousValue.id !== currentValue.id || previousValue.nombre !== currentValue.nombre;
   }
 
 }
