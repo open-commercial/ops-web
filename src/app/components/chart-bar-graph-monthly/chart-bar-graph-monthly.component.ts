@@ -37,7 +37,7 @@ export class ChartBarGraphMonthlyComponent extends BarChartDirective implements 
   }
 
   private handleData(data: PeriodoMonto[]): void {
-    const monthsAsString = this.generateMonthsData()
+    const monthsAsString = this.generateMonths()
       .filter(m => data.some(i => i.periodo === m.value))
       .map(m => m.name);
     const montos = data.map(i => i.monto);

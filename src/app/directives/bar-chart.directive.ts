@@ -2,14 +2,15 @@ import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { SucursalesService } from '../services/sucursales.service';
+import { ChartDirective } from './chart.directive';
 
 @Directive()
-export abstract class BarChartDirective implements OnInit, OnDestroy {
+export abstract class BarChartDirective extends ChartDirective implements OnInit, OnDestroy {
 
   sucursalesService = inject(SucursalesService);
   sucursalSeleccionadaSubscription: Subscription;
-  years: number[] = this.generateYearsData();
-  months: { value: number, name: string }[] = this.generateMonthsData();
+  years: number[] = this.generateYears();
+  months: { value: number, name: string }[] = this.generateMonths();
   loadingData: boolean = false;
   barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
@@ -53,20 +54,6 @@ export abstract class BarChartDirective implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sucursalSeleccionadaSubscription.unsubscribe();
-  }
-
-  generateYearsData(): number[] {
-    const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 10;
-    return Array.from({ length: currentYear - startYear + 1 }, (_, i) => currentYear - i);
-  }
-
-  generateMonthsData(): { value: number, name: string }[] {
-    const monthsNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    return monthsNames.map((name, index) => ({
-      value: index + 1, name
-    }))
   }
 
   updateChart(labels: string[], datasets: { data: any, label: string, color?: string }[]): void {

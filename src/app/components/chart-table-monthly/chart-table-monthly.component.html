@@ -6,7 +6,20 @@
         </fa-icon>
     </div>
     <div class="styleDateContainer">
-        <ng-container *ngTemplateOutlet="yearlyTemplate; context: { showMonth: true }"></ng-container>
+        <div class="styleYear" *ngIf="!loadingData">
+            <div class="spanStyle"><span>Año:</span></div>
+            <select name="year" class="form-select form-select-sm" [(ngModel)]="selectedYear"
+                (change)="loadChartData()">
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+            </select>
+            <ng-container class="styleMonth">
+                <div class="spanStyle"><span>Mes:</span></div>
+                <select name="month" class="form-select form-select-sm" [(ngModel)]="selectedMonth"
+                    (change)="loadChartData()">
+                    <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
+                </select>
+            </ng-container>
+        </div>
     </div>
     <div *ngIf="!loadingData && tableChartData.length === 0" class="alert alert-secondary mt-2 text-center">
         No hay información disponible para este período. Seleccione otro período.
@@ -16,7 +29,8 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{{ chartType === 'compras' ? 'Proveedor' : (chartType === 'ventas' ? 'Cliente' : '') }}</th>
+                    <th scope="col">{{ chartType === 'compras' ? 'Proveedor' : (chartType === 'ventas' ? 'Cliente' : '')
+                        }}</th>
                     <th scope="col">Monto $</th>
                 </tr>
             </thead>
@@ -30,19 +44,3 @@
         </table>
     </div>
 </section>
-<ng-template #yearlyTemplate let-showMonth="showMonth">
-    <div class="styleYear" *ngIf="!loadingData">
-        <div class="spanStyle"><span>Año:</span></div>
-        <select name="year" class="form-select form-select-sm" [(ngModel)]="selectedYear"
-            (change)="loadChartData()">
-            <option *ngFor="let year of years" [value]="year">{{year}}</option>
-        </select>
-        <ng-container class="styleMonth">
-            <div class="spanStyle"><span>Mes:</span></div>
-            <select name="month" class="form-select form-select-sm" [(ngModel)]="selectedMonth"
-                (change)="loadChartData()">
-                <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
-            </select>
-        </ng-container>
-    </div>
-</ng-template>

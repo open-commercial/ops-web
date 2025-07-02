@@ -5,7 +5,13 @@
             [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
     </div>
     <div class="styleDateContainer">
-        <ng-container *ngTemplateOutlet="yearlyTemplate; context: { showMonth: false }"></ng-container>
+        <div class="styleYear" *ngIf="!loadingData">
+            <div class="spanStyle"><span>Año:</span></div>
+            <select name="year" class="form-select form-select-sm" [(ngModel)]="selectedYear"
+                (change)="loadChartData()">
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+            </select>
+        </div>
     </div>
     <div *ngIf="!loadingData && tableChartData.length === 0" class="alert alert-secondary mt-2 text-center">
         No hay información disponible para este período. Seleccione otro período.
@@ -15,7 +21,8 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{{ chartType === 'compras' ? 'Proveedor' : (chartType === 'ventas' ? 'Cliente' : '') }}</th>
+                    <th scope="col">{{ chartType === 'compras' ? 'Proveedor' : (chartType === 'ventas' ? 'Cliente' : '')
+                        }}</th>
                     <th scope="col">Monto $</th>
                 </tr>
             </thead>
@@ -29,11 +36,3 @@
         </table>
     </div>
 </section>
-<ng-template #yearlyTemplate let-showMonth="showMonth">
-    <div class="styleYear" *ngIf="!loadingData">
-        <div class="spanStyle"><span>Año:</span></div>
-        <select name="year" class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="loadChartData()">
-            <option *ngFor="let year of years" [value]="year">{{year}}</option>
-        </select>
-    </div>
-</ng-template>
