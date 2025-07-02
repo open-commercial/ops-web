@@ -12,13 +12,11 @@
                 (change)="loadChartData()">
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
             </select>
-            <ng-container class="styleMonth">
-                <div class="spanStyle"><span>Mes:</span></div>
-                <select name="month" class="form-select form-select-sm" [(ngModel)]="selectedMonth"
-                    (change)="loadChartData()">
-                    <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
-                </select>
-            </ng-container>
+            <div class="spanStyle"><span>Mes:</span></div>
+            <select name="month" class="form-select form-select-sm" [(ngModel)]="selectedMonth"
+                (change)="loadChartData()">
+                <option *ngFor="let month of months" [value]="month.value">{{month.name}}</option>
+            </select>
         </div>
     </div>
     <div *ngIf="!loadingData && tableChartData.length === 0" class="alert alert-secondary mt-2 text-center">
