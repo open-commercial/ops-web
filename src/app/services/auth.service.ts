@@ -64,7 +64,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const isExpired = this.jwtHelper.isTokenExpired(this.storageService.getItem('token'));
-    if (isExpired) { this.cleanAccessTokenInLocalStorage(); }
+    if (isExpired) {
+      this.cleanAccessTokenInLocalStorage();
+    }
     return !isExpired;
   }
 
@@ -86,7 +88,9 @@ export class AuthService {
 
   userHasAnyOfTheseRoles(roles: Rol[]): boolean {
     const token = this.getToken();
-    if (!token) { return false; }
+    if (!token) { 
+      return false;
+    }
 
     const decodedToken = this.jwtHelper.decodeToken(token);
     const decodedRoles = decodedToken.roles;

@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Usuario} from '../../models/usuario';
-import {Rol} from '../../models/rol';
-import {UsuariosService} from '../../services/usuarios.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeService} from '../../services/mensaje.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Usuario } from '../../models/usuario';
+import { Rol } from '../../models/rol';
+import { UsuariosService } from '../../services/usuarios.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { finalize } from 'rxjs/operators';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 
 export enum UFProfile {
   USUARIO = 'USUARIO',
@@ -16,7 +16,6 @@ export enum UFProfile {
 const repeatedPasswordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('password');
   const repetirPassword = control.get('repetir_password');
-
   return password && repetirPassword && password.value !== repetirPassword.value ? { repeatedPassword: true } : null;
 };
 
@@ -26,6 +25,7 @@ const repeatedPasswordValidator: ValidatorFn = (control: AbstractControl): Valid
   styleUrls: ['./usuario-form.component.scss']
 })
 export class UsuarioFormComponent implements OnInit {
+
   form: UntypedFormGroup;
   submitted = false;
 
@@ -50,10 +50,12 @@ export class UsuarioFormComponent implements OnInit {
   @Input() saving: boolean = false;
   @Output() savingChange = new EventEmitter<boolean>();
 
-  constructor(private fb: UntypedFormBuilder,
-              private usuariosService: UsuariosService,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService) { }
+  constructor(
+    private readonly fb: UntypedFormBuilder,
+    private readonly usuariosService: UsuariosService,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly mensajeService: MensajeService
+  ) { }
 
   ngOnInit() {
     this.createForm();
@@ -112,17 +114,17 @@ export class UsuarioFormComponent implements OnInit {
     const formArray: FormArray = this.form.get('roles') as FormArray;
 
     /* Selected */
-    if(event.target.checked){
+    if (event.target.checked) {
       // Add a new control in the arrayForm
       formArray.push(new FormControl(event.target.value));
     }
     /* unselected */
-    else{
+    else {
       // find the unselected element
       let i: number = 0;
 
       formArray.controls.forEach((ctrl: FormControl) => {
-        if(ctrl.value == event.target.value) {
+        if (ctrl.value == event.target.value) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
           return;
@@ -135,7 +137,6 @@ export class UsuarioFormComponent implements OnInit {
 
   submit() {
     this.submitted = true;
-    console.log(this.form.value);
     if (this.form.valid) {
       const formValues = this.form.value;
 
@@ -153,7 +154,7 @@ export class UsuarioFormComponent implements OnInit {
       const obvs = this.usuario && this.usuario.idUsuario
         ? this.usuariosService.updateUsuario(usuario)
         : this.usuariosService.createUsuario(usuario)
-      ;
+        ;
 
       this.setSaving(true);
       this.loadingOverlayService.activate();
@@ -166,7 +167,7 @@ export class UsuarioFormComponent implements OnInit {
           next: u => this.userSaved.emit(u),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         })
-      ;
+        ;
     }
   }
 }

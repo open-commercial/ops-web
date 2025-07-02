@@ -1,42 +1,42 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {SucursalesService} from '../../services/sucursales.service';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {ConfiguracionSucursal} from '../../models/configuracion-sucursal';
-import {ConfiguracionesSucursalService} from '../../services/configuraciones-sucursal.service';
-import {finalize} from 'rxjs/operators';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {Router} from '@angular/router';
-import {Sucursal} from '../../models/sucursal';
-import {Subscription} from 'rxjs';
-import {Rol} from '../../models/rol';
-import {AuthService} from '../../services/auth.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { SucursalesService } from '../../services/sucursales.service';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ConfiguracionSucursal } from '../../models/configuracion-sucursal';
+import { ConfiguracionesSucursalService } from '../../services/configuraciones-sucursal.service';
+import { finalize } from 'rxjs/operators';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { Router } from '@angular/router';
+import { Sucursal } from '../../models/sucursal';
+import { Subscription } from 'rxjs';
+import { Rol } from '../../models/rol';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-configuracion',
   templateUrl: './configuracion.component.html'
 })
 export class ConfiguracionComponent implements OnInit, OnDestroy {
+
   form: UntypedFormGroup;
   sucursal: Sucursal;
   configuracion: ConfiguracionSucursal;
   submitted = false;
-
-  allowedRolesToEdit: Rol[] = [ Rol.ADMINISTRADOR ];
+  allowedRolesToEdit: Rol[] = [Rol.ADMINISTRADOR];
   hasRoleToEdit = false;
-
   subscription: Subscription;
-
   disabledInputFile = false;
 
-  constructor(private sucursalesService: SucursalesService,
-              private configuracionesSucursalService: ConfiguracionesSucursalService,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
-              private router: Router,
-              private fb: UntypedFormBuilder,
-              private authService: AuthService) {
+  constructor(
+    private readonly sucursalesService: SucursalesService,
+    private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly mensajeService: MensajeService,
+    private readonly router: Router,
+    private readonly fb: UntypedFormBuilder,
+    private readonly authService: AuthService
+  ) {
     this.subscription = new Subscription();
   }
 
@@ -49,7 +49,7 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
     }
     this.createForm();
     this.loadSucursalConfiguration();
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.loadSucursalConfiguration()));
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.loadSucursalConfiguration()));
   }
 
   loadSucursalConfiguration() {
@@ -67,7 +67,7 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
           this.router.navigate(['/']);
         }
       })
-    ;
+      ;
   }
 
   ngOnDestroy() {
@@ -151,7 +151,7 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
-      ;
+        ;
     }
   }
 

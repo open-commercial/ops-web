@@ -139,7 +139,6 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     this.hasRoleToCrearRecibo = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearRecibo);
     this.subscription.add(this.previousRouteService.previousRoute$.subscribe(url => {
       const urlHaveToBeStored = /(^\/proveedores$|^\/proveedores\?[a-zA-Z0-9=&]+$)/.test(url);
-      console.log(urlHaveToBeStored);
       if (urlHaveToBeStored) {
         sessionStorage.setItem(ssCCPPreviousUrlKey, url);
       }

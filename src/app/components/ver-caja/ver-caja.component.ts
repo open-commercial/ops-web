@@ -1,55 +1,53 @@
 import { AuthService } from './../../services/auth.service';
 import { Rol } from './../../models/rol';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Caja} from '../../models/caja';
-import {ActivatedRoute} from '@angular/router';
-import {CajasService} from '../../services/cajas.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {formatCurrency, Location} from '@angular/common';
-import {MensajeService} from '../../services/mensaje.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {EstadoCaja} from '../../models/estado-caja';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {FormasDePagoService} from '../../services/formas-de-pago.service';
-import {FormaDePago} from '../../models/forma-de-pago';
-import {NgbAccordion, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {MontoModalComponent} from '../monto-modal/monto-modal.component';
-import {NuevoGastoModalComponent} from '../nuevo-gasto-modal/nuevo-gasto-modal.component';
-import {SucursalesService} from '../../services/sucursales.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Caja } from '../../models/caja';
+import { ActivatedRoute } from '@angular/router';
+import { CajasService } from '../../services/cajas.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { formatCurrency, Location } from '@angular/common';
+import { MensajeService } from '../../services/mensaje.service';
+import { finalize } from 'rxjs/operators';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { EstadoCaja } from '../../models/estado-caja';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { FormasDePagoService } from '../../services/formas-de-pago.service';
+import { FormaDePago } from '../../models/forma-de-pago';
+import { NgbAccordion, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MontoModalComponent } from '../monto-modal/monto-modal.component';
+import { NuevoGastoModalComponent } from '../nuevo-gasto-modal/nuevo-gasto-modal.component';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-ver-caja',
   templateUrl: './ver-caja.component.html'
 })
 export class VerCajaComponent implements OnInit, OnDestroy {
+
   estado = EstadoCaja;
   caja: Caja = null;
   formasDePago: FormaDePago[] = [];
   totalesFormasDePago: { [key: number]: number } = {};
-
-  resumen: { idFormaDePago: number, nombreFormaDePago: string, afectaCaja: boolean, total: number}[] = [];
-
+  resumen: { idFormaDePago: number, nombreFormaDePago: string, afectaCaja: boolean, total: number }[] = [];
   totalQueAfectaCaja: number = null;
   totalSistema: number = null;
   loadingTotales = false;
-
   @ViewChild('accordion') accordion: NgbAccordion;
-
   subscription: Subscription;
-
-  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  allowedRolesToDelete: Rol[] = [Rol.ADMINISTRADOR];
   hasRoleToDelete = false;
 
-  constructor(private route: ActivatedRoute,
-              private formasDePagoService: FormasDePagoService,
-              private cajasService: CajasService,
-              private sucursalesService: SucursalesService,
-              private location: Location,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
-              private modalService: NgbModal,
-              private authService: AuthService) {
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly formasDePagoService: FormasDePagoService,
+    private readonly cajasService: CajasService,
+    private readonly sucursalesService: SucursalesService,
+    private readonly location: Location,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly mensajeService: MensajeService,
+    private readonly modalService: NgbModal,
+    private readonly authService: AuthService
+  ) {
     this.subscription = new Subscription();
   }
 
@@ -57,8 +55,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.refreshCaja(id);
-
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.volverAlListado()));
   }
 
   ngOnDestroy() {
@@ -153,7 +150,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: saldo => {
-          const modalRef = this.modalService.open(MontoModalComponent, {scrollable: true});
+          const modalRef = this.modalService.open(MontoModalComponent, { scrollable: true });
           modalRef.componentInstance.title = 'Cerrar Caja';
           modalRef.componentInstance.htmlInfo = [
             '<em>El Saldo Sistema es:</em>', '&nbsp;', '<strong>' + formatCurrency(saldo, 'es-AR', '$') + '</strong>'
@@ -167,19 +164,19 @@ export class VerCajaComponent implements OnInit, OnDestroy {
                 next: caja => this.caja = caja,
                 error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
               })
-            ;
+              ;
           }, () => { return; });
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
-    ;
+      ;
   }
 
   nuevoGasto() {
     if (this.caja.estado !== EstadoCaja.ABIERTA) {
       return;
     }
-    const modalRef = this.modalService.open(NuevoGastoModalComponent, {scrollable: true});
+    const modalRef = this.modalService.open(NuevoGastoModalComponent, { scrollable: true });
     modalRef.result.then(() => {
       const obs: Observable<any>[] = [
         this.cajasService.getCaja(this.caja.idCaja),
@@ -197,7 +194,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
-      ;
+        ;
     }, () => { return; });
   }
 
@@ -206,7 +203,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const modalRef = this.modalService.open(MontoModalComponent, {scrollable: true});
+    const modalRef = this.modalService.open(MontoModalComponent, { scrollable: true });
     modalRef.componentInstance.title = 'Reabrir Caja';
     modalRef.componentInstance.label = 'Saldo Apertura';
     modalRef.result.then((monto: number) => {
@@ -217,7 +214,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
           next: () => this.refreshCaja(),
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
-      ;
+        ;
     }, () => { return; });
   }
 
@@ -237,7 +234,7 @@ export class VerCajaComponent implements OnInit, OnDestroy {
             next: () => this.volverAlListado(),
             error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
           })
-        ;
+          ;
       }
     }, () => { return; });
   }

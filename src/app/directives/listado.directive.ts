@@ -70,7 +70,7 @@ export abstract class ListadoDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createFilterForm();
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.getItemsFromQueryParams()));
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.getItemsFromQueryParams()));
     this.subscription.add(this.route.queryParamMap.subscribe(params => this.getItemsFromQueryParams(params)));
   }
 

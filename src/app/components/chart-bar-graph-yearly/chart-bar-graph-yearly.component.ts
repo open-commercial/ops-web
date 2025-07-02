@@ -1,94 +1,44 @@
-import { Component, Input, SimpleChange, SimpleChanges } from '@angular/core';
-import { ChartDirective } from 'src/app/directives/chart.directive';
-import { Sucursal } from 'src/app/models/sucursal';
-import { ChartService } from 'src/app/services/chart.service';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { BarChartDirective } from 'src/app/directives/bar-chart.directive';
+import { PeriodoMonto } from 'src/app/models/periodo-monto';
+import { EstadisticasService } from 'src/app/services/estadisticas.service';
 
 @Component({
   selector: 'app-chart-bar-graph-yearly',
   templateUrl: './chart-bar-graph-yearly.component.html',
   styleUrls: ['./chart-bar-graph-yearly.component.scss']
 })
-export class ChartBarGraphYearlyComponent extends ChartDirective {
-  @Input() title: string = '';
-  @Input() chartType: 'compras' | 'ventas' = 'compras';
-  @Input() sucursal: Sucursal;
+export class ChartBarGraphYearlyComponent extends BarChartDirective implements OnInit {
 
-  chartDataArray: any[] = [];
+  @Input() title: string;
+  @Input() chartType: 'compras' | 'ventas';
   noDataAvailable: boolean = false;
+  estadisticasService: EstadisticasService = inject(EstadisticasService);
 
-  constructor(private readonly chartService: ChartService) {
-    super();
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.loadChartData();
   }
 
   override loadChartData(): void {
-    this.setLoadingState(true);
+    this.loadingData = true;
     if (this.chartType === 'compras') {
-      this.chartService.getChartDataPurchaseAnnual().subscribe(data => {
+      this.estadisticasService.getMontoNetoCompradoAnual().subscribe(data => {
         this.handleData(data);
-        this.setLoadingState(false);
+        this.loadingData = false;
       });
     } else if (this.chartType === 'ventas') {
-      this.chartService.getChartDataSalesAnnual().subscribe(data => {
+      this.estadisticasService.getMontoNetoVendidoAnual().subscribe(data => {
         this.handleData(data);
-        this.setLoadingState(false);
+        this.loadingData = false;
       });
     }
   }
-  
-  handleData(data: any): void {
-    if (data?.labels && data?.datasets) {
-      const labels = this.generateYearData()
-        .slice(0, 4)
-        .map(String)
-        .sort((a, b) => a.localeCompare(b));
-  
-      const dataMap = new Map(
-        data.labels.map((label: number | string, index: number) => [String(label), data.datasets[0].data[index]])
-      );
-      const synchronizedData = labels.map((label) => dataMap.get(label) ?? 0);
-  
-      if (!Array.isArray(data.datasets) || data.datasets.length === 0) {
-        this.chartDataArray = [];
-        this.noDataAvailable = true;
-        this.setLoadingState(false);
-        return;
-      }
-  
-      const updatedDatasets = data.datasets.map((dataset: any) => ({
-        ...dataset,
-        data: synchronizedData,
-      }));
-      this.updateChart({ ...data, labels, datasets: updatedDatasets }, labels);
-      this.chartDataArray = updatedDatasets;
-      this.noDataAvailable = false;
-    } else {
-      console.warn("No hay datos válidos para el gráfico.");
-      this.chartDataArray = [];
-      this.noDataAvailable = true;
-    }
-  
-    this.setLoadingState(false);
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && this.shouldReloadChartData(changes['sucursal'])) {
-      const currentYear = new Date().getFullYear();
-      if (this.selectedYear !== currentYear) {
-        this.selectedYear = currentYear;
-      }
-      this.loadChartData();
-    }
-  
-    if (changes['chartType'] && !changes['chartType'].firstChange) {
-      this.loadChartData();
-    }
-  }
-
-  private shouldReloadChartData(change: SimpleChange): boolean {
-    const { previousValue, currentValue } = change;
-    if (!currentValue) return false;
-    if (!previousValue) return true;
-    return previousValue.id !== currentValue.id || previousValue.nombre !== currentValue.nombre;
+  private handleData(data: PeriodoMonto[]): void {
+    const periodos = data.map(i => String(i.periodo)).reverse();
+    const montos = data.map(i => i.monto).reverse();
+    this.updateChart(periodos, [{ data: montos, label: 'Monto neto' }]);
   }
 
 }

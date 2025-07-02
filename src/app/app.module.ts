@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -91,15 +91,13 @@ import { FacturaCompraComponent } from './components/factura-compra/factura-comp
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
 import { NgChartsModule } from 'ng2-charts';
-import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ChartBarGraphMonthlyComponent } from './components/chart-bar-graph-monthly/chart-bar-graph-monthly.component';
 import { ChartBarGraphYearlyComponent } from './components/chart-bar-graph-yearly/chart-bar-graph-yearly.component';
-import localeEsAR from '@angular/common/locales/es-AR';
-import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 import { ChartTableYearlyComponent } from './components/chart-table-yearly/chart-table-yearly.component';
 import { ChartTableMonthlyComponent } from './components/chart-table-monthly/chart-table-monthly.component';
-
+import localeEsAR from '@angular/common/locales/es-AR';
+import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -203,14 +201,13 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NgSelectModule,
         AppRoutingModule,
         ShareModule,
-        NgChartsModule,
-        FormsModule
+        NgChartsModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
     bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: []
 })
 export class AppModule { }

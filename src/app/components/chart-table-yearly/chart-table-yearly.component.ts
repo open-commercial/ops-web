@@ -1,63 +1,46 @@
-import { Component, SimpleChanges, Input, SimpleChange } from '@angular/core';
-import { ChartDirective } from 'src/app/directives/chart.directive';
-import { ChartInterface } from 'src/app/models/chart-interface';
-import { Sucursal } from 'src/app/models/sucursal';
-import { ChartService } from 'src/app/services/chart.service';
-
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { TableChartDirective } from 'src/app/directives/table-chart.directive';
+import { EstadisticasService } from 'src/app/services/estadisticas.service';
 
 @Component({
   selector: 'app-chart-table-yearly',
   templateUrl: './chart-table-yearly.component.html',
   styleUrls: ['./chart-table-yearly.component.scss']
 })
-export class ChartTableYearlyComponent extends ChartDirective {
-  @Input() title: string = '';
-  @Input() dataType: 'compras' | 'ventas';
-  @Input() years: number[] = [];
-  @Input() selectedYear: number;
-  @Input() suppliers: ChartInterface[] = [];
-  @Input() sucursal: Sucursal;
+export class ChartTableYearlyComponent extends TableChartDirective implements OnInit {
 
-  constructor(private readonly chartService: ChartService) { 
-    super();
+  @Input() title: string;
+  @Input() chartType: 'compras' | 'ventas';
+  selectedYear: number = this.years[0];
+  estadisticasService: EstadisticasService = inject(EstadisticasService);
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.loadChartData();
   }
 
-  loadChartData(year: number): void {
+  override loadChartData(): void {
     this.loadingData = true;
-    const chartDataPurchaseSaleSupplier = this.dataType === 'compras' ?
-      this.chartService.getChartDataPurchaseAnnualSupplier(year) :
-      this.chartService.getChartDataSalesAnnualSupplier(year);
-
-    chartDataPurchaseSaleSupplier.subscribe({
-      next: (data) => { this.handleChartData(data);
-                        this.loadingData = false;
-      },
-      error: (err) => {console.log('Error al cargar datos', err);
-                        this.loadingData = false;
-      }
-    })
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['sucursal'] && this.shouldReloadChartData(changes['sucursal'])) {
-      const currentYear = new Date().getFullYear();
-      if (this.selectedYear !== currentYear) {
-        this.selectedYear = currentYear;
-      }
-      this.loadChartData(this.selectedYear);
+    if (this.chartType === 'compras') {
+      this.estadisticasService.getMontoNetoCompradoAnualPorProveedor(this.selectedYear).subscribe(data => {
+        this.updateChart(
+          data.map(item => ({
+            value: item.monto,
+            name: item.entidad
+          })));
+        this.loadingData = false;
+      });
     }
-
-    if (changes['dataType'] && !changes['dataType'].firstChange) {
-      this.loadChartData(this.selectedYear);
+    if (this.chartType === 'ventas') {
+      this.estadisticasService.getMontoNetoVendidoPorClienteAnual(this.selectedYear).subscribe(data => {
+        this.updateChart(
+          data.map(item => ({
+            value: item.monto,
+            name: item.entidad
+          })));
+        this.loadingData = false;
+      });
     }
-  }
-
-  private shouldReloadChartData(change: SimpleChange): boolean {
-    const { previousValue, currentValue } = change;
-    if (!currentValue) return false;
-    if (!previousValue) return true;
-
-    return previousValue.id !== currentValue.id || previousValue.nombre !== currentValue.nombre;
   }
 
 }
