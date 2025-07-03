@@ -45,7 +45,7 @@ import { NotasDebitoCompraComponent } from './components/notas-debito-compra/not
 import { VerReciboComponent } from './components/ver-recibo/ver-recibo.component';
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -53,7 +53,7 @@ const routes: Routes = [
     path: '', component: HomeComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: 'pedidos', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'estadisticas', component: EstadisticasComponent },
       {
         path: 'pedidos', component: PedidosHomeComponent,
         children: [
