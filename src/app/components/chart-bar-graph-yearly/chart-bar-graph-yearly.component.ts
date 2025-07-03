@@ -12,7 +12,6 @@ export class ChartBarGraphYearlyComponent extends BarChartDirective implements O
 
   @Input() title: string;
   @Input() chartType: 'compras' | 'ventas';
-  noDataAvailable: boolean = false;
   estadisticasService: EstadisticasService = inject(EstadisticasService);
 
   ngOnInit(): void {
