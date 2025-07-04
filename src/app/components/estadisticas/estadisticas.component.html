@@ -18,30 +18,22 @@
 				<div class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-bar-graph-yearly
-								[title]="'Compras por año'"
-								[chartType]="'compras'">
-							</app-chart-bar-graph-yearly>
+							<app-compra-anual-chart>
+							</app-compra-anual-chart>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-yearly
-								[title]="'Compras por año por proveedor'"
-								[chartType]="'compras'">
-							</app-chart-table-yearly>
+							<app-compra-anual-por-proveedor-chart>								
+							</app-compra-anual-por-proveedor-chart>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-bar-graph-monthly
-								[title]="'Compras por mes'"
-								[chartType]="'compras'">
-							</app-chart-bar-graph-monthly>
+							<app-compra-mensual-chart>								
+							</app-compra-mensual-chart>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-monthly
-								[title]="'Compras por mes por proveedor'"
-								[chartType]="'compras'">
-							</app-chart-table-monthly>
+							<app-compra-mensual-por-proveedor-chart>								
+							</app-compra-mensual-por-proveedor-chart>
 						</div>
 					</div>
 				</div>
@@ -59,30 +51,22 @@
 				<div class="container-fluid">
 					<div class="row p-0 gap-4 mt-2">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-bar-graph-yearly
-								[title]="'Ventas por año'"
-								[chartType]="'ventas'">
-							</app-chart-bar-graph-yearly>
+							<app-venta-anual-chart>
+							</app-venta-anual-chart>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-yearly
-								[title]="'Ventas por año por cliente'"
-								[chartType]="'ventas'">
-							</app-chart-table-yearly>
+							<app-venta-anual-por-cliente-chart>
+							</app-venta-anual-por-cliente-chart>
 						</div>
 					</div>
 					<div class="row gap-4 p-0 mt-4">
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-bar-graph-monthly
-								[title]="'Ventas por mes'"
-								[chartType]="'ventas'">
-							</app-chart-bar-graph-monthly>
+							<app-venta-mensual-chart>
+							</app-venta-mensual-chart>
 						</div>
 						<div class="col-sm-12 col-md col-lg p-0">
-							<app-chart-table-monthly
-								[title]="'Ventas por mes por cliente'"
-								[chartType]="'ventas'">
-							</app-chart-table-monthly>
+							<app-venta-mensual-por-cliente-chart>
+							</app-venta-mensual-por-cliente-chart>
 						</div>
 					</div>
 				</div>

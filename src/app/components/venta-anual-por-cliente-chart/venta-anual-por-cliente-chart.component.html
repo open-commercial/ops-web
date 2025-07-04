@@ -1,0 +1,37 @@
+<section class="container">
+    <span>Venta por año por cliente</span>
+    <div *ngIf="loadingData">
+        <fa-icon class="spinner-primary d-flex align-items-center justify-content-center mt-2"
+            [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
+    </div>
+    <div class="styleDateContainer">
+        <div class="styleYear" *ngIf="!loadingData">
+            <div class="spanStyle"><span>Año:</span></div>
+            <select name="year" class="form-select form-select-sm" [(ngModel)]="selectedYear"
+                (change)="loadChartData()">
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+            </select>
+        </div>
+    </div>
+    <div *ngIf="!loadingData && tableChartData.length === 0" class="alert alert-secondary mt-2 text-center">
+        No hay información disponible para este período. Seleccione otro período.
+    </div>
+    <div *ngIf="!loadingData && tableChartData.length > 0" class="table-responsive custom-table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Monto $</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr *ngFor="let item of tableChartData; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.value | currency:'ARS':'symbol':'1.0-2' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

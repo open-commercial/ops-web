@@ -1,5 +1,5 @@
 <section class="container">
-    <span>{{ title }}</span>
+    <span>Compras por año por proveedor</span>
     <div *ngIf="loadingData">
         <fa-icon class="spinner-primary d-flex align-items-center justify-content-center mt-2"
             [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
@@ -21,8 +21,7 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{{ chartType === 'compras' ? 'Proveedor' : (chartType === 'ventas' ? 'Cliente' : '')
-                        }}</th>
+                    <th scope="col">Proveedor</th>
                     <th scope="col">Monto $</th>
                 </tr>
             </thead>

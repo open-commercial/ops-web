@@ -92,12 +92,16 @@ import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-fa
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
 import { NgChartsModule } from 'ng2-charts';
 import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
-import { ChartBarGraphMonthlyComponent } from './components/chart-bar-graph-monthly/chart-bar-graph-monthly.component';
-import { ChartBarGraphYearlyComponent } from './components/chart-bar-graph-yearly/chart-bar-graph-yearly.component';
-import { ChartTableYearlyComponent } from './components/chart-table-yearly/chart-table-yearly.component';
-import { ChartTableMonthlyComponent } from './components/chart-table-monthly/chart-table-monthly.component';
 import localeEsAR from '@angular/common/locales/es-AR';
 import localeEsARExtra from '@angular/common/locales/extra/es-AR';
+import { CompraAnualChartComponent } from './components/compra-anual-chart/compra-anual-chart.component';
+import { CompraAnualPorProveedorChartComponent } from './components/compra-anual-por-proveedor-chart/compra-anual-por-proveedor-chart.component';
+import { CompraMensualChartComponent } from './components/compra-mensual-chart/compra-mensual-chart.component';
+import { CompraMensualPorProveedorChartComponent } from './components/compra-mensual-por-proveedor-chart/compra-mensual-por-proveedor-chart.component';
+import { VentaAnualChartComponent } from './components/venta-anual-chart/venta-anual-chart.component';
+import { VentaAnualPorClienteChartComponent } from './components/venta-anual-por-cliente-chart/venta-anual-por-cliente-chart.component';
+import { VentaMensualChartComponent } from './components/venta-mensual-chart/venta-mensual-chart.component';
+import { VentaMensualPorClienteChartComponent } from './components/venta-mensual-por-cliente-chart/venta-mensual-por-cliente-chart.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -189,10 +193,14 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         NuevoRenglonFacturaModalComponent,
         ConfiguracionComponent,
         EstadisticasComponent,
-        ChartBarGraphMonthlyComponent,
-        ChartBarGraphYearlyComponent,
-        ChartTableYearlyComponent,
-        ChartTableMonthlyComponent
+        CompraAnualChartComponent,
+        CompraAnualPorProveedorChartComponent,
+        CompraMensualChartComponent,
+        CompraMensualPorProveedorChartComponent,
+        VentaAnualChartComponent,
+        VentaAnualPorClienteChartComponent,
+        VentaMensualChartComponent,
+        VentaMensualPorClienteChartComponent
     ],
     imports: [
         BrowserModule,
