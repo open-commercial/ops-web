@@ -17,4 +17,10 @@ export abstract class ChartDirective {
     }))
   }
 
+  convertPeriodosToMonthsAsString(periodos: number[]): string[] {
+    return this.generateMonths()
+      .filter(m => periodos.some(i => i === m.value))
+      .map(m => m.name);
+  }
+
 }
