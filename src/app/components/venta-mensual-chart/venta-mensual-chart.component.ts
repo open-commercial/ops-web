@@ -20,7 +20,7 @@ export class VentaMensualChartComponent extends BarChartDirective implements OnI
 
   override loadChartData(): void {
     this.loadingData = true;
-    this.estadisticasService.getMontoNetoCompradoMensual(this.selectedYear).subscribe(data => {
+    this.estadisticasService.getMontoNetoVendidoMensual(this.selectedYear).subscribe(data => {
       this.handleData(data);
       this.loadingData = false;
     });
