@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
@@ -11,22 +11,21 @@ import { StorageKeys, StorageService } from './storage.service';
 import { LoadingOverlayService } from './loading-overlay.service';
 import { Rol } from '../models/rol';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
 
   urlLogin = environment.apiUrl + '/api/v1/login';
   urlLogout = environment.apiUrl + '/api/v1/logout';
   jwtHelper = new JwtHelperService();
-
-  constructor(private http: HttpClient,
-              private router: Router,
-              private usuariosService: UsuariosService,
-              private storageService: StorageService,
-              private loadingOverlayService: LoadingOverlayService) {}
+  http = inject(HttpClient);
+  router = inject(Router);
+  usuariosService = inject(UsuariosService);
+  storageService = inject(StorageService);
+  loadingOverlayService = inject(LoadingOverlayService);
 
   login(user: string, pass: string) {
     const credential = { username: user, password: pass };
-    return this.http.post(this.urlLogin, credential, {responseType: 'text'})
+    return this.http.post(this.urlLogin, credential, { responseType: 'text' })
       .pipe(
         map(data => {
           this.setAuthenticationInfo(data);
@@ -38,7 +37,7 @@ export class AuthService {
           } else {
             msjError = err.error;
           }
-          return throwError(msjError);
+          return throwError(() => msjError);
         })
       );
   }
@@ -50,8 +49,7 @@ export class AuthService {
       .subscribe(() => {
         this.cleanAccessTokenInLocalStorage();
         this.router.navigate(['/login']);
-      })
-    ;
+      });
   }
 
   cleanAccessTokenInLocalStorage() {
@@ -76,8 +74,9 @@ export class AuthService {
 
   getLoggedInIdUsuario(): string {
     const token = this.getToken();
-    if (!token) { return null; }
-
+    if (!token) {
+      return null;
+    }
     const decodedToken = this.jwtHelper.decodeToken(token);
     return decodedToken.idUsuario;
   }
@@ -88,10 +87,9 @@ export class AuthService {
 
   userHasAnyOfTheseRoles(roles: Rol[]): boolean {
     const token = this.getToken();
-    if (!token) { 
+    if (!token) {
       return false;
     }
-
     const decodedToken = this.jwtHelper.decodeToken(token);
     const decodedRoles = decodedToken.roles;
     return decodedRoles.filter(x => roles.includes(x)).length > 0;

@@ -5,12 +5,12 @@
 			Estadísticas
 		</h1>
 	</div>
-	<ngb-accordion class="ops-accordion" [closeOthers]="false" #acc="ngbAccordion" activeIds="ngb-accordion-ventas">
+	<ngb-accordion class="ops-accordion" [closeOthers]="false" #accordion activeIds="ngb-accordion-ventas">
 		<ngb-panel id="ngb-accordion-compras">
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
-					<fa-icon *ngIf="acc.isExpanded('ngb-accordion-compras')" [icon]="['fas', 'chevron-up']" class="chevronStyle me-2"></fa-icon>
-					<fa-icon *ngIf="!acc.isExpanded('ngb-accordion-compras')" [icon]="['fas', 'chevron-down']" class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="accordion.isExpanded('ngb-accordion-compras')" [icon]="['fas', 'chevron-up']" class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="!accordion.isExpanded('ngb-accordion-compras')" [icon]="['fas', 'chevron-down']" class="chevronStyle me-2"></fa-icon>
 					<span class="me-auto">Compras</span>
 				</div>
 			</ng-template>
@@ -42,8 +42,8 @@
 		<ngb-panel id="ngb-accordion-ventas">
 			<ng-template ngbPanelTitle>
 				<div class="d-flex align-items-center justify-content-between w-100">
-					<fa-icon *ngIf="acc.isExpanded('ngb-accordion-ventas')" [icon]="['fas', 'chevron-up']" class="chevronStyle me-2"></fa-icon>
-					<fa-icon *ngIf="!acc.isExpanded('ngb-accordion-ventas')" [icon]="['fas', 'chevron-down']" class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="accordion.isExpanded('ngb-accordion-ventas')" [icon]="['fas', 'chevron-up']" class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="!accordion.isExpanded('ngb-accordion-ventas')" [icon]="['fas', 'chevron-down']" class="chevronStyle me-2"></fa-icon>
 					<span class="me-auto">Ventas</span>
 				</div>
 			</ng-template>

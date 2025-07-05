@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Rol } from 'src/app/models/rol';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +8,6 @@ import { Rol } from 'src/app/models/rol';
 export class HomeComponent {
 
   menuOpened = false;
-  rol = Rol;  
 
   toggleMenu() {
     this.menuOpened = !this.menuOpened;
@@ -21,5 +19,4 @@ export class HomeComponent {
       appElement.classList.remove('menu-opened');
     }
   }
-
 }
