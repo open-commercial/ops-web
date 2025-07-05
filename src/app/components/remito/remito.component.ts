@@ -1,22 +1,22 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {BatchActionKey, BatchActionsService} from '../../services/batch-actions.service';
-import {FacturasVentaService} from '../../services/facturas-venta.service';
-import {FacturaVenta} from '../../models/factura-venta';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeService} from '../../services/mensaje.service';
-import {Location} from '@angular/common';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {TipoBulto} from '../../models/tipo-bulto';
-import {Transportista} from '../../models/transportista';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {TransportistasService} from '../../services/transportistas.service';
-import {NuevoRemito} from '../../models/nuevo-remito';
-import {RemitosService} from '../../services/remitos.service';
-import {ActivatedRoute} from '@angular/router';
-import {HelperService} from '../../services/helper.service';
-import {SucursalesService} from '../../services/sucursales.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BatchActionKey, BatchActionsService } from '../../services/batch-actions.service';
+import { FacturasVentaService } from '../../services/facturas-venta.service';
+import { FacturaVenta } from '../../models/factura-venta';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { finalize } from 'rxjs/operators';
+import { MensajeService } from '../../services/mensaje.service';
+import { Location } from '@angular/common';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { TipoBulto } from '../../models/tipo-bulto';
+import { Transportista } from '../../models/transportista';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { TransportistasService } from '../../services/transportistas.service';
+import { NuevoRemito } from '../../models/nuevo-remito';
+import { RemitosService } from '../../services/remitos.service';
+import { ActivatedRoute } from '@angular/router';
+import { HelperService } from '../../services/helper.service';
+import { SucursalesService } from '../../services/sucursales.service';
 
 const bultosCount = (min: number): ValidatorFn => {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -24,7 +24,7 @@ const bultosCount = (min: number): ValidatorFn => {
     (control as UntypedFormArray).controls.forEach((b) => {
       cant += b.get('cantidad') && b.get('cantidad').valid ? b.get('cantidad').value : 0;
     });
-    return cant >= min ? null : { bultosCount: { count: cant, min }};
+    return cant >= min ? null : { bultosCount: { count: cant, min } };
   };
 };
 
@@ -34,29 +34,28 @@ const bultosCount = (min: number): ValidatorFn => {
   styleUrls: ['./remito.component.scss']
 })
 export class RemitoComponent implements OnInit, OnDestroy {
+
   facturasVenta: FacturaVenta[] = [];
   form: UntypedFormGroup;
   submitted = false;
-
   totalBultos = 0;
   totalFacturas = 0;
-
   transportistas: Transportista[] = [];
-
   helper = HelperService;
-
   subscription: Subscription;
 
-  constructor(private batchActionsService: BatchActionsService,
-              private loadingOverlayService: LoadingOverlayService,
-              private facturasVentaService: FacturasVentaService,
-              private remitosService: RemitosService,
-              private mensajeService: MensajeService,
-              private transportistasService: TransportistasService,
-              private location: Location,
-              private fb: UntypedFormBuilder,
-              private route: ActivatedRoute,
-              private sucursalesService: SucursalesService) {
+  constructor(
+    private readonly batchActionsService: BatchActionsService,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly facturasVentaService: FacturasVentaService,
+    private readonly remitosService: RemitosService,
+    private readonly mensajeService: MensajeService,
+    private readonly transportistasService: TransportistasService,
+    private readonly location: Location,
+    private readonly fb: UntypedFormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly sucursalesService: SucursalesService
+  ) {
     this.subscription = new Subscription();
   }
 
@@ -92,10 +91,8 @@ export class RemitoComponent implements OnInit, OnDestroy {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.volverAlListado();
         },
-      )
-    ;
-
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
+      );
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.volverAlListado()));
   }
 
   ngOnDestroy() {
@@ -105,8 +102,8 @@ export class RemitoComponent implements OnInit, OnDestroy {
   createForm() {
     this.form = this.fb.group({
       bultos: this.fb.array([], [Validators.required, bultosCount(1)]),
-      pesoTotalEnKg: [null , Validators.min(0.1)],
-      volumenTotalEnM3: [null , Validators.min(0.1)],
+      pesoTotalEnKg: [null, Validators.min(0.1)],
+      volumenTotalEnM3: [null, Validators.min(0.1)],
       idTransportista: [null, Validators.required],
       costoDeEnvio: [0, Validators.min(0)],
       observaciones: null,
@@ -118,7 +115,7 @@ export class RemitoComponent implements OnInit, OnDestroy {
     const tipos = Object.values(TipoBulto);
     tipos.forEach(t => {
       const bControl = this.fb.group({
-        check: false, tipo: t, cantidad: [{ value: 1, disabled: true}, [Validators.required, Validators.min(1)]]
+        check: false, tipo: t, cantidad: [{ value: 1, disabled: true }, [Validators.required, Validators.min(1)]]
       });
       bControl.get('cantidad').valueChanges.subscribe(() => this.totalBultos = this.getTotalBultos());
       this.bultos.push(bControl);
@@ -198,7 +195,7 @@ export class RemitoComponent implements OnInit, OnDestroy {
           },
           err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         )
-      ;
+        ;
     }
   }
 }

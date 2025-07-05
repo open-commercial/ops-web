@@ -11,8 +11,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { HomeComponent } from './components/home/home.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { registerLocaleData } from '@angular/common';
-import localeEsAR from '@angular/common/locales/es-AR';
-import localeEsARExtra from '@angular/common/locales/extra/es-AR';
 import { ProductoFiltroComponent } from './components/producto-filtro/producto-filtro.component';
 import { FacturasVentaComponent } from './components/facturas-venta/facturas-venta.component';
 import { FacturasCompraComponent } from './components/facturas-compra/facturas-compra.component';
@@ -92,6 +90,18 @@ import { SelectableListComponent } from './components/selectable-list/selectable
 import { FacturaCompraComponent } from './components/factura-compra/factura-compra.component';
 import { NuevoRenglonFacturaModalComponent } from './components/nuevo-renglon-factura-modal/nuevo-renglon-factura-modal.component';
 import { ConfiguracionComponent } from './components/configuracion/configuracion.component';
+import { NgChartsModule } from 'ng2-charts';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
+import localeEsAR from '@angular/common/locales/es-AR';
+import localeEsARExtra from '@angular/common/locales/extra/es-AR';
+import { CompraAnualChartComponent } from './components/compra-anual-chart/compra-anual-chart.component';
+import { CompraAnualPorProveedorChartComponent } from './components/compra-anual-por-proveedor-chart/compra-anual-por-proveedor-chart.component';
+import { CompraMensualChartComponent } from './components/compra-mensual-chart/compra-mensual-chart.component';
+import { CompraMensualPorProveedorChartComponent } from './components/compra-mensual-por-proveedor-chart/compra-mensual-por-proveedor-chart.component';
+import { VentaAnualChartComponent } from './components/venta-anual-chart/venta-anual-chart.component';
+import { VentaAnualPorClienteChartComponent } from './components/venta-anual-por-cliente-chart/venta-anual-por-cliente-chart.component';
+import { VentaMensualChartComponent } from './components/venta-mensual-chart/venta-mensual-chart.component';
+import { VentaMensualPorClienteChartComponent } from './components/venta-mensual-por-cliente-chart/venta-mensual-por-cliente-chart.component';
 
 registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
 
@@ -182,6 +192,15 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         FacturaCompraComponent,
         NuevoRenglonFacturaModalComponent,
         ConfiguracionComponent,
+        EstadisticasComponent,
+        CompraAnualChartComponent,
+        CompraAnualPorProveedorChartComponent,
+        CompraMensualChartComponent,
+        CompraMensualPorProveedorChartComponent,
+        VentaAnualChartComponent,
+        VentaAnualPorClienteChartComponent,
+        VentaMensualChartComponent,
+        VentaMensualPorClienteChartComponent
     ],
     imports: [
         BrowserModule,
@@ -189,12 +208,14 @@ registerLocaleData(localeEsAR, 'es-AR', localeEsARExtra);
         HttpClientModule,
         NgSelectModule,
         AppRoutingModule,
-        ShareModule
+        ShareModule,
+        NgChartsModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: []
 })
-export class AppModule {}
+export class AppModule { }

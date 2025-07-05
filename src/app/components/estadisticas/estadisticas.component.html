@@ -1,0 +1,76 @@
+<section class="app-pedido">
+	<div class="d-flex flex-row align-items-center my-3">
+		<h1 class="h3 m-0 flex-fill text-truncate">
+			<fa-icon [icon]="['fas', 'square-poll-vertical']"></fa-icon>
+			Estadísticas
+		</h1>
+	</div>
+	<ngb-accordion class="ops-accordion" [closeOthers]="false" #accordion activeIds="ngb-accordion-ventas">
+		<ngb-panel id="ngb-accordion-compras">
+			<ng-template ngbPanelTitle>
+				<div class="d-flex align-items-center justify-content-between w-100">
+					<fa-icon *ngIf="accordion.isExpanded('ngb-accordion-compras')" [icon]="['fas', 'chevron-up']" class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="!accordion.isExpanded('ngb-accordion-compras')" [icon]="['fas', 'chevron-down']" class="chevronStyle me-2"></fa-icon>
+					<span class="me-auto">Compras</span>
+				</div>
+			</ng-template>
+			<ng-template ngbPanelContent>
+				<div class="container-fluid">
+					<div class="row p-0 gap-4 mt-2">
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-compra-anual-chart>
+							</app-compra-anual-chart>
+						</div>
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-compra-anual-por-proveedor-chart>								
+							</app-compra-anual-por-proveedor-chart>
+						</div>
+					</div>
+					<div class="row gap-4 p-0 mt-4">
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-compra-mensual-chart>								
+							</app-compra-mensual-chart>
+						</div>
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-compra-mensual-por-proveedor-chart>								
+							</app-compra-mensual-por-proveedor-chart>
+						</div>
+					</div>
+				</div>
+			</ng-template>
+		</ngb-panel>
+		<ngb-panel id="ngb-accordion-ventas">
+			<ng-template ngbPanelTitle>
+				<div class="d-flex align-items-center justify-content-between w-100">
+					<fa-icon *ngIf="accordion.isExpanded('ngb-accordion-ventas')" [icon]="['fas', 'chevron-up']" class="chevronStyle me-2"></fa-icon>
+					<fa-icon *ngIf="!accordion.isExpanded('ngb-accordion-ventas')" [icon]="['fas', 'chevron-down']" class="chevronStyle me-2"></fa-icon>
+					<span class="me-auto">Ventas</span>
+				</div>
+			</ng-template>
+			<ng-template ngbPanelContent>
+				<div class="container-fluid">
+					<div class="row p-0 gap-4 mt-2">
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-venta-anual-chart>
+							</app-venta-anual-chart>
+						</div>
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-venta-anual-por-cliente-chart>
+							</app-venta-anual-por-cliente-chart>
+						</div>
+					</div>
+					<div class="row gap-4 p-0 mt-4">
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-venta-mensual-chart>
+							</app-venta-mensual-chart>
+						</div>
+						<div class="col-sm-12 col-md col-lg p-0">
+							<app-venta-mensual-por-cliente-chart>
+							</app-venta-mensual-por-cliente-chart>
+						</div>
+					</div>
+				</div>
+			</ng-template>
+		</ngb-panel>
+	</ngb-accordion>
+</section>

@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Usuario } from '../../models/usuario';
 import { AuthService } from '../../services/auth.service';
 import { SucursalesService } from '../../services/sucursales.service';
 import { Sucursal } from '../../models/sucursal';
 import { UsuariosService } from '../../services/usuarios.service';
-import {combineLatest, Subscription} from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-bar',
@@ -12,6 +12,7 @@ import {combineLatest, Subscription} from 'rxjs';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit, OnDestroy {
+
   private pSideNavOpened = false;
   @Input() set sindeNavOpened(value: boolean) { this.pSideNavOpened = value; }
   get sideNavOpened(): boolean { return this.pSideNavOpened; }
@@ -20,12 +21,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
   usuario: Usuario = null;
   sucursales: Sucursal[] = [];
   sucursalSeleccionada: Sucursal = null;
-
   subscription: Subscription;
 
   constructor(public authService: AuthService,
-              public sucursalesService: SucursalesService,
-              public usuariosService: UsuariosService) {
+    public sucursalesService: SucursalesService,
+    public usuariosService: UsuariosService) {
     this.subscription = new Subscription();
   }
 
@@ -35,14 +35,13 @@ export class NavBarComponent implements OnInit, OnDestroy {
         combineLatest([
           this.authService.getLoggedInUsuario(),
           this.sucursalesService.getSucursales()
-        ]).subscribe(( v: [Usuario, Sucursal[]]) => {
+        ]).subscribe((v: [Usuario, Sucursal[]]) => {
           this.usuario = v[0];
           this.sucursales = v[1];
           this.refreshSucursalSeleccionada();
         })
       );
-
-      this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.refreshSucursalSeleccionada()));
+      this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.refreshSucursalSeleccionada()));
     }
   }
 

@@ -1,49 +1,49 @@
-import {FormasDePagoService} from './../../services/formas-de-pago.service';
-import {FormaDePago} from './../../models/forma-de-pago';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {CuentaCorrienteCliente} from '../../models/cuenta-corriente';
-import {NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import {NuevoRenglonPedido} from '../../models/nuevo-renglon-pedido';
-import {PedidosService} from '../../services/pedidos.service';
-import {RenglonPedido} from '../../models/renglon-pedido';
-import {CantidadProductoModalComponent} from '../cantidad-producto-modal/cantidad-producto-modal.component';
-import {Producto} from '../../models/producto';
-import {TipoDeEnvio} from '../../models/tipo-de-envio';
-import {NuevosResultadosComprobante} from '../../models/nuevos-resultados-comprobante';
-import {Resultados} from '../../models/resultados';
-import {CuentasCorrientesService} from '../../services/cuentas-corrientes.service';
-import {SucursalesService} from '../../services/sucursales.service';
-import {Sucursal} from '../../models/sucursal';
-import {DetallePedido} from '../../models/detalle-pedido';
-import {AuthService} from '../../services/auth.service';
-import {debounceTime, finalize} from 'rxjs/operators';
-import {ActivatedRoute, Router} from '@angular/router';
-import {combineLatest, Subscription} from 'rxjs';
-import {ProductosService} from '../../services/productos.service';
-import {EliminarRenglonPedidoModalComponent} from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
-import {Cliente} from '../../models/cliente';
-import {ClientesService} from '../../services/clientes.service';
-import {StorageKeys, StorageService} from '../../services/storage.service';
-import {Usuario} from '../../models/usuario';
-import {Rol} from '../../models/rol';
-import {Pedido} from '../../models/pedido';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {MensajeService} from '../../services/mensaje.service';
-import {TipoDeComprobante} from '../../models/tipo-de-comprobante';
-import {Location} from '@angular/common';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {ProductosParaVerificarStock} from '../../models/productos-para-verificar-stock';
-import {ProductoFaltante} from '../../models/producto-faltante';
-import {Movimiento} from '../../models/movimiento';
+import { FormasDePagoService } from './../../services/formas-de-pago.service';
+import { FormaDePago } from './../../models/forma-de-pago';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { CuentaCorrienteCliente } from '../../models/cuenta-corriente';
+import { NgbAccordion, NgbAccordionConfig, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NuevoRenglonPedido } from '../../models/nuevo-renglon-pedido';
+import { PedidosService } from '../../services/pedidos.service';
+import { RenglonPedido } from '../../models/renglon-pedido';
+import { CantidadProductoModalComponent } from '../cantidad-producto-modal/cantidad-producto-modal.component';
+import { Producto } from '../../models/producto';
+import { TipoDeEnvio } from '../../models/tipo-de-envio';
+import { NuevosResultadosComprobante } from '../../models/nuevos-resultados-comprobante';
+import { Resultados } from '../../models/resultados';
+import { CuentasCorrientesService } from '../../services/cuentas-corrientes.service';
+import { SucursalesService } from '../../services/sucursales.service';
+import { Sucursal } from '../../models/sucursal';
+import { DetallePedido } from '../../models/detalle-pedido';
+import { AuthService } from '../../services/auth.service';
+import { debounceTime, finalize } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, Subscription } from 'rxjs';
+import { ProductosService } from '../../services/productos.service';
+import { EliminarRenglonPedidoModalComponent } from '../eliminar-renglon-pedido-modal/eliminar-renglon-pedido-modal.component';
+import { Cliente } from '../../models/cliente';
+import { ClientesService } from '../../services/clientes.service';
+import { StorageKeys, StorageService } from '../../services/storage.service';
+import { Usuario } from '../../models/usuario';
+import { Rol } from '../../models/rol';
+import { Pedido } from '../../models/pedido';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { MensajeService } from '../../services/mensaje.service';
+import { TipoDeComprobante } from '../../models/tipo-de-comprobante';
+import { Location } from '@angular/common';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { ProductosParaVerificarStock } from '../../models/productos-para-verificar-stock';
+import { ProductoFaltante } from '../../models/producto-faltante';
+import { Movimiento } from '../../models/movimiento';
 
 enum OpcionEnvio {
-  RETIRO_EN_SUCURSAL= 'RETIRO_EN_SUCURSAL',
-  ENVIO_A_DOMICILIO= 'ENVIO A DOMICILIO',
+  RETIRO_EN_SUCURSAL = 'RETIRO_EN_SUCURSAL',
+  ENVIO_A_DOMICILIO = 'ENVIO A DOMICILIO',
 }
 enum OpcionEnvioUbicacion {
-  USAR_UBICACION_ENVIO= 'USAR_UBICACION_ENVIO',
-  USAR_UBICACION_FACTURACION= 'USAR_UBICACION_FACTURACION',
+  USAR_UBICACION_ENVIO = 'USAR_UBICACION_ENVIO',
+  USAR_UBICACION_FACTURACION = 'USAR_UBICACION_FACTURACION',
 }
 
 enum Action {
@@ -58,6 +58,7 @@ enum Action {
   styleUrls: ['./pedido.component.scss'],
 })
 export class PedidoComponent implements OnInit, OnDestroy {
+
   title = 'Nuevo Pedido';
   form: UntypedFormGroup;
   submitted = false;
@@ -102,24 +103,25 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   retiroEnSucursalDisabled = false;
 
-  constructor(private fb: UntypedFormBuilder,
-              modalConfig: NgbModalConfig,
-              private modalService: NgbModal,
-              accordionConfig: NgbAccordionConfig,
-              private pedidosService: PedidosService,
-              private clientesService: ClientesService,
-              private cuentasCorrienteService: CuentasCorrientesService,
-              public sucursalesService: SucursalesService,
-              private authService: AuthService,
-              private router: Router,
-              private route: ActivatedRoute,
-              private productosService: ProductosService,
-              private storageService: StorageService,
-              private mensajeService: MensajeService,
-              private location: Location,
-              public loadingOverlayService: LoadingOverlayService,
-              public formasDePagoService: FormasDePagoService) {
-
+  constructor(
+    private readonly fb: UntypedFormBuilder,
+    readonly modalConfig: NgbModalConfig,
+    private readonly modalService: NgbModal,
+    readonly accordionConfig: NgbAccordionConfig,
+    private readonly pedidosService: PedidosService,
+    private readonly clientesService: ClientesService,
+    private readonly cuentasCorrienteService: CuentasCorrientesService,
+    public readonly sucursalesService: SucursalesService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly productosService: ProductosService,
+    private readonly storageService: StorageService,
+    private readonly mensajeService: MensajeService,
+    private readonly location: Location,
+    public readonly loadingOverlayService: LoadingOverlayService,
+    public readonly formasDePagoService: FormasDePagoService
+  ) {
     this.subscription = new Subscription();
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
@@ -130,7 +132,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
     this.createForm();
 
     const obvs = [
-      this.sucursalesService.getPuntosDeRetito(),
+      this.sucursalesService.getPuntosDeRetiro(),
       this.formasDePagoService.getFormasDePago(),
       this.formasDePagoService.getFormaDePagoPredeterminada(),
     ];
@@ -147,14 +149,14 @@ export class PedidoComponent implements OnInit, OnDestroy {
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       });
 
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(s => {
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(s => {
       this.setOpcionEnvio(s.idSucursal);
     }));
 
     this.init();
   }
 
-  setOpcionEnvio(idSucursal: number, value: OpcionEnvio|null = null) {
+  setOpcionEnvio(idSucursal: number, value: OpcionEnvio | null = null) {
     value = value || OpcionEnvio.RETIRO_EN_SUCURSAL;
     this.form.get('opcionEnvio').setValue(value);
     if (!this.esSucursalPuntoDeRetiro(idSucursal)) {
@@ -240,7 +242,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
             .subscribe({
               next: (v: [CuentaCorrienteCliente, RenglonPedido[]]) => {
                 this.datosParaEditarOClonar.ccc = v[0];
-                this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido : e }));
+                this.datosParaEditarOClonar.renglones = v[1].map(e => ({ renglonPedido: e }));
                 if (this.action === Action.EDITAR) {
                   v[1].forEach(e => this.cantidadesInicialesPedido[e.idProductoItem] = e.cantidad);
                 }
@@ -257,8 +259,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
                 }
                 this.inicializarForm();
               },
-            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-          });
+              error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            });
         },
         error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
@@ -287,14 +289,14 @@ export class PedidoComponent implements OnInit, OnDestroy {
                   },
                   error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 })
-              ;
+                ;
             } else {
               this.inicializarForm();
             }
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
-      ;
+        ;
     } else {
       this.inicializarForm();
     }
@@ -478,7 +480,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
         })
-      ;
+        ;
     }
   }
 
@@ -501,7 +503,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
-    ;
+      ;
   }
 
   agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {
@@ -601,8 +603,8 @@ export class PedidoComponent implements OnInit, OnDestroy {
 
   createPagoForm(pago: { idFormaDePago: number, monto: number } = { idFormaDePago: null, monto: 0.0 }) {
     return this.fb.group({
-      idFormaDePago: [ pago.idFormaDePago, Validators.required ],
-      monto: [ pago.monto, [Validators.required, Validators.min(10) ] ]
+      idFormaDePago: [pago.idFormaDePago, Validators.required],
+      monto: [pago.monto, [Validators.required, Validators.min(10)]]
     });
   }
 
@@ -693,7 +695,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
-    ;
+      ;
   }
 
   addRenglonPedido(nrp: NuevoRenglonPedido) {
@@ -704,7 +706,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         next: data => this.handleRenglonPedido(data[0]),
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
-    ;
+      ;
   }
 
   editarRenglon(rpControl: AbstractControl) {
@@ -786,7 +788,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
         next: (r: Resultados) => this.form.get('resultados').setValue(r),
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
-    ;
+      ;
   }
 
   updatedCliente($event: Cliente) {
@@ -819,7 +821,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
         })
-      ;
+        ;
     }
   }
 
@@ -867,7 +869,7 @@ export class PedidoComponent implements OnInit, OnDestroy {
     const ccc: CuentaCorrienteCliente = this.form.get('ccc').value;
     const canEditDescuento = ccc && this.usuario
       && (this.authService.userHasAnyOfTheseRoles([Rol.ADMINISTRADOR, Rol.ENCARGADO]) ||
-      !(this.usuario.idUsuario === ccc.cliente.idCredencial && this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR])));
+        !(this.usuario.idUsuario === ccc.cliente.idCredencial && this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR])));
     if (canEditDescuento) {
       this.form.get('descuento').enable();
     } else {

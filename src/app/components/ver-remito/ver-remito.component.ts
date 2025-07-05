@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {combineLatest, Subscription} from 'rxjs';
-import {RemitosService} from '../../services/remitos.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {ActivatedRoute} from '@angular/router';
-import {finalize} from 'rxjs/operators';
-import {RenglonRemito} from '../../models/renglon-remito';
-import {Remito} from '../../models/remito';
-import {MensajeService} from '../../services/mensaje.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {Location} from '@angular/common';
-import {HelperService} from '../../services/helper.service';
-import {SucursalesService} from '../../services/sucursales.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, Subscription } from 'rxjs';
+import { RemitosService } from '../../services/remitos.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+import { RenglonRemito } from '../../models/renglon-remito';
+import { Remito } from '../../models/remito';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { Location } from '@angular/common';
+import { HelperService } from '../../services/helper.service';
+import { SucursalesService } from '../../services/sucursales.service';
 
 @Component({
   selector: 'app-ver-remito',
@@ -18,19 +18,20 @@ import {SucursalesService} from '../../services/sucursales.service';
   styleUrls: ['./ver-remito.component.scss']
 })
 export class VerRemitoComponent implements OnInit, OnDestroy {
+
   remito: Remito;
   renglones: RenglonRemito[] = [];
-
   helper = HelperService;
-
   subscription: Subscription;
 
-  constructor(private remitosService: RemitosService,
-              private route: ActivatedRoute,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
-              private location: Location,
-              private sucursalesService: SucursalesService) {
+  constructor(
+    private readonly remitosService: RemitosService,
+    private readonly route: ActivatedRoute,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly mensajeService: MensajeService,
+    private readonly location: Location,
+    private readonly sucursalesService: SucursalesService
+  ) {
     this.subscription = new Subscription();
   }
 
@@ -53,9 +54,9 @@ export class VerRemitoComponent implements OnInit, OnDestroy {
           this.volverAlListado();
         }
       })
-    ;
+      ;
 
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.volverAlListado()));
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.volverAlListado()));
   }
 
   ngOnDestroy() {

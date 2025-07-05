@@ -4,6 +4,10 @@
     <div class="flex-fill px-1 main-content container-fluid px-3">
         <router-outlet></router-outlet>
     </div>
-    <app-side-nav class="app-side-nav flex-shrink-0 flex-sm-grow-0" [class.opened]="menuOpened" (menuOptionClick)="toggleMenu()"></app-side-nav>
+    <app-side-nav
+      class="app-side-nav flex-shrink-0 flex-sm-grow-0" 
+      [class.opened]="menuOpened"
+      (menuOptionClick)="toggleMenu()">
+    </app-side-nav>
   </div>
 </div>

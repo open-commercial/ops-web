@@ -7,25 +7,25 @@ import { environment } from '../../environments/environment';
 import { HelperService } from './helper.service';
 import { StorageKeys, StorageService } from './storage.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class SucursalesService {
-  
+
   public url = environment.apiUrl + '/api/v1/sucursales';
+  private readonly sucursalSeleccionadaSubject = new Subject<Sucursal>();
+  sucursalSeleccionada$ = this.sucursalSeleccionadaSubject.asObservable();
 
-  private sucursalSubject = new Subject<Sucursal>();
-  sucursal$ = this.sucursalSubject.asObservable();
-
-  constructor(private http: HttpClient,
-              private storageService: StorageService) { }
+  constructor(private readonly http: HttpClient, private readonly storageService: StorageService) { }
 
   getSucursalLabel(s: Sucursal) {
-    if (!s) { return ''; }
+    if (!s) {
+      return '';
+    }
     return s.nombre + (s.detalleUbicacion ? ' (' + s.detalleUbicacion + ')' : '');
   }
 
   getIdSucursal() {
-    const idSuc = Number(this.storageService.getItem('idSucursal'));
-    return isNaN(idSuc) ? null : idSuc;
+    const idSucursal = Number(this.storageService.getItem('idSucursal'));
+    return isNaN(idSucursal) ? null : idSucursal;
   }
 
   setIdSucursal(idSucursal: string) {
@@ -34,14 +34,14 @@ export class SucursalesService {
 
   seleccionarSucursal(s: Sucursal) {
     this.setIdSucursal(s.idSucursal.toString());
-    this.sucursalSubject.next(s);
+    this.sucursalSeleccionadaSubject.next(s);
   }
 
   getSucursales(): Observable<Array<Sucursal>> {
     return this.http.get<Array<Sucursal>>(this.url);
   }
 
-  getPuntosDeRetito(): Observable<Array<Sucursal>> {
+  getPuntosDeRetiro(): Observable<Array<Sucursal>> {
     const terminos = { puntoDeRetiro: 'true' };
     return this.http.get<Array<Sucursal>>(`${this.url}?${HelperService.getQueryString(terminos)}`);
   }

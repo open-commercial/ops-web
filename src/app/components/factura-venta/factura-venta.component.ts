@@ -37,6 +37,7 @@ import { Rol } from '../../models/rol';
   styleUrls: ['./factura-venta.component.scss']
 })
 export class FacturaVentaComponent implements OnInit, OnDestroy {
+  
   title = '';
   form: UntypedFormGroup;
   submitted = false;
@@ -59,33 +60,33 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
   formaDePagoPredeterminada: FormaDePago;
 
   tiposDeComprobanteLabels = [
-    { val: TipoDeComprobante.FACTURA_A,   text: 'Factura A'   },
-    { val: TipoDeComprobante.FACTURA_B,   text: 'Factura B'   },
-    { val: TipoDeComprobante.FACTURA_C,   text: 'Factura C'   },
-    { val: TipoDeComprobante.FACTURA_X,   text: 'Factura X'   },
-    { val: TipoDeComprobante.FACTURA_Y,   text: 'Factura Y'   },
+    { val: TipoDeComprobante.FACTURA_A, text: 'Factura A' },
+    { val: TipoDeComprobante.FACTURA_B, text: 'Factura B' },
+    { val: TipoDeComprobante.FACTURA_C, text: 'Factura C' },
+    { val: TipoDeComprobante.FACTURA_X, text: 'Factura X' },
+    { val: TipoDeComprobante.FACTURA_Y, text: 'Factura Y' },
     { val: TipoDeComprobante.PRESUPUESTO, text: 'Presupuesto' }
   ];
 
   @ViewChild('accordion') accordion: NgbAccordion;
-  @ViewChild('checkAllToggler') checkAllToggler: ElementRef;  
+  @ViewChild('checkAllToggler') checkAllToggler: ElementRef;
 
   constructor(modalConfig: NgbModalConfig,
-              accordionConfig: NgbAccordionConfig,
-              private readonly fb: UntypedFormBuilder,
-              private readonly facturasService: FacturasService,
-              private readonly facturasVentaService: FacturasVentaService,
-              private readonly route: ActivatedRoute,
-              private readonly router: Router,
-              private readonly location: Location,
-              private readonly cuentasCorrienteService: CuentasCorrientesService,
-              private readonly mensajeService: MensajeService,
-              private readonly sucursalesService: SucursalesService,
-              private readonly storageService: StorageService,
-              private readonly pedidosService: PedidosService,
-              public loadingOverlayService: LoadingOverlayService,
-              public formasDePagoService: FormasDePagoService,
-              public authService: AuthService) {
+    accordionConfig: NgbAccordionConfig,
+    private readonly fb: UntypedFormBuilder,
+    private readonly facturasService: FacturasService,
+    private readonly facturasVentaService: FacturasVentaService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly location: Location,
+    private readonly cuentasCorrienteService: CuentasCorrientesService,
+    private readonly mensajeService: MensajeService,
+    private readonly sucursalesService: SucursalesService,
+    private readonly storageService: StorageService,
+    private readonly pedidosService: PedidosService,
+    public loadingOverlayService: LoadingOverlayService,
+    public formasDePagoService: FormasDePagoService,
+    public authService: AuthService) {
     accordionConfig.type = 'dark';
     modalConfig.backdrop = 'static';
     modalConfig.keyboard = false;
@@ -114,7 +115,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       });
 
-    this.subscription.add(this.sucursalesService.sucursal$.subscribe(() => this.getTiposDeComprobante()));
+    this.subscription.add(this.sucursalesService.sucursalSeleccionada$.subscribe(() => this.getTiposDeComprobante()));
   }
 
   ngOnDestroy() {
@@ -137,20 +138,20 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
             } else {
               this.mensajeService.msg(`Estado de pedido Inválido (${p.estado})`, MensajeModalType.ERROR)
                 .then(() => this.router.navigate(['/pedidos']))
-              ;
+                ;
             }
           },
           e => {
             this.mensajeService.msg(e.error, MensajeModalType.ERROR)
               .then(() => this.router.navigate(['/pedidos']))
-            ;
+              ;
           }
         )
-      ;
+        ;
     } else {
       this.mensajeService.msg('No es un pedido válido', MensajeModalType.ERROR)
         .then(() => this.router.navigate(['/pedidos']))
-      ;
+        ;
     }
   }
 
@@ -177,14 +178,14 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
                 .then(() => this.router.navigate(['/pedidos']));
             }
           })
-        ;
+          ;
       } else {
         this.inicializarForm();
       }
     } else {
       this.mensajeService.msg('No se ha especificado un pedido', MensajeModalType.ERROR)
         .then(() => this.router.navigate(['/pedidos']))
-      ;
+        ;
     }
   }
 
@@ -359,10 +360,10 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
       this.facturasVentaService.getReglonesDePedido(this.pedido.idPedido, tipoDeComprobante)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe(data => this.setRenglonesFactura(data))
-      ;
+        ;
     } else {
       const nrfs = this.renglones.value.map(e => {
-        return  {
+        return {
           bonificacion: null,
           idProducto: e.renglon.idProductoItem,
           cantidad: e.renglon.cantidad,
@@ -375,7 +376,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
         .subscribe((data: RenglonFactura[]) => {
           this.setRenglonesFactura(data);
         })
-      ;
+        ;
     }
   }
 
@@ -412,7 +413,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
     this.facturasService.calcularResultadosFactura(nrf)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe((r: Resultados) => this.resultados = r)
-    ;
+      ;
   }
 
   submit() {
@@ -453,13 +454,13 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
           this.pedido = null;
           let msg = 'La factura fué dada de alta correctamente';
           const isABoC = [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C]
-            .indexOf(f.tipoComprobante) >= 0;          
+            .indexOf(f.tipoComprobante) >= 0;
           this.mensajeService.msg(msg, MensajeModalType.INFO);
           this.router.navigate(['/facturas-venta']);
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
-    ;
+      ;
   }
 
   handleSelectCcc(ccc: CuentaCorrienteCliente) {
@@ -472,7 +473,7 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   toggleCheckAll($event) {
     if (this.checkingRenglon) { return; }
-    const checked = $event.target.checked ;
+    const checked = $event.target.checked;
     this.checkingAll = true;
     this.renglones.controls.forEach(e => e.get('checked').setValue(checked));
     this.checkingAll = false;
@@ -513,8 +514,8 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
 
   createPagoForm(pago: { idFormaDePago: number, monto: number } = { idFormaDePago: null, monto: 0.0 }) {
     return this.fb.group({
-      idFormaDePago: [ pago.idFormaDePago, Validators.required ],
-      monto: [ pago.monto, [Validators.required, Validators.min(10) ] ]
+      idFormaDePago: [pago.idFormaDePago, Validators.required],
+      monto: [pago.monto, [Validators.required, Validators.min(10)]]
     });
   }
 

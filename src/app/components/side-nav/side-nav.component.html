@@ -4,12 +4,14 @@
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
-  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId" (panelChange)="beforeChange($event)">
+  <ngb-accordion id="menu" class="ops-accordion" [closeOthers]="true" #accordion [activeIds]="accordionActiveId"
+    (panelChange)="beforeChange($event)">
     <ng-template ngFor let-m [ngForOf]="menuData">
       <ngb-panel [id]="m.id" *ngIf="m.show">
         <ng-template ngbPanelTitle>
           <span class="d-flex align-items-center">
-            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']" class="me-2"></fa-icon>
+            <fa-icon [icon]="['fas', accordion.isExpanded(m.id) ? 'chevron-up' : 'chevron-down']"
+              class="me-2"></fa-icon>
             <span>{{ m.seccion }}</span>
           </span>
         </ng-template>

@@ -2,8 +2,8 @@ import { filter, Subscription } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { NgbAccordion, NgbAccordionConfig, NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Component, EventEmitter, Output, ViewChild, OnDestroy } from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {Rol} from '../../models/rol';
+import { AuthService } from '../../services/auth.service';
+import { Rol } from '../../models/rol';
 
 @Component({
   selector: 'app-side-nav',
@@ -12,30 +12,25 @@ import {Rol} from '../../models/rol';
   providers: [NgbAccordionConfig]
 })
 export class SideNavComponent implements OnDestroy {
+
   tieneRolAdministrador = false;
   tieneRolAdminOEncargado = false;
   tieneRolVendedor = false;
-
   menuData = [];
-
   @Output() menuOptionClick = new EventEmitter<void>();
-
   @ViewChild('accordion') accordion: NgbAccordion;
-
   subscription: Subscription;
-  url='';
-  accordionActiveId='';
+  url = '';
+  accordionActiveId = '';
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              accordionConfig: NgbAccordionConfig) {
+  constructor(private readonly authService: AuthService,
+    private readonly router: Router,
+    accordionConfig: NgbAccordionConfig,) {
     accordionConfig.type = 'dark';
     this.subscription = new Subscription();
-
     this.tieneRolAdministrador = this.authService.userHasAnyOfTheseRoles([Rol.ADMINISTRADOR]);
     this.tieneRolAdminOEncargado = this.authService.userHasAnyOfTheseRoles([Rol.ADMINISTRADOR, Rol.ENCARGADO]);
     this.tieneRolVendedor = this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR]);
-
     this.menuData = [
       {
         seccion: 'Administración',
@@ -43,6 +38,7 @@ export class SideNavComponent implements OnDestroy {
         show: this.tieneRolAdminOEncargado,
         rutas: [
           { name: 'Cajas', icon: ['fas', 'cash-register'], route: '/cajas', show: true },
+          { name: 'Estadísticas', icon: ['fas', 'square-poll-vertical'], route: '/estadisticas', show: this.tieneRolAdministrador },
           { name: 'Formas de Pago', icon: ['fas', 'money-bill-wave'], route: '/formas-de-pago', show: true },
           { name: 'Gastos', icon: ['fas', 'hand-holding-usd'], route: '/gastos', show: true },
           { name: 'Localidades', icon: ['fas', 'map-marked-alt'], route: '/localidades', show: true },
@@ -141,11 +137,9 @@ export class SideNavComponent implements OnDestroy {
           if (url.indexOf('?') >= 0) {
             url = url.split('?')[0];
           }
-
           const elemento = this.menuData.filter(m => {
             return m.rutas.filter(r => r.route.indexOf(url) === 0).length > 0;
           });
-
           this.accordionActiveId = elemento.length ? elemento[0].id : '';
         })
     );
@@ -159,9 +153,10 @@ export class SideNavComponent implements OnDestroy {
     this.menuOptionClick.emit();
   }
 
-  public beforeChange($event: NgbPanelChangeEvent) {
+  beforeChange($event: NgbPanelChangeEvent) {
     if (this.accordion.isExpanded($event.panelId)) {
       $event.preventDefault();
     }
   }
+
 }
