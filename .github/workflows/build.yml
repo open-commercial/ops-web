@@ -1,10 +1,12 @@
 name: Open Commercial CI
+
 on:
   push:
     branches:
       - master
   pull_request:
     types: [ opened, synchronize, reopened ]
+    
 jobs:
   build-analyze-deploy:
     name: Build, analyze, dockerize, and publish
@@ -14,10 +16,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.5.1
         with:
-          node-version: 16.13          
+          node-version: 16.13
+          
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,44 +29,69 @@ jobs:
           ENV_NAME: production          
         run: |
           npm install
-          npm run build                  
+          npm run build
+          
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}       
-      - name: Generate changelog
-        if: ${{ github.ref == 'refs/heads/master' }}
-        uses: Bullrich/generate-release-changelog@master
-        id: changelog
-        env:
-          REPO: ${{ github.repository }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
       - name: Get release version
         if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           echo "RELEASE_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
-      - name: Create Release
+
+      - name: Create tag
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"          
+          echo "Tagging version: ${RELEASE_VERSION}"
+          git tag "${RELEASE_VERSION}"
+          git push origin "${RELEASE_VERSION}"
+          
+      - name: Generate changelog
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |          
+          PREV_TAG=$(git tag --sort=-creatordate | sed -n '2p')
+          if [ -z "$PREV_TAG" ]; then
+            PREV_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "Previous tag: $PREV_TAG"
+          echo "Current tag: ${RELEASE_VERSION}"          
+          echo "" >> CHANGELOG.md
+          git log ${PREV_TAG}..HEAD \
+            --pretty=format:"- [%h](https://github.com/${{ github.repository }}/commit/%h) %s" \
+            >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          cat CHANGELOG.md
+
+      - name: Create release
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
-          release_name: ${{ env.RELEASE_VERSION }}
-          body: |
-            ${{ steps.changelog.outputs.changelog }}
+          name: ${{ env.RELEASE_VERSION }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Set up QEMU
         if: ${{ github.ref_name == 'master' }}
         uses: docker/setup-qemu-action@v2
+        
       - name: Set up Docker Buildx
         if: ${{ github.ref_name == 'master' }}
         uses: docker/setup-buildx-action@v2
+        
       - name: Login to DockerHub
         if: ${{ github.ref_name == 'master' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
       - name: Build and push Docker image
         if: ${{ github.ref_name == 'master' }}
         uses: docker/build-push-action@v3
