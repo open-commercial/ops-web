@@ -1,4 +1,4 @@
-import { ReciboVentaActionsBarComponent } from './../components/recibo-venta-actions-bar/recibo-venta-actions-bar.component';
+import { ReciboVentaActionsBarComponent } from '../components/recibo-venta-actions-bar/recibo-venta-actions-bar.component';
 import { ReciboCompraActionsBarComponent } from '../components/recibo-compra-actions-bar/recibo-compra-actions-bar.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';

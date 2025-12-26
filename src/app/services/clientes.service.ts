@@ -8,6 +8,7 @@ import { BusquedaClienteCriteria } from '../models/criterias/busqueda-cliente-cr
 
 @Injectable({providedIn: 'root'})
 export class ClientesService {
+  
   url = environment.apiUrl + '/api/v1/clientes';
   urlBusqueda = this.url + '/busqueda/criteria';
 
@@ -36,19 +37,11 @@ export class ClientesService {
     return this.http.delete<void>(`${this.url}/${idCliente}`);
   }
 
-  getClientePredeterminado(): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.url}/predeterminado`);
-  }
-
   setClientePredeterminado(idCliente: number): Observable<void> {
     return this.http.put<void>(`${this.url}/${idCliente}/predeterminado`, {});
   }
 
   existeClientePredetermiando(): Observable<boolean> {
     return this.http.get<boolean>(`${this.url}/existe-predeterminado`);
-  }
-
-  getClienteDePedido(idPedido: number): Observable<Cliente> {
-    return this.http.get<Cliente>(this.url + `/pedidos/${idPedido}`);
   }
 }
