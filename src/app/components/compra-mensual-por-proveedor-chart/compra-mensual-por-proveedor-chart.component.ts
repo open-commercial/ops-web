@@ -10,7 +10,7 @@ import { EstadisticasService } from 'src/app/services/estadisticas.service';
 export class CompraMensualPorProveedorChartComponent extends TableChartDirective implements OnInit {
 
   selectedYear: number = this.years[0];
-  selectedMonth: number = this.months[0].value;
+  selectedMonth: number = this.getCurrentMonth();
   estadisticasService: EstadisticasService = inject(EstadisticasService);
 
   ngOnInit(): void {

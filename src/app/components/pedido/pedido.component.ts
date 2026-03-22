@@ -62,23 +62,24 @@ export class PedidoComponent implements OnInit, OnDestroy {
   title = 'Nuevo Pedido';
   form: UntypedFormGroup;
   submitted = false;
-
   oe = OpcionEnvio;
   oeu = OpcionEnvioUbicacion;
-
   sucursales: Array<Sucursal> = [];
-
   saving = false;
   cccPredeterminado: CuentaCorrienteCliente = null;
-
   loadingResultados = false;
-
   @ViewChild('accordion') accordion: NgbAccordion;
-
   usuario: Usuario = null;
-
   action = Action.NUEVO;
-
+  cccReadOnly = false;
+  localStorageKey = StorageKeys.PEDIDO_NUEVO;
+  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
+  cantidadesActualesPedido: { [idProducto: number]: number } = {};
+  subscription: Subscription;
+  mov = Movimiento;
+  formasDePago: FormaDePago[] = [];
+  formaDePagoPredeterminada: FormaDePago;
+  retiroEnSucursalDisabled = false;
   datosParaEditarOClonar = {
     pedido: null,
     ccc: null,
@@ -87,21 +88,6 @@ export class PedidoComponent implements OnInit, OnDestroy {
     opcionEnvio: null,
     opcionEnvioUbicacion: null,
   };
-
-  cccReadOnly = false;
-  localStorageKey = StorageKeys.PEDIDO_NUEVO;
-
-  cantidadesInicialesPedido: { [idProducto: number]: number } = {};
-  cantidadesActualesPedido: { [idProducto: number]: number } = {};
-
-  subscription: Subscription;
-
-  mov = Movimiento;
-
-  formasDePago: FormaDePago[] = [];
-  formaDePagoPredeterminada: FormaDePago;
-
-  retiroEnSucursalDisabled = false;
 
   constructor(
     private readonly fb: UntypedFormBuilder,

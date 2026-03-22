@@ -17,7 +17,7 @@ export class PedidosService {
   url = environment.apiUrl + '/api/v1/pedidos';
   urlBusqueda = this.url + '/busqueda/criteria';
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   buscar(criteria: BusquedaPedidoCriteria): Observable<Pagination> {
     return this.http.post<Pagination>(this.urlBusqueda, criteria);

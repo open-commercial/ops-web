@@ -3,6 +3,10 @@ import { Directive } from '@angular/core';
 @Directive()
 export abstract class ChartDirective {
 
+  getCurrentMonth(): number {
+    return new Date().getMonth() + 1;
+  }
+
   generateYears(): number[] {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - 10;
