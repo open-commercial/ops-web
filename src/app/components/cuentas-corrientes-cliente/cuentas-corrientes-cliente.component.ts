@@ -32,6 +32,7 @@ import { HelperService } from '../../services/helper.service';
   styleUrls: ['./cuentas-corrientes-cliente.component.scss']
 })
 export class CuentasCorrientesClienteComponent extends ListadoDirective implements OnInit {
+
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
 
@@ -49,6 +50,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
   ];
 
   rol = Rol;
+  helper = HelperService;
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
   allowedRolesToSetPredeterminado: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
@@ -57,10 +59,9 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
-  @ViewChild('ordernarPorCCC') ordenarPorCCCElement: FiltroOrdenamientoComponent;
-  @ViewChild('sentidoCCC') sentidoCCCElement: FiltroOrdenamientoComponent;
 
-  helper = HelperService;
+  @ViewChild('ordernarPorCCC') ordenarPorCCCElement: FiltroOrdenamientoComponent;
+  @ViewChild('sentidoCCC') sentidoCCCElement: FiltroOrdenamientoComponent;  
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
@@ -81,15 +82,13 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     super.ngOnInit();
     this.hasRoleToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRoleToSetPredeterminado = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToSetPredeterminado);
-
     this.loadingOverlayService.activate();
     this.ubicacionesService.getProvincias()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: provincias => this.provincias = provincias,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+        error: err => { this.mensajeService.msg(err.error, MensajeModalType.ERROR); },
+      });
   }
 
   getTerminosFromQueryParams(ps) {
@@ -143,10 +142,8 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
             error: err => {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
-          })
-        ;
-      })
-    ;
+          });
+      });
   }
 
   resetFilterForm() {
@@ -227,18 +224,16 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     modalRef.result.then(formato => {
       const qParams = this.getFormValues();
       const terminos = this.getTerminosFromQueryParams(qParams);
-
       this.loadingOverlayService.activate();
       this.ccService.generateListaClientesReporte(terminos, formato)
-        .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          (res) => {
+        .pipe(finalize(() => this.loadingOverlayService.deactivate())).subscribe({
+          next: (res) => {
             const mimeType = formato === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
             const file = new Blob([res], {type: mimeType});
             saveAs(file, `clientes.${formato}`);
           },
-          () => this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR),
-        );
+          error: () => { this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR); },
+        });
     }, () => { return; });
   }
 
@@ -260,15 +255,13 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
       if (result) {
         if (!cliente.predeterminado) {
           this.loadingOverlayService.activate();
-          this.clientesService.setClientePredeterminado(cliente.idCliente)
-            .subscribe(
-              () => location.reload(),
-              err => {
+          this.clientesService.setClientePredeterminado(cliente.idCliente).subscribe({
+              next: () => location.reload(),
+              error: (err) => {
                 this.loadingOverlayService.deactivate();
                 this.mensajeService.msg(err.error, MensajeModalType.ERROR);
               },
-            )
-          ;
+            });
         }
       }
     });
@@ -292,16 +285,13 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
-        this.clientesService.deleteCliente(cliente.idCliente)
-          .subscribe(
-            // no se hace this.loadingOverlayService.deactivate() porque necesita que se recargue el reload
-            () => location.reload(),
-            err => {
+        this.clientesService.deleteCliente(cliente.idCliente).subscribe({
+            next: () => location.reload(),
+            error: (err) => {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
-          )
-        ;
+          });
       }
     });
   }

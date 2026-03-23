@@ -4,14 +4,25 @@
       <fa-icon [icon]="['fas', 'truck']"></fa-icon> Proveedores
     </h1>
     <div class="text-nowrap text-end m-0">
-      <button class="btn btn-primary ms-2 my-1" routerLink="/proveedores/nuevo" ngbPopover="Nuevo Proveedor" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      <button 
+        class="btn btn-primary ms-2 my-1" 
+        routerLink="/proveedores/nuevo" 
+        ngbPopover="Nuevo Proveedor" 
+        triggers="mouseenter:mouseleave" 
+        placement="left">
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
-              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="ccpFilterCollapse"
-              [class.bg-white]="!isFiltersCollapsed"
-              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      <button 
+        type="button" 
+        class="btn btn-primary ms-2" 
+        (click)="isFiltersCollapsed = !isFiltersCollapsed"
+        [attr.aria-expanded]="!isFiltersCollapsed" 
+        aria-controls="ccpFilterCollapse"
+        [class.bg-white]="!isFiltersCollapsed"
+        ngbPopover="Filtros" 
+        triggers="mouseenter:mouseleave" 
+        placement="left">
+          <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
@@ -40,31 +51,70 @@
         </div>
         <div class="col-md-6">
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorCCP></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoCCC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoCCP></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento 
+              class="mb-3" 
+              id="filtroOrdenamientoOrdenarPorCCC" 
+              [values]="ordenArray" 
+              [label]="'Ordenar Por'" 
+              formControlName="ordenarPor" 
+              #ordernarPorCCP>
+            </app-filtro-ordenamiento>
+            <app-filtro-ordenamiento 
+              id="filtroOrdenamientoSentidoCCC" 
+              [values]="sentidoArray" 
+              [label]="'Sentido'" 
+              formControlName="sentido" 
+              #sentidoCCP>
+            </app-filtro-ordenamiento>
           </div>
         </div>
       </div>
     </ng-template>
-    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+    <app-filtros-form 
+      [form]="filterForm" 
+      [fieldsTemplate]="filterFormFields" 
+      (filterBtnClick)="filter()" 
+      (resetBtnClick)="reset()">
+    </app-filtros-form>
   </div>
-  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
-                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <app-filtros-aplicados 
+    [appliedFilters]="appliedFilters" 
+    [totalElements]="totalElements" 
+    [searching]="searching"
+    [ordenarPorAplicado]="ordenarPorAplicado" 
+    [sentidoAplicado]="sentidoAplicado">
+  </app-filtros-aplicados>
   <div class="ccc my-2 bg-white">
     <ng-template #info let-item>
+      <div>
+        <span class="badge text-bg-dark ms-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
+      </div>
       <div class="row">
-        <div class="col-lg-6">
-          <span class="badge text-bg-dark me-2 mb-2">#{{item.proveedor.nroProveedor}}</span>
-          <span class="badge text-bg-dark me-2 mb-2">CUIT o DNI: {{item.proveedor.idFiscal}}</span>
-          <span class="badge text-bg-dark me-2 mb-2">{{ helper.categoriaIVALabel(item.proveedor.categoriaIVA) }}</span>
-          <div class="ms-2 mb-2 fst-italic fw-bold nombre">
-            {{ item.proveedor.razonSocial }}
+        <div class="col-lg-6">          
+          <div class="ms-2 mb-2 fst-italic fw-bold nombre">{{ item.proveedor.razonSocial }}</div>
+          <div class="ms-2" *ngIf="!!item.proveedor.idFiscal">
+            <span class="fw-bold">CUIT o DNI: </span>{{ item.proveedor.idFiscal }}
+          </div>
+          <div class="ms-2" *ngIf="!!item.proveedor.categoriaIVA">
+            <span class="fw-bold">Categoría IVA: </span>{{ helper.categoriaIVALabel(item.proveedor.categoriaIVA) }}
+          </div>
+          <div class="ms-2" *ngIf="!!item.proveedor.email">
+            <span class="fw-bold">Email: </span>{{ item.proveedor.email }}
           </div>
           <div class="ms-2" *ngIf="!!item.proveedor.ubicacion">
             <span class="fw-bold">Ubicación: </span>{{ helper.formatUbicacion(item.proveedor.ubicacion) }}
           </div>
         </div>
         <div class="col-lg-6">
+          <div class="ms-2 text-nowrap" *ngIf="item.proveedor.telPrimario">
+            <span class="fw-bold">Teléfono #1: </span>{{ item.proveedor.telPrimario }}
+          </div>
+          <div class="ms-2 text-nowrap" *ngIf="item.proveedor.telSecundario">
+            <span class="fw-bold">Teléfono #2: </span>{{ item.proveedor.telSecundario }}
+          </div>
+          <div class="ms-2 text-nowrap" *ngIf="item.proveedor.web">
+            <span class="fw-bold">Web: </span>{{ item.proveedor.web }}
+          </div>
           <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
             <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
@@ -78,23 +128,45 @@
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block">
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.proveedor)">
-            <fa-icon [icon]="['fas', 'book']"></fa-icon>
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Ver Cuenta Corriente" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="irACtaCte(item.proveedor)">
+              <fa-icon [icon]="['fas', 'book']"></fa-icon>
           </button>
         </li>
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarProveedor(item.proveedor)">
-            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Editar" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="editarProveedor(item.proveedor)">
+              <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarProveedor(item.proveedor)">
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Eliminar" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="eliminarProveedor(item.proveedor)">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>
         </li>
       </ul>
     </ng-template>
-    <app-lista [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
-               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+    <app-lista 
+      [items]="items" 
+      [infoTemplate]="info" 
+      [actionsTemplate]="actions"
+      [page]="page" 
+      [totalPages]="totalPages" 
+      [totalElements]="totalElements" 
+      (pageChange)="loadPage($event)">
+    </app-lista>
   </div>
 </div>

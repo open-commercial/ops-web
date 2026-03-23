@@ -27,6 +27,7 @@ import { ProveedoresService } from '../../../../services/proveedores.service';
   styleUrls: ['./cuentas-corrientes-proveedor.component.scss']
 })
 export class CuentasCorrientesProveedorComponent extends ListadoDirective implements OnInit {
+
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
 
@@ -45,6 +46,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
 
   ordenarPorAplicado = '';
   sentidoAplicado = '';
+
   @ViewChild('ordernarPorCCP') ordenarPorCCPElement: FiltroOrdenamientoComponent;
   @ViewChild('sentidoCCP') sentidoCCPElement: FiltroOrdenamientoComponent;
 
@@ -77,7 +79,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: provincias => this.provincias = provincias,
-        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        error: err => void this.mensajeService.msg(err.error, MensajeModalType.ERROR),
       })
     ;
   }
@@ -127,7 +129,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: localidades => this.localidades = localidades,
-            error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+            error: err => void this.mensajeService.msg(err.error, MensajeModalType.ERROR),
           })
         ;
       })
@@ -217,8 +219,7 @@ export class CuentasCorrientesProveedorComponent extends ListadoDirective implem
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             }
-          })
-        ;
+          });
       }
     });
   }

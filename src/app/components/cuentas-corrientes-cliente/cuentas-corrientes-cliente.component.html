@@ -2,17 +2,33 @@
   <div class="d-flex flex-row align-items-center my-3">
     <h1 class="h3 m-0 flex-fill text-truncate"><fa-icon [icon]="['fas', 'portrait']"></fa-icon> Clientes</h1>
     <div class="text-end m-0 text-nowrap">
-      <button class="btn btn-primary ms-2 my-1" routerLink="/clientes/nuevo" ngbPopover="Nuevo Cliente" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      <button 
+        class="btn btn-primary ms-2 my-1" 
+        routerLink="/clientes/nuevo" 
+        ngbPopover="Nuevo Cliente" 
+        triggers="mouseenter:mouseleave" 
+        placement="left">
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-      <button class="btn btn-primary ms-2" (click)="generateReporte()" placement="left" ngbPopover="Imprimir" triggers="mouseenter:mouseleave">
-        <fa-icon [icon]="['fas', 'print']"></fa-icon>
+      <button 
+        class="btn btn-primary ms-2" 
+        (click)="generateReporte()" 
+        placement="left" 
+        ngbPopover="Imprimir" 
+        triggers="mouseenter:mouseleave">
+          <fa-icon [icon]="['fas', 'print']"></fa-icon>
       </button>
-      <button type="button" class="btn btn-primary ms-2" (click)="isFiltersCollapsed = !isFiltersCollapsed"
-              [attr.aria-expanded]="!isFiltersCollapsed" aria-controls="cccFilterCollapse"
-              [class.bg-white]="!isFiltersCollapsed"
-              ngbPopover="Filtros" triggers="mouseenter:mouseleave" placement="left">
-        <fa-icon [icon]="['fas', 'filter']"></fa-icon>
+      <button 
+        type="button" 
+        class="btn btn-primary ms-2" 
+        (click)="isFiltersCollapsed = !isFiltersCollapsed"
+        [attr.aria-expanded]="!isFiltersCollapsed" 
+        aria-controls="cccFilterCollapse"
+        [class.bg-white]="!isFiltersCollapsed"
+        ngbPopover="Filtros" 
+        triggers="mouseenter:mouseleave" 
+        placement="left">
+          <fa-icon [icon]="['fas', 'filter']"></fa-icon>
       </button>
     </div>
   </div>
@@ -42,16 +58,38 @@
             </select>
           </div>
           <div class="card card-body bg-light mb-3">
-            <app-filtro-ordenamiento class="mb-3" id="filtroOrdenamientoOrdenarPorCCC" [values]="ordenArray" [label]="'Ordenar Por'" formControlName="ordenarPor" #ordernarPorCCC></app-filtro-ordenamiento>
-            <app-filtro-ordenamiento id="filtroOrdenamientoSentidoCCC" [values]="sentidoArray" [label]="'Sentido'" formControlName="sentido" #sentidoCCC></app-filtro-ordenamiento>
+            <app-filtro-ordenamiento 
+              class="mb-3" id="filtroOrdenamientoOrdenarPorCCC" 
+              [values]="ordenArray" 
+              [label]="'Ordenar Por'" 
+              formControlName="ordenarPor" 
+              #ordernarPorCCC>
+            </app-filtro-ordenamiento>
+            <app-filtro-ordenamiento 
+              id="filtroOrdenamientoSentidoCCC" 
+              [values]="sentidoArray" 
+              [label]="'Sentido'" 
+              formControlName="sentido" 
+              #sentidoCCC>
+            </app-filtro-ordenamiento>
           </div>
         </div>
       </div>
     </ng-template>
-    <app-filtros-form [form]="filterForm" [fieldsTemplate]="filterFormFields" (filterBtnClick)="filter()" (resetBtnClick)="reset()"></app-filtros-form>
+    <app-filtros-form 
+      [form]="filterForm" 
+      [fieldsTemplate]="filterFormFields" 
+      (filterBtnClick)="filter()"
+      (resetBtnClick)="reset()">
+    </app-filtros-form>
   </div>
-  <app-filtros-aplicados [appliedFilters]="appliedFilters" [totalElements]="totalElements" [searching]="searching"
-                         [ordenarPorAplicado]="ordenarPorAplicado" [sentidoAplicado]="sentidoAplicado"></app-filtros-aplicados>
+  <app-filtros-aplicados 
+    [appliedFilters]="appliedFilters" 
+    [totalElements]="totalElements" 
+    [searching]="searching"
+    [ordenarPorAplicado]="ordenarPorAplicado" 
+    [sentidoAplicado]="sentidoAplicado">
+  </app-filtros-aplicados>
   <div class="ccc my-2 bg-white">
     <ng-template #info let-item>
       <div>
@@ -90,6 +128,15 @@
           <div class="ms-2 text-nowrap" *ngIf="item.fechaUltimoMovimiento">
             <span class="fw-bold">Ult. Mov. C/C:</span> {{ item.fechaUltimoMovimiento | date:'dd/MM/yyyy HH:mm' }}
           </div>
+          <div class="ms-2" *ngIf="item.cliente.telefono">
+            <span class="fw-bold">Teléfono: </span>{{ item.cliente.telefono }}
+          </div>
+          <div class="ms-2" *ngIf="item.cliente.email">
+            <span class="fw-bold">Email: </span>{{ item.cliente.email }}
+          </div>
+          <div class="ms-2" *ngIf="item.cliente.contacto">
+            <span class="fw-bold">Contacto: </span>{{ item.cliente.contacto }}
+          </div>
           <div class="ms-2 text-nowrap">
             <span class="fw-bold">Saldo C/C: </span>
             <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
@@ -121,7 +168,15 @@
         </li>
       </ul>
     </ng-template>
-    <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
-               [page]="page" [totalPages]="totalPages" [totalElements]="totalElements" (pageChange)="loadPage($event)"></app-lista>
+    <app-lista 
+      [size]="size" 
+      [items]="items" 
+      [infoTemplate]="info" 
+      [actionsTemplate]="actions"
+      [page]="page" 
+      [totalPages]="totalPages" 
+      [totalElements]="totalElements" 
+      (pageChange)="loadPage($event)">
+    </app-lista>
   </div>
 </div>

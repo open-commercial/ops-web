@@ -221,7 +221,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
-    onSameUrlNavigation: 'reload', scrollPositionRestoration: 'enabled', relativeLinkResolution: 'legacy'
+    onSameUrlNavigation: 'reload', 
+    scrollPositionRestoration: 'enabled', 
+    relativeLinkResolution: 'legacy'
   })],
   exports: [RouterModule]
 })
