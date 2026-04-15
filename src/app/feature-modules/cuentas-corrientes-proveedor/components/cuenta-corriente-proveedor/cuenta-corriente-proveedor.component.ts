@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingOverlayService } from '../../../../services/loading-overlay.service';
 import { MensajeService } from '../../../../services/mensaje.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { CuentasCorrientesService } from '../../../../services/cuentas-corrientes.service';
 import { finalize } from 'rxjs/operators';
 import { CuentaCorrienteProveedor } from '../../../../models/cuenta-corriente';
@@ -44,6 +44,7 @@ const ssCCPPreviousUrlKey = 'CCP_PREVIOUS_URL';
   providers: [DatePipe]
 })
 export class CuentaCorrienteProveedorComponent extends ListadoDirective implements OnInit {
+  
   ccp: CuentaCorrienteProveedor;
   renglones: RenglonCuentaCorriente[] = [];
   saldo = 0;
@@ -96,7 +97,8 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
               private readonly authService: AuthService,
               private readonly notasService: NotasService,
               private readonly recibosService: RecibosService,
-              private readonly datePipe: DatePipe) {
+              private readonly datePipe: DatePipe,
+              private readonly location: Location) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
@@ -120,8 +122,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
                     .then(() => { return; }, () => { return; });
                   this.router.navigate(['/proveedores']);
                 }
-              })
-            ;
+              });
           },
           error: (err) => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
@@ -146,8 +147,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
   }
 
   volverAlListado() {
-    const backUrl = sessionStorage.getItem(ssCCPPreviousUrlKey) || '/proveedores';
-    this.router.navigateByUrl(backUrl);
+    this.location.back();
   }
 
   getItemsFromQueryParams(params = null) {

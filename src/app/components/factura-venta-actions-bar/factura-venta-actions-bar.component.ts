@@ -27,6 +27,7 @@ type FacturaVentaActionButtonName = 'show'|'email'|'show-remito'|'new-remito'|'c
   providers: [DatePipe]
 })
 export class FacturaVentaActionsBarComponent implements OnInit {
+
   private pFacturaVenta: FacturaVenta;
   @Input() set facturaVenta(value: FacturaVenta) { this.pFacturaVenta = value; }
   get facturaVenta(): FacturaVenta { return this.pFacturaVenta; }
@@ -62,15 +63,15 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     'create-nota-credito': false
   };
 
-  constructor(private router: Router,
-              private authService: AuthService,
-              private mensajeService: MensajeService,
-              private loadingOverlayService: LoadingOverlayService,
-              private modalService: NgbModal,
-              private datePipe: DatePipe,
-              private facturasVentaService: FacturasVentaService,
-              private configuracionesSucursalService: ConfiguracionesSucursalService,
-              private notasService: NotasService) {
+  constructor(private readonly router: Router,
+              private readonly authService: AuthService,
+              private readonly mensajeService: MensajeService,
+              private readonly loadingOverlayService: LoadingOverlayService,
+              private readonly modalService: NgbModal,
+              private readonly datePipe: DatePipe,
+              private readonly facturasVentaService: FacturasVentaService,
+              private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
+              private readonly notasService: NotasService) {
     this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEnviarPorEmail);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
   }
@@ -81,8 +82,8 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     });
   }
 
-  async verFactura() {
-    await this.router.navigate(['/facturas-venta/ver', this.facturaVenta.idFactura]);
+  verFactura() {
+    this.router.navigate(['/facturas-venta/ver', this.facturaVenta.idFactura]);
   }
 
   downloadFacturaPdf() {
@@ -95,19 +96,18 @@ export class FacturaVentaActionsBarComponent implements OnInit {
           this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });
         },
-      })
-    ;
+      });
   }
 
-  async enviarPorEmail() {
+  enviarPorEmail() {
     if (!this.hasRoleToEnviarPorEmail) {
-      await this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
       return;
     }
 
     const msg = '¿Está seguro que desea enviar un email con la factura al Cliente?';
 
-    await this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.facturasVentaService.enviarPorEmail(this.facturaVenta.idFactura)
@@ -121,27 +121,26 @@ export class FacturaVentaActionsBarComponent implements OnInit {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 .then(() => { return; }, () => { return; });
             }
-          })
-        ;
+          });
       }
     });
   }
 
-  async verRemito() {
+  verRemito() {
     if (this.facturaVenta.remito) {
-      await this.router.navigate(['/remitos/ver', this.facturaVenta.remito.idRemito]);
+      this.router.navigate(['/remitos/ver', this.facturaVenta.remito.idRemito]);
     }
   }
 
-  async nuevoRemito() {
+  nuevoRemito() {
     if (!this.facturaVenta.remito) {
-      await this.router.navigate(['/remitos/de-factura', this.facturaVenta.idFactura]);
+      this.router.navigate(['/remitos/de-factura', this.facturaVenta.idFactura]);
     }
   }
 
-  async crearNotaCreditoFactura() {
+  crearNotaCreditoFactura() {
     if (!this.hasRoleToCrearNota) {
-      await this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
       return;
     }
 
@@ -149,8 +148,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     modalRef.componentInstance.idFactura = this.facturaVenta.idFactura;
     const nf = this.facturaVenta.numSerieAfip
       ? HelperService.formatNumFactura(this.facturaVenta.numSerieAfip, this.facturaVenta.numFacturaAfip)
-      : HelperService.formatNumFactura(this.facturaVenta.numSerie, this.facturaVenta.numFactura)
-    ;
+      : HelperService.formatNumFactura(this.facturaVenta.numSerie, this.facturaVenta.numFactura);
     modalRef.componentInstance.title = [
       this.facturaVenta.tipoComprobante.toString().replace('_', ' '),
       'Nº ' + nf + ' del Cliente ' + this.facturaVenta.nombreFiscalCliente,
@@ -168,10 +166,10 @@ export class FacturaVentaActionsBarComponent implements OnInit {
             this.mensajeService.msg(message, MensajeModalType.INFO).then(
               () => {
                 if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
-                  this.doAutorizar(nota.idNota, () => this.afterAutorizar.emit());
+                  this.autorizar(nota.idNota, () => this.afterAutorizar.emit());
                 } else { this.afterNoAutorizar.emit() }
-              }
-            , () => { return; });
+              }, 
+              () => { return; });
           } else {
             throw new Error('La Nota no posee id');
           }
@@ -181,7 +179,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
     }, () => { return; });
   }
 
-  doAutorizar(idNota: number, callback = () => { return; }) {
+  private autorizar(idNota: number, callback = () => { return; }) {
     this.loadingOverlayService.activate();
     this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
@@ -211,7 +209,6 @@ export class FacturaVentaActionsBarComponent implements OnInit {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });
         },
-      })
-    ;
+      });
   }
 }

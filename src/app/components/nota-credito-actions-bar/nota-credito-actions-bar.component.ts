@@ -23,7 +23,7 @@ export class NotaCreditoActionsBarComponent extends NotaActionsBarDirective {
     super(router, mensajeService, loadingOverlayService, authService, configuracionesSucursalService, notasService);
   }
 
-  async verFactura() {
+  verFactura() {
     let idFactura = null;
     let path = '';
 
@@ -37,6 +37,6 @@ export class NotaCreditoActionsBarComponent extends NotaActionsBarDirective {
       return;
     }
 
-    await this.router.navigate([path, idFactura]);
+    this.router.navigate([path, idFactura]);
   }
 }

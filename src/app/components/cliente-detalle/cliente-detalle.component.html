@@ -1,23 +1,36 @@
-<strong>Cliente</strong>
 <table class="table table-bordered table-sm" *ngIf="cliente">
-  <caption class="sr-only">Detalles de Cliente</caption>
   <tbody>
-  <tr>
-    <th scope="row" class="w-25 table-dark">Nombre</th>
-    <td>{{ cliente.nombreFiscal + (cliente.nombreFantasia ? ' (' + cliente.nombreFantasia + ')' : '')}}</td>
-  </tr>
-  <tr>
-    <th scope="row" class="table-dark">Ubicación</th>
-    <td>{{ cliente.detalleUbicacionDeFacturacion || cliente.detalleUbicacionDeEnvio }}</td>
-  </tr>
-  <tr>
-    <th scope="row" class="table-dark">Categoría IVA</th>
-    <td>{{ helper.categoriaIVALabel(cliente.categoriaIVA) | titlecase }}</td>
-  </tr>
-  <tr>
-    <th scope="row" class="table-dark">CUIT o DNI</th>
-    <td>{{ cliente.idFiscal }}</td>
-  </tr>
+    <tr>
+      <th scope="row" class="w-25 table-dark">Nombre</th>
+      <td>{{ cliente.nombreFiscal + (cliente.nombreFantasia ? ' (' + cliente.nombreFantasia + ')' : '')}}</td>
+    </tr>
+    <tr *ngIf="cliente.idFiscal">
+      <th scope="row" class="table-dark">CUIT o DNI</th>
+      <td>{{ cliente.idFiscal }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-dark">Categoría IVA</th>
+      <td>{{ helper.categoriaIVALabel(cliente.categoriaIVA) }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-dark">Fecha de Alta</th>
+      <td>{{ cliente.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-dark">Ubicación</th>
+      <td>{{ cliente.detalleUbicacionDeFacturacion || cliente.detalleUbicacionDeEnvio }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="table-dark">Teléfono</th>
+      <td>{{ cliente.telefono }}</td>
+    </tr>
+    <tr *ngIf="cliente.email">
+      <th scope="row" class="table-dark">Email</th>
+      <td>{{ cliente.email }}</td>
+    </tr>
+    <tr *ngIf="cliente.contacto">
+      <th scope="row" class="table-dark">Contacto</th>
+      <td>{{ cliente.contacto }}</td>
+    </tr>
   </tbody>
 </table>
-

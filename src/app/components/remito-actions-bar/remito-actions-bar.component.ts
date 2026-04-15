@@ -50,18 +50,18 @@ export class RemitoActionsBarComponent implements OnInit {
     });
   }
 
-  async verRemito() {
-    await this.router.navigate(['/remitos/ver', this.remito.idRemito]);
+  verRemito() {
+    this.router.navigate(['/remitos/ver', this.remito.idRemito]);
   }
 
-  async eliminarRemito() {
+  eliminarRemito() {
     if (!this.hasRoleToDelete) {
-      await this.mensajeService.msg('No posee permiso para eliminar remitos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para eliminar remitos.', MensajeModalType.ERROR);
       return;
     }
 
     const msg = `¿Está seguro que desea eliminar el remito ` + HelperService.formatNumRemito(this.remito.serie, this.remito.nroRemito) + '?';
-    await this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.remitosService.eliminarRemito(this.remito.idRemito)

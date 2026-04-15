@@ -88,14 +88,14 @@ export class MovimientoCajaComponent implements OnInit {
     });
   }
 
-  async verDetalle(m: MovimientoCaja) {
+  verDetalle(m: MovimientoCaja) {
     if (m.tipoComprobante === TipoDeComprobante.RECIBO) {
-      await this.router.navigate(['/recibos/ver/', m.idMovimiento]);
+      this.router.navigate(['/recibos/ver/', m.idMovimiento]);
       return;
     }
 
     if (m.tipoComprobante === TipoDeComprobante.GASTO) {
-      await this.router.navigate(['/gastos/ver/', m.idMovimiento]);
+      this.router.navigate(['/gastos/ver/', m.idMovimiento]);
     }
   }
 

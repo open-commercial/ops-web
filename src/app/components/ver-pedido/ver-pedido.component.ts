@@ -16,19 +16,17 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
   styleUrls: ['./ver-pedido.component.scss']
 })
 export class VerPedidoComponent implements OnInit {
+
   pedido: Pedido = null;
   renglones: RenglonPedido[] = [];
-
   tipoDeEnvio = TipoDeEnvio;
-
   nombreCliente = '';
   envioLabel = '';
-
   estado = EstadoPedido;
 
-  constructor(private route: ActivatedRoute,
-              private pedidosService: PedidosService,
-              private location: Location,
+  constructor(private readonly route: ActivatedRoute,
+              private readonly pedidosService: PedidosService,
+              private readonly location: Location,
               public loadingOverlayService: LoadingOverlayService) { }
 
   ngOnInit() {
@@ -42,16 +40,14 @@ export class VerPedidoComponent implements OnInit {
       .subscribe((v: [Pedido, RenglonPedido[]]) => {
         this.pedido = v[0];
         this.renglones = v[1];
-
         this.nombreCliente = this.getNombreCliente();
         this.envioLabel = this.getEnvioLabel();
-      })
-    ;
+      });
   }
 
   private getNombreCliente() {
     let ret = '';
-    if (this.pedido && this.pedido.cliente) {
+    if (this.pedido?.cliente) {
       const c = this.pedido.cliente;
       ret = `${c.nroCliente} - ${c.nombreFiscal}` + (c.nombreFantasia ? ` - ${c.nombreFantasia}` : '');
     }
@@ -59,7 +55,7 @@ export class VerPedidoComponent implements OnInit {
   }
 
   private getEnvioLabel() {
-    if (!this.pedido || !this.pedido.tipoDeEnvio) {
+    if (!this.pedido?.tipoDeEnvio) {
       return '';
     }
 

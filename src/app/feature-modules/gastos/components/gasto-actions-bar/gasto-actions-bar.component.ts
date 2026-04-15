@@ -52,18 +52,18 @@ export class GastoActionsBarComponent implements OnInit {
     });
   }
 
-  async verGasto() {
+  verGasto() {
     if (!this.hasRoleToSee) {
-      await this.mensajeService.msg('No posee permiso para ver el gasto', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para ver el gasto', MensajeModalType.ERROR);
       return;
     }
 
-    await this.router.navigate(['/gastos/ver', this.gasto.idGasto]);
+    this.router.navigate(['/gastos/ver', this.gasto.idGasto]);
   }
 
-  async eliminarGasto() {
+  eliminarGasto() {
     if (!this.hasRoleToDelete) {
-      await this.mensajeService.msg('No posee permiso para eliminar el gasto', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para eliminar el gasto', MensajeModalType.ERROR);
       return;
     }
 
@@ -80,8 +80,7 @@ export class GastoActionsBarComponent implements OnInit {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 .then(() => { return; }, () => { return; });
             },
-          })
-        ;
+          });
       }
     }, () => { return; });
   }

@@ -2,7 +2,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SucursalesService } from '../services/sucursales.service';
 import { OnDestroy, OnInit, Directive } from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Pagination } from '../models/pagination';
 import { MensajeModalType } from '../components/mensaje-modal/mensaje-modal.component';
@@ -11,6 +11,7 @@ import { MensajeService } from '../services/mensaje.service';
 
 @Directive()
 export abstract class ListadoDirective implements OnInit, OnDestroy {
+  
   items = [];
   isFiltersCollapsed = true;
 

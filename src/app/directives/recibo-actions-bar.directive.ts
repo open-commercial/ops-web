@@ -64,18 +64,18 @@ export abstract class ReciboActionsBarDirective implements OnInit {
 
   abstract doCrearNotaDebitoRecibo(): void;
 
-  async verRecibo() {
-    await this.router.navigate(['/recibos/ver', this.recibo.idRecibo]);
+  verRecibo() {
+    this.router.navigate(['/recibos/ver', this.recibo.idRecibo]);
   }
 
-  async eliminarRecibo() {
+  eliminarRecibo() {
     if (!this.hasRoleToDelete) {
-      await this.mensajeService.msg('No posee permiso para eliminar recibos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para eliminar recibos.', MensajeModalType.ERROR);
       return;
     }
 
     const msg = 'Esta seguro que desea eliminar el recibo seleccionado?';
-    await this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.recibosService.eliminarRecibo(this.recibo.idRecibo)
@@ -87,24 +87,23 @@ export abstract class ReciboActionsBarDirective implements OnInit {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 .then(() => { return; }, () => { return; });
             }
-          })
-        ;
+          });
       }
     });
   }
 
-  async crearNotaDeDebitoRecibo() {
+  crearNotaDeDebitoRecibo() {
     if (!this.hasRoleToCrearNota) {
-      await this.mensajeService.msg('No posee permisos para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permisos para crear notas.', MensajeModalType.ERROR);
       return;
     }
 
     this.doCrearNotaDebitoRecibo();
   }
 
-  protected async showNotaCreationSuccessMessage(nota: Nota, message: string, callback: () => void = () => { return; }) {
+  protected showNotaCreationSuccessMessage(nota: Nota, message: string, callback: () => void = () => { return; }) {
     if (nota.idNota) {
-      await this.mensajeService.msg(message, MensajeModalType.INFO).then(
+      this.mensajeService.msg(message, MensajeModalType.INFO).then(
         () => {
           if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
             callback();

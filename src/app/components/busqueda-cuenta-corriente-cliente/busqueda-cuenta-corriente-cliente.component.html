@@ -36,21 +36,36 @@
   <div class="p-2" *ngIf="!readOnly">
     <ul class="list-unstyled p-0 m-0">
       <li class="mb-2">
-        <button class="btn btn-primary" type="button" (click)="showCccModal()"
-          ngbPopover="Buscar Cliente" triggers="mouseenter:mouseleave" placement="left">
-          <fa-icon [icon]="['fas', 'search']"></fa-icon>
+        <button 
+          class="btn btn-primary" 
+          type="button" 
+          (click)="showCccModal()"
+          ngbPopover="Buscar Cliente" 
+          triggers="mouseenter:mouseleave" 
+          placement="left">
+            <fa-icon [icon]="['fas', 'search']"></fa-icon>
         </button>
       </li>
       <li class="mb-2" *ngIf="ccc && ccc.cliente && hasRoleToEditClientes">
-        <button class="btn btn-primary" type="button" (click)="editCliente()"
-          ngbPopover="Editar Cliente" triggers="mouseenter:mouseleave" placement="left">
-          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        <button 
+          class="btn btn-primary" 
+          type="button" 
+          (click)="editCliente()"
+          ngbPopover="Editar Cliente" 
+          triggers="mouseenter:mouseleave" 
+          placement="left">
+            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
         </button>
       </li>
       <li class="mb-2" *ngIf="hasRoleToCreateClientes">
-        <button class="btn btn-primary" type="button" (click)="addCliente()"
-          ngbPopover="Nuevo Cliente" triggers="mouseenter:mouseleave" placement="left">
-          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+        <button 
+          class="btn btn-primary" 
+          type="button" 
+          (click)="addCliente()"
+          ngbPopover="Nuevo Cliente" 
+          triggers="mouseenter:mouseleave" 
+          placement="left">
+            <fa-icon [icon]="['fas', 'plus']"></fa-icon>
         </button>
       </li>
     </ul>

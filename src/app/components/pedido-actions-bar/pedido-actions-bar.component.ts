@@ -12,17 +12,17 @@ import { Pedido } from './../../models/pedido';
 import { Component, OnInit, Input } from '@angular/core';
 import { HelperService } from 'src/app/services/helper.service';
 
-type PedidoActionButtonName = 'show'|'download'|'edit'|'clone'|'delete'|'invoice'|'show-invoice';
+type PedidoActionButtonName = 'show'|'download'|'edit'|'clone'|'delete'|'invoice'|'show-invoice'|'show-cc';
 
 @Component({
   selector: 'app-pedido-actions-bar',
   templateUrl: './pedido-actions-bar.component.html'
 })
 export class PedidoActionsBarComponent implements OnInit {
+
   private pPedido: Pedido;
   @Input() set pedido(value: Pedido) { this.pPedido = value; }
   get pedido(): Pedido { return this.pPedido; }
-
   private pHiddenButtons: PedidoActionButtonName[] = [];
   @Input() set hiddenButtons(value: PedidoActionButtonName[]) { this.pHiddenButtons = value; }
   get hiddenButtons(): PedidoActionButtonName[] { return this.pHiddenButtons; }
@@ -35,6 +35,7 @@ export class PedidoActionsBarComponent implements OnInit {
     'delete': false,
     'invoice': false,
     'show-invoice': false,
+    'show-cc': false
   }
 
   allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
@@ -43,39 +44,48 @@ export class PedidoActionsBarComponent implements OnInit {
   allowedRolesToEdit: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
   hasRolToEdit = false;
 
+  allowedRolesToViewCC: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  hasRolToViewCC = false;
+
   puedeEliminarPedido = false;
   puedeEditarPedido = false;
   puedeFacturarPedido = false;
   puedeVerFacturas = false;
+  puedeVerCtaCte = false;
 
-  constructor(private router: Router,
-              private authService: AuthService,
-              private mensajeService: MensajeService,
-              private loadingOverlayService: LoadingOverlayService,
-              private pedidosService: PedidosService,
-              private storageService: StorageService) {
+  constructor(private readonly router: Router,
+              private readonly authService: AuthService,
+              private readonly mensajeService: MensajeService,
+              private readonly loadingOverlayService: LoadingOverlayService,
+              private readonly pedidosService: PedidosService,
+              private readonly storageService: StorageService) {
     this.hasRolToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRolToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);
+    this.hasRolToViewCC = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToViewCC);
   }
 
   ngOnInit(): void {
     this.puedeEliminarPedido = this.hasRolToDelete && this.pedido.estado === EstadoPedido.ABIERTO;
     this.puedeEditarPedido = this.hasRolToEdit && this.pedido.estado === EstadoPedido.ABIERTO;
     this.puedeFacturarPedido = this.hasRolToEdit && this.pedido.estado === EstadoPedido.ABIERTO;
-    this.puedeVerFacturas = [EstadoPedido.CERRADO].indexOf(this.pedido.estado) >= 0;
-
+    this.puedeVerFacturas = [EstadoPedido.CERRADO].includes(this.pedido.estado);
+    this.puedeVerCtaCte = this.hasRolToViewCC;
     Object.keys(this.hiddenButtonsValues).forEach((k: PedidoActionButtonName) => {
-      this.hiddenButtonsValues[k] = this.hiddenButtons.indexOf(k) >= 0;
+      this.hiddenButtonsValues[k] = this.hiddenButtons.includes(k);
     });
   }
 
-  async verPedido() {
-    await this.router.navigate(['/pedidos/ver', this.pedido.idPedido]);
+  verPedido() {
+    this.router.navigate(['/pedidos/ver', this.pedido.idPedido]);
   }
 
-  async cancelarPedido() {
+  verCtaCte() {
+    this.router.navigate(['/clientes/cuenta-corriente', this.pedido.cliente.idCliente]);
+  }
+
+  cancelarPedido() {
     if (!this.puedeEliminarPedido) {
-      await this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
       return;
     }
 
@@ -92,38 +102,37 @@ export class PedidoActionsBarComponent implements OnInit {
               this.mensajeService.msg(`Error: ${err.error}`, MensajeModalType.ERROR)
                 .then(() => { return; }, () => { return; });
             },
-          })
-        ;
+          });
       }
     }, () => { return; });
   }
 
-  async editarPedido() {
+  editarPedido() {
     if (!this.puedeEditarPedido) {
-      await this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
       return;
     }
     this.storageService.removeItem(StorageKeys.PEDIDO_EDITAR);
-    await this.router.navigate(['/pedidos/editar', this.pedido.idPedido]);
+    this.router.navigate(['/pedidos/editar', this.pedido.idPedido]);
   }
 
-  async clonarPedido() {
+  clonarPedido() {
     this.storageService.removeItem(StorageKeys.PEDIDO_NUEVO);
-    await this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: this.pedido.idPedido }});
+    this.router.navigate(['/pedidos/nuevo'], { queryParams: { idToClone: this.pedido.idPedido }});
   }
 
-  async facturarPedido() {
+  facturarPedido() {
     if (!this.puedeFacturarPedido) {
-      await this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
       return;
     }
     this.storageService.removeItem(StorageKeys.PEDIDO_FACTURAR);
-    await this.router.navigate(['/facturas-venta/de-pedido', this.pedido.idPedido]);
+    this.router.navigate(['/facturas-venta/de-pedido', this.pedido.idPedido]);
   }
 
-  async verFacturas() {
+  verFacturas() {
     if (this.puedeVerFacturas) {
-      await this.router.navigate(['/facturas-venta'], { queryParams: { nroPedido: this.pedido.nroPedido }});
+      this.router.navigate(['/facturas-venta'], { queryParams: { nroPedido: this.pedido.nroPedido }});
     }
   }
 
@@ -137,7 +146,6 @@ export class PedidoActionsBarComponent implements OnInit {
           this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });
         },
-      })
-    ;
+      });
   }
 }

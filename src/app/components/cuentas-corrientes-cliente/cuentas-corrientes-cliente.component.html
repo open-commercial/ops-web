@@ -147,23 +147,43 @@
     <ng-template #actions let-item>
       <ul class="list-inline mb-0 text-center d-inline-block mt-2">
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Ver Cuenta Corriente" placement="left" triggers="mouseenter:mouseleave" (click)="irACtaCte(item.cliente)">
-            <fa-icon [icon]="['fas', 'book']"></fa-icon>
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Ver Cuenta Corriente" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="irACtaCte(item.cliente)">
+              <fa-icon [icon]="['fas', 'book']"></fa-icon>
           </button>
         </li>
         <li class="list-inline-item" *ngIf="!item.cliente.predeterminado">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Establecer como predeterminado" placement="left" triggers="mouseenter:mouseleave" (click)="setPredeterminado(item.cliente)">
-            <fa-icon [icon]="['fas', 'user-check']"></fa-icon>
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Establecer como predeterminado" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="setPredeterminado(item.cliente)">
+              <fa-icon [icon]="['fas', 'user-check']"></fa-icon>
           </button>
         </li>
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Editar" placement="left" triggers="mouseenter:mouseleave" (click)="editarCliente(item.cliente)">
-            <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Editar" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="editarCliente(item.cliente)">
+              <fa-icon [icon]="['fas', 'pen']"></fa-icon>
           </button>
         </li>
         <li class="list-inline-item">
-          <button class="btn btn-primary fake-cursor" ngbPopover="Eliminar" placement="left" triggers="mouseenter:mouseleave" (click)="eliminarCliente(item.cliente)">
-            <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+          <button 
+            class="btn btn-primary fake-cursor" 
+            ngbPopover="Eliminar" 
+            placement="left" 
+            triggers="mouseenter:mouseleave" 
+            (click)="eliminarCliente(item.cliente)">
+              <fa-icon [icon]="['fas', 'trash']"></fa-icon>
           </button>
         </li>
       </ul>

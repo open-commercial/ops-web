@@ -28,6 +28,7 @@ import { ListadoDirective } from '../../directives/listado.directive';
   styleUrls: ['./pedidos.component.scss']
 })
 export class PedidosComponent extends ListadoDirective implements OnInit {
+
   estado = EstadoPedido;
   rol = Rol;
   usuario: Usuario;
@@ -47,14 +48,14 @@ export class PedidosComponent extends ListadoDirective implements OnInit {
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected sucursalesService: SucursalesService,
-              private pedidosService: PedidosService,
-              private fb: UntypedFormBuilder,
-              private authService: AuthService,
-              protected mensajeService: MensajeService,
-              private clientesService: ClientesService,
-              private usuariosService: UsuariosService,
-              private productosService: ProductosService,
-              public loadingOverlayService: LoadingOverlayService) {
+              private readonly pedidosService: PedidosService,
+              private readonly fb: UntypedFormBuilder,
+              private readonly authService: AuthService,
+              protected readonly mensajeService: MensajeService,
+              private readonly clientesService: ClientesService,
+              private readonly usuariosService: UsuariosService,
+              private readonly productosService: ProductosService,
+              public readonly loadingOverlayService: LoadingOverlayService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
     this.hasRolToDelete = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToDelete);
     this.hasRolToEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEdit);

@@ -92,6 +92,6 @@ export class AuthService {
     }
     const decodedToken = this.jwtHelper.decodeToken(token);
     const decodedRoles = decodedToken.roles;
-    return decodedRoles.filter(x => roles.includes(x)).length > 0;
+    return decodedRoles.some((x: Rol) => roles.includes(x));
   }
 }

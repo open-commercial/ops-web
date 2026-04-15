@@ -72,14 +72,14 @@ export abstract class NotaActionsBarDirective implements OnInit {
     });
   }
 
-  async autorizar() {
+  autorizar() {
     if (!this.hasRoleToAutorizar) {
-      await this.mensajeService.msg('No posee permiso para autorizar la nota.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para autorizar la nota.', MensajeModalType.ERROR);
       return;
     }
 
     if (this.tiposDeComprobantesParaAutorizacion.indexOf(this.nota.tipoComprobante) < 0) {
-      await this.mensajeService.msg('El tipo de movimiento seleccionado no corresponde con la operación solicitada.', MensajeModalType.ERROR);
+      this.mensajeService.msg('El tipo de movimiento seleccionado no corresponde con la operación solicitada.', MensajeModalType.ERROR);
       return;
     }
 
@@ -116,9 +116,9 @@ export abstract class NotaActionsBarDirective implements OnInit {
     ;
   }
 
-  async verDetalle() {
+  verDetalle() {
     if (!this.hasRoleToVerDetalle) {
-      await this.mensajeService.msg('No posee permiso para ver la nota.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para ver la nota.', MensajeModalType.ERROR);
       return;
     }
 
@@ -131,17 +131,17 @@ export abstract class NotaActionsBarDirective implements OnInit {
        return;
     }
 
-    await this.router.navigate([path, this.nota.idNota]);
+    this.router.navigate([path, this.nota.idNota]);
   }
 
-  async eliminar() {
+  eliminar() {
     if (!this.hasRoleToDelete) {
-      await this.mensajeService.msg('No posee permiso para eliminar la nota.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No posee permiso para eliminar la nota.', MensajeModalType.ERROR);
       return;
     }
 
     const msg = 'Esta seguro que desea eliminar la nota seleccionada?';
-    await this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
+    this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
         this.notasService.eliminar(this.nota.idNota)
@@ -153,8 +153,7 @@ export abstract class NotaActionsBarDirective implements OnInit {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 .then(() => { return; }, () => { return; });
             },
-          })
-        ;
+          });
       }
     });
   }

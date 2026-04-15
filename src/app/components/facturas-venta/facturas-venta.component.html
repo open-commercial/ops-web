@@ -93,8 +93,8 @@
       <app-factura-venta-actions-bar
         [facturaVenta]="item"
         (afterAutorizar)="loadPage(0)"
-        (afterNoAutorizar)="loadPage(0)"
-      ></app-factura-venta-actions-bar>
+        (afterNoAutorizar)="loadPage(0)">
+      </app-factura-venta-actions-bar>
     </ng-template>
     <app-lista [size]="size" [items]="items" [infoTemplate]="info" [actionsTemplate]="actions"
                [batchActionKey]="baKey" [batchActionActions]="baActions"
