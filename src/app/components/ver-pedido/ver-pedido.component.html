@@ -1,6 +1,6 @@
 <div class="app-ver-pedido">
   <div *ngIf="pedido">
-    <div class="d-flex flex-row align-items-center my-3">
+    <div class="d-flex flex-column flex-md-row align-md-items-center my-3">
       <h1 class="h3 pe-2 mb-0 flex-fill text-truncate">
         <a 
           class="btn fake-cursor" 
@@ -12,11 +12,13 @@
         </a>
         <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Pedido
       </h1>
-      <app-pedido-actions-bar
+      <div class="text-end m-0 text-nowrap"> 
+        <app-pedido-actions-bar
         [pedido]="pedido"
         [hiddenButtons]="['show']"
         class="text-nowrap">
-      </app-pedido-actions-bar>
+        </app-pedido-actions-bar>
+      </div>
     </div>
     <table class="table table-bordered table-sm">
       <caption class="sr-only">Datos del pedido</caption>
