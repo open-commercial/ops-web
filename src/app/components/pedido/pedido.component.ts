@@ -459,14 +459,13 @@ export class PedidoComponent implements OnInit, OnDestroy {
               this.agregarErroresDisponibilidad(pfs);
               this.accordion.expand('productos');
               this.mensajeService.msg(
-                'Uno o mas productos no poseen stock disponible. Por favor, verifique la sección Productos.',
+                'Uno o mas productos no tienen stock disponible. Por favor, verifique la sección Productos.',
                 MensajeModalType.ERROR
               );
             }
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-        ;
+        });
     }
   }
 
@@ -482,14 +481,10 @@ export class PedidoComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.reset();
-          const msg = np.idPedido ? 'Pedido actualizado correctamente!' : 'Pedido enviado correctamente!';
-          this.mensajeService.msg(msg, MensajeModalType.INFO).then(() => {
-            this.router.navigate(['/pedidos']);
-          });
+          this.router.navigate(['/pedidos']);
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      })
-      ;
+      });
   }
 
   agregarErroresDisponibilidad(pfs: ProductoFaltante[]) {

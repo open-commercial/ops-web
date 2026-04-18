@@ -85,7 +85,6 @@ export class MedidasComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => {
-              this.mensajeService.msg(`La medida "${m.nombre}" fue eliminada correctamente.`, MensajeModalType.INFO);
               this.loadMedidas();
             },
             error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),

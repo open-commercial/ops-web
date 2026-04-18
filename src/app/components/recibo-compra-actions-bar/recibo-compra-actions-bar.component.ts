@@ -22,12 +22,12 @@ import { Component } from '@angular/core';
 export class ReciboCompraActionsBarComponent extends ReciboActionsBarDirective {
 
   constructor(protected router: Router,
-              protected mensajeService: MensajeService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected authService: AuthService,
-              protected recibosService: RecibosService,
-              private proveedoresService: ProveedoresService,
-              private modalService: NgbModal) {
+    protected mensajeService: MensajeService,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected authService: AuthService,
+    protected recibosService: RecibosService,
+    private readonly proveedoresService: ProveedoresService,
+    private readonly modalService: NgbModal) {
     super(router, mensajeService, loadingOverlayService, authService, recibosService);
   }
 
@@ -41,21 +41,17 @@ export class ReciboCompraActionsBarComponent extends ReciboActionsBarDirective {
           modalRef.componentInstance.proveedor = p;
           modalRef.componentInstance.idRecibo = this.recibo.idRecibo;
           modalRef.result.then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
-            const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleReciboModalComponent, { backdrop: 'static'});
+            const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleReciboModalComponent, { backdrop: 'static' });
             modalRef2.componentInstance.nndr = data[0];
             modalRef2.componentInstance.notaDebito = data[1];
             modalRef2.componentInstance.proveedor = p;
-            modalRef2.result.then(
-              (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-              () => { return; }
-            );
-          }, () => { return; });
+            modalRef2.result.then(() => { location.reload(); });
+          });
         },
         error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });
         },
-      })
-    ;
+      });
   }
 }

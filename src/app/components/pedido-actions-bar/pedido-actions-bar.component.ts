@@ -85,7 +85,7 @@ export class PedidoActionsBarComponent implements OnInit {
 
   cancelarPedido() {
     if (!this.puedeEliminarPedido) {
-      this.mensajeService.msg('No posee permiso para cancelar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para cancelar un pedido!', MensajeModalType.ERROR);
       return;
     }
 
@@ -109,7 +109,7 @@ export class PedidoActionsBarComponent implements OnInit {
 
   editarPedido() {
     if (!this.puedeEditarPedido) {
-      this.mensajeService.msg('No posee permiso para editar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para editar un pedido!', MensajeModalType.ERROR);
       return;
     }
     this.storageService.removeItem(StorageKeys.PEDIDO_EDITAR);
@@ -123,7 +123,7 @@ export class PedidoActionsBarComponent implements OnInit {
 
   facturarPedido() {
     if (!this.puedeFacturarPedido) {
-      this.mensajeService.msg('No posee permiso para facturar un pedido.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para facturar un pedido!', MensajeModalType.ERROR);
       return;
     }
     this.storageService.removeItem(StorageKeys.PEDIDO_FACTURAR);

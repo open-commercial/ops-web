@@ -75,7 +75,7 @@ export class VerProductoComponent implements OnInit {
 
   editar() {
     if (!this.hasRoleToEdit) {
-      this.mensajeService.msg('No posee permiso para editar productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para editar productos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -84,7 +84,7 @@ export class VerProductoComponent implements OnInit {
 
   eliminar() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar productos!', MensajeModalType.ERROR);
       return;
     }
 

@@ -158,7 +158,7 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
 
   crearTransportista() {
     if (!this.hasRoleToCrear) {
-      this.mensajeService.msg('No posee permiso para dar de alta un transportistas', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para dar de alta un transportistas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -167,7 +167,7 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
 
   editarTransportista(t: Transportista) {
     if (!this.hasRoleToEdit) {
-      this.mensajeService.msg('No posee permiso para editar datos del transportistas', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para editar datos del transportistas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -176,7 +176,7 @@ export class TransportistasComponent extends ListadoDirective implements OnInit 
 
   eliminarTransportista(t: Transportista) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar transportistas', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar transportistas!', MensajeModalType.ERROR);
       return;
     }
 

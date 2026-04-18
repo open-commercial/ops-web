@@ -54,7 +54,7 @@ export class GastoActionsBarComponent implements OnInit {
 
   verGasto() {
     if (!this.hasRoleToSee) {
-      this.mensajeService.msg('No posee permiso para ver el gasto', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para ver el gasto!', MensajeModalType.ERROR);
       return;
     }
 
@@ -63,7 +63,7 @@ export class GastoActionsBarComponent implements OnInit {
 
   eliminarGasto() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar el gasto', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar el gasto!', MensajeModalType.ERROR);
       return;
     }
 

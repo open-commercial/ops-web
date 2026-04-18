@@ -22,7 +22,7 @@ import { Rol } from '../../models/rol';
 import { AuthService } from '../../services/auth.service';
 import { Pagination } from '../../models/pagination';
 import { NotaCreditoVentaSinFacturaModalComponent } from '../nota-credito-venta-sin-factura-modal/nota-credito-venta-sin-factura-modal.component';
-import { Nota, NotaCredito, NotaDebito } from '../../models/nota';
+import { NotaCredito, NotaDebito } from '../../models/nota';
 import { NotaCreditoVentaDetalleSinFacturaModalComponent } from '../nota-credito-venta-detalle-sin-factura-modal/nota-credito-venta-detalle-sin-factura-modal.component';
 import { NotaDebitoVentaSinReciboModalComponent } from '../nota-debito-venta-sin-recibo-modal/nota-debito-venta-sin-recibo-modal.component';
 import { NuevaNotaCreditoSinFactura } from '../../models/nueva-nota-credito-sin-factura';
@@ -57,19 +57,19 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
 
   tc = TipoDeComprobante;
 
-  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  allowedRolesToDelete: Rol[] = [Rol.ADMINISTRADOR];
   hasRoleToDelete = false;
 
-  allowedRolesToAutorizar: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  allowedRolesToAutorizar: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
   hasRoleToAutorizar = false;
 
-  allowedRolesToVerDetalle: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  allowedRolesToVerDetalle: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
   hasRoleToVerDetalle = false;
 
-  allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  allowedRolesToCrearNota: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCrearNota = false;
 
-  allowedRolesToCrearRecibo: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  allowedRolesToCrearRecibo: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCrearRecibo = false;
 
   tcParaNotasDeCredito: TipoDeComprobante[] = [
@@ -122,20 +122,20 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
   helper = HelperService;
 
   constructor(protected route: ActivatedRoute,
-              protected router: Router,
-              protected sucursalesService: SucursalesService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService,
-              private readonly previousRouteService: PreviousRouteService,
-              private readonly cuentasCorrientesService: CuentasCorrientesService,
-              private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
-              private readonly notasService: NotasService,
-              private readonly recibosService: RecibosService,
-              private readonly remitosService: RemitosService,
-              private readonly modalService: NgbModal,
-              private readonly authService: AuthService,
-              private readonly datePipe: DatePipe,
-              private readonly location: Location) {
+    protected router: Router,
+    protected sucursalesService: SucursalesService,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected mensajeService: MensajeService,
+    private readonly previousRouteService: PreviousRouteService,
+    private readonly cuentasCorrientesService: CuentasCorrientesService,
+    private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
+    private readonly notasService: NotasService,
+    private readonly recibosService: RecibosService,
+    private readonly remitosService: RemitosService,
+    private readonly modalService: NgbModal,
+    private readonly authService: AuthService,
+    private readonly datePipe: DatePipe,
+    private readonly location: Location) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
@@ -165,8 +165,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             this.router.navigate(['/clientes']);
           },
-        })
-      ;
+        });
     } else {
       this.mensajeService.msg('Se debe especificar un id de cliente.', MensajeModalType.ERROR);
       this.router.navigate(['/clientes']);
@@ -209,14 +208,16 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
   }
 
   createFilterForm() { /* No hace nada ya que no existe formulario de filtro */ }
+
   resetFilterForm() { /* No hace nada ya que no existe formulario de filtro */ }
 
-  getAppliedFilters() { this.appliedFilters = []; };
-  getFormValues() { return {} };
+  getAppliedFilters() { this.appliedFilters = []; }
+
+  getFormValues() { return {} }
 
   getItemsObservableMethod(terminos): Observable<Pagination> {
     return this.cuentasCorrientesService.getCuentaCorrienteRenglones(this.ccc.idCuentaCorriente, terminos.pagina);
-  };
+  }
 
   volverAlListado() {
     this.location.back();
@@ -224,7 +225,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
 
   autorizar(r: RenglonCuentaCorriente) {
     if (!this.hasRoleToAutorizar) {
-      this.mensajeService.msg('No posee permiso para autorizar movimientos', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para autorizar movimientos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -248,15 +249,14 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
                 next: () => {
-                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
-                  .then(() => callback())
+                  this.mensajeService.msg('La Nota fue autorizada por ARCA correctamente!', MensajeModalType.INFO)
+                    .then(() => callback())
                 },
                 error: err => {
                   this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                     .then(() => callback())
                 },
-              })
-            ;
+              });
           } else {
             this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR);
           }
@@ -270,7 +270,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
 
   verDetalle(r: RenglonCuentaCorriente) {
     if (!this.hasRoleToVerDetalle) {
-      this.mensajeService.msg('No posee permiso para ver el detalle de movimientos', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para ver el detalle de movimientos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -320,7 +320,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
 
   exportar() {
     if (this.ccc?.cliente) {
-      const options: OPOption[] = [{ value: 'xlsx', text: 'Excel'}, { value: 'pdf', text: 'Pdf' }];
+      const options: OPOption[] = [{ value: 'xlsx', text: 'Excel' }, { value: 'pdf', text: 'Pdf' }];
       const modalRef = this.modalService.open(OptionPickerModalComponent);
       modalRef.componentInstance.options = options;
       modalRef.componentInstance.title = 'Descargar Reporte';
@@ -336,7 +336,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
           .subscribe({
             next: (res) => {
               const mimeType = formato === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf';
-              const file = new Blob([res], {type: mimeType});
+              const file = new Blob([res], { type: mimeType });
               saveAs(file, `CuentaCorrienteCliente.${formato}`);
             },
             error: () => {
@@ -344,14 +344,14 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
                 .then(() => { return; }, () => { return; })
             },
           })
-        ;
+          ;
       });
     }
   }
 
   eliminar(r: RenglonCuentaCorriente) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar movimientos', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar movimientos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -374,7 +374,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     }
 
     if (obvs) {
-      const msg = 'Esta seguro que desea eliminar / anular el movimiento seleccionado?';
+      const msg = '¿Esta seguro que desea eliminar / anular el movimiento seleccionado?';
       this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
         if (result) {
           this.loadingOverlayService.activate();
@@ -387,7 +387,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
                   .then(() => { return; }, () => { return; });
               },
             })
-          ;
+            ;
         }
       });
     } else {
@@ -397,29 +397,24 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
 
   nuevaNotaCredito() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
-    const modalRef = this.modalService.open(NotaCreditoVentaSinFacturaModalComponent, {backdrop: 'static', size: 'lg'});
+    const modalRef = this.modalService.open(NotaCreditoVentaSinFacturaModalComponent, { backdrop: 'static', size: 'lg' });
     modalRef.componentInstance.cliente = this.ccc.cliente;
-    modalRef.result
-      .then((data: [NuevaNotaCreditoSinFactura, NotaCredito]) => {
-        const modalRef2 = this.modalService.open(NotaCreditoVentaDetalleSinFacturaModalComponent, {backdrop: 'static', size: 'lg'});
-        modalRef2.componentInstance.nncsf = data[0];
-        modalRef2.componentInstance.notaCredito = data[1];
-        modalRef2.componentInstance.cliente = this.ccc.cliente;
-        modalRef2.result.then(
-          (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
-          () => { return; }
-        );
-      }, () => { return; })
-    ;
+    modalRef.result.then((data: [NuevaNotaCreditoSinFactura, NotaCredito]) => {
+      const modalRef2 = this.modalService.open(NotaCreditoVentaDetalleSinFacturaModalComponent, { backdrop: 'static', size: 'lg' });
+      modalRef2.componentInstance.nncsf = data[0];
+      modalRef2.componentInstance.notaCredito = data[1];
+      modalRef2.componentInstance.cliente = this.ccc.cliente;
+      modalRef2.result.then((nota: NotaCredito) => { location.reload(); });
+    });
   }
 
   nuevaNotaDebito() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -431,12 +426,8 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
         modalRef2.componentInstance.nndsr = data[0];
         modalRef2.componentInstance.notaDebito = data[1];
         modalRef2.componentInstance.cliente = this.ccc.cliente;
-        modalRef2.result.then(
-          (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-          () => { return; }
-        );
-      }, () => { return; })
-    ;
+        modalRef2.result.then((nota: NotaDebito) => { location.reload(); });
+      });
   }
 
   crearNotaCreditoFactura(r: RenglonCuentaCorriente) {
@@ -446,7 +437,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     }
 
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -456,8 +447,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
           if (result) {
             this.doCrearNotaCreditoFactura(r);
           }
-        })
-      ;
+        });
     } else {
       this.doCrearNotaCreditoFactura(r);
     }
@@ -477,11 +467,8 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
       modalRef2.componentInstance.nncf = data[0];
       modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.cliente = this.ccc.cliente;
-      modalRef2.result.then(
-        (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
-        () => { return; }
-      );
-    }, () => { return; });
+      modalRef2.result.then(() => { location.reload(); });
+    });
   }
 
   crearNotaDebitoRecibo(r: RenglonCuentaCorriente) {
@@ -491,7 +478,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     }
 
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -502,7 +489,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
             this.doCrearNotaDebitoRecibo(r);
           }
         })
-      ;
+        ;
     } else {
       this.doCrearNotaDebitoRecibo(r);
     }
@@ -512,39 +499,18 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     const modalRef = this.modalService.open(NotaDebitoVentaReciboModalComponent, { backdrop: 'static' });
     modalRef.componentInstance.cliente = this.ccc.cliente;
     modalRef.componentInstance.idRecibo = r.idMovimiento;
-    modalRef.result
-      .then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
-        const modalRef2 = this.modalService.open(NotaDebitoVentaDetalleReciboModalComponent, { backdrop: 'static', size: 'lg' });
-        modalRef2.componentInstance.nnddr = data[0];
-        modalRef2.componentInstance.notaDebito = data[1];
-        modalRef2.componentInstance.cliente = this.ccc.cliente;
-        modalRef2.result.then(
-          (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-          () => { return; }
-        );
-      }, () => { return; })
-    ;
-  }
-
-  private showNotaCreationSuccessMessage(nota: Nota, message: string) {
-    if (nota.idNota) {
-      this.mensajeService.msg(message, MensajeModalType.INFO).then(
-        () => {
-          if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
-            this.doAutorizar(nota.idNota, () => this.loadPage(1));
-          } else {
-            this.loadPage(1);
-          }
-        }
-      );
-    } else {
-      throw new Error('La Nota no posee id');
-    }
+    modalRef.result.then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
+      const modalRef2 = this.modalService.open(NotaDebitoVentaDetalleReciboModalComponent, { backdrop: 'static', size: 'lg' });
+      modalRef2.componentInstance.nnddr = data[0];
+      modalRef2.componentInstance.notaDebito = data[1];
+      modalRef2.componentInstance.cliente = this.ccc.cliente;
+      modalRef2.result.then(() => { location.reload(); });
+    });
   }
 
   nuevoRecibo() {
     if (!this.hasRoleToCrearRecibo) {
-      this.mensajeService.msg('No posee permiso para crear recibos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear recibos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -552,7 +518,7 @@ export class CuentaCorrienteClienteComponent extends ListadoDirective implements
     const saldo = (this.saldo < 0 ? Number(this.saldo.toFixed(2).replace(',', '')) : 0) * -1;
     modalRef.componentInstance.cliente = this.ccc.cliente;
     modalRef.componentInstance.saldo = saldo;
-    modalRef.result.then(() => this.loadPage(1), () => { return; });
+    modalRef.result.then(() => location.reload(), () => { return; });
   }
 
   enDebeOHaber(r: RenglonCuentaCorriente): string {

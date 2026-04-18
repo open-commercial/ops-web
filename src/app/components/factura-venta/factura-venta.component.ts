@@ -452,15 +452,10 @@ export class FacturaVentaComponent implements OnInit, OnDestroy {
           const f = fs[0];
           this.storageService.removeItem(this.localStorageKey);
           this.pedido = null;
-          let msg = 'La factura fué dada de alta correctamente';
-          const isABoC = [TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C]
-            .indexOf(f.tipoComprobante) >= 0;
-          this.mensajeService.msg(msg, MensajeModalType.INFO);
           this.router.navigate(['/facturas-venta']);
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-      ;
+      });
   }
 
   handleSelectCcc(ccc: CuentaCorrienteCliente) {

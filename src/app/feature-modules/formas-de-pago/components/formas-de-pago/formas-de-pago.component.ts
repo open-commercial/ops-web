@@ -48,7 +48,7 @@ export class FormasDePagoComponent implements OnInit {
       return;
     }
 
-    const msg = `Esta seguro que desea establecer a "${fdp.nombre}" como la forma predeterminada de pago?`;
+    const msg = `¿Esta seguro que desea establecer a "${fdp.nombre}" como la forma predeterminada de pago?`;
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();

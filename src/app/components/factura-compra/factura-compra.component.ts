@@ -241,7 +241,7 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
 
   removeRenglon(i: number) {
     const rf: RenglonFactura = this.renglones.at(i).get('renglonFactura').value;
-    this.mensajeService.msg(`Está seguro de eliminar "${rf.descripcionItem}" de los renglones de la factura?`, MensajeModalType.CONFIRM)
+    this.mensajeService.msg(`¿Está seguro de eliminar "${rf.descripcionItem}" de los renglones de la factura?`, MensajeModalType.CONFIRM)
       .then(result => {
         if (result) {
           this.renglones.removeAt(i);
@@ -347,13 +347,11 @@ export class FacturaCompraComponent implements OnInit, OnDestroy {
         }))
         .subscribe({
           next: () => {
-            this.mensajeService.msg('La factura se guardó correctamente.', MensajeModalType.INFO);
             this.clearLSData();
             this.volverAlListado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
     }
   }
 

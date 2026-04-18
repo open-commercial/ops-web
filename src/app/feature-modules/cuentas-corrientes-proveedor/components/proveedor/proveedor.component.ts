@@ -96,14 +96,10 @@ export class ProveedorComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: () => {
-            this.mensajeService
-              .msg('Los datos del proveedor fueron guardados exitosamente.', MensajeModalType.INFO)
-              .then(() => { this.volverAlListado(); })
-            ;
+            this.volverAlListado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
     }
   }
 

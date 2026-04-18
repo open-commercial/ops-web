@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
               .subscribe(
                 (usuario: Usuario) => {
                   if (!this.tienePermisos(usuario)) {
-                    this.showErrorMessage('No posee permisos para ingresar');
+                    this.showErrorMessage('No tiene permisos para ingresar!');
                     this.form.enable();
                     this.authService.logout();
                     return;

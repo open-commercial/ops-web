@@ -208,13 +208,12 @@ export class TraspasoComponent implements OnInit {
         this.loadingOverlayService.activate();
         this.traspasosService.guardarTraspaso(nt)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-          .subscribe(
-            () => {
-              this.mensajeService.msg('Traspaso creado correctamente!', MensajeModalType.INFO);
+          .subscribe({
+            next: () => {
               this.volverAlListado();
             },
-            err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-          )
+            error: (err) => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+          })
         ;
       });
     }

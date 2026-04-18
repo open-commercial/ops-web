@@ -1,31 +1,33 @@
-import {Component, OnInit} from '@angular/core';
-import {ReciboModalDirective} from '../../directives/recibo-modal.directive';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UntypedFormBuilder} from '@angular/forms';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {MensajeService} from '../../services/mensaje.service';
-import {FormasDePagoService} from '../../services/formas-de-pago.service';
-import {Recibo} from '../../models/recibo';
-import {Cliente} from '../../models/cliente';
-import {SucursalesService} from '../../services/sucursales.service';
-import {Observable} from 'rxjs';
-import {RecibosService} from '../../services/recibos.service';
-import {AuthService} from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { ReciboModalDirective } from '../../directives/recibo-modal.directive';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntypedFormBuilder } from '@angular/forms';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { MensajeService } from '../../services/mensaje.service';
+import { FormasDePagoService } from '../../services/formas-de-pago.service';
+import { Recibo } from '../../models/recibo';
+import { Cliente } from '../../models/cliente';
+import { SucursalesService } from '../../services/sucursales.service';
+import { Observable } from 'rxjs';
+import { RecibosService } from '../../services/recibos.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-recibo-cliente-modal',
   templateUrl: '../recibo-modal/recibo-modal.component.html',
 })
 export class ReciboClienteModalComponent extends ReciboModalDirective implements OnInit {
+
   cliente: Cliente;
+
   constructor(public activeModal: NgbActiveModal,
-              protected fb: UntypedFormBuilder,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService,
-              protected formasDePagoService: FormasDePagoService,
-              protected authService: AuthService,
-              protected recibosService: RecibosService,
-              private sucursalesService: SucursalesService) {
+    protected fb: UntypedFormBuilder,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected mensajeService: MensajeService,
+    protected formasDePagoService: FormasDePagoService,
+    protected authService: AuthService,
+    protected recibosService: RecibosService,
+    private readonly sucursalesService: SucursalesService) {
     super(activeModal, fb, loadingOverlayService, mensajeService, formasDePagoService, authService);
   }
 

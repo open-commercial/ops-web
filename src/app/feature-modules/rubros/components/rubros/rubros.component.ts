@@ -83,7 +83,7 @@ export class RubrosComponent implements OnInit {
       return;
     }
 
-    const msg = 'Esta seguro que desea eliminar el rubro seleccionado?';
+    const msg = `¿Está seguro de eliminar el rubro "${r.nombre}"?`;
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
@@ -91,12 +91,10 @@ export class RubrosComponent implements OnInit {
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
             next: () => {
-              this.mensajeService.msg(`El rubro "${r.nombre}" fue eliminado correctamente.`);
               this.getRubros();
             },
             error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-          })
-        ;
+          });
       }
     });
   }

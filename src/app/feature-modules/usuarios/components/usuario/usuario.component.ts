@@ -15,6 +15,7 @@ import { Location } from '@angular/common';
   templateUrl: './usuario.component.html',
 })
 export class UsuarioComponent implements OnInit {
+
   usuario: Usuario;
   loading = false;
   saving = false;
@@ -25,17 +26,17 @@ export class UsuarioComponent implements OnInit {
 
   hasRoleToCreateOrEdit = false;
 
-  constructor(private route: ActivatedRoute,
-              private location: Location,
-              private mensajeService: MensajeService,
-              private usuariosService: UsuariosService,
-              private authService: AuthService) { }
+  constructor(private readonly route: ActivatedRoute,
+              private readonly location: Location,
+              private readonly mensajeService: MensajeService,
+              private readonly usuariosService: UsuariosService,
+              private readonly authService: AuthService) { }
 
   ngOnInit(): void {
     this.hasRoleToCreateOrEdit = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreateOrEdit);
 
     if (!this.hasRoleToCreateOrEdit) {
-      this.mensajeService.msg('Ud no posee permisos para crear o editar usuarios.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permisos para crear o editar usuarios!', MensajeModalType.ERROR);
       this.volverAlListado();
       return;
     }
@@ -51,8 +52,7 @@ export class UsuarioComponent implements OnInit {
             this.volverAlListado();
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           }
-        })
-      ;
+        });
     }
   }
 
@@ -65,8 +65,6 @@ export class UsuarioComponent implements OnInit {
   }
 
   onUserSaved() {
-    this.mensajeService.msg('Los datos de usuario se guardaron correctamente.', MensajeModalType.INFO).then(() => {
-      this.volverAlListado();
-    })
+    this.volverAlListado();
   }
 }

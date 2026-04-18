@@ -12,6 +12,7 @@ import { Sucursal } from '../../models/sucursal';
 import { Subscription } from 'rxjs';
 import { Rol } from '../../models/rol';
 import { AuthService } from '../../services/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-configuracion',
@@ -35,7 +36,8 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
     private readonly mensajeService: MensajeService,
     private readonly router: Router,
     private readonly fb: UntypedFormBuilder,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly location: Location
   ) {
     this.subscription = new Subscription();
   }
@@ -66,8 +68,7 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR);
           this.router.navigate(['/']);
         }
-      })
-      ;
+      });
   }
 
   ngOnDestroy() {
@@ -147,11 +148,10 @@ export class ConfiguracionComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.loadSucursalConfiguration();
-            this.mensajeService.msg('La configuración fue actualizada exitosamente.', MensajeModalType.INFO);
+            this.location.back();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-        ;
+        });
     }
   }
 

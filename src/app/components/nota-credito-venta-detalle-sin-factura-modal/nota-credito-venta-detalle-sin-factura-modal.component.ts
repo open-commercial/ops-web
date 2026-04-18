@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {NotaCredito} from '../../models/nota';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UntypedFormBuilder} from '@angular/forms';
-import {MensajeService} from '../../services/mensaje.service';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {NotasService} from '../../services/notas.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
+import { Component, OnInit } from '@angular/core';
+import { NotaCredito } from '../../models/nota';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntypedFormBuilder } from '@angular/forms';
+import { MensajeService } from '../../services/mensaje.service';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { NotasService } from '../../services/notas.service';
+import { finalize } from 'rxjs/operators';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
 import Big from 'big.js';
-import {NuevaNotaCreditoSinFactura} from '../../models/nueva-nota-credito-sin-factura';
+import { NuevaNotaCreditoSinFactura } from '../../models/nueva-nota-credito-sin-factura';
 import NotaCreditoVentaDetalleModalDirective from '../../directives/nota-credito-venta-detalle-modal-directive';
-import {ClientesService} from '../../services/clientes.service';
+import { ClientesService } from '../../services/clientes.service';
 
 Big.DP = 15;
 
@@ -20,14 +20,15 @@ Big.DP = 15;
   styleUrls: ['../nota-credito-detalle-modal/nota-credito-detalle-modal.component.scss']
 })
 export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCreditoVentaDetalleModalDirective implements OnInit {
+
   nncsf: NuevaNotaCreditoSinFactura;
 
   constructor(public activeModal: NgbActiveModal,
-              protected fb: UntypedFormBuilder,
-              protected notasService: NotasService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService,
-              protected clientesService: ClientesService) {
+    protected fb: UntypedFormBuilder,
+    protected notasService: NotasService,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected mensajeService: MensajeService,
+    protected clientesService: ClientesService) {
     super(activeModal, fb, notasService, loadingOverlayService, mensajeService, clientesService);
   }
 
@@ -44,7 +45,6 @@ export class NotaCreditoVentaDetalleSinFacturaModalComponent extends NotaCredito
       .subscribe({
         next: (nc: NotaCredito) => this.activeModal.close(nc),
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+      });
   }
 }

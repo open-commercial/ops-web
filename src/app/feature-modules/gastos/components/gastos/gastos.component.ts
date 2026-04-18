@@ -258,7 +258,7 @@ export class GastosComponent extends ListadoDirective implements OnInit {
 
   eliminarGasto(g: Gasto) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar el gasto', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar el gasto!', MensajeModalType.ERROR);
       return;
     }
     const msg = `¿Está seguro que desea eliminar / anular el gasto seleccionado?`;

@@ -16,11 +16,11 @@
       <th scope="row" class="table-dark">Fecha de Alta</th>
       <td>{{ cliente.fechaAlta | date:'dd/MM/yyyy HH:mm' }}</td>
     </tr>
-    <tr>
+    <tr *ngIf="cliente.detalleUbicacionDeFacturacion || cliente.detalleUbicacionDeEnvio">
       <th scope="row" class="table-dark">Ubicación</th>
       <td>{{ cliente.detalleUbicacionDeFacturacion || cliente.detalleUbicacionDeEnvio }}</td>
     </tr>
-    <tr>
+    <tr *ngIf="cliente.telefono">
       <th scope="row" class="table-dark">Teléfono</th>
       <td>{{ cliente.telefono }}</td>
     </tr>

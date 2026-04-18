@@ -243,7 +243,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
 
   setPredeterminado(cliente: Cliente) {
     if (!this.hasRoleToSetPredeterminado) {
-      this.mensajeService.msg('No posee permiso establecer un cliente como predeterminado.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso establecer un cliente como predeterminado!', MensajeModalType.ERROR);
       return;
     }
 
@@ -273,7 +273,7 @@ export class CuentasCorrientesClienteComponent extends ListadoDirective implemen
 
   eliminarCliente(cliente: Cliente) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar clientes.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar clientes!', MensajeModalType.ERROR);
       return;
     }
 

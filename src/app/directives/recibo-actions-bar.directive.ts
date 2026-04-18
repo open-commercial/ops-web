@@ -70,11 +70,11 @@ export abstract class ReciboActionsBarDirective implements OnInit {
 
   eliminarRecibo() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar recibos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar recibos!', MensajeModalType.ERROR);
       return;
     }
 
-    const msg = 'Esta seguro que desea eliminar el recibo seleccionado?';
+    const msg = '¿Esta seguro que desea eliminar el recibo seleccionado?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();
@@ -94,7 +94,7 @@ export abstract class ReciboActionsBarDirective implements OnInit {
 
   crearNotaDeDebitoRecibo() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permisos para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -111,7 +111,7 @@ export abstract class ReciboActionsBarDirective implements OnInit {
         }
       );
     } else {
-      throw new Error('La Nota no posee id');
+      throw new Error('La Nota no tiene id');
     }
   }
 }

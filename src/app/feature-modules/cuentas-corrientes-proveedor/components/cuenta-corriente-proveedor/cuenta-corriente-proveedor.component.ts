@@ -44,7 +44,7 @@ const ssCCPPreviousUrlKey = 'CCP_PREVIOUS_URL';
   providers: [DatePipe]
 })
 export class CuentaCorrienteProveedorComponent extends ListadoDirective implements OnInit {
-  
+
   ccp: CuentaCorrienteProveedor;
   renglones: RenglonCuentaCorriente[] = [];
   saldo = 0;
@@ -53,16 +53,16 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
 
   helper = HelperService;
 
-  allowedRolesToDelete: Rol[] = [ Rol.ADMINISTRADOR ];
+  allowedRolesToDelete: Rol[] = [Rol.ADMINISTRADOR];
   hasRoleToDelete = false;
 
-  allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  allowedRolesToCrearNota: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCrearNota = false;
 
-  allowedRolesToVerDetalle: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO/*, Rol.VENDEDOR*/ ];
+  allowedRolesToVerDetalle: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO/*, Rol.VENDEDOR*/];
   hasRoleToVerDetalle = false;
 
-  allowedRolesToCrearRecibo: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  allowedRolesToCrearRecibo: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCrearRecibo = false;
 
   tcParaNotasDeCredito: TipoDeComprobante[] = [
@@ -87,18 +87,18 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
   ];
 
   constructor(protected route: ActivatedRoute,
-              protected router: Router,
-              protected sucursalesService: SucursalesService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService,
-              private readonly previousRouteService: PreviousRouteService,
-              private readonly cuentasCorrientesService: CuentasCorrientesService,
-              private readonly modalService: NgbModal,
-              private readonly authService: AuthService,
-              private readonly notasService: NotasService,
-              private readonly recibosService: RecibosService,
-              private readonly datePipe: DatePipe,
-              private readonly location: Location) {
+    protected router: Router,
+    protected sucursalesService: SucursalesService,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected mensajeService: MensajeService,
+    private readonly previousRouteService: PreviousRouteService,
+    private readonly cuentasCorrientesService: CuentasCorrientesService,
+    private readonly modalService: NgbModal,
+    private readonly authService: AuthService,
+    private readonly notasService: NotasService,
+    private readonly recibosService: RecibosService,
+    private readonly datePipe: DatePipe,
+    private readonly location: Location) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
@@ -129,7 +129,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
             this.router.navigate(['/proveedores']);
           }
         })
-      ;
+        ;
     } else {
       this.mensajeService.msg('Se debe especificar un id de proveedor.', MensajeModalType.ERROR);
       this.router.navigate(['/proveedores']);
@@ -184,22 +184,19 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
 
   nuevaNotaCredito() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
-    const modalRef = this.modalService.open(NotaCreditoCompraSinFacturaModalComponent, {backdrop: 'static', size: 'lg'});
+    const modalRef = this.modalService.open(NotaCreditoCompraSinFacturaModalComponent, { backdrop: 'static', size: 'lg' });
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.result.then((data: [NuevaNotaCreditoSinFactura, NotaCredito]) => {
-      const modalRef2 = this.modalService.open(NotaCreditoCompraDetalleSinFacturaModalComponent, {backdrop: 'static', size: 'lg'});
+      const modalRef2 = this.modalService.open(NotaCreditoCompraDetalleSinFacturaModalComponent, { backdrop: 'static', size: 'lg' });
       modalRef2.componentInstance.proveedor = this.ccp.proveedor;
       modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.nncsf = data[0];
-      modalRef2.result.then(
-        (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
-        () => { return; }
-      );
-    }, () => { return; });
+      modalRef2.result.then(() => { location.reload(); });
+    });
   }
 
   crearNotaCreditoFactura(r: RenglonCuentaCorriente) {
@@ -209,7 +206,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     }
 
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
     this.doCrearNotaCreditoFactura(r);
@@ -229,16 +226,13 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
       modalRef2.componentInstance.nncf = data[0];
       modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.proveedor = this.ccp.proveedor;
-      modalRef2.result.then(
-        (nota: NotaCredito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Crédito creada correctamente.'),
-        () => { return; }
-      );
-    }, () => { return; });
+      modalRef2.result.then(() => { location.reload(); });
+    });
   }
 
   nuevaNotaDebito() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -246,16 +240,12 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.result
       .then((data: [NuevaNotaDebitoSinRecibo, NotaDebito]) => {
-        const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleSinReciboModalComponent, {backdrop: 'static', size: 'lg'});
+        const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleSinReciboModalComponent, { backdrop: 'static', size: 'lg' });
         modalRef2.componentInstance.proveedor = this.ccp.proveedor;
         modalRef2.componentInstance.notaDebito = data[1];
         modalRef2.componentInstance.nndsr = data[0];
-        modalRef2.result.then(
-          (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-          () => { return; }
-        );
-      }, () => { return; })
-    ;
+        modalRef2.result.then(() => { location.reload(); });
+      });
   }
 
   crearNotaDebitoRecibo(r: RenglonCuentaCorriente) {
@@ -265,7 +255,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     }
 
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -277,20 +267,17 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.componentInstance.idRecibo = r.idMovimiento;
     modalRef.result.then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
-      const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleReciboModalComponent, { backdrop: 'static'});
+      const modalRef2 = this.modalService.open(NotaDebitoCompraDetalleReciboModalComponent, { backdrop: 'static' });
       modalRef2.componentInstance.nndr = data[0];
       modalRef2.componentInstance.notaDebito = data[1];
       modalRef2.componentInstance.proveedor = this.ccp.proveedor;
-      modalRef2.result.then(
-        (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.'),
-        () => { return; }
-      );
-    }, () => { return; });
+      modalRef2.result.then(() => { location.reload(); });
+    });
   }
 
   verDetalle(r: RenglonCuentaCorriente) {
     if (!this.hasRoleToVerDetalle) {
-      this.mensajeService.msg('No posee permiso para ver el detalle de movimientos', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para ver el detalle de movimientos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -339,7 +326,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
 
   eliminar(r: RenglonCuentaCorriente) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar movimientos', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar movimientos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -353,7 +340,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     }
 
     if (obvs) {
-      const msg = 'Esta seguro que desea eliminar / anular el movimiento seleccionado?';
+      const msg = '¿Esta seguro que desea eliminar / anular el movimiento seleccionado?';
       this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
         if (result) {
           this.loadingOverlayService.activate();
@@ -365,8 +352,7 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
                 this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                   .then(() => { return; }, () => { return; });
               },
-            })
-          ;
+            });
         }
       });
     }
@@ -376,13 +362,13 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     if (nota.idNota) {
       this.mensajeService.msg(message, MensajeModalType.INFO).then(() => this.loadPage(1));
     } else {
-      throw new Error('La Nota no posee id');
+      throw new Error('La Nota no tiene id');
     }
   }
 
   nuevoRecibo() {
     if (!this.hasRoleToCrearRecibo) {
-      this.mensajeService.msg('No posee permiso para crear recibos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear recibos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -390,6 +376,6 @@ export class CuentaCorrienteProveedorComponent extends ListadoDirective implemen
     const saldo = (this.saldo < 0 ? Number(this.saldo.toFixed(2).replace(',', '')) : 0) * -1;
     modalRef.componentInstance.proveedor = this.ccp.proveedor;
     modalRef.componentInstance.saldo = saldo;
-    modalRef.result.then(() => this.loadPage(1), () => { return; });
+    modalRef.result.then(() => location.reload(), () => { return; });
   }
 }

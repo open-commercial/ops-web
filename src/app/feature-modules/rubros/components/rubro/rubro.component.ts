@@ -98,12 +98,10 @@ export class RubroComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: () => {
-            this.mensajeService.msg('Los datos del rubro se guardaron correctamente.', MensajeModalType.INFO);
             this.volverAlListado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
     }
   }
 }

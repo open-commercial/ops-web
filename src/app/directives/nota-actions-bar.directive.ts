@@ -74,7 +74,7 @@ export abstract class NotaActionsBarDirective implements OnInit {
 
   autorizar() {
     if (!this.hasRoleToAutorizar) {
-      this.mensajeService.msg('No posee permiso para autorizar la nota.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para autorizar la nota!', MensajeModalType.ERROR);
       return;
     }
 
@@ -94,15 +94,14 @@ export abstract class NotaActionsBarDirective implements OnInit {
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
                 next: () => {
-                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                  this.mensajeService.msg('La Nota fue autorizada por ARCA correctamente!', MensajeModalType.INFO)
                   .then(() => { return; }, () => { return; });
                 },
                 error: err => {
                   this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                     .then(() => { return; }, () => { return; });
                 },
-              })
-            ;
+              });
           } else {
             this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR)
               .then(() => { return; }, () => { return; });
@@ -112,13 +111,12 @@ export abstract class NotaActionsBarDirective implements OnInit {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });
         },
-      })
-    ;
+      });
   }
 
   verDetalle() {
     if (!this.hasRoleToVerDetalle) {
-      this.mensajeService.msg('No posee permiso para ver la nota.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para ver la nota!', MensajeModalType.ERROR);
       return;
     }
 
@@ -136,11 +134,11 @@ export abstract class NotaActionsBarDirective implements OnInit {
 
   eliminar() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar la nota.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar la nota!', MensajeModalType.ERROR);
       return;
     }
 
-    const msg = 'Esta seguro que desea eliminar la nota seleccionada?';
+    const msg = '¿Esta seguro que desea eliminar la nota seleccionada?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate();

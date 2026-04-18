@@ -188,12 +188,10 @@ export class ProductoMultiEditorComponent implements OnInit {
         .subscribe({
           next: () => {
             this.batchActionsService.clear(BatchActionKey.PRODUCTOS);
-            this.mensajeService.msg('Productos actualizados correctamente!', MensajeModalType.INFO);
             this.location.back();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
     }
   }
 

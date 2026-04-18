@@ -14,22 +14,20 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   templateUrl: './sucursales.component.html',
 })
 export class SucursalesComponent implements OnInit {
+
   sucursales: Sucursal[] = [];
-
   allowedRolesToAdministrarSucursales: Rol[] = [Rol.ADMINISTRADOR];
-
   hasRoleToAdministrarSucursales = false;
 
-
-  constructor(private loadingOverlayService: LoadingOverlayService,
-              private router: Router,
-              private mensajeService: MensajeService,
-              private sucursalesService: SucursalesService,
-              private authService: AuthService) { }
+  constructor(private readonly loadingOverlayService: LoadingOverlayService,
+              private readonly router: Router,
+              private readonly mensajeService: MensajeService,
+              private readonly sucursalesService: SucursalesService,
+              private readonly authService: AuthService) { }
 
   ngOnInit(): void {
-    this.hasRoleToAdministrarSucursales = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToAdministrarSucursales);
-
+    this.hasRoleToAdministrarSucursales = 
+      this.authService.userHasAnyOfTheseRoles(this.allowedRolesToAdministrarSucursales);
     this.loadingOverlayService.activate();
     this.sucursalesService.getSucursales()
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
@@ -64,7 +62,7 @@ export class SucursalesComponent implements OnInit {
       return;
     }
 
-    const msg = 'Está seguro de eliminar la sucursal seleccionada?';
+    const msg = '¿Está seguro de eliminar la sucursal "' + sucursal.nombre + '"?';
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
         this.loadingOverlayService.activate()
@@ -75,8 +73,7 @@ export class SucursalesComponent implements OnInit {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
-          })
-        ;
+          });
       }
     });
   }

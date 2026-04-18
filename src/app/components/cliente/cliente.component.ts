@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {Cliente} from '../../models/cliente';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {CategoriaIVA} from '../../models/categoria-iva';
-import {LoadingOverlayService} from '../../services/loading-overlay.service';
-import {Location} from '@angular/common';
-import {Rol} from '../../models/rol';
-import {ClientesService} from '../../services/clientes.service';
-import {finalize} from 'rxjs/operators';
-import {MensajeService} from '../../services/mensaje.service';
-import {MensajeModalType} from '../mensaje-modal/mensaje-modal.component';
-import {ActivatedRoute} from '@angular/router';
-import {UFProfile} from '../usuario-form/usuario-form.component';
+import { Component, OnInit } from '@angular/core';
+import { Cliente } from '../../models/cliente';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { CategoriaIVA } from '../../models/categoria-iva';
+import { LoadingOverlayService } from '../../services/loading-overlay.service';
+import { Location } from '@angular/common';
+import { Rol } from '../../models/rol';
+import { ClientesService } from '../../services/clientes.service';
+import { finalize } from 'rxjs/operators';
+import { MensajeService } from '../../services/mensaje.service';
+import { MensajeModalType } from '../mensaje-modal/mensaje-modal.component';
+import { ActivatedRoute } from '@angular/router';
+import { UFProfile } from '../usuario-form/usuario-form.component';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -19,15 +19,16 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./cliente.component.scss']
 })
 export class ClienteComponent implements OnInit {
+
   cliente: Cliente = null;
   form: UntypedFormGroup;
   submitted = false;
 
   categoriasIVA = [
-    { value: CategoriaIVA.RESPONSABLE_INSCRIPTO, text: 'Responsable Inscripto'},
-    { value: CategoriaIVA.EXENTO, text: 'Exento'},
-    { value: CategoriaIVA.CONSUMIDOR_FINAL, text: 'Consumidor Final'},
-    { value: CategoriaIVA.MONOTRIBUTO, text: 'Monotributo'},
+    { value: CategoriaIVA.RESPONSABLE_INSCRIPTO, text: 'Responsable Inscripto' },
+    { value: CategoriaIVA.EXENTO, text: 'Exento' },
+    { value: CategoriaIVA.CONSUMIDOR_FINAL, text: 'Consumidor Final' },
+    { value: CategoriaIVA.MONOTRIBUTO, text: 'Monotributo' },
   ];
 
   rol = Rol;
@@ -41,14 +42,14 @@ export class ClienteComponent implements OnInit {
   hasRoleToEditClientes = false;
   hasRoleVendedor = false;
 
-  constructor(private fb: UntypedFormBuilder,
-              private route: ActivatedRoute,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
-              private clientesService: ClientesService,
-              private location: Location,
-              private authService: AuthService,
-              ) {
+  constructor(private readonly fb: UntypedFormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly mensajeService: MensajeService,
+    private readonly clientesService: ClientesService,
+    private readonly location: Location,
+    private readonly authService: AuthService,
+  ) {
     this.hasRoleToCreateClientes = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCreateClientes);
     this.hasRoleToEditClientes = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEditClientes);
     this.hasRoleVendedor = this.authService.userHasAnyOfTheseRoles([Rol.VENDEDOR]);
@@ -58,7 +59,7 @@ export class ClienteComponent implements OnInit {
     this.createForm();
     if (this.route.snapshot.paramMap.has('id')) {
       if (!this.hasRoleToEditClientes) {
-        this.mensajeService.msg('No tiene permiso para editar clientes.', MensajeModalType.ERROR)
+        this.mensajeService.msg('No tiene permiso para editar clientes!', MensajeModalType.ERROR)
           .then(() => this.volverAlListado(), () => { return; });
         return;
       }
@@ -76,10 +77,10 @@ export class ClienteComponent implements OnInit {
               .then(() => this.volverAlListado(), () => { return; });
           }
         })
-      ;
+        ;
     } else {
       if (!this.hasRoleToCreateClientes) {
-        this.mensajeService.msg('No tiene permiso para crear clientes.', MensajeModalType.ERROR)
+        this.mensajeService.msg('No tiene permiso para crear clientes!', MensajeModalType.ERROR)
           .then(() => this.volverAlListado(), () => { return; });
       }
     }
@@ -92,12 +93,12 @@ export class ClienteComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       puedeComprarAPlazo: false,
-      montoCompraMinima: [{value: 0, disabled: this.hasRoleVendedor}, Validators.min(0)],
+      montoCompraMinima: [{ value: 0, disabled: this.hasRoleVendedor }, Validators.min(0)],
       nombreFiscal: ['', Validators.required],
       nombreFantasia: '',
       idFiscal: '',
       categoriaIVA: [null, Validators.required],
-      idViajante: [{value: null, disabled: this.hasRoleVendedor}],
+      idViajante: [{ value: null, disabled: this.hasRoleVendedor }],
       telefono: ['', Validators.required],
       contacto: '',
       email: ['', Validators.email],
@@ -125,17 +126,13 @@ export class ClienteComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: () => {
-            this.mensajeService
-              .msg('Los datos del cliente fueron guardados exitosamente.', MensajeModalType.INFO)
-              .then(() => this.volverAlListado(), () => { return; })
-            ;
+            this.volverAlListado();
           },
           error: err => {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR)
               .then(() => { return; }, () => { return; })
           },
-        })
-      ;
+        });
     }
   }
 

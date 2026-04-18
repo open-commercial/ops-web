@@ -207,7 +207,7 @@ export class CajasComponent extends ListadoDirective implements OnInit {
 
   eliminarCaja(caja: Caja) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar una caja.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar una caja!', MensajeModalType.ERROR);
       return;
     }
 

@@ -94,12 +94,10 @@ export class MedidaComponent implements OnInit {
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
         .subscribe({
           next: () => {
-            this.mensajeService.msg('Los datos de la medida se han guardado correctamente.', MensajeModalType.INFO);
             this.volverAlListado();
           },
           error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        })
-      ;
+        });
     }
   }
 }

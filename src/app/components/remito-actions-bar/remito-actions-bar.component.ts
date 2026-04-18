@@ -56,7 +56,7 @@ export class RemitoActionsBarComponent implements OnInit {
 
   eliminarRemito() {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar remitos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar remitos!', MensajeModalType.ERROR);
       return;
     }
 

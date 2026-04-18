@@ -18,6 +18,7 @@ import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal
   styleUrls: ['./sucursal.component.scss']
 })
 export class SucursalComponent implements OnInit {
+
   form: UntypedFormGroup;
   submitted = false;
   sucursal: Sucursal;
@@ -34,12 +35,12 @@ export class SucursalComponent implements OnInit {
     { value: CategoriaIVA.MONOTRIBUTO, text: 'Monotributo'},
   ];
 
-  constructor(private fb: UntypedFormBuilder,
-              private route: ActivatedRoute,
-              private locaction: Location,
-              private loadingOverlayService: LoadingOverlayService,
-              private mensajeService: MensajeService,
-              private sucursalesService: SucursalesService) {}
+  constructor(private readonly fb: UntypedFormBuilder,
+              private readonly route: ActivatedRoute,
+              private readonly locaction: Location,
+              private readonly loadingOverlayService: LoadingOverlayService,
+              private readonly mensajeService: MensajeService,
+              private readonly sucursalesService: SucursalesService) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -63,16 +64,15 @@ export class SucursalComponent implements OnInit {
             this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             this.volverAlListado();
           }
-        })
-      ;
+        });
     }
   }
 
   loadData() {
     this.form.patchValue(this.sucursal);
     this.imageDataUrl = this.sucursal ? this.sucursal.logo : '';
-    this.form.get('fechaInicioActividad').setValue(
-      HelperService.getNgbDateFromDate(this.sucursal.fechaInicioActividad)
+    this.form.get('fechaInicioActividad')
+      .setValue(HelperService.getNgbDateFromDate(this.sucursal.fechaInicioActividad)
     );
   }
 
@@ -129,8 +129,7 @@ export class SucursalComponent implements OnInit {
     this.sucursalesService.persistSucursal(sucursal)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: () => this.mensajeService.msg('La sucursal se dió alta en forma exitosa.', MensajeModalType.INFO)
-          .then(() => location.replace('/sucursales')),
+        next: () => this.volverAlListado(),
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
     ;
@@ -142,9 +141,8 @@ export class SucursalComponent implements OnInit {
     this.sucursalesService.updateSucursal(sucursal)
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
-        next: () => this.mensajeService.msg('Los datos de la sucursal se actualizaron en forma exitosa.', MensajeModalType.INFO)
-        .then(() => location.replace('/sucursales')),
-      error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
+        next: () => this.volverAlListado(),
+        error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
       })
     ;
   }

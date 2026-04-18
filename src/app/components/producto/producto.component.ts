@@ -213,12 +213,10 @@ export class ProductoComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: () => {
-          this.mensajeService.msg('Producto creado correctamente', MensajeModalType.INFO);
           this.location.back();
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-      })
-    ;
+      });
   }
 
   submitProductoEditado() {
@@ -231,12 +229,10 @@ export class ProductoComponent implements OnInit {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: () => {
-          this.mensajeService.msg('Producto actualizado correctamente', MensajeModalType.INFO);
           this.location.back();
         },
         error: err => this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-      })
-    ;
+      });
   }
 
   /**

@@ -1,21 +1,21 @@
 import { AuthService } from './../../../../services/auth.service';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ListadoDirective} from '../../../../directives/listado.directive';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SucursalesService} from '../../../../services/sucursales.service';
-import {LoadingOverlayService} from '../../../../services/loading-overlay.service';
-import {MensajeService} from '../../../../services/mensaje.service';
-import {Observable} from 'rxjs';
-import {Pagination} from '../../../../models/pagination';
-import {UntypedFormBuilder} from '@angular/forms';
-import {UsuariosService} from '../../../../services/usuarios.service';
-import {BusquedaUsuarioCriteria} from '../../../../models/criterias/busqueda-usuario-criteria';
-import {FiltroOrdenamientoComponent} from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
-import {HelperService} from '../../../../services/helper.service';
-import {BusquedaCuentaCorrienteClienteCriteria} from '../../../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
-import {Rol} from '../../../../models/rol';
-import {Usuario} from '../../../../models/usuario';
-import {MensajeModalType} from '../../../../components/mensaje-modal/mensaje-modal.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ListadoDirective } from '../../../../directives/listado.directive';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SucursalesService } from '../../../../services/sucursales.service';
+import { LoadingOverlayService } from '../../../../services/loading-overlay.service';
+import { MensajeService } from '../../../../services/mensaje.service';
+import { Observable } from 'rxjs';
+import { Pagination } from '../../../../models/pagination';
+import { UntypedFormBuilder } from '@angular/forms';
+import { UsuariosService } from '../../../../services/usuarios.service';
+import { BusquedaUsuarioCriteria } from '../../../../models/criterias/busqueda-usuario-criteria';
+import { FiltroOrdenamientoComponent } from '../../../../components/filtro-ordenamiento/filtro-ordenamiento.component';
+import { HelperService } from '../../../../services/helper.service';
+import { BusquedaCuentaCorrienteClienteCriteria } from '../../../../models/criterias/busqueda-cuenta-corriente-cliente-criteria';
+import { Rol } from '../../../../models/rol';
+import { Usuario } from '../../../../models/usuario';
+import { MensajeModalType } from '../../../../components/mensaje-modal/mensaje-modal.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -56,13 +56,13 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
   hasRoleToManageUsuarios = false;
 
   constructor(protected route: ActivatedRoute,
-              protected router: Router,
-              protected sucursalesService: SucursalesService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected mensajeService: MensajeService,
-              private fb: UntypedFormBuilder,
-              private usuariosService: UsuariosService,
-              private authService: AuthService) {
+    protected router: Router,
+    protected sucursalesService: SucursalesService,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected mensajeService: MensajeService,
+    private readonly fb: UntypedFormBuilder,
+    private readonly usuariosService: UsuariosService,
+    private readonly authService: AuthService) {
     super(route, router, sucursalesService, loadingOverlayService, mensajeService);
   }
 
@@ -70,7 +70,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
     super.ngOnInit();
     this.hasRoleToManageUsuarios = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToManageUsuarios);
     if (!this.allowedRolesToManageUsuarios) {
-      this.mensajeService.msg('Ud. no posee permisos para administrar usuarios.', MensajeModalType.ERROR);
+      this.mensajeService.msg('Ud. no tiene permisos para administrar usuarios!', MensajeModalType.ERROR);
       this.router.navigate(['/']);
     }
   }
@@ -86,7 +86,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
       sentido: { defaultValue: sentido },
     };
 
-    terminos = HelperService.paramsToTerminos<BusquedaCuentaCorrienteClienteCriteria>(ps, config , terminos);
+    terminos = HelperService.paramsToTerminos<BusquedaCuentaCorrienteClienteCriteria>(ps, config, terminos);
 
     if (ps.nombre) {
       terminos.username = ps.nombre;
@@ -140,7 +140,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
 
   getFormValues() {
     const values = this.filterForm.value;
-    const ret: {[k: string]: any} = {};
+    const ret: { [k: string]: any } = {};
 
     if (values.nombre) { ret.nombre = values.nombre; }
     if (values.rol) { ret.rol = values.rol; }
@@ -150,7 +150,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
 
   nuevoUsuario() {
     if (!this.allowedRolesToManageUsuarios) {
-      this.mensajeService.msg('Ud. no posee permisos para crear usuarios.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permisos para crear usuarios!', MensajeModalType.ERROR);
       return;
     }
 
@@ -159,7 +159,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
 
   editarUsuario(u: Usuario) {
     if (!this.allowedRolesToManageUsuarios) {
-      this.mensajeService.msg('Ud. no posee permisos para editar usuarios.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permisos para editar usuarios!', MensajeModalType.ERROR);
       return;
     }
     this.router.navigate(['/usuarios/editar', u.idUsuario]);
@@ -167,11 +167,11 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
 
   eliminarUsuario(u: Usuario) {
     if (!this.allowedRolesToManageUsuarios) {
-      this.mensajeService.msg('Ud. no posee permisos para eliminar usuarios.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permisos para eliminar usuarios!', MensajeModalType.ERROR);
       return;
     }
 
-    const msg = 'Esta seguro que desea eliminar el usuario seleccionado?';
+    const msg = `¿Esta seguro que desea eliminar el usuario "${u.username}"?`;
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then(result => {
       if (result) {
         this.loadingOverlayService.activate();
@@ -182,8 +182,7 @@ export class UsuariosComponent extends ListadoDirective implements OnInit {
               this.loadingOverlayService.deactivate();
               this.mensajeService.msg(err.error, MensajeModalType.ERROR);
             },
-          })
-        ;
+          });
       }
     });
   }

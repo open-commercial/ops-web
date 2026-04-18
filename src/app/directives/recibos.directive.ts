@@ -288,7 +288,7 @@ export abstract class RecibosDirective extends ListadoDirective implements OnIni
         }
       );
     } else {
-      throw new Error('La Nota no posee id');
+      throw new Error('La Nota no tiene id');
     }
   }
 

@@ -293,7 +293,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
 
   editarProducto(producto: Producto) {
     if (!this.hasRoleToEdit) {
-      this.mensajeService.msg('No posee permiso para editar productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para editar productos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -302,7 +302,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
 
   eliminarProducto(producto: Producto) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar productos!', MensajeModalType.ERROR);
       return;
     }
 
@@ -330,7 +330,7 @@ export class ProductosComponent extends ListadoDirective implements OnInit {
 
   eliminarSeleccionados(ids: number[]) {
     if (!this.hasRoleToDelete) {
-      this.mensajeService.msg('No posee permiso para eliminar productos.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para eliminar productos!', MensajeModalType.ERROR);
       return;
     }
 

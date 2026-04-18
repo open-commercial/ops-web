@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 import { FacturaVenta } from './../../models/factura-venta';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
-type FacturaVentaActionButtonName = 'show'|'email'|'show-remito'|'new-remito'|'create-nota-credito';
+type FacturaVentaActionButtonName = 'show' | 'email' | 'show-remito' | 'new-remito' | 'create-nota-credito';
 
 @Component({
   selector: 'app-factura-venta-actions-bar',
@@ -39,10 +39,10 @@ export class FacturaVentaActionsBarComponent implements OnInit {
   @Output() afterAutorizar = new EventEmitter<void>();
   @Output() afterNoAutorizar = new EventEmitter<void>();
 
-  allowedRolesToEnviarPorEmail: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR ];
+  allowedRolesToEnviarPorEmail: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR];
   hasRoleToEnviarPorEmail = false;
 
-  allowedRolesToCrearNota: Rol[] = [ Rol.ADMINISTRADOR, Rol.ENCARGADO ];
+  allowedRolesToCrearNota: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCrearNota = false;
 
   tiposDeComprobantesParaAutorizacion: TipoDeComprobante[] = [
@@ -64,14 +64,14 @@ export class FacturaVentaActionsBarComponent implements OnInit {
   };
 
   constructor(private readonly router: Router,
-              private readonly authService: AuthService,
-              private readonly mensajeService: MensajeService,
-              private readonly loadingOverlayService: LoadingOverlayService,
-              private readonly modalService: NgbModal,
-              private readonly datePipe: DatePipe,
-              private readonly facturasVentaService: FacturasVentaService,
-              private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
-              private readonly notasService: NotasService) {
+    private readonly authService: AuthService,
+    private readonly mensajeService: MensajeService,
+    private readonly loadingOverlayService: LoadingOverlayService,
+    private readonly modalService: NgbModal,
+    private readonly datePipe: DatePipe,
+    private readonly facturasVentaService: FacturasVentaService,
+    private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
+    private readonly notasService: NotasService) {
     this.hasRoleToEnviarPorEmail = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToEnviarPorEmail);
     this.hasRoleToCrearNota = this.authService.userHasAnyOfTheseRoles(this.allowedRolesToCrearNota);
   }
@@ -101,7 +101,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
 
   enviarPorEmail() {
     if (!this.hasRoleToEnviarPorEmail) {
-      this.mensajeService.msg('No posee permiso para enviar la factura por email.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para enviar la factura por email!', MensajeModalType.ERROR);
       return;
     }
 
@@ -140,7 +140,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
 
   crearNotaCreditoFactura() {
     if (!this.hasRoleToCrearNota) {
-      this.mensajeService.msg('No posee permiso para crear notas.', MensajeModalType.ERROR);
+      this.mensajeService.msg('No tiene permiso para crear notas!', MensajeModalType.ERROR);
       return;
     }
 
@@ -160,7 +160,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
       modalRef2.componentInstance.notaCredito = data[1];
       modalRef2.componentInstance.idCliente = this.facturaVenta.idCliente;
       modalRef2.result.then(
-          (nota: NotaCredito) => {
+        (nota: NotaCredito) => {
           const message = 'Nota de Crédito creada correctamente.';
           if (nota.idNota) {
             this.mensajeService.msg(message, MensajeModalType.INFO).then(
@@ -168,10 +168,10 @@ export class FacturaVentaActionsBarComponent implements OnInit {
                 if (this.tiposDeComprobantesParaAutorizacion.indexOf(nota.tipoComprobante) >= 0) {
                   this.autorizar(nota.idNota, () => this.afterAutorizar.emit());
                 } else { this.afterNoAutorizar.emit() }
-              }, 
+              },
               () => { return; });
           } else {
-            throw new Error('La Nota no posee id');
+            throw new Error('La Nota no tiene id');
           }
         },
         () => { return; }
@@ -191,15 +191,14 @@ export class FacturaVentaActionsBarComponent implements OnInit {
               .pipe(finalize(() => this.loadingOverlayService.deactivate()))
               .subscribe({
                 next: () => {
-                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
+                  this.mensajeService.msg('La Nota fue autorizada por ARCA correctamente!', MensajeModalType.INFO)
                     .then(callback, () => { return; });
                 },
                 error: err => {
                   this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                     .then(callback, () => { return; });
                 },
-              })
-            ;
+              });
           } else {
             this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR)
               .then(() => { return; }, () => { return; });

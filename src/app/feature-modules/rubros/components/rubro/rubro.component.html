@@ -1,11 +1,14 @@
 <div class="app-rubro">
   <h1 class="h3 m-0 flex-fill text-truncate my-3">
-    <a class="btn fake-cursor" placement="right" ngbPopover="Volver" triggers="mouseenter:mouseleave"
-        (click)="volverAlListado()">
-      <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
+    <a class="btn fake-cursor" 
+      placement="right" 
+      ngbPopover="Volver" 
+      triggers="mouseenter:mouseleave"
+      (click)="volverAlListado()">
+        <fa-icon [icon]="['fas', 'chevron-left']" [size]="'lg'"></fa-icon>
     </a>
     <fa-icon [icon]="['fas', 'cubes']"></fa-icon>
-    Rubro{{ rubro ? (': ' + rubro.nombre) : ''}}
+    Rubro
   </h1>
   <form [formGroup]="form" (submit)="submit()" *ngIf="form" class="border rounded bg-light p-3">
     <div class="row">

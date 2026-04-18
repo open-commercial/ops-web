@@ -187,15 +187,13 @@ export class RemitoComponent implements OnInit, OnDestroy {
       this.loadingOverlayService.activate();
       this.remitosService.crearRemitosDeFacturasVenta(nr)
         .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-        .subscribe(
-          () => {
-            this.mensajeService.msg('El Remito fue creado correctamente!', MensajeModalType.INFO);
+        .subscribe({
+          next: () => {
             this.batchActionsService.clear(BatchActionKey.FACTURAS_VENTA);
             this.volverAlListado();
           },
-          err => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
-        )
-        ;
+          error: (err) => this.mensajeService.msg(err.error, MensajeModalType.ERROR),
+        });
     }
   }
 }

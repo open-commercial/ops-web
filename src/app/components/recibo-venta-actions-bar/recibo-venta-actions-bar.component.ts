@@ -24,17 +24,16 @@ import { Component } from '@angular/core';
 export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
 
   constructor(protected router: Router,
-              protected mensajeService: MensajeService,
-              protected loadingOverlayService: LoadingOverlayService,
-              protected authService: AuthService,
-              protected recibosService: RecibosService,
-              private clientesService: ClientesService,
-              private configuracionesSucursalService: ConfiguracionesSucursalService,
-              private notasService: NotasService,
-              private modalService: NgbModal) {
+    protected mensajeService: MensajeService,
+    protected loadingOverlayService: LoadingOverlayService,
+    protected authService: AuthService,
+    protected recibosService: RecibosService,
+    private readonly clientesService: ClientesService,
+    private readonly configuracionesSucursalService: ConfiguracionesSucursalService,
+    private readonly notasService: NotasService,
+    private readonly modalService: NgbModal) {
     super(router, mensajeService, loadingOverlayService, authService, recibosService);
   }
-
 
   doCrearNotaDebitoRecibo() {
     this.loadingOverlayService.activate();
@@ -45,53 +44,13 @@ export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
           const modalRef = this.modalService.open(NotaDebitoVentaReciboModalComponent, { backdrop: 'static' });
           modalRef.componentInstance.cliente = c;
           modalRef.componentInstance.idRecibo = this.recibo.idRecibo;
-          modalRef.result
-            .then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
-              const modalRef2 = this.modalService.open(NotaDebitoVentaDetalleReciboModalComponent, { backdrop: 'static', size: 'lg' });
-              modalRef2.componentInstance.nnddr = data[0];
-              modalRef2.componentInstance.notaDebito = data[1];
-              modalRef2.componentInstance.cliente = c;
-              modalRef2.result.then(
-                (nota: NotaDebito) => this.showNotaCreationSuccessMessage(nota, 'Nota de Débito creada correctamente.', () => {
-                  this.doAutorizar(nota.idNota);
-                }),
-                () => { return; }
-              );
-            }, () => { return; })
-          ;
-        },
-        error: err => {
-          this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-            .then(() => { return; }, () => { return; });
-        },
-      });
-  }
-
-  doAutorizar(idNota: number, callback = () => { return; }) {
-    this.loadingOverlayService.activate();
-    this.configuracionesSucursalService.isFacturaElectronicaHabilitada()
-      .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-      .subscribe({
-        next: habilitada => {
-          if (habilitada) {
-            this.loadingOverlayService.activate();
-            this.notasService.autorizar(idNota)
-              .pipe(finalize(() => this.loadingOverlayService.deactivate()))
-              .subscribe({
-                next: () => {
-                  this.mensajeService.msg('La Nota fue autorizada por AFIP correctamente!', MensajeModalType.INFO)
-                    .then(callback, () => { return; });
-                },
-                error: err => {
-                  this.mensajeService.msg(err.error, MensajeModalType.ERROR)
-                    .then(callback, () => { return; });
-                },
-              })
-            ;
-          } else {
-            this.mensajeService.msg('La funcionalidad de Factura Electronica no se encuentra habilitada.', MensajeModalType.ERROR)
-              .then(() => { return; }, () => { return; });
-          }
+          modalRef.result.then((data: [NuevaNotaDebitoDeRecibo, NotaDebito]) => {
+            const modalRef2 = this.modalService.open(NotaDebitoVentaDetalleReciboModalComponent, { backdrop: 'static', size: 'lg' });
+            modalRef2.componentInstance.nnddr = data[0];
+            modalRef2.componentInstance.notaDebito = data[1];
+            modalRef2.componentInstance.cliente = c;
+            modalRef2.result.then(() => { location.reload(); });
+          });
         },
         error: err => {
           this.mensajeService.msg(err.error, MensajeModalType.ERROR)
@@ -106,7 +65,7 @@ export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
       .pipe(finalize(() => this.loadingOverlayService.deactivate()))
       .subscribe({
         next: res => {
-          const file = new Blob([res], {type: 'application/pdf'});
+          const file = new Blob([res], { type: 'application/pdf' });
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL, '_blank');
         },
@@ -114,7 +73,6 @@ export class ReciboVentaActionsBarComponent extends ReciboActionsBarDirective {
           this.mensajeService.msg('Error al generar el reporte', MensajeModalType.ERROR)
             .then(() => { return; }, () => { return; });
         },
-      })
-    ;
+      });
   }
 }
