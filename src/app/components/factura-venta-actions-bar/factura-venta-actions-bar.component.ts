@@ -105,7 +105,7 @@ export class FacturaVentaActionsBarComponent implements OnInit {
       return;
     }
 
-    const msg = '¿Está seguro que desea enviar un email con la factura al Cliente?';
+    const msg = '¿Está seguro que desea enviar un email con la factura al cliente?';
 
     this.mensajeService.msg(msg, MensajeModalType.CONFIRM).then((result) => {
       if (result) {
@@ -113,10 +113,6 @@ export class FacturaVentaActionsBarComponent implements OnInit {
         this.facturasVentaService.enviarPorEmail(this.facturaVenta.idFactura)
           .pipe(finalize(() => this.loadingOverlayService.deactivate()))
           .subscribe({
-            next: () => {
-              this.mensajeService.msg('La factura fue enviada por email.', MensajeModalType.INFO)
-                .then(() => { return; }, () => { return; });
-            },
             error: err => {
               this.mensajeService.msg(err.error, MensajeModalType.ERROR)
                 .then(() => { return; }, () => { return; });
