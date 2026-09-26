@@ -61,12 +61,12 @@
   <div class="recibos-venta">
     <ng-template #info let-item>
       <div class="flex-fill">
-        <div>
-          <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
-          <span class="badge text-bg-dark me-2">#{{ helper.formatNumFactura(item.numSerie, item.numRecibo) }}</span>
+        <div class="d-flex flex-row flex-wrap">
+          <span class="badge text-bg-dark ms-2 mb-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span class="badge text-bg-dark ms-2 mb-2">#{{ helper.formatNumFactura(item.numSerie, item.numRecibo) }}</span>
         </div>
       </div>
-      <div class="d-flex flex-column flex-md-row mt-2">
+      <div class="d-flex flex-column flex-md-row px-2">
         <div class="w-100 me-2">
           <div class="me-2">
             <span class="fw-bold">Cliente:&nbsp;</span>
@@ -92,7 +92,7 @@
           </div>
           <div class="flex-fill d-flex flex-row flex-wrap align-items-center me-2">
             <span class="fw-bold">Monto:&nbsp;</span>
-            <span class="fst-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+            <span class="badge badge-monto" [ngClass]="item.monto >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
           </div>
         </div>
       </div>

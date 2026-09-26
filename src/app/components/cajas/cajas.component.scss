@@ -11,16 +11,6 @@
     .column-data {
       display: inline-block;
       font-style: italic;
-      &.monto {
-        background: #eaffe6;
-        color: #084c08;
-        font-weight: 700;
-        padding: .15rem .5rem 0 .4rem;
-        margin-bottom: .2rem;
-        border-radius: .25rem;
-        border: .05rem solid #084c08;
-        border-left: .3rem solid #084c08;
-      }
     }
   }
 }

@@ -4,15 +4,16 @@
       <fa-icon [icon]="['fas', 'money-bill-wave']"></fa-icon> Formas de Pago
     </h1>
   </div>
-  <div class="formas-de-pago ">
-    <div class="d-flex flex-row py-2 align-items-center border-bottom" *ngFor="let fdp of formasDePago" [ngClass]="{ 'bg-primary' : fdp.predeterminado }">
-      <div class="forma-de-pago flex-fill p-2">
+  <div class="formas-de-pago bg-white border rounded">
+    <div class="d-flex flex-md-row align-items-center forma-de-pago p-2" *ngFor="let fdp of formasDePago; index as i"
+         [ngClass]="{ 'border-bottom': i !== formasDePago.length - 1, 'bg-primary': fdp.predeterminado }">
+      <div class="flex-fill">
         <span class="lead me-2" [class.fw-bold]="fdp.predeterminado">{{ fdp.nombre }}</span>
         <span class="badge text-bg-secondary me-2" *ngIf="fdp.predeterminado">Predeterminado</span>
         <span class="badge text-bg-secondary" *ngIf="fdp.afectaCaja">Afecta la Caja</span>
       </div>
-      <ul class="list-unstyled mb-0">
-        <li *ngIf="!fdp.predeterminado">
+      <ul class="list-inline mb-0 text-center d-inline-block">
+        <li class="list-inline-item" *ngIf="!fdp.predeterminado">
           <button class="btn btn-primary fake-cursor" ngbPopover="Establecer como predeterminado" placement="left" triggers="mouseenter:mouseleave"
                   (click)="setAsDefault(fdp)">
             <fa-icon [icon]="['far', 'square']"></fa-icon>

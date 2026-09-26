@@ -13,17 +13,20 @@
   </div>
   <app-batch-actions-box [batchActionKey]="batchActionKey" [actions]="batchActionActions"></app-batch-actions-box>
 </div>
-<div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center border-bottom border-top py-2" [class.selected]="isSelected(item)">
-  <div class="form-check ms-2" *ngIf="batchActionKey">
-    <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
-    <label class="form-check-label" [for]="'check_row_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>
-  </div>
-  <div class="d-flex flex-column flex-sm-row flex-fill align-items-sm-center">
-    <div class="d-flex flex-column flex-fill">
-      <ng-container *ngTemplateOutlet="(infoTemplate ? infoTemplate : noInfo) ; context:{ $implicit: item, index: i }"></ng-container>
+<div class="bg-white border rounded" *ngIf="items?.length">
+  <div *ngFor="let item of items; let i=index;" class="d-flex flex-row align-items-center p-2"
+       [class.border-bottom]="i !== items.length - 1" [class.selected]="isSelected(item)">
+    <div class="form-check ms-2" *ngIf="batchActionKey">
+      <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
+      <label class="form-check-label" [for]="'check_row_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>
     </div>
-    <div class="text-end flex-fill flex-shrink-0 flex-grow-0 px-2" *ngIf="actionsTemplate">
-      <ng-container *ngTemplateOutlet="actionsTemplate ; context: { $implicit: item, index: i }"></ng-container>
+    <div class="d-flex flex-column flex-sm-row flex-fill align-items-sm-center min-w-0 gap-2">
+      <div class="d-flex flex-column flex-fill min-w-0">
+        <ng-container *ngTemplateOutlet="(infoTemplate ? infoTemplate : noInfo) ; context:{ $implicit: item, index: i }"></ng-container>
+      </div>
+      <div class="text-end flex-fill flex-shrink-0 flex-grow-0 px-2" *ngIf="actionsTemplate">
+        <ng-container *ngTemplateOutlet="actionsTemplate ; context: { $implicit: item, index: i }"></ng-container>
+      </div>
     </div>
   </div>
 </div>

@@ -4,9 +4,9 @@
       <fa-icon class="spinner-primary" [icon]="['fas', 'circle-notch']" [spin]="true" [size]="'3x'"></fa-icon>
     </div>
     <div *ngIf="ccc && !refreshing" class="d-flex flex-column">
-      <div>
+      <div class="d-flex flex-row flex-wrap">
         <span class="badge text-bg-dark me-2 mb-2">#{{ ccc.cliente.nroCliente }}</span>
-        <span class="badge text-bg-{{ ccc.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} mb-2">
+        <span class="badge mb-2" [ngClass]="ccc.cliente.puedeComprarAPlazo ? 'text-bg-success' : 'text-bg-danger'">
           <fa-icon [icon]="['fas', 'check']" *ngIf="ccc.cliente.puedeComprarAPlazo"></fa-icon>
           <fa-icon [icon]="['fas', 'times']" *ngIf="!ccc.cliente.puedeComprarAPlazo"></fa-icon>
           &nbsp;{{ ccc.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
@@ -23,7 +23,7 @@
         Ubi. envio: {{ helper.formatUbicacion(ccc.cliente.ubicacionEnvio) }}
       </span>
       <span>
-        Saldo CC: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.0-2'}}</span>
+        Saldo CC: <span class="saldo" [class.negativo]="ccc.saldo < 0">{{ ccc.saldo | currency: 'ARS':'symbol':'1.2-2'}}</span>
       </span>
       <span>
         Compra mínima: {{ ccc.cliente.montoCompraMinima | currency: 'ARS':'symbol':'1.0-2' }}

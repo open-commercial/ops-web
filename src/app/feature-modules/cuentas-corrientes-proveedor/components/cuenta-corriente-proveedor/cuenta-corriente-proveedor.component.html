@@ -39,7 +39,7 @@
   </div>
   <app-proveedor-detalle [proveedor]="ccp.proveedor"></app-proveedor-detalle>
   <div class="text-end mx-2">
-    ÚLTIMO SALDO: <span class="fw-bold">{{ saldo | currency:'ARS':'symbol':'1.0-2' }}</span>
+    ÚLTIMO SALDO: <span class="badge badge-monto" [ngClass]="saldo >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ saldo | currency:'ARS':'symbol':'1.2-2' }}</span>
   </div>
   <!-- Template para las actions porque se renderizan dos veces y es para no repetir y equivorcarse  -->
   <ng-template #actions let-r="r">
@@ -100,7 +100,7 @@
               <span class="badge text-bg-dark me-2">
                 <fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ r.fecha | date:'dd/MM/yyyy HH:mm' }}
               </span>
-              <span class="badge text-bg-pill text-bg-light border border-dark me-2 my-1">
+              <span class="badge text-bg-light border border-dark me-2 my-1">
                 {{ helper.tipoComprobanteLabel(r.tipoComprobante) }}
               </span>
               <span class="badge text-bg-dark me-2">#{{ r.serie }}-{{ r.numero }}</span>

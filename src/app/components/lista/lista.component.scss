@@ -4,3 +4,7 @@
 .selected {
   background: lighten($color: $primary, $amount: 25%);
 }
+
+.min-w-0 {
+  min-width: 0;
+}

@@ -46,23 +46,19 @@
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
-    <ul class="list-unstyled my-3 text-end">
+    <ul class="list-unstyled my-3 text-end d-flex flex-column gap-1">
       <li>
         <strong>Total afecta Caja: </strong>
-        <span class="lead">
-          <span class="badge" [class.text-bg-success]="totalQueAfectaCaja >= 0" [class.text-bg-danger]="totalQueAfectaCaja < 0">
-            <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
-            <span *ngIf="!loadingTotales">{{ totalQueAfectaCaja | currency: 'ARS':'symbol':'1.0-2' }}</span>
-          </span>
+        <span class="badge badge-monto" [class.text-bg-success]="totalQueAfectaCaja >= 0" [class.text-bg-danger]="totalQueAfectaCaja < 0">
+          <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
+          <span *ngIf="!loadingTotales">{{ totalQueAfectaCaja | currency: 'ARS':'symbol':'1.0-2' }}</span>
         </span>
       </li>
       <li>
         <strong>Total Sistema: </strong>
-        <span class="lead">
-          <span class="badge" [class.text-bg-success]="totalSistema >= 0" [class.text-bg-danger]="totalSistema < 0">
-            <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
-            <span *ngIf="!loadingTotales">{{ totalSistema | currency: 'ARS':'symbol':'1.0-2' }}</span>
-          </span>
+        <span class="badge badge-monto" [class.text-bg-success]="totalSistema >= 0" [class.text-bg-danger]="totalSistema < 0">
+          <fa-icon [icon]="['fas', 'circle-notch']" [spin]="true" *ngIf="loadingTotales"></fa-icon>
+          <span *ngIf="!loadingTotales">{{ totalSistema | currency: 'ARS':'symbol':'1.0-2' }}</span>
         </span>
       </li>
     </ul>

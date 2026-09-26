@@ -60,16 +60,6 @@ export class SideNavComponent implements OnDestroy {
         ],
       },
       {
-        seccion: 'Sistema',
-        id: 'sistema',
-        show: this.tieneRolAdministrador,
-        rutas: [
-          { name: 'Configuración', icon: ['fas', 'cog'], route: '/configuracion', show: true },
-          { name: 'Sucursales', icon: ['fas', 'store'], route: '/sucursales', show: true },
-          { name: 'Usuarios', icon: ['fas', 'users'], route: '/usuarios', show: true },
-        ],
-      },
-      {
         seccion: 'Stock',
         id: 'stock',
         show: this.tieneRolAdminOEncargado || this.tieneRolVendedor,
@@ -125,6 +115,16 @@ export class SideNavComponent implements OnDestroy {
             route: '/recibos-venta',
             show: this.tieneRolAdminOEncargado || this.tieneRolVendedor
           },
+        ],
+      },
+      {
+        seccion: 'Sistema',
+        id: 'sistema',
+        show: this.tieneRolAdministrador,
+        rutas: [
+          { name: 'Configuración', icon: ['fas', 'cog'], route: '/configuracion', show: true },
+          { name: 'Sucursales', icon: ['fas', 'store'], route: '/sucursales', show: true },
+          { name: 'Usuarios', icon: ['fas', 'users'], route: '/usuarios', show: true },
         ],
       },
     ];

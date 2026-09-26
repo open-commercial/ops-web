@@ -33,14 +33,11 @@
         </li>
       </ul>
       <span class="navbar-text">
-        <button type="button" id="menu-btn" class="btn btn-link text-black fake-cursor me-1" (click)="menuBtnClick()">
+        <button type="button" id="menu-btn" class="btn btn-link text-black fake-cursor me-1 d-lg-none"
+          (click)="menuBtnClick()" aria-label="Abrir menú">
           <fa-icon [icon]="['fas', 'bars']" size="lg"></fa-icon>
         </button>
       </span>
     </div>
   </div>
 </nav>
-<div class="bg-primary d-md-none text-center py-1 px-2">
-  <fa-icon [icon]="['fas', 'store']"></fa-icon>&nbsp;{{ sucursalSeleccionada ? sucursalSeleccionada.nombre : '(Sin sucursal seleccionada)' }}
-</div>
-

@@ -1,13 +1,14 @@
 <div class="d-flex flex-column h-100 app-home">
   <app-nav-bar [sindeNavOpened]="menuOpened" (menuButtonClick)="toggleMenu()"></app-nav-bar>
   <div class="d-flex flex-row flex-fill content-container">
-    <div class="flex-fill px-1 main-content container-fluid px-3">
-        <router-outlet></router-outlet>
-    </div>
+    <div *ngIf="menuOpened" class="side-nav-backdrop d-lg-none" (click)="closeMenu()"></div>
     <app-side-nav
-      class="app-side-nav flex-shrink-0 flex-sm-grow-0" 
+      class="app-side-nav flex-shrink-0"
       [class.opened]="menuOpened"
-      (menuOptionClick)="toggleMenu()">
+      (menuOptionClick)="closeMenu()">
     </app-side-nav>
+    <div class="flex-fill px-1 main-content container-fluid px-3">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

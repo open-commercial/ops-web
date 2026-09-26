@@ -1,25 +1,58 @@
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AuthService } from './../../../../services/auth.service';
 import { Rol } from './../../../../models/rol';
 import { MensajeService } from 'src/app/services/mensaje.service';
 import { finalize } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { RubrosService } from './../../../../services/rubros.service';
 import { Location } from '@angular/common';
 import { LoadingOverlayService } from './../../../../services/loading-overlay.service';
 import { Rubro } from './../../../../models/rubro';
 import { ActivatedRoute } from '@angular/router';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MensajeModalType } from 'src/app/components/mensaje-modal/mensaje-modal.component';
+
+const svgValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = (control.value || '').trim();
+  if (!value) { return null; }
+
+  const doc = new DOMParser().parseFromString(value, 'image/svg+xml');
+  if (doc.querySelector('parsererror')) {
+    return { svgInvalido: true };
+  }
+
+  const root = doc.documentElement;
+  if (!root || root.nodeName.toLowerCase() !== 'svg') {
+    return { svgRequerido: true };
+  }
+
+  if (root.querySelector('script, foreignObject')) {
+    return { svgNoPermitido: true };
+  }
+
+  const elementos = [root, ...Array.from(root.querySelectorAll('*'))];
+  const tieneAtributoNoPermitido = elementos.some(el =>
+    Array.from(el.attributes).some(attr => {
+      const nombre = attr.name.toLowerCase();
+      return nombre.startsWith('on') || (nombre === 'href' && attr.value.trim().toLowerCase().startsWith('javascript:'));
+    })
+  );
+
+  return tieneAtributoNoPermitido ? { svgNoPermitido: true } : null;
+};
 
 @Component({
   selector: 'app-rubro',
-  templateUrl: './rubro.component.html'
+  templateUrl: './rubro.component.html',
+  styleUrls: ['./rubro.component.scss']
 })
-export class RubroComponent implements OnInit {
+export class RubroComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;
   rubro: Rubro;
   submitted = false;
+  svgPreview: SafeHtml = null;
+  private subscription = new Subscription();
 
   allowedRolesToCreate = [Rol.ADMINISTRADOR, Rol.ENCARGADO];
   hasRoleToCreate = false;
@@ -78,8 +111,22 @@ export class RubroComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
-      imagenHtml: '',
+      imagenHtml: ['', svgValidator],
     });
+
+    const imagenHtmlControl = this.form.get('imagenHtml');
+    this.subscription.add(
+      imagenHtmlControl.valueChanges.subscribe(() => this.actualizarPreview(imagenHtmlControl))
+    );
+  }
+
+  private actualizarPreview(control: AbstractControl) {
+    const value = (control.value || '').trim();
+    this.svgPreview = value && control.valid ? this.sanitizer.bypassSecurityTrustHtml(value) : null;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   get f() { return this.form.controls; }

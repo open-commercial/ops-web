@@ -53,11 +53,11 @@
   <div class="gastos">
     <ng-template #info let-item>
       <div class="flex-fill">
-        <div class="mb-1">
-          <span class="badge text-bg-dark me-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
-          <span class="badge text-bg-dark me-2">#{{ item.nroGasto }}</span>
+        <div class="d-flex flex-row flex-wrap">
+          <span class="badge text-bg-dark ms-2 mb-2"><fa-icon [icon]="['fas', 'calendar']"></fa-icon> {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span class="badge text-bg-dark ms-2 mb-2">#{{ item.nroGasto }}</span>
         </div>
-        <div class="flex-fill d-flex flex-column flex-md-row flex-md-wrap me-2">
+        <div class="flex-fill d-flex flex-column flex-md-row flex-md-wrap px-2">
           <div class="me-2 mb-1">
             <span class="fw-bold">Usuario:&nbsp;</span>
             <span class="fst-italic">{{ item.nombreUsuario }}</span>
@@ -72,7 +72,7 @@
           </div>
           <div class="me-2 mb-1">
             <span class="fw-bold">Monto:&nbsp;</span>
-            <span class="fst-italic monto">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
+            <span class="badge badge-monto" [ngClass]="item.monto >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.monto | currency:'ARS':'symbol':'1.0-2' }}</span>
           </div>
         </div>
       </div>

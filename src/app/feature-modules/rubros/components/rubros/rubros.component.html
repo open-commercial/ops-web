@@ -9,7 +9,7 @@
       </button>
     </div>
   </div>
-  <div class="rubros bg-light border rounded">
+  <div class="rubros bg-white border rounded">
     <div *ngFor="let r of rubros; index as i" class="d-flex flex-md-row align-items-center rubro p-2" [ngClass]="{'border-bottom': i !== rubros.length - 1}">
       <div class="flex-fill">
         <span class="lead">{{ r.nombre }}</span>

@@ -1,19 +1,52 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
 .app-home {
-  padding: 0;
+  padding: 56px 0 0;
+
+  app-nav-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 3;
+    background: whitesmoke;
+  }
   .content-container {
+    min-height: 0;
+
+    .side-nav-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      background: rgba(0, 0, 0, .35);
+    }
+
     app-side-nav {
       position: fixed;
       top: 0;
       bottom: 0;
       right: -16rem;
-      z-index: 2;
+      z-index: 5;
       transition: right .25s;
+      box-shadow: -5px 0 5px 0 rgba(0, 0, 0, .38);
+
       &.opened {
         right: 0;
       }
-      box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
-      -webkit-box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
-      -moz-box-shadow: -5px 0px 5px 0px rgba(0,0,0,0.38);
+    }
+
+    @include media-breakpoint-up(lg) {
+      padding-left: 15rem;
+
+      app-side-nav {
+        top: 56px;
+        left: 0;
+        right: auto;
+        z-index: 2;
+        box-shadow: none;
+      }
     }
   }
 }

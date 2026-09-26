@@ -24,8 +24,23 @@
       </div>
       <div class="col-md-6">
         <div class="mb-3">
-          <label for="imagenHtml" class="form-label">Imagen (html)</label>
-          <textarea class="form-control" id="observaciones" rows="5" formControlName="imagenHtml"></textarea>
+          <label for="imagenHtml" class="form-label">Icono en SVG</label>
+          <textarea class="form-control" id="imagenHtml" rows="5" formControlName="imagenHtml"
+              [ngClass]="{ 'is-invalid': f.imagenHtml.errors }"></textarea>
+          <div class="invalid-feedback" *ngIf="f.imagenHtml.errors">
+            <div *ngIf="f.imagenHtml.errors.svgInvalido">El código SVG no es válido</div>
+            <div *ngIf="f.imagenHtml.errors.svgRequerido">Debe ingresar únicamente código SVG</div>
+            <div *ngIf="f.imagenHtml.errors.svgNoPermitido">El SVG contiene elementos o atributos no permitidos</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <span class="form-label">Vista previa</span>
+          <div class="border rounded bg-white p-2 text-center imagen-preview d-flex align-items-center justify-content-center">
+            <div class="w-100" *ngIf="svgPreview; else sinImagen" [innerHTML]="svgPreview"></div>
+            <ng-template #sinImagen>
+              <span class="text-muted fst-italic">(Sin icono)</span>
+            </ng-template>
+          </div>
         </div>
       </div>
     </div>

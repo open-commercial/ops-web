@@ -58,15 +58,15 @@
             <span class="column-name">Usuario Cierre:&nbsp;</span><span class="column-data">{{ item.nombreUsuarioCierraCaja }}</span>
           </span>
         </div>
-        <div class="d-flex flex-column flex-md-row flex-wrap">
-          <span class="dato text-nowrap">
-            <span class="column-name">Saldo Apertura:&nbsp;</span><span class="column-data monto">{{ item.saldoApertura | currency:'ARS':'symbol':'1.0-2' }}</span>
+        <div class="d-flex flex-column flex-md-row flex-wrap gap-1 gap-md-0">
+          <span class="dato">
+            <span class="column-name">Saldo Apertura:&nbsp;</span><span class="badge badge-monto" [ngClass]="item.saldoApertura >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.saldoApertura | currency:'ARS':'symbol':'1.0-2' }}</span>
           </span>
-          <span class="dato text-nowrap" *ngIf="item.saldoSistema !== null && item.saldoSistema !== undefined">
-            <span class="column-name">Saldo Sistema:&nbsp;</span><span class="column-data monto">{{ item.saldoSistema | currency:'ARS':'symbol':'1.0-2' }}</span>
+          <span class="dato" *ngIf="item.saldoSistema !== null && item.saldoSistema !== undefined">
+            <span class="column-name">Saldo Sistema:&nbsp;</span><span class="badge badge-monto" [ngClass]="item.saldoSistema >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.saldoSistema | currency:'ARS':'symbol':'1.0-2' }}</span>
           </span>
-          <span class="dato text-nowrap" *ngIf="item.saldoReal !== null && item.saldoReal !== undefined">
-            <span class="column-name">Saldo Real:&nbsp;</span><span class="column-data monto">{{ item.saldoReal | currency:'ARS':'symbol':'1.0-2' }}</span>
+          <span class="dato" *ngIf="item.saldoReal !== null && item.saldoReal !== undefined">
+            <span class="column-name">Saldo Real:&nbsp;</span><span class="badge badge-monto" [ngClass]="item.saldoReal >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.saldoReal | currency:'ARS':'symbol':'1.0-2' }}</span>
           </span>
         </div>
       </div>

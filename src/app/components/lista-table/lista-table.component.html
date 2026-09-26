@@ -9,7 +9,7 @@
   <th scope="col" *ngFor="let c of tableConfig" [ngClass]="{ 'd-none': c.hidden }">{{ c.name }}</th>
 </ng-template>
 
-<div class="d-flex flex-row flex-wrap justify-content-between">
+<div class="d-flex flex-row flex-wrap justify-content-between align-items-center px-2">
   <div class="flex-fill">
     <div class="form-check ms-2 py-2" *ngIf="batchActionKey">
       <input type="checkbox" class="form-check-input" id="check_all_items" [checked]="isAllItemsSelected" (change)="toggleAll($event)">
@@ -18,7 +18,7 @@
       </label>
     </div>
   </div>
-  <div class="flex-fill d-flex flex-row align-items-center justify-content-end">
+  <div class="flex-fill d-flex flex-row align-items-center justify-content-end py-2">
     <app-batch-actions-box [batchActionKey]="batchActionKey" [actions]="batchActionActions"></app-batch-actions-box>
     <div ngbDropdown placement="bottom-right" class="ms-2 d-inline-block toggle-columns-dropdown" *ngIf="hasColumnsThatCanBeHidden">
       <button type="button" class="btn btn-primary" ngbDropdownToggle  ngbPopover="Mostrar/Esconder columnas" placement="left" triggers="mouseenter:mouseleave">
@@ -38,37 +38,39 @@
     </div>
   </div>
 </div>
-<div class="table-responsive" #tableContainer
-  (mousedown)="mouseDown($event)"
-  (mouseleave)="mouseLeave()"
-  (mouseup)="mouseUp()"
-  (mousemove)="mouseMove($event)"
->
-  <table class="table table-bordered table-sm lista-table">
-    <caption class="visually-hidden">{{ tableCaption }}</caption>
-    <thead *ngIf="tableConfig.length">
-      <tr>
-        <th scope="col" *ngIf="batchActionKey" class="selection-column"></th>
-        <ng-container *ngTemplateOutlet="tableHeadersTemplate ? tableHeadersTemplate : defaultTableHeaders">
-        </ng-container>
-        <th scope="col" class="actions-column"></th>
+<div class="bg-white border rounded lista-table-container" *ngIf="items?.length">
+  <div class="table-responsive" #tableContainer
+    (mousedown)="mouseDown($event)"
+    (mouseleave)="mouseLeave()"
+    (mouseup)="mouseUp()"
+    (mousemove)="mouseMove($event)"
+  >
+    <table class="table table-sm lista-table mb-0">
+      <caption class="visually-hidden">{{ tableCaption }}</caption>
+      <thead *ngIf="tableConfig.length">
+        <tr>
+          <th scope="col" *ngIf="batchActionKey" class="selection-column"></th>
+          <ng-container *ngTemplateOutlet="tableHeadersTemplate ? tableHeadersTemplate : defaultTableHeaders">
+          </ng-container>
+          <th scope="col" class="actions-column"></th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of items; let i=index;" [class.table-warning]="isSelected(item)">
+        <td *ngIf="batchActionKey" class="align-middle selection-column">
+          <div class="form-check ms-2">
+            <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
+            <label class="form-check-label" [for]="'check_row_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>
+          </div>
+        </td>
+        <ng-container *ngTemplateOutlet="infoTemplate ? infoTemplate : noTableInfo; context:{ $implicit: item, config: dynamicConfig }"></ng-container>
+        <td class="text-end text-md-center align-middle actions-column">
+          <ng-container *ngTemplateOutlet="actionsTemplate ? actionsTemplate : noActions; context:{ $implicit: item }"></ng-container>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let item of items; let i=index;" [class.table-warning]="isSelected(item)">
-      <td *ngIf="batchActionKey" class="align-middle selection-column">
-        <div class="form-check ms-2">
-          <input type="checkbox" class="form-check-input" [id]="'check_row_' + i.toString()" [checked]="isSelected(item)" (change)="toggleItemSelection($event, item)">
-          <label class="form-check-label" [for]="'check_row_' + i.toString()"><span class="sr-only">Seleccionar fila {{ i }}</span></label>
-        </div>
-      </td>
-      <ng-container *ngTemplateOutlet="infoTemplate ? infoTemplate : noTableInfo; context:{ $implicit: item, config: dynamicConfig }"></ng-container>
-      <td class="text-end text-md-center align-middle actions-column">
-        <ng-container *ngTemplateOutlet="actionsTemplate ? actionsTemplate : noActions; context:{ $implicit: item }"></ng-container>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <ngb-pagination [pageSize]="size" [collectionSize]="totalElements" [(page)]="displayPage"

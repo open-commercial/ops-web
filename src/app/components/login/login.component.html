@@ -5,6 +5,7 @@
     <div class="mb-3">
       <label for="username" class="form-label">Usuario</label>
       <input class="form-control" id="username" type="text" required formControlName="username"
+             #usernameInput
              [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
       <div class="invalid-feedback" *ngIf="submitted && f.username.errors">
         <div *ngIf="f.username.errors.required">Requerido</div>
@@ -13,6 +14,7 @@
     <div class="mb-3">
       <label for="password" class="form-label">Contraseña</label>
       <input class="form-control" id="password" type="password" required formControlName="password"
+             #passwordInput
              [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
       <div class="invalid-feedback" *ngIf="submitted && f.password.errors">
         <div *ngIf="f.password.errors.required">Requerido</div>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../models/usuario';
@@ -15,7 +15,7 @@ import { LoadingOverlayService } from '../../services/loading-overlay.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 
   form: UntypedFormGroup;
   loading = false;
@@ -23,6 +23,8 @@ export class LoginComponent implements OnInit {
   allowedRoles: Rol[] = [Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE];
   private readonly errors = new Subject<string>();
   errorMessage: string;
+  @ViewChild('usernameInput') usernameInput: ElementRef<HTMLInputElement>;
+  @ViewChild('passwordInput') passwordInput: ElementRef<HTMLInputElement>;
   authService = inject(AuthService);
   fb = inject(UntypedFormBuilder);
   router = inject(Router);
@@ -39,6 +41,10 @@ export class LoginComponent implements OnInit {
       .pipe(debounceTime(3000))
       .subscribe(() => this.errorMessage = null);
     this.createForm();
+  }
+
+  ngAfterViewInit() {
+    this.usernameInput.nativeElement.focus();
   }
 
   get f() {
@@ -68,21 +74,19 @@ export class LoginComponent implements OnInit {
               .subscribe(
                 (usuario: Usuario) => {
                   if (!this.tienePermisos(usuario)) {
-                    this.showErrorMessage('No tiene permisos para ingresar!');
                     this.form.enable();
+                    this.showErrorMessage('No tiene permisos para ingresar!');
                     this.authService.logout();
                     return;
                   }
                   this.loadingOverlayService.activate();
                   this.sucursalesService.getSucursales()
                     .pipe(
-                      finalize(() => {
-                        this.loadingOverlayService.deactivate();
-                        this.form.enable();
-                      })
+                      finalize(() => this.loadingOverlayService.deactivate())
                     )
                     .subscribe(
                       sucs => {
+                        this.form.enable();
                         if (sucs.length) {
                           const aux = sucs.filter((s: Sucursal) => s.idSucursal === usuario.idSucursalPredeterminada);
                           if (aux.length) {
@@ -96,18 +100,21 @@ export class LoginComponent implements OnInit {
                           this.authService.logout();
                         }
                       },
-                      err => this.showErrorMessage(err)
+                      err => {
+                        this.form.enable();
+                        this.showErrorMessage(err);
+                      }
                     );
                 },
                 err => {
-                  this.showErrorMessage(err);
                   this.form.enable();
+                  this.showErrorMessage(err);
                 }
               );
           },
           err => {
-            this.showErrorMessage(err);
             this.form.enable();
+            this.showErrorMessage(err);
           })
         ;
     }
@@ -120,5 +127,8 @@ export class LoginComponent implements OnInit {
 
   showErrorMessage(message: string) {
     this.errors.next(message);
+    const input = this.passwordInput.nativeElement;
+    input.focus();
+    input.select();
   }
 }

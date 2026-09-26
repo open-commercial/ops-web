@@ -90,14 +90,14 @@
     [ordenarPorAplicado]="ordenarPorAplicado" 
     [sentidoAplicado]="sentidoAplicado">
   </app-filtros-aplicados>
-  <div class="ccc my-2 bg-white">
+  <div class="ccc my-2">
     <ng-template #info let-item>
-      <div>
+      <div class="d-flex flex-row flex-wrap">
         <span class="badge text-bg-dark ms-2 mb-2">#{{ item.cliente.nroCliente }}</span>
-        <span class="badge text-bg-light border border-secondary ms-2 mb-2">
+        <span class="badge text-bg-light border border-secondary ms-2 mb-2" *ngIf="item.cliente.montoCompraMinima">
           Compra Mínima: {{ item.cliente.montoCompraMinima | currency:'ARS':'symbol':'1.0-2' }}
         </span>
-        <span class="badge text-bg-{{ item.cliente.puedeComprarAPlazo ? 'success' : 'danger' }} ms-2 mb-2">
+        <span class="badge ms-2 mb-2" [ngClass]="item.cliente.puedeComprarAPlazo ? 'text-bg-success' : 'text-bg-danger'">
           <fa-icon [icon]="['fas', 'check']" *ngIf="item.cliente.puedeComprarAPlazo"></fa-icon>
           <fa-icon [icon]="['fas', 'times']" *ngIf="!item.cliente.puedeComprarAPlazo"></fa-icon>
           &nbsp;{{ item.cliente.puedeComprarAPlazo ? 'Puede' : 'No puede' }} comprar a plazo
@@ -137,9 +137,9 @@
           <div class="ms-2" *ngIf="item.cliente.contacto">
             <span class="fw-bold">Contacto: </span>{{ item.cliente.contacto }}
           </div>
-          <div class="ms-2 text-nowrap">
+          <div class="ms-2">
             <span class="fw-bold">Saldo C/C: </span>
-            <span class="saldo" [class.negativo]="item.saldo < 0">{{ item.saldo | currency:'ARS':'symbol':'1.0-2'}}</span>
+            <span class="badge badge-monto" [ngClass]="item.saldo >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.saldo | currency:'ARS':'symbol':'1.2-2'}}</span>
           </div>
         </div>
       </div>

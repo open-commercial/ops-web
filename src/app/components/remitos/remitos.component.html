@@ -65,7 +65,7 @@
         <span class="fw-bold">Ubicación:&nbsp;</span><span class="fst-italic">{{ item.detalleEnvio }}</span>
       </div>
       <div>
-        <span class="px-2 fw-bold">Costo Envio:&nbsp;</span><span class="fst-italic costo-de-envio">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span>
+        <span class="px-2 fw-bold">Costo Envio:&nbsp;</span><span class="badge badge-monto" [ngClass]="item.costoDeEnvio >= 0 ? 'text-bg-success' : 'text-bg-danger'">{{ item.costoDeEnvio | currency:'ARS':'symbol':'1.0-2' }}</span>
       </div>
     </ng-template>
     <ng-template #actions let-item let-index>
